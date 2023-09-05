@@ -1,4 +1,4 @@
-name: Build
+name: Test Sandbox
 
 on:
   push:
@@ -34,3 +34,6 @@ jobs:
       - name: Build
         shell: bash
         run: ./build_unix.sh ${{matrix.build_type}} -DCMAKE_CXX_COMPILER=${{matrix.cxx}}
+
+      - name: Run Sandbox
+        run: ./liger-sandbox

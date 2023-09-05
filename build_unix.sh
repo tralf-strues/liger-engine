@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 mkdir -p .liger_log
 
 if [ $# -eq 0 ]; then
