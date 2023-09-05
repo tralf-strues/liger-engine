@@ -1,3 +1,4 @@
+#=== C/C++ ===#
 # Prerequisites
 *.d
 
@@ -30,3 +31,24 @@
 *.exe
 *.out
 *.app
+
+#=== Binary and build files ===#
+/build/
+/build_debug/
+/build_release/
+
+/liger-editor*
+/liger-sandbox*
+
+#=== MacOS ===#
+*.DS_Store
+
+#=== Visual Studio Code ===#
+/.vs/
+
+#=== Visual Studio Code ===#
+/.vscode/
+/.cache/
+
+#=== Logging and caches ===#
+/.liger_log/
