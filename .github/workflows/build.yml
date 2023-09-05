@@ -16,8 +16,17 @@ jobs:
         cxx: [g++, clang++]
         build_type: [Debug, Release]
 
+        include:
+          - os: ubuntu-latest
+            install: sudo apt-get install -y ninja
+          - os: macos-latest
+            install: brew install ninja
+
     steps:
       - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: ${{matrix.install}}
 
       - name: Build
         run: ./build_unix.sh ${{matrix.build_type}} -DCMAKE_CXX_COMPILER=${{matrix.cxx}}
