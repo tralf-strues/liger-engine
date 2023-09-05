@@ -24,9 +24,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: Install dependencies
+        shell: bash
         run: ${{matrix.install}}
 
       - name: Build
+        shell: bash
         run: ./build_unix.sh ${{matrix.build_type}} -DCMAKE_CXX_COMPILER=${{matrix.cxx}}
