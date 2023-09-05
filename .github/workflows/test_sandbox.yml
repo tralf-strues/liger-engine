@@ -18,9 +18,7 @@ jobs:
 
         include:
           - os: ubuntu-latest
-            install: sudo apt-get install ninja-build
-          - os: ubuntu-latest
-            install: sudo apt-get install xorg-dev
+            install: sudo apt-get install ninja-build xorg-dev
           - os: macos-latest
             install: brew install ninja
 
