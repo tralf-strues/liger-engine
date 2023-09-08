@@ -1,0 +1,79 @@
+/**
+ * @author Nikita Mochalov (github.com/tralf-strues)
+ * @file enum_bitmask.ipp
+ * @date 2023-09-05
+ *
+ * The MIT License (MIT)
+ * Copyright (c) 2023 Nikita Mochalov
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ */
+
+#ifndef BITMASK_IMPL
+#error Do not include this file directly
+#endif
+
+namespace liger {
+
+template <typename EnumT, typename UnderlyingT>
+EnumBitMask<EnumT, UnderlyingT>::EnumBitMask(std::initializer_list<EnumT> enum_values) {
+  for (const auto enum_value : enum_values) {
+    mask |= static_cast<UnderlyingT>(enum_value);
+  }
+}
+
+template <typename EnumT, typename UnderlyingT>
+EnumBitMask<EnumT, UnderlyingT>& EnumBitMask<EnumT, UnderlyingT>::operator|=(EnumT enum_value) {
+  mask |= static_cast<UnderlyingT>(enum_value);
+  return *this;
+}
+
+template <typename EnumT, typename UnderlyingT>
+EnumBitMask<EnumT, UnderlyingT>& EnumBitMask<EnumT, UnderlyingT>::operator&=(EnumT enum_value) {
+  mask &= static_cast<UnderlyingT>(enum_value);
+  return *this;
+}
+
+template <typename EnumT, typename UnderlyingT>
+EnumBitMask<EnumT, UnderlyingT>& EnumBitMask<EnumT, UnderlyingT>::operator|=(EnumBitMask<EnumT, UnderlyingT> other) {
+  mask |= other.mask;
+  return *this;
+}
+
+template <typename EnumT, typename UnderlyingT>
+EnumBitMask<EnumT, UnderlyingT>& EnumBitMask<EnumT, UnderlyingT>::operator&=(EnumBitMask<EnumT, UnderlyingT> other) {
+  mask &= other.mask;
+  return *this;
+}
+
+template <typename EnumT, typename UnderlyingT>
+EnumBitMask<EnumT, UnderlyingT> operator|(EnumBitMask<EnumT, UnderlyingT> lhs, EnumBitMask<EnumT, UnderlyingT> rhs) {
+  EnumBitMask<EnumT, UnderlyingT> result = lhs;
+  result |= rhs;
+  return result;
+}
+
+template <typename EnumT, typename UnderlyingT>
+EnumBitMask<EnumT, UnderlyingT> operator&(EnumBitMask<EnumT, UnderlyingT> lhs, EnumBitMask<EnumT, UnderlyingT> rhs) {
+  EnumBitMask<EnumT, UnderlyingT> result = lhs;
+  result &= rhs;
+  return result;
+}
+
+}  // namespace liger

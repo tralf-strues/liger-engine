@@ -25,10 +25,20 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <iostream>
+#include "liger/core/core.hpp"
 
 int main() {
-  std::cout << "Liger Sandbox" << std::endl;
+  liger::Log log;
+  log.AddWriter(std::make_unique<liger::ConsoleLogWriter>(liger::kDefaultConsoleLogStyle));
+
+  liger::int32 i = 0;
+  log.Message(liger::LogLevel::kInfo,    liger::LigerLogChannel::kNone,    "Info none {0}", i++);
+  log.Message(liger::LogLevel::kTrace,   liger::LigerLogChannel::kCore,    "Trace core {0}", i++);
+  log.Message(liger::LogLevel::kWarning, liger::LigerLogChannel::kRender,  "Warning render {0}", i++);
+  log.Message(liger::LogLevel::kError,   liger::LigerLogChannel::kECS,     "Error ecs {0}", i++);
+  log.Message(liger::LogLevel::kFatal,   liger::LigerLogChannel::kPhysics, "Fatal physics {0}", i++);
+
+  // std::cout << "Liger Sandbox" << std::endl;
 
   return 0;
 }
