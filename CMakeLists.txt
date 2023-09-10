@@ -17,13 +17,6 @@ if (DOXYGEN_FOUND AND LIGER_BUILD_DOCS)
     configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
     message("Doxygen build started")
 
-    # set(DOXYGEN_GENERATE_HTML ON)
-    # set(DOXYGEN_GENERATE_MAN OFF)
-
-    # doxygen_add_docs(
-    #   doxygen
-    #   engine/src editor/src)
-
     add_custom_target(doc_doxygen ALL
         COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
         WORKING_DIRECTORY ${CMAKE_HOME_DIRECTORY}

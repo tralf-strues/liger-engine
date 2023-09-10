@@ -31,8 +31,8 @@
 
 namespace liger {
 
-namespace LigerLogChannel {
-enum LigerLogChannel : uint64 {
+namespace LogChannel {
+enum LogChannel : uint64 {
   kNone    = 0x0000'0000,
   kCore    = 0x0000'0001,
 
@@ -40,7 +40,7 @@ enum LigerLogChannel : uint64 {
   kECS     = 0x0000'0004,
   kPhysics = 0x0000'0008
 };
-}  // namespace LigerLogChannel
+}  // namespace LogChannel
 
 using LogChannelMask = uint64;
 

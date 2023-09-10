@@ -1,21 +1,21 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file main.cpp
- * @date 2023-09-05
- * 
+ * @file default_log.cpp
+ * @date 2023-09-10
+ *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
  * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,16 +25,13 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "liger/core/core.hpp"
+#include "liger/core/log/default_log.hpp"
 
-int main() {
-  liger::int32 i = 0;
-  LIGER_LOG_INFO  (liger::LogChannel::kNone,    "Liger Sandbox");
-  LIGER_LOG_INFO  (liger::LogChannel::kNone,    "Info none {0}", i++);
-  LIGER_LOG_TRACE (liger::LogChannel::kCore,    "Trace core {0}", i++);
-  LIGER_LOG_WARN  (liger::LogChannel::kRender,  "Warning render {0}", i++);
-  LIGER_LOG_ERROR (liger::LogChannel::kECS,     "Error ecs {0}", i++);
-  LIGER_LOG_FATAL (liger::LogChannel::kPhysics, "Fatal physics {0}", i++);
+liger::Log liger::default_log::g_Log = CreateDefaultLog();
 
-  return 0;
+liger::Log liger::default_log::CreateDefaultLog() {
+  Log log;
+  log.AddWriter(std::make_unique<ConsoleLogWriter>(kDefaultConsoleLogStyle));
+
+  return log;
 }
