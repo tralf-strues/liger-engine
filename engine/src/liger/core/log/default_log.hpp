@@ -35,10 +35,10 @@
 #define LIGER_LOG_ERROR(channel, ...) liger::default_log::g_Log.Message(liger::LogLevel::kError,   channel, __VA_ARGS__);
 #define LIGER_LOG_FATAL(channel, ...) liger::default_log::g_Log.Message(liger::LogLevel::kFatal,   channel, __VA_ARGS__);
 
-#define LIGER_ASSERT(condition, ...) \
-  if (!(condition)) {                \
-    LIGER_LOG_FATAL(__VA_ARGS__);    \
-    std::abort();                    \
+#define LIGER_ASSERT(condition, channel, ...) \
+  if (!(condition)) {                         \
+    LIGER_LOG_FATAL(channel, __VA_ARGS__);    \
+    std::abort();                             \
   }
 
 namespace liger {

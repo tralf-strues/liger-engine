@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classliger_1_1_scoped_timer.html" title="Utility class for measuring time taking to execute a scope of code." alt="" coords="5,5,136,32"/>
+<area shape="rect" id="node1" href="$classliger_1_1detail_1_1_i_base_event_sink.html" title=" " alt="" coords="5,5,192,32"/>
+<area shape="rect" id="node2" href="$classliger_1_1_event_sink.html" title="Event sink for callbacks of the specified event." alt="" coords="240,5,420,32"/>
 </map>

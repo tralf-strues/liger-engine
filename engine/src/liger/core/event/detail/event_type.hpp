@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file log.ipp
- * @date 2023-09-06
+ * @file event_type.hpp
+ * @date 2023-09-11
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -25,20 +25,26 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef LOG_IMPL
-#error Do not include this file directly
-#endif
+#pragma once
 
-#include <fmt/color.h>
-#include <fmt/core.h>
-#include <fmt/ostream.h>
+#include "liger/core/types.hpp"
 
 namespace liger {
+namespace detail {
 
-template <typename... Args>
-void Log::Message(LogLevel level, uint64 channel, Args&&... args) {
-  messages_.emplace_back(level, channel, std::move(fmt::format(args...)));
-  OnMessageAdded();
-}
+using EventTypeId = uint32;
 
+struct EventTypeIdGenerator {
+  static EventTypeId NextId();
+};
+
+template <typename T>
+struct EventTypeIdHolder {
+  static EventTypeId Value() {
+    static const EventTypeId id = EventTypeIdGenerator::NextId();
+    return id;
+  }
+};
+
+}  // namespace detail
 }  // namespace liger

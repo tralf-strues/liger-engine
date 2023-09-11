@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['reset_0',['Reset',['../classliger_1_1_timer.html#ae7c0c1e7d12de4b8a6e7c64e451cdd2a',1,'liger::Timer']]]
+  ['main_2ecpp_0',['main.cpp',['../main_8cpp.html',1,'']]],
+  ['message_1',['message',['../structliger_1_1_log_message.html#ad1801b28ff7fc83cc9f59fb60a0b6e06',1,'liger::LogMessage']]]
 ];

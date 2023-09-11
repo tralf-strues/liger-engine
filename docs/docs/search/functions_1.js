@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['elapsed_0',['Elapsed',['../classliger_1_1_timer.html#a248d47492d7bca22d136c728fc8b9c26',1,'liger::Timer']]],
-  ['elapsedms_1',['ElapsedMs',['../classliger_1_1_timer.html#aca6b1fd36a1c2c2f7fdbc82de2e64ca6',1,'liger::Timer']]]
+  ['connect_0',['Connect',['../classliger_1_1_event_sink.html#a4eb20a458c6b13094f845ae8a32004b5',1,'liger::EventSink::Connect()'],['../classliger_1_1_event_sink.html#adc94c4e7acafa680af31e377a07010f2',1,'liger::EventSink::Connect(ClassT &amp;instance)']]]
 ];

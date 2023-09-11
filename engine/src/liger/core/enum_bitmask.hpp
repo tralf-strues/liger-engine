@@ -79,13 +79,48 @@ struct EnumBitMask {
 };
 
 template <typename EnumT, typename UnderlyingT>
-EnumBitMask<EnumT, UnderlyingT> operator|(EnumBitMask<EnumT, UnderlyingT> lhs, EnumBitMask<EnumT, UnderlyingT> rhs);
+EnumBitMask<EnumT, UnderlyingT>::EnumBitMask(std::initializer_list<EnumT> enum_values) {
+  for (const auto enum_value : enum_values) {
+    mask |= static_cast<UnderlyingT>(enum_value);
+  }
+}
 
 template <typename EnumT, typename UnderlyingT>
-EnumBitMask<EnumT, UnderlyingT> operator&(EnumBitMask<EnumT, UnderlyingT> lhs, EnumBitMask<EnumT, UnderlyingT> rhs);
+EnumBitMask<EnumT, UnderlyingT>& EnumBitMask<EnumT, UnderlyingT>::operator|=(EnumT enum_value) {
+  mask |= static_cast<UnderlyingT>(enum_value);
+  return *this;
+}
+
+template <typename EnumT, typename UnderlyingT>
+EnumBitMask<EnumT, UnderlyingT>& EnumBitMask<EnumT, UnderlyingT>::operator&=(EnumT enum_value) {
+  mask &= static_cast<UnderlyingT>(enum_value);
+  return *this;
+}
+
+template <typename EnumT, typename UnderlyingT>
+EnumBitMask<EnumT, UnderlyingT>& EnumBitMask<EnumT, UnderlyingT>::operator|=(EnumBitMask<EnumT, UnderlyingT> other) {
+  mask |= other.mask;
+  return *this;
+}
+
+template <typename EnumT, typename UnderlyingT>
+EnumBitMask<EnumT, UnderlyingT>& EnumBitMask<EnumT, UnderlyingT>::operator&=(EnumBitMask<EnumT, UnderlyingT> other) {
+  mask &= other.mask;
+  return *this;
+}
+
+template <typename EnumT, typename UnderlyingT>
+EnumBitMask<EnumT, UnderlyingT> operator|(EnumBitMask<EnumT, UnderlyingT> lhs, EnumBitMask<EnumT, UnderlyingT> rhs) {
+  EnumBitMask<EnumT, UnderlyingT> result = lhs;
+  result |= rhs;
+  return result;
+}
+
+template <typename EnumT, typename UnderlyingT>
+EnumBitMask<EnumT, UnderlyingT> operator&(EnumBitMask<EnumT, UnderlyingT> lhs, EnumBitMask<EnumT, UnderlyingT> rhs) {
+  EnumBitMask<EnumT, UnderlyingT> result = lhs;
+  result &= rhs;
+  return result;
+}
 
 }  // namespace liger
-
-#define BITMASK_IMPL
-#include <liger/core/enum_bitmask.ipp>
-#undef BITMASK_IMPL

@@ -124,10 +124,10 @@ $(document).ready(function(){initNavTree('default__log_8hpp_source.html',''); in
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#define LIGER_LOG_ERROR(channel, ...) liger::default_log::g_Log.Message(liger::LogLevel::kError,   channel, __VA_ARGS__);</span></div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#define LIGER_LOG_FATAL(channel, ...) liger::default_log::g_Log.Message(liger::LogLevel::kFatal,   channel, __VA_ARGS__);</span></div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#define LIGER_ASSERT(condition, ...) \</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">  if (!(condition)) {                \</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">    LIGER_LOG_FATAL(__VA_ARGS__);    \</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">    std::abort();                    \</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#define LIGER_ASSERT(condition, channel, ...) \</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">  if (!(condition)) {                         \</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">    LIGER_LOG_FATAL(channel, __VA_ARGS__);    \</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">    std::abort();                             \</span></div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">  }</span></div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">namespace </span>liger {</div>

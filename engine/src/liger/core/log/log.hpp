@@ -27,6 +27,8 @@
 
 #pragma once
 
+#include <fmt/core.h>
+
 #include "liger/core/log/log_message.hpp"
 #include "liger/core/log/log_writer.hpp"
 
@@ -56,8 +58,10 @@ class Log {
   std::vector<std::unique_ptr<ILogWriter>> writers_;
 };
 
-}  // namespace liger
+template <typename... Args>
+void Log::Message(LogLevel level, uint64 channel, Args&&... args) {
+  messages_.emplace_back(level, channel, std::move(fmt::format(args...)));
+  OnMessageAdded();
+}
 
-#define LOG_IMPL
-#include "liger/core/log/log.ipp"
-#undef LOG_IMPL
+}  // namespace liger

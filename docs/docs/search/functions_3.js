@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['scopedtimer_0',['ScopedTimer',['../classliger_1_1_scoped_timer.html#a8ba122b435db9bf24ea0bb7dae699ff9',1,'liger::ScopedTimer']]]
+  ['elapsed_0',['Elapsed',['../classliger_1_1_timer.html#a248d47492d7bca22d136c728fc8b9c26',1,'liger::Timer']]],
+  ['elapsedms_1',['ElapsedMs',['../classliger_1_1_timer.html#aca6b1fd36a1c2c2f7fdbc82de2e64ca6',1,'liger::Timer']]]
 ];

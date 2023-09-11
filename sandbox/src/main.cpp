@@ -27,6 +27,19 @@
 
 #include "liger/core/core.hpp"
 
+struct MouseEvent {
+  int mouse_key{0};
+};
+
+struct MouseEventHandler {
+  bool OnMouseEvent(const MouseEvent& event) {
+    LIGER_LOG_INFO(liger::LogChannel::kNone, "Mouse event, mouse_key + offset = {0}", event.mouse_key + offset);
+    return false;
+  }
+
+  int offset{0};
+};
+
 int main() {
   liger::int32 i = 0;
   LIGER_LOG_INFO  (liger::LogChannel::kNone,    "Liger Sandbox");
@@ -48,6 +61,14 @@ int main() {
 
     LIGER_LOG_INFO(liger::LogChannel::kCore, "total = {0}", total);
   }
+
+  liger::EventDispatcher event_dispatcher;
+
+  MouseEventHandler handler;
+  handler.offset = 22;
+
+  event_dispatcher.GetSink<MouseEvent>().Connect<&MouseEventHandler::OnMouseEvent>(handler);
+  event_dispatcher.Dispatch<MouseEvent>(MouseEvent{10});
 
   return 0;
 }

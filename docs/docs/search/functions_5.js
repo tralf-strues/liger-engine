@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['_7escopedtimer_0',['~ScopedTimer',['../classliger_1_1_scoped_timer.html#a338ced0c8c39fe3d3e89e1b09d29f589',1,'liger::ScopedTimer']]]
+  ['remove_0',['Remove',['../classliger_1_1_event_sink.html#a98976085cf46c91c50c90a93c43ebec7',1,'liger::EventSink::Remove()'],['../classliger_1_1_event_sink.html#ad0e6b6ac0671f4bc14791272efdcfa53',1,'liger::EventSink::Remove(ClassT &amp;instance)']]],
+  ['reset_1',['Reset',['../classliger_1_1_timer.html#ae7c0c1e7d12de4b8a6e7c64e451cdd2a',1,'liger::Timer']]]
 ];
