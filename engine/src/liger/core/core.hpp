@@ -35,3 +35,4 @@
 #include "liger/core/log/log_channels.hpp"
 #include "liger/core/time.hpp"
 #include "liger/core/types.hpp"
+#include "liger/core/uuid.hpp"

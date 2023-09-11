@@ -39,5 +39,7 @@ var files_dup =
       [ "liger::Timer", "classliger_1_1_timer.html", "classliger_1_1_timer" ],
       [ "liger::ScopedTimer", "classliger_1_1_scoped_timer.html", "classliger_1_1_scoped_timer" ]
     ] ],
-    [ "types.hpp", "types_8hpp.html", null ]
+    [ "types.hpp", "types_8hpp.html", null ],
+    [ "uuid.cpp", "uuid_8cpp.html", null ],
+    [ "uuid.hpp", "uuid_8hpp.html", "uuid_8hpp" ]
 ];
