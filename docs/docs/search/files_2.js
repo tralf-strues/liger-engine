@@ -1,11 +1,7 @@
 var searchData=
 [
-  ['liger_5flog_5fchannels_2ehpp_0',['liger_log_channels.hpp',['../liger__log__channels_8hpp.html',1,'']]],
-  ['log_2ecpp_1',['log.cpp',['../log_8cpp.html',1,'']]],
-  ['log_2ehpp_2',['log.hpp',['../log_8hpp.html',1,'']]],
-  ['log_2eipp_3',['log.ipp',['../log_8ipp.html',1,'']]],
-  ['log_5flevel_2ehpp_4',['log_level.hpp',['../log__level_8hpp.html',1,'']]],
-  ['log_5fmessage_2ecpp_5',['log_message.cpp',['../log__message_8cpp.html',1,'']]],
-  ['log_5fmessage_2ehpp_6',['log_message.hpp',['../log__message_8hpp.html',1,'']]],
-  ['log_5fwriter_2ehpp_7',['log_writer.hpp',['../log__writer_8hpp.html',1,'']]]
+  ['enum_5fbitmask_2ehpp_0',['enum_bitmask.hpp',['../enum__bitmask_8hpp.html',1,'']]],
+  ['enum_5fbitmask_2eipp_1',['enum_bitmask.ipp',['../enum__bitmask_8ipp.html',1,'']]],
+  ['enum_5fclass_2ecpp_2',['enum_class.cpp',['../enum__class_8cpp.html',1,'']]],
+  ['enum_5fclass_2ehpp_3',['enum_class.hpp',['../enum__class_8hpp.html',1,'']]]
 ];

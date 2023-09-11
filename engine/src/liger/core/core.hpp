@@ -32,4 +32,5 @@
 #include "liger/core/log/console_log_writer.hpp"
 #include "liger/core/log/default_log.hpp"
 #include "liger/core/log/log_channels.hpp"
+#include "liger/core/time.hpp"
 #include "liger/core/types.hpp"

@@ -36,5 +36,18 @@ int main() {
   LIGER_LOG_ERROR (liger::LogChannel::kECS,     "Error ecs {0}", i++);
   LIGER_LOG_FATAL (liger::LogChannel::kPhysics, "Fatal physics {0}", i++);
 
+  {
+    liger::ScopedTimer timer{liger::LogChannel::kCore, "Sandbox loop"};
+
+    float total = 0.0f;
+    for (liger::uint32 i = 0; i < 4096; ++i) {
+      total += static_cast<float>(i) / 100.0f;
+    }
+
+    total /= 4096.0f;
+
+    LIGER_LOG_INFO(liger::LogChannel::kCore, "total = {0}", total);
+  }
+
   return 0;
 }

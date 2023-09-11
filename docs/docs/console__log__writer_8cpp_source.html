@@ -115,7 +115,7 @@ $(document).ready(function(){initNavTree('console__log__writer_8cpp_source.html'
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;<a class="code" href="console__log__writer_8hpp.html">liger/core/log/console_log_writer.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;<a class="code" href="liger__log__channels_8hpp.html">liger/core/log/liger_log_channels.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;liger/core/log/log_channels.hpp&quot;</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;<a class="code" href="log__level_8hpp.html">liger/core/log/log_level.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">using namespace </span>liger;</div>
@@ -168,22 +168,21 @@ $(document).ready(function(){initNavTree('console__log__writer_8cpp_source.html'
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>   {LogLevel::kError,   fg(fmt::color::red)},</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>   {LogLevel::kFatal,   fmt::emphasis::bold | fg(fmt::color::red)}},</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  <span class="comment">/*level_names=*/</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  {{LogLevel::kInfo,    <span class="stringliteral">&quot;[ INFO  ]&quot;</span>},</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>   {LogLevel::kTrace,   <span class="stringliteral">&quot;[ TRACE ]&quot;</span>},</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>   {LogLevel::kWarning, <span class="stringliteral">&quot;[ WARN  ]&quot;</span>},</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>   {LogLevel::kError,   <span class="stringliteral">&quot;[ ERROR ]&quot;</span>},</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>   {LogLevel::kFatal,   <span class="stringliteral">&quot;[ FATAL ]&quot;</span>}},</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  {{LogLevel::kInfo,    <span class="stringliteral">&quot;[INFO] &quot;</span>},</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>   {LogLevel::kTrace,   <span class="stringliteral">&quot;[TRACE]&quot;</span>},</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>   {LogLevel::kWarning, <span class="stringliteral">&quot;[WARN] &quot;</span>},</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>   {LogLevel::kError,   <span class="stringliteral">&quot;[ERROR]&quot;</span>},</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>   {LogLevel::kFatal,   <span class="stringliteral">&quot;[FATAL]&quot;</span>}},</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  </div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  <span class="comment">/*write_channel=*/</span><span class="keyword">true</span>,</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="comment">/*channel_names=*/</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  {{(uint64_t)LigerLogChannel::kNone,    <span class="stringliteral">&quot;[  None   ]&quot;</span>},</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>   {(uint64_t)LigerLogChannel::kCore,    <span class="stringliteral">&quot;[  Core   ]&quot;</span>},</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>   {(uint64_t)LigerLogChannel::kRender,  <span class="stringliteral">&quot;[ Render  ]&quot;</span>},</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>   {(uint64_t)LigerLogChannel::kECS,     <span class="stringliteral">&quot;[   ECS   ]&quot;</span>},</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>   {(uint64_t)LigerLogChannel::kPhysics, <span class="stringliteral">&quot;[ Physics ]&quot;</span>}}</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  {{(uint64_t)LogChannel::kNone,    <span class="stringliteral">&quot;[None]   &quot;</span>},</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>   {(uint64_t)LogChannel::kCore,    <span class="stringliteral">&quot;[Core]   &quot;</span>},</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>   {(uint64_t)LogChannel::kRender,  <span class="stringliteral">&quot;[Render] &quot;</span>},</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>   {(uint64_t)LogChannel::kECS,     <span class="stringliteral">&quot;[ECS]    &quot;</span>},</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>   {(uint64_t)LogChannel::kPhysics, <span class="stringliteral">&quot;[Physics]&quot;</span>}}</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>};</div>
 <div class="ttc" id="aconsole__log__writer_8hpp_html"><div class="ttname"><a href="console__log__writer_8hpp.html">console_log_writer.hpp</a></div></div>
-<div class="ttc" id="aliger__log__channels_8hpp_html"><div class="ttname"><a href="liger__log__channels_8hpp.html">liger_log_channels.hpp</a></div></div>
 <div class="ttc" id="alog__level_8hpp_html"><div class="ttname"><a href="log__level_8hpp.html">log_level.hpp</a></div></div>
 <div class="ttc" id="astructliger_1_1_console_log_writer_1_1_style_html"><div class="ttname"><a href="structliger_1_1_console_log_writer_1_1_style.html">liger::ConsoleLogWriter::Style</a></div><div class="ttdef"><b>Definition:</b> <a href="console__log__writer_8hpp_source.html#l00043">console_log_writer.hpp:43</a></div></div>
 <div class="ttc" id="astructliger_1_1_log_message_html"><div class="ttname"><a href="structliger_1_1_log_message.html">liger::LogMessage</a></div><div class="ttdef"><b>Definition:</b> <a href="log__message_8hpp_source.html#l00035">log_message.hpp:35</a></div></div>
