@@ -15,6 +15,7 @@ var annotated_dup =
       [ "ILogWriter", "classliger_1_1_i_log_writer.html", null ],
       [ "Log", "classliger_1_1_log.html", null ],
       [ "LogMessage", "structliger_1_1_log_message.html", "structliger_1_1_log_message" ],
+      [ "Random", "classliger_1_1_random.html", null ],
       [ "ScopedTimer", "classliger_1_1_scoped_timer.html", "classliger_1_1_scoped_timer" ],
       [ "Timer", "classliger_1_1_timer.html", "classliger_1_1_timer" ]
     ] ]

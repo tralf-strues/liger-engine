@@ -34,6 +34,10 @@ var files_dup =
     [ "log_writer.hpp", "log__writer_8hpp.html", [
       [ "liger::ILogWriter", "classliger_1_1_i_log_writer.html", null ]
     ] ],
+    [ "random.cpp", "random_8cpp.html", null ],
+    [ "random.hpp", "random_8hpp.html", [
+      [ "liger::Random", "classliger_1_1_random.html", null ]
+    ] ],
     [ "time.cpp", "time_8cpp.html", null ],
     [ "time.hpp", "time_8hpp.html", [
       [ "liger::Timer", "classliger_1_1_timer.html", "classliger_1_1_timer" ],

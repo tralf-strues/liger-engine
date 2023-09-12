@@ -29,6 +29,7 @@
 
 #include <cstdint>
 #include <fstream>
+#include <glm/glm.hpp>
 #include <iostream>
 #include <map>
 #include <random>

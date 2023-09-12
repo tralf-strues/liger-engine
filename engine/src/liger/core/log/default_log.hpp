@@ -38,7 +38,7 @@
 #define LIGER_ASSERT(condition, channel, ...) \
   if (!(condition)) {                         \
     LIGER_LOG_FATAL(channel, __VA_ARGS__);    \
-    std::abort();                             \
+    std::terminate();                         \
   }
 
 namespace liger {
