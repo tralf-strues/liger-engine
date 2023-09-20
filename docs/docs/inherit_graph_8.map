@@ -1,4 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classliger_1_1_i_log_writer.html" title="Manages a particular way of writing log messages (e.g. ConsoleLogWriter)." alt="" coords="5,5,119,32"/>
-<area shape="rect" id="node2" href="$classliger_1_1_console_log_writer.html" title="Writes log messages to console and allows custom styles." alt="" coords="167,5,324,32"/>
+<area shape="rect" id="Node000000" href="$structliger_1_1_enum_bit_mask.html" title="Convenience struct for storing a bit mask of the specified enum class values." alt="" coords="5,5,284,31"/>
 </map>

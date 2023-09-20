@@ -27,18 +27,33 @@
 
 #include "liger/core/core.hpp"
 
-struct MouseEvent {
-  int mouse_key{0};
-};
+static bool g_Running{true};
 
-struct MouseEventHandler {
-  bool OnMouseEvent(const MouseEvent& event) {
-    LIGER_LOG_INFO(liger::LogChannel::kNone, "Mouse event, mouse_key + offset = {0}", event.mouse_key + offset);
-    return false;
-  }
+bool OnWindowClose(const liger::WindowCloseEvent& event) {
+  LIGER_LOG_INFO(liger::LogChannel::kGameCore, "OnWindowClose: window = {0}", (void*)event.window);
+  g_Running = false;
+  return true;
+}
 
-  int offset{0};
-};
+bool OnMouseScroll(const liger::MouseScrollEvent& event) {
+  LIGER_LOG_INFO(liger::LogChannel::kGameCore, "OnMouseScroll: delta = {0}", event.delta);
+  return false;
+}
+
+bool OnMouseMove(const liger::MouseMoveEvent& event) {
+  LIGER_LOG_INFO(liger::LogChannel::kGameCore, "OnMouseMove: pos = {0}, delta = {1}", event.new_position, event.delta);
+  return false;
+}
+
+bool OnMouseButton(const liger::MouseButtonEvent& event) {
+  LIGER_LOG_INFO(liger::LogChannel::kGameCore, "OnMouseButton: button = {0}", event.custom_button_num);
+  return false;
+}
+
+bool OnKeyEvent(const liger::KeyEvent& event) {
+  LIGER_LOG_INFO(liger::LogChannel::kGameCore, "OnKeyEvent: key = {0}", static_cast<int>(event.key));
+  return false;
+}
 
 int main() {
   liger::int32 i = 0;
@@ -63,12 +78,20 @@ int main() {
   }
 
   liger::EventDispatcher event_dispatcher;
+  liger::PlatformLayer platform_layer{event_dispatcher};
 
-  MouseEventHandler handler;
-  handler.offset = 22;
+  auto window = std::unique_ptr<liger::Window>(platform_layer.CreateWindow(1280, 720, "Liger Sandbox"));
+  window->SetOpacity(0.9f);
 
-  event_dispatcher.GetSink<MouseEvent>().Connect<&MouseEventHandler::OnMouseEvent>(handler);
-  event_dispatcher.Dispatch<MouseEvent>(MouseEvent{10});
+  platform_layer.GetSink<liger::WindowCloseEvent>().Connect<&OnWindowClose>();
+  platform_layer.GetSink<liger::MouseScrollEvent>().Connect<&OnMouseScroll>();
+  platform_layer.GetSink<liger::MouseMoveEvent>().Connect<&OnMouseMove>();
+  platform_layer.GetSink<liger::MouseButtonEvent>().Connect<&OnMouseButton>();
+  platform_layer.GetSink<liger::KeyEvent>().Connect<&OnKeyEvent>();
+
+  while (g_Running) {
+    platform_layer.PollEvents();
+  }
 
   return 0;
 }

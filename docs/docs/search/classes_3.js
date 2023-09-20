@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['log_0',['Log',['../classliger_1_1_log.html',1,'liger']]],
-  ['logmessage_1',['LogMessage',['../structliger_1_1_log_message.html',1,'liger']]]
+  ['ibaseeventsink_0',['IBaseEventSink',['../classliger_1_1detail_1_1_i_base_event_sink.html',1,'liger::detail']]],
+  ['ilogwriter_1',['ILogWriter',['../classliger_1_1_i_log_writer.html',1,'liger']]]
 ];

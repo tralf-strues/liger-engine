@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['main_2ecpp_0',['main.cpp',['../main_8cpp.html',1,'']]],
-  ['message_1',['message',['../structliger_1_1_log_message.html#ad1801b28ff7fc83cc9f59fb60a0b6e06',1,'liger::LogMessage']]]
+  ['ibaseeventsink_0',['IBaseEventSink',['../classliger_1_1detail_1_1_i_base_event_sink.html',1,'liger::detail']]],
+  ['ilogwriter_1',['ILogWriter',['../classliger_1_1_i_log_writer.html',1,'liger']]]
 ];

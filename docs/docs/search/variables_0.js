@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['channel_0',['channel',['../structliger_1_1_log_message.html#a9f959d4eb95b19bdd822afeb34d4955f',1,'liger::LogMessage']]]
+  ['action_0',['action',['../structliger_1_1_mouse_button_event.html#a3523aca50a25dbd0ed8ceaa6fd7decee',1,'liger::MouseButtonEvent']]]
 ];

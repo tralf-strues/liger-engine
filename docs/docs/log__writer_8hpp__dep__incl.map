@@ -1,13 +1,25 @@
 <map id="log_writer.hpp" name="log_writer.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="213,5,315,32"/>
-<area shape="rect" id="node2" href="$console__log__writer_8hpp.html" title=" " alt="" coords="120,80,275,107"/>
-<area shape="rect" id="node5" href="$log_8hpp.html" title=" " alt="" coords="300,80,364,107"/>
-<area shape="rect" id="node3" href="$console__log__writer_8cpp.html" title=" " alt="" coords="5,155,160,181"/>
-<area shape="rect" id="node4" href="$core_8hpp.html" title=" " alt="" coords="212,453,284,480"/>
-<area shape="rect" id="node6" href="$default__log_8hpp.html" title=" " alt="" coords="277,155,387,181"/>
-<area shape="rect" id="node11" href="$log_8cpp.html" title=" " alt="" coords="412,155,476,181"/>
-<area shape="rect" id="node7" href="$callback_8hpp.html" title=" " alt="" coords="286,229,381,256"/>
-<area shape="rect" id="node10" href="$default__log_8cpp.html" title=" " alt="" coords="405,229,515,256"/>
-<area shape="rect" id="node8" href="$event__sink_8hpp.html" title=" " alt="" coords="294,304,405,331"/>
-<area shape="rect" id="node9" href="$event__dispatcher_8hpp.html" title=" " alt="" coords="286,379,431,405"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="213,5,315,31"/>
+<area shape="rect" id="Node000002" href="$console__log__writer_8hpp.html" title=" " alt="" coords="120,79,275,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="245,44,211,80,207,76,241,40"/>
+<area shape="rect" id="Node000005" href="$log_8hpp.html" title=" " alt="" coords="300,79,364,104"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="288,40,322,76,319,80,284,44"/>
+<area shape="rect" id="Node000003" href="$console__log__writer_8cpp.html" title=" " alt="" coords="5,152,160,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="167,115,103,154,100,149,164,110"/>
+<area shape="rect" id="Node000004" href="$core_8hpp.html" title=" " alt="" coords="212,445,284,471"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="200,120,200,237,200,313,205,351,216,388,243,444,238,446,211,390,200,352,195,313,195,237,195,120"/>
+<area shape="rect" id="Node000006" href="$default__log_8hpp.html" title=" " alt="" coords="277,152,387,177"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="335,120,335,151,329,151,329,120"/>
+<area shape="rect" id="Node000011" href="$log_8cpp.html" title=" " alt="" coords="412,152,476,177"/>
+<area shape="poly" id="edge12_Node000005_Node000011" title=" " alt="" coords="365,110,427,149,424,154,362,115"/>
+<area shape="poly" id="edge10_Node000006_Node000004" title=" " alt="" coords="306,189,289,206,276,227,264,256,256,288,248,351,247,406,249,445,244,445,242,407,242,351,251,287,259,255,271,224,285,203,302,185"/>
+<area shape="rect" id="Node000007" href="$callback_8hpp.html" title=" " alt="" coords="286,225,381,251"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="335,193,336,225,330,225,330,193"/>
+<area shape="rect" id="Node000010" href="$default__log_8cpp.html" title=" " alt="" coords="405,225,515,251"/>
+<area shape="poly" id="edge11_Node000006_Node000010" title=" " alt="" coords="368,183,440,223,437,227,366,188"/>
+<area shape="rect" id="Node000008" href="$event__sink_8hpp.html" title=" " alt="" coords="294,299,405,324"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="342,265,349,297,344,299,337,266"/>
+<area shape="rect" id="Node000009" href="$event__dispatcher_8hpp.html" title=" " alt="" coords="286,372,431,397"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="356,339,360,371,354,372,350,340"/>
+<area shape="poly" id="edge9_Node000009_Node000004" title=" " alt="" coords="329,408,268,447,265,443,326,404"/>
 </map>

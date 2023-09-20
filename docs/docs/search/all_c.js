@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['_7escopedtimer_0',['~ScopedTimer',['../classliger_1_1_scoped_timer.html#a338ced0c8c39fe3d3e89e1b09d29f589',1,'liger::ScopedTimer']]]
+  ['platform_5flayer_2ecpp_0',['platform_layer.cpp',['../platform__layer_8cpp.html',1,'']]],
+  ['platform_5flayer_2ehpp_1',['platform_layer.hpp',['../platform__layer_8hpp.html',1,'']]],
+  ['platformlayer_2',['PlatformLayer',['../classliger_1_1_platform_layer.html',1,'liger']]]
 ];

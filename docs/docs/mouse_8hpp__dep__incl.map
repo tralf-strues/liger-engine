@@ -1,0 +1,9 @@
+<map id="mouse.hpp" name="mouse.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="59,5,146,31"/>
+<area shape="rect" id="Node000002" href="$platform__layer_8hpp.html" title=" " alt="" coords="39,79,167,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,46,105,78,100,78,100,46"/>
+<area shape="rect" id="Node000003" href="$core_8hpp.html" title=" " alt="" coords="5,152,77,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="85,117,54,153,50,150,81,114"/>
+<area shape="rect" id="Node000004" href="$platform__layer_8cpp.html" title=" " alt="" coords="101,152,229,177"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="125,114,157,150,153,153,121,117"/>
+</map>

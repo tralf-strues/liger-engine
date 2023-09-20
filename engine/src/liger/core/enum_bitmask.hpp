@@ -69,6 +69,7 @@ struct EnumBitMask {
   UnderlyingT mask{0};
 
   EnumBitMask() = default;
+  explicit EnumBitMask(UnderlyingT mask);
   EnumBitMask(std::initializer_list<EnumT> enum_values);
 
   EnumBitMask& operator|=(EnumT enum_value);
@@ -77,6 +78,9 @@ struct EnumBitMask {
   EnumBitMask& operator|=(EnumBitMask other);
   EnumBitMask& operator&=(EnumBitMask other);
 };
+
+template <typename EnumT, typename UnderlyingT>
+EnumBitMask<EnumT, UnderlyingT>::EnumBitMask(UnderlyingT mask) : mask(mask) {}
 
 template <typename EnumT, typename UnderlyingT>
 EnumBitMask<EnumT, UnderlyingT>::EnumBitMask(std::initializer_list<EnumT> enum_values) {

@@ -87,9 +87,10 @@ const liger::ConsoleLogWriter::Style liger::kDefaultConsoleLogStyle = {
   
   /*write_channel=*/true,
   /*channel_names=*/
-  {{(uint64_t)LogChannel::kNone,    "         "},
-   {(uint64_t)LogChannel::kCore,    "[Core]   "},
-   {(uint64_t)LogChannel::kRender,  "[Render] "},
-   {(uint64_t)LogChannel::kECS,     "[ECS]    "},
-   {(uint64_t)LogChannel::kPhysics, "[Physics]"}}
+  {{(uint64_t)LogChannel::kNone,     "          "},
+   {(uint64_t)LogChannel::kCore,     "[Core]    "},
+   {(uint64_t)LogChannel::kRender,   "[Render]  "},
+   {(uint64_t)LogChannel::kECS,      "[ECS]     "},
+   {(uint64_t)LogChannel::kPhysics,  "[Physics] "},
+   {(uint64_t)LogChannel::kGameCore, "[GameCore]"},}
 };

@@ -1,5 +1,7 @@
 <map id="console_log_writer.hpp" name="console_log_writer.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="73,5,228,32"/>
-<area shape="rect" id="node2" href="$console__log__writer_8cpp.html" title=" " alt="" coords="5,80,160,107"/>
-<area shape="rect" id="node3" href="$core_8hpp.html" title=" " alt="" coords="184,80,256,107"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="73,5,228,31"/>
+<area shape="rect" id="Node000002" href="$console__log__writer_8cpp.html" title=" " alt="" coords="5,79,160,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,44,96,80,92,76,127,40"/>
+<area shape="rect" id="Node000003" href="$core_8hpp.html" title=" " alt="" coords="184,79,256,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="174,40,210,76,206,80,171,43"/>
 </map>

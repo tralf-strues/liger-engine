@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['scopedtimer_0',['ScopedTimer',['../classliger_1_1_scoped_timer.html',1,'liger']]],
-  ['style_1',['Style',['../structliger_1_1_console_log_writer_1_1_style.html',1,'liger::ConsoleLogWriter']]]
+  ['log_0',['Log',['../classliger_1_1_log.html',1,'liger']]],
+  ['logmessage_1',['LogMessage',['../structliger_1_1_log_message.html',1,'liger']]]
 ];

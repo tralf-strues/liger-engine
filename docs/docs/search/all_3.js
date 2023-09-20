@@ -1,17 +1,8 @@
 var searchData=
 [
-  ['elapsed_0',['Elapsed',['../classliger_1_1_timer.html#a248d47492d7bca22d136c728fc8b9c26',1,'liger::Timer']]],
-  ['elapsedms_1',['ElapsedMs',['../classliger_1_1_timer.html#aca6b1fd36a1c2c2f7fdbc82de2e64ca6',1,'liger::Timer']]],
-  ['enum_5fbitmask_2ehpp_2',['enum_bitmask.hpp',['../enum__bitmask_8hpp.html',1,'']]],
-  ['enum_5fclass_2ecpp_3',['enum_class.cpp',['../enum__class_8cpp.html',1,'']]],
-  ['enum_5fclass_2ehpp_4',['enum_class.hpp',['../enum__class_8hpp.html',1,'']]],
-  ['enumbitmask_5',['EnumBitMask',['../structliger_1_1_enum_bit_mask.html',1,'liger']]],
-  ['event_5fdispatcher_2ehpp_6',['event_dispatcher.hpp',['../event__dispatcher_8hpp.html',1,'']]],
-  ['event_5fsink_2ehpp_7',['event_sink.hpp',['../event__sink_8hpp.html',1,'']]],
-  ['event_5ftype_2ecpp_8',['event_type.cpp',['../event__type_8cpp.html',1,'']]],
-  ['event_5ftype_2ehpp_9',['event_type.hpp',['../event__type_8hpp.html',1,'']]],
-  ['eventdispatcher_10',['EventDispatcher',['../classliger_1_1_event_dispatcher.html',1,'liger']]],
-  ['eventsink_11',['EventSink',['../classliger_1_1_event_sink.html',1,'liger']]],
-  ['eventtypeidgenerator_12',['EventTypeIdGenerator',['../structliger_1_1detail_1_1_event_type_id_generator.html',1,'liger::detail']]],
-  ['eventtypeidholder_13',['EventTypeIdHolder',['../structliger_1_1detail_1_1_event_type_id_holder.html',1,'liger::detail']]]
+  ['declare_5fenum_5fclass_0',['DECLARE_ENUM_CLASS',['../enum__class_8hpp.html#a4d2184af770c0de875a18828ceafdd63',1,'enum_class.hpp']]],
+  ['default_5flog_2ecpp_1',['default_log.cpp',['../default__log_8cpp.html',1,'']]],
+  ['default_5flog_2ehpp_2',['default_log.hpp',['../default__log_8hpp.html',1,'']]],
+  ['delta_3',['delta',['../structliger_1_1_mouse_move_event.html#a4c05968037b5ed2c61fccbfe2f4614ce',1,'liger::MouseMoveEvent']]],
+  ['dispatch_4',['dispatch',['../classliger_1_1_event_dispatcher.html#a9b1925719669de0708433b6e14d1693b',1,'liger::EventDispatcher::Dispatch()'],['../classliger_1_1_event_sink.html#a6f906d2cf0219b66fc1612d234809502',1,'liger::EventSink::Dispatch()']]]
 ];
