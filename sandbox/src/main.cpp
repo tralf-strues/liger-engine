@@ -89,6 +89,27 @@ int main() {
   platform_layer.GetSink<liger::MouseButtonEvent>().Connect<&OnMouseButton>();
   platform_layer.GetSink<liger::KeyEvent>().Connect<&OnKeyEvent>();
 
+  tf::Executor executor;
+  tf::Taskflow taskflow;
+
+  tf::Task A = taskflow.emplace([](){ std::cout << "A" << std::endl; }).name("A");  
+  tf::Task C = taskflow.emplace([](){ std::cout << "C" << std::endl; }).name("C");  
+  tf::Task D = taskflow.emplace([](){ std::cout << "D" << std::endl; }).name("D");  
+
+  tf::Task B = taskflow.emplace([] (tf::Subflow& subflow) {
+    std::cout << "Subflow: B" << std::endl;
+
+    tf::Task B1 = subflow.emplace([](){ std::cout << "B1" << std::endl; }).name("B1");  
+    tf::Task B2 = subflow.emplace([](){ std::cout << "B2" << std::endl; }).name("B2");  
+    tf::Task B3 = subflow.emplace([](){ std::cout << "B3" << std::endl; }).name("B3");  
+    B3.succeed(B1, B2);  // B3 runs after B1 and B2
+  }).name("B");
+
+  A.precede(B, C);  // A runs before B and C
+  D.succeed(B, C);  // D runs after  B and C
+
+  executor.run(taskflow).wait();
+
   while (g_Running) {
     platform_layer.PollEvents();
   }
