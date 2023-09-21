@@ -14,3 +14,5 @@ target_sources(liger
   PRIVATE
     ${LIGER_SOURCE}
   )
+
+target_precompile_headers(liger PRIVATE liger/core/core.hpp)
