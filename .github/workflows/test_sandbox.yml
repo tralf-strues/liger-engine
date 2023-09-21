@@ -18,9 +18,9 @@ jobs:
 
         include:
           - os: ubuntu-latest
-            install: sudo apt-get install ninja-build xorg-dev
+            install: sudo apt-get install ninja-build xorg-dev doxygen
           - os: macos-latest
-            install: brew install ninja
+            install: brew install ninja doxygen
 
     steps:
       - uses: actions/checkout@v3
