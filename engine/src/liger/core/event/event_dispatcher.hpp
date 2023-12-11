@@ -27,8 +27,8 @@
 
 #pragma once
 
-#include "liger/core/event/detail/event_type.hpp"
-#include "liger/core/event/event_sink.hpp"
+#include <liger/core/event/detail/event_type.hpp>
+#include <liger/core/event/event_sink.hpp>
 
 namespace liger {
 

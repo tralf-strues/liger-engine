@@ -11,5 +11,6 @@ target_link_libraries(liger
     fmt
     glfw
     glm
+    magic_enum
     yaml-cpp
   )

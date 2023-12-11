@@ -27,12 +27,12 @@
 
 #pragma once
 
-#include "liger/core/types.hpp"
+#include <cstdint>
 
 namespace liger {
 namespace detail {
 
-using EventTypeId = uint32;
+using EventTypeId = uint32_t;
 
 struct EventTypeIdGenerator {
   static EventTypeId NextId();

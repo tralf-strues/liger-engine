@@ -1,5 +1,5 @@
 var enum__bitmask_8hpp =
 [
-    [ "liger::EnumBitMask< EnumT, UnderlyingT >", "structliger_1_1_enum_bit_mask.html", null ],
-    [ "Bit", "enum__bitmask_8hpp.html#a3cd031e2867650cfe969757dcd39eca9", null ]
+    [ "liger::EnumEnableBitmask< Enum >", "structliger_1_1_enum_enable_bitmask.html", null ],
+    [ "Bit", "enum__bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa", null ]
 ];

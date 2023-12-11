@@ -1,0 +1,25 @@
+<map id="synchronization.hpp" name="synchronization.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="206,5,343,31"/>
+<area shape="rect" id="Node000002" href="$buffer_8hpp.html" title=" " alt="" coords="5,153,170,178"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="206,30,105,49,62,63,36,81,31,95,35,111,46,126,61,141,57,145,42,130,31,113,26,95,32,77,60,58,103,44,205,25"/>
+<area shape="rect" id="Node000005" href="$command__queue_8hpp.html" title=" " alt="" coords="47,79,278,105"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="257,34,195,73,193,68,254,29"/>
+<area shape="rect" id="Node000006" href="$graphics__pipeline_8hpp.html" title=" " alt="" coords="498,79,730,105"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="333,29,542,73,541,78,332,34"/>
+<area shape="rect" id="Node000009" href="$texture_8hpp.html" title=" " alt="" coords="301,79,474,105"/>
+<area shape="poly" id="edge12_Node000001_Node000009" title=" " alt="" coords="295,29,357,68,354,73,292,34"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="174,300,302,326"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="91,178,97,213,104,233,115,250,144,275,178,292,176,297,141,279,111,254,99,235,92,215,85,179"/>
+<area shape="rect" id="Node000004" href="$device__resource_8hpp.html" title=" " alt="" coords="125,226,352,252"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="114,176,200,217,198,222,112,181"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="241,252,241,284,236,284,236,252"/>
+<area shape="poly" id="edge6_Node000005_Node000004" title=" " alt="" coords="171,104,227,211,223,214,166,106"/>
+<area shape="rect" id="Node000007" href="$format_8hpp.html" title=" " alt="" coords="304,153,474,178"/>
+<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="577,108,442,150,441,145,575,103"/>
+<area shape="rect" id="Node000008" href="$shader__module_8hpp.html" title=" " alt="" coords="501,153,722,178"/>
+<area shape="poly" id="edge10_Node000006_Node000008" title=" " alt="" coords="616,105,615,137,610,137,611,105"/>
+<area shape="poly" id="edge9_Node000007_Node000003" title=" " alt="" coords="391,179,385,215,377,235,366,254,335,279,300,297,298,292,332,275,361,250,372,233,380,213,386,178"/>
+<area shape="poly" id="edge11_Node000008_Node000004" title=" " alt="" coords="548,182,317,226,316,220,547,176"/>
+<area shape="poly" id="edge13_Node000009_Node000004" title=" " alt="" coords="363,108,328,127,293,155,270,184,252,214,248,211,265,181,290,151,325,123,360,103"/>
+<area shape="poly" id="edge14_Node000009_Node000007" title=" " alt="" coords="390,105,391,137,386,137,385,105"/>
+</map>

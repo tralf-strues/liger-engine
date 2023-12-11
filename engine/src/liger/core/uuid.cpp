@@ -25,12 +25,17 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "liger/core/uuid.hpp"
+#include <liger/core/uuid.hpp>
+#include <random>
 
-liger::UUID liger::GenerateUUID() {
+namespace liger {
+
+UUID GenerateUUID() {
   static std::random_device random_device;
   static std::mt19937_64 random_engine{random_device()};
-  static std::uniform_int_distribution<uint64> uniform_distribution;
+  static std::uniform_int_distribution<uint64_t> uniform_distribution;
 
   return uniform_distribution(random_engine);
 }
+
+}  // namespace liger

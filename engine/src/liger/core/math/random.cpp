@@ -25,7 +25,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "liger/core/math/random.hpp"
+#include <liger/core/math/random.hpp>
 
 #include <glm/gtc/random.hpp>
 

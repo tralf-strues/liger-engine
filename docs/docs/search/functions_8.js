@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_7escopedtimer_0',['~ScopedTimer',['../classliger_1_1_scoped_timer.html#a338ced0c8c39fe3d3e89e1b09d29f589',1,'liger::ScopedTimer']]]
+  ['loadbufferdata_0',['LoadBufferData',['../classliger_1_1rhi_1_1_i_device.html#ac6752c2c0e71a03b9f29c00526b4e267',1,'liger::rhi::IDevice']]]
 ];

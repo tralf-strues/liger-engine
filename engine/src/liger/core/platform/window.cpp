@@ -25,18 +25,19 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "liger/core/platform/window.hpp"
+#include <liger/core/log/default_log.hpp>
+#include <liger/core/platform/window.hpp>
 
 #include <GLFW/glfw3.h>
 
-using namespace liger;
+namespace liger {
 
-Window::Window(uint32 width, uint32 height, cstring title) {
+Window::Window(uint32_t width, uint32_t height, const std::string_view title) {
   glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
   glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-  window_ = glfwCreateWindow(width, height, title, nullptr, nullptr);
-  LIGER_ASSERT(window_, LogChannel::kCore, "glfwCreateWindow failed!");
+  window_ = glfwCreateWindow(width, height, title.data(), nullptr, nullptr);
+  LIGER_ASSERT(window_, "Window", "glfwCreateWindow failed!");
 }
 
 Window::~Window() {
@@ -45,36 +46,36 @@ Window::~Window() {
 
 GLFWwindow* Window::GetGLFWwindow() { return window_; }
 
-void Window::SetTitle(cstring title) {
-  glfwSetWindowTitle(window_, title);
+void Window::SetTitle(const std::string_view title) {
+  glfwSetWindowTitle(window_, title.data());
 }
 
-uint32 Window::GetWidth() const {
-  int32 width = 0;
+uint32_t Window::GetWidth() const {
+  int32_t width = 0;
   glfwGetWindowSize(window_, &width, nullptr);
 
-  return static_cast<uint32>(width);
+  return static_cast<uint32_t>(width);
 }
 
-uint32 Window::GetHeight() const {
-  int32 height = 0;
+uint32_t Window::GetHeight() const {
+  int32_t height = 0;
   glfwGetWindowSize(window_, nullptr, &height);
 
-  return static_cast<uint32>(height);
+  return static_cast<uint32_t>(height);
 }
 
-uint32 Window::GetFramebufferWidth() const {
-  int32 width = 0;
+uint32_t Window::GetFramebufferWidth() const {
+  int32_t width = 0;
   glfwGetFramebufferSize(window_, &width, nullptr);
 
-  return static_cast<uint32>(width);
+  return static_cast<uint32_t>(width);
 }
 
-uint32 Window::GetFramebufferHeight() const {
-  int32 height = 0;
+uint32_t Window::GetFramebufferHeight() const {
+  int32_t height = 0;
   glfwGetFramebufferSize(window_, nullptr, &height);
 
-  return static_cast<uint32>(height);
+  return static_cast<uint32_t>(height);
 }
 
 void Window::SetOpacity(float opacity) {
@@ -84,3 +85,5 @@ void Window::SetOpacity(float opacity) {
 float Window::GetOpacity() const {
   return glfwGetWindowOpacity(window_);
 }
+
+}  // namespace liger

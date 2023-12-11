@@ -100,16 +100,16 @@ $(document).ready(function(){initNavTree('console__log__writer_8hpp.html',''); i
 <div class="textblock"><code>#include &lt;fmt/color.h&gt;</code><br />
 <code>#include &lt;fmt/core.h&gt;</code><br />
 <code>#include &lt;fmt/ostream.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="log__writer_8hpp_source.html">liger/core/log/log_writer.hpp</a>&quot;</code><br />
+<code>#include &lt;<a class="el" href="log__writer_8hpp_source.html">liger/core/log/log_writer.hpp</a>&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for console_log_writer.hpp:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="console__log__writer_8hpp__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="console__log__writer_8hpp__incl.svg" width="539" height="258"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="console__log__writer_8hpp__dep__incl.svg" width="262" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="console__log__writer_8hpp__dep__incl.svg" width="164" height="111"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="console__log__writer_8hpp_source.html">Go to the source code of this file.</a></p>
@@ -124,8 +124,9 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a646d12a124f127158047bf16d4be9e12" id="r_a646d12a124f127158047bf16d4be9e12"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structliger_1_1_enum_bit_mask.html">const</a> <a class="el" href="structliger_1_1_console_log_writer_1_1_style.html">ConsoleLogWriter::Style</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="console__log__writer_8hpp.html#a646d12a124f127158047bf16d4be9e12">liger::kDefaultConsoleLogStyle</a></td></tr>
-<tr class="separator:a646d12a124f127158047bf16d4be9e12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69f3257be9c138947d1bcbf7876c4b16" id="r_a69f3257be9c138947d1bcbf7876c4b16"><td class="memItemLeft" align="right" valign="top"><a id="a69f3257be9c138947d1bcbf7876c4b16" name="a69f3257be9c138947d1bcbf7876c4b16"></a>
+const <a class="el" href="structliger_1_1_console_log_writer_1_1_style.html">ConsoleLogWriter::Style</a>&#160;</td><td class="memItemRight" valign="bottom"><b>liger::kDefaultConsoleLogStyle</b></td></tr>
+<tr class="separator:a69f3257be9c138947d1bcbf7876c4b16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Nikita Mochalov (github.com/tralf-strues)</dd></dl>
@@ -136,59 +137,7 @@ Variables</h2></td></tr>
 <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </p>
 
 <p class="definition">Definition in file <a class="el" href="console__log__writer_8hpp_source.html">console_log_writer.hpp</a>.</p>
-</div><h2 class="groupheader">Variable Documentation</h2>
-<a id="a646d12a124f127158047bf16d4be9e12" name="a646d12a124f127158047bf16d4be9e12"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a646d12a124f127158047bf16d4be9e12">&#9670;&#160;</a></span>kDefaultConsoleLogStyle</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structliger_1_1_enum_bit_mask.html">const</a> <a class="el" href="structliger_1_1_console_log_writer_1_1_style.html">liger::ConsoleLogWriter::Style</a> liger::kDefaultConsoleLogStyle</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">  {},</div>
-<div class="line"> </div>
-<div class="line">  <span class="keyword">true</span>,</div>
-<div class="line">  <span class="keyword">true</span>,</div>
-<div class="line">  </div>
-<div class="line">  {{LogLevel::kInfo,    {}},</div>
-<div class="line">   {LogLevel::kTrace,   fg(fmt::color::olive_drab)},</div>
-<div class="line">   {LogLevel::kWarning, fg(fmt::color::purple)},</div>
-<div class="line">   {LogLevel::kError,   fg(fmt::color::red)},</div>
-<div class="line">   {LogLevel::kFatal,   fmt::emphasis::bold | fg(fmt::color::red)}},</div>
-<div class="line">  </div>
-<div class="line">  {{LogLevel::kInfo,    <span class="stringliteral">&quot;[INFO] &quot;</span>},</div>
-<div class="line">   {LogLevel::kTrace,   <span class="stringliteral">&quot;[TRACE]&quot;</span>},</div>
-<div class="line">   {LogLevel::kWarning, <span class="stringliteral">&quot;[WARN] &quot;</span>},</div>
-<div class="line">   {LogLevel::kError,   <span class="stringliteral">&quot;[ERROR]&quot;</span>},</div>
-<div class="line">   {LogLevel::kFatal,   <span class="stringliteral">&quot;[FATAL]&quot;</span>}},</div>
-<div class="line">  </div>
-<div class="line">  <span class="keyword">true</span>,</div>
-<div class="line">  </div>
-<div class="line">  {{(uint64_t)LogChannel::kNone,     <span class="stringliteral">&quot;          &quot;</span>},</div>
-<div class="line">   {(uint64_t)LogChannel::kCore,     <span class="stringliteral">&quot;[Core]    &quot;</span>},</div>
-<div class="line">   {(uint64_t)LogChannel::kRender,   <span class="stringliteral">&quot;[Render]  &quot;</span>},</div>
-<div class="line">   {(uint64_t)LogChannel::kECS,      <span class="stringliteral">&quot;[ECS]     &quot;</span>},</div>
-<div class="line">   {(uint64_t)LogChannel::kPhysics,  <span class="stringliteral">&quot;[Physics] &quot;</span>},</div>
-<div class="line">   {(uint64_t)LogChannel::kGameCore, <span class="stringliteral">&quot;[GameCore]&quot;</span>},}</div>
-<div class="line">}</div>
-</div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="console__log__writer_8cpp_source.html#l00070">70</a> of file <a class="el" href="console__log__writer_8cpp_source.html">console_log_writer.cpp</a>.</p>
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

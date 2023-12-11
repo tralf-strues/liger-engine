@@ -27,7 +27,7 @@
 
 #pragma once
 
-#include "liger/core/log/log_message.hpp"
+#include <liger/core/log/log_message.hpp>
 
 namespace liger {
 

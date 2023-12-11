@@ -25,12 +25,14 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "liger/core/log/log_message.hpp"
+#include <liger/core/log/log_message.hpp>
 
-using namespace liger;
+namespace liger {
 
-LogMessage::LogMessage(LogLevel level, uint64 channel, const std::string_view message)
+LogMessage::LogMessage(LogLevel level, const std::string_view channel, const std::string_view message)
     : level(level), channel(channel), message(message) {}
 
-LogMessage::LogMessage(LogLevel level, uint64 channel, std::string&& message)
-    : level(level), channel(channel), message(message) {}
+LogMessage::LogMessage(LogLevel level, std::string&& channel, std::string&& message)
+    : level(level), channel(std::move(channel)), message(std::move(message)) {}
+
+}  // namespace liger

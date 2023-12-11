@@ -25,69 +25,72 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "liger/core/core.hpp"
+#include <liger/core/core.hpp>
 
 static bool g_Running{true};
 
-bool OnWindowClose(const liger::WindowCloseEvent& event) {
-  LIGER_LOG_INFO(liger::LogChannel::kGameCore, "OnWindowClose: window = {0}", (void*)event.window);
+using namespace liger;
+using namespace liger::core;
+
+bool OnWindowClose(const WindowCloseEvent& event) {
+  LIGER_LOG_INFO(LogChannel::kGameCore, "OnWindowClose: window = {0}", (void*)event.window);
   g_Running = false;
   return true;
 }
 
-bool OnMouseScroll(const liger::MouseScrollEvent& event) {
-  LIGER_LOG_INFO(liger::LogChannel::kGameCore, "OnMouseScroll: delta = {0}", event.delta);
+bool OnMouseScroll(const MouseScrollEvent& event) {
+  LIGER_LOG_INFO(LogChannel::kGameCore, "OnMouseScroll: delta = {0}", event.delta);
   return false;
 }
 
-bool OnMouseMove(const liger::MouseMoveEvent& event) {
-  LIGER_LOG_INFO(liger::LogChannel::kGameCore, "OnMouseMove: pos = {0}, delta = {1}", event.new_position, event.delta);
+bool OnMouseMove(const MouseMoveEvent& event) {
+  LIGER_LOG_INFO(LogChannel::kGameCore, "OnMouseMove: pos = {0}, delta = {1}", event.new_position, event.delta);
   return false;
 }
 
-bool OnMouseButton(const liger::MouseButtonEvent& event) {
-  LIGER_LOG_INFO(liger::LogChannel::kGameCore, "OnMouseButton: button = {0}", event.custom_button_num);
+bool OnMouseButton(const MouseButtonEvent& event) {
+  LIGER_LOG_INFO(LogChannel::kGameCore, "OnMouseButton: button = {0}", event.custom_button_num);
   return false;
 }
 
-bool OnKeyEvent(const liger::KeyEvent& event) {
-  LIGER_LOG_INFO(liger::LogChannel::kGameCore, "OnKeyEvent: key = {0}", static_cast<int>(event.key));
+bool OnKeyEvent(const KeyEvent& event) {
+  LIGER_LOG_INFO(LogChannel::kGameCore, "OnKeyEvent: key = {0}", static_cast<int>(event.key));
   return false;
 }
 
 int main() {
-  liger::int32 i = 0;
-  LIGER_LOG_INFO  (liger::LogChannel::kNone,    "Liger Sandbox");
-  LIGER_LOG_INFO  (liger::LogChannel::kNone,    "Info none {0}", i++);
-  LIGER_LOG_TRACE (liger::LogChannel::kCore,    "Trace core {0}", i++);
-  LIGER_LOG_WARN  (liger::LogChannel::kRender,  "Warning render {0}", i++);
-  LIGER_LOG_ERROR (liger::LogChannel::kECS,     "Error ecs {0}", i++);
-  LIGER_LOG_FATAL (liger::LogChannel::kPhysics, "Fatal physics {0}", i++);
+  int32 i = 0;
+  LIGER_LOG_INFO  (LogChannel::kNone,    "Liger Sandbox");
+  LIGER_LOG_INFO  (LogChannel::kNone,    "Info none {0}", i++);
+  LIGER_LOG_TRACE (LogChannel::kCore,    "Trace core {0}", i++);
+  LIGER_LOG_WARN  (LogChannel::kRender,  "Warning render {0}", i++);
+  LIGER_LOG_ERROR (LogChannel::kECS,     "Error ecs {0}", i++);
+  LIGER_LOG_FATAL (LogChannel::kPhysics, "Fatal physics {0}", i++);
 
   {
-    liger::ScopedTimer timer{liger::LogChannel::kCore, "Sandbox loop"};
+    ScopedTimer timer{LogChannel::kCore, "Sandbox loop"};
 
     float total = 0.0f;
-    for (liger::uint32 i = 0; i < 4096; ++i) {
+    for (uint32 i = 0; i < 4096; ++i) {
       total += static_cast<float>(i) / 100.0f;
     }
 
     total /= 4096.0f;
 
-    LIGER_LOG_INFO(liger::LogChannel::kCore, "total = {0}", total);
+    LIGER_LOG_INFO(LogChannel::kCore, "total = {0}", total);
   }
 
-  liger::EventDispatcher event_dispatcher;
-  liger::PlatformLayer platform_layer{event_dispatcher};
+  EventDispatcher event_dispatcher;
+  PlatformLayer platform_layer{event_dispatcher};
 
-  auto window = std::unique_ptr<liger::Window>(platform_layer.CreateWindow(1280, 720, "Liger Sandbox"));
+  auto window = std::unique_ptr<Window>(platform_layer.CreateWindow(1280, 720, "Liger Sandbox"));
   window->SetOpacity(0.9f);
 
-  platform_layer.GetSink<liger::WindowCloseEvent>().Connect<&OnWindowClose>();
-  platform_layer.GetSink<liger::MouseScrollEvent>().Connect<&OnMouseScroll>();
-  platform_layer.GetSink<liger::MouseMoveEvent>().Connect<&OnMouseMove>();
-  platform_layer.GetSink<liger::MouseButtonEvent>().Connect<&OnMouseButton>();
-  platform_layer.GetSink<liger::KeyEvent>().Connect<&OnKeyEvent>();
+  platform_layer.GetSink<WindowCloseEvent>().Connect<&OnWindowClose>();
+  platform_layer.GetSink<MouseScrollEvent>().Connect<&OnMouseScroll>();
+  platform_layer.GetSink<MouseMoveEvent>().Connect<&OnMouseMove>();
+  platform_layer.GetSink<MouseButtonEvent>().Connect<&OnMouseButton>();
+  platform_layer.GetSink<KeyEvent>().Connect<&OnKeyEvent>();
 
   tf::Executor executor;
   tf::Taskflow taskflow;

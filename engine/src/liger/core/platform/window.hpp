@@ -27,7 +27,7 @@
 
 #pragma once
 
-#include "liger/core/types.hpp"
+#include <string_view>
 
 class GLFWwindow;
 
@@ -49,19 +49,19 @@ class Window {
 
   GLFWwindow* GetGLFWwindow();
 
-  void SetTitle(cstring title);
+  void SetTitle(const std::string_view title);
 
-  uint32 GetWidth() const;
-  uint32 GetHeight() const;
+  uint32_t GetWidth() const;
+  uint32_t GetHeight() const;
 
-  uint32 GetFramebufferWidth() const;
-  uint32 GetFramebufferHeight() const;
+  uint32_t GetFramebufferWidth() const;
+  uint32_t GetFramebufferHeight() const;
 
   void SetOpacity(float opacity);
   float GetOpacity() const;
 
  private:
-  Window(uint32 width, uint32 height, cstring title);
+  Window(uint32_t width, uint32_t height, const std::string_view title);
 
  private:
   GLFWwindow* window_{nullptr};

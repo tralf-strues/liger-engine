@@ -25,9 +25,10 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "liger/core/time.hpp"
+#include <liger/core/log/default_log.hpp>
+#include <liger/core/time.hpp>
 
-using namespace liger;
+namespace liger {
 
 Timer::Timer() { Reset(); }
 
@@ -40,8 +41,11 @@ float Timer::Elapsed() {
 
 float Timer::ElapsedMs() { return Elapsed() * 1e3f; }
 
-ScopedTimer::ScopedTimer(uint64 channel, const std::string& name) : channel_(channel), name_(name) {}
+ScopedTimer::ScopedTimer(const std::string_view channel, const std::string_view message)
+    : channel_(channel), message_(message) {}
 
 ScopedTimer::~ScopedTimer() {
-  LIGER_LOG_TRACE(channel_, "{} - {:.{}f}ms", name_, timer_.ElapsedMs(), 3);
+  LIGER_LOG_TRACE(channel_, "{} - {:.{}f}ms", message_, timer_.ElapsedMs(), 3);
 }
+
+}  // namespace liger

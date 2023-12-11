@@ -25,13 +25,13 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "liger/core/platform/platform_layer.hpp"
+#include <liger/core/platform/platform_layer.hpp>
 
-using namespace liger;
+namespace liger {
 
 PlatformLayer::PlatformLayer(EventDispatcher& dispatcher) : dispatcher_(dispatcher) {
-  int32 result = glfwInit();
-  LIGER_ASSERT(result == GLFW_TRUE, LogChannel::kCore, "Can't init glfw!");
+  int32_t result = glfwInit();
+  LIGER_ASSERT(result == GLFW_TRUE, "PlatformLayer", "Can't init glfw!");
 }
 
 PlatformLayer::~PlatformLayer() {
@@ -45,7 +45,7 @@ void PlatformLayer::PollEvents() {
 /************************************************************************************************
  * Window
  ************************************************************************************************/
-Window* PlatformLayer::CreateWindow(uint32 width, uint32 height, cstring title) {
+Window* PlatformLayer::CreateWindow(uint32_t width, uint32_t height, const std::string_view title) {
   auto window = new Window(width, height, title);
   glfwSetWindowUserPointer(window->GetGLFWwindow(), this);
 
@@ -61,7 +61,7 @@ Window* PlatformLayer::CreateWindow(uint32 width, uint32 height, cstring title) 
  * Callbacks
  ************************************************************************************************/
 void PlatformLayer::SetupCallbacks(Window* window) {
-  LIGER_ASSERT(window, LogChannel::kCore, "Invalid window!");
+  LIGER_ASSERT(window, "PlatformLayer", "Invalid window!");
 
   /* Window */
   glfwSetWindowCloseCallback(window->GetGLFWwindow(), WindowCloseCallback);
@@ -76,7 +76,7 @@ void PlatformLayer::SetupCallbacks(Window* window) {
 
 void PlatformLayer::WindowCloseCallback(GLFWwindow* glfw_window) {
   PlatformLayer* platform = static_cast<PlatformLayer*>(glfwGetWindowUserPointer(glfw_window));
-  LIGER_ASSERT(platform, LogChannel::kCore, "GLFW window is not associated with a PlatformLayer!");
+  LIGER_ASSERT(platform, "PlatformLayer", "GLFW window is not associated with a PlatformLayer!");
 
   WindowCloseEvent event{};
   event.window = platform->window_wrapper_[glfw_window];
@@ -84,9 +84,9 @@ void PlatformLayer::WindowCloseCallback(GLFWwindow* glfw_window) {
   platform->dispatcher_.Dispatch(event);
 }
 
-void PlatformLayer::KeyCallback(GLFWwindow* glfw_window, int32 key, int32 scancode, int32 action, int32 mods) {
+void PlatformLayer::KeyCallback(GLFWwindow* glfw_window, int32_t key, int32_t scancode, int32_t action, int32_t mods) {
   PlatformLayer* platform = static_cast<PlatformLayer*>(glfwGetWindowUserPointer(glfw_window));
-  LIGER_ASSERT(platform, LogChannel::kCore, "GLFW window is not associated with a PlatformLayer!");
+  LIGER_ASSERT(platform, "PlatformLayer", "GLFW window is not associated with a PlatformLayer!");
 
   KeyEvent event{};
   event.key    = static_cast<Key>(key);
@@ -98,7 +98,7 @@ void PlatformLayer::KeyCallback(GLFWwindow* glfw_window, int32 key, int32 scanco
 
 void PlatformLayer::ScrollCallback(GLFWwindow* glfw_window, double dx, double dy) {
   PlatformLayer* platform = static_cast<PlatformLayer*>(glfwGetWindowUserPointer(glfw_window));
-  LIGER_ASSERT(platform, LogChannel::kCore, "GLFW window is not associated with a PlatformLayer!");
+  LIGER_ASSERT(platform, "PlatformLayer", "GLFW window is not associated with a PlatformLayer!");
 
   MouseScrollEvent event{};
   event.delta = glm::vec2{dx, dy};
@@ -108,7 +108,7 @@ void PlatformLayer::ScrollCallback(GLFWwindow* glfw_window, double dx, double dy
 
 void PlatformLayer::MouseMoveCallback(GLFWwindow* glfw_window, double x, double y) {
   PlatformLayer* platform = static_cast<PlatformLayer*>(glfwGetWindowUserPointer(glfw_window));
-  LIGER_ASSERT(platform, LogChannel::kCore, "GLFW window is not associated with a PlatformLayer!");
+  LIGER_ASSERT(platform, "PlatformLayer", "GLFW window is not associated with a PlatformLayer!");
 
   MouseMoveEvent event{};
   event.new_position = glm::vec2{x, y};
@@ -119,9 +119,9 @@ void PlatformLayer::MouseMoveCallback(GLFWwindow* glfw_window, double x, double 
   platform->dispatcher_.Dispatch(event);
 }
 
-void PlatformLayer::MouseButtonCallback(GLFWwindow* glfw_window, int32 button, int32 action, int32 mods) {
+void PlatformLayer::MouseButtonCallback(GLFWwindow* glfw_window, int32_t button, int32_t action, int32_t mods) {
   PlatformLayer* platform = static_cast<PlatformLayer*>(glfwGetWindowUserPointer(glfw_window));
-  LIGER_ASSERT(platform, LogChannel::kCore, "GLFW window is not associated with a PlatformLayer!");
+  LIGER_ASSERT(platform, "PlatformLayer", "GLFW window is not associated with a PlatformLayer!");
 
   bool primary_button = button <= GLFW_MOUSE_BUTTON_MIDDLE;
 
@@ -138,14 +138,14 @@ void PlatformLayer::MouseButtonCallback(GLFWwindow* glfw_window, int32 button, i
  * Input
  ************************************************************************************************/
 bool PlatformLayer::KeyPressed(Window* window, Key key) const {
-  LIGER_ASSERT(window, LogChannel::kCore, "Invalid window!");
+  LIGER_ASSERT(window, "PlatformLayer", "Invalid window!");
 
-  auto action = glfwGetKey(window->GetGLFWwindow(), static_cast<int32>(key));
+  auto action = glfwGetKey(window->GetGLFWwindow(), static_cast<int32_t>(key));
   return action == GLFW_PRESS || action == GLFW_REPEAT;
 }
 
 glm::vec2 PlatformLayer::GetCursorPosition(Window* window) const {
-  LIGER_ASSERT(window, LogChannel::kCore, "Invalid window!");
+  LIGER_ASSERT(window, "PlatformLayer", "Invalid window!");
 
   double x{0.0f};
   double y{0.0f};
@@ -155,7 +155,8 @@ glm::vec2 PlatformLayer::GetCursorPosition(Window* window) const {
 }
 
 void PlatformLayer::SetCursorEnabled(Window* window, bool enabled) {
-  LIGER_ASSERT(window, LogChannel::kCore, "Invalid window!");
-
+  LIGER_ASSERT(window, "PlatformLayer", "Invalid window!");
   glfwSetInputMode(window->GetGLFWwindow(), GLFW_CURSOR, enabled ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 }
+
+}  // namespace liger

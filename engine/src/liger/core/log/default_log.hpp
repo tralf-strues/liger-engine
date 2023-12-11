@@ -27,13 +27,18 @@
 
 #pragma once
 
-#include "liger/core/log/log.hpp"
+#include <liger/core/log/log.hpp>
 
-#define LIGER_LOG_INFO(channel, ...)  liger::default_log::g_Log.Message(liger::LogLevel::kInfo,    channel, __VA_ARGS__);
-#define LIGER_LOG_TRACE(channel, ...) liger::default_log::g_Log.Message(liger::LogLevel::kTrace,   channel, __VA_ARGS__);
-#define LIGER_LOG_WARN(channel, ...)  liger::default_log::g_Log.Message(liger::LogLevel::kWarning, channel, __VA_ARGS__);
-#define LIGER_LOG_ERROR(channel, ...) liger::default_log::g_Log.Message(liger::LogLevel::kError,   channel, __VA_ARGS__);
-#define LIGER_LOG_FATAL(channel, ...) liger::default_log::g_Log.Message(liger::LogLevel::kFatal,   channel, __VA_ARGS__);
+#define LIGER_LOG_INFO(channel, ...) \
+  ::liger::default_log::g_Log.Message(::liger::LogLevel::kInfo, channel, __VA_ARGS__);
+#define LIGER_LOG_TRACE(channel, ...) \
+  ::liger::default_log::g_Log.Message(::liger::LogLevel::kTrace, channel, __VA_ARGS__);
+#define LIGER_LOG_WARN(channel, ...) \
+  ::liger::default_log::g_Log.Message(::liger::LogLevel::kWarning, channel, __VA_ARGS__);
+#define LIGER_LOG_ERROR(channel, ...) \
+  ::liger::default_log::g_Log.Message(::liger::LogLevel::kError, channel, __VA_ARGS__);
+#define LIGER_LOG_FATAL(channel, ...) \
+  ::liger::default_log::g_Log.Message(::liger::LogLevel::kFatal, channel, __VA_ARGS__);
 
 #define LIGER_ASSERT(condition, channel, ...) \
   if (!(condition)) {                         \

@@ -1,5 +1,5 @@
 var classliger_1_1_scoped_timer =
 [
-    [ "ScopedTimer", "classliger_1_1_scoped_timer.html#a8ba122b435db9bf24ea0bb7dae699ff9", null ],
-    [ "~ScopedTimer", "classliger_1_1_scoped_timer.html#a338ced0c8c39fe3d3e89e1b09d29f589", null ]
+    [ "ScopedTimer", "classliger_1_1_scoped_timer.html#a67b8a19512bbb00ddd85214bf54fa3bc", null ],
+    [ "~ScopedTimer", "classliger_1_1_scoped_timer.html#a82ff9d0efc13594984e97bd39a343ea1", null ]
 ];

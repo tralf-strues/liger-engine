@@ -1,2 +1,5 @@
 BasedOnStyle: Google
 ColumnLimit: 120
+AlignConsecutiveDeclarations: true
+AlignConsecutiveAssignments: true
+AllowShortEnumsOnASingleLine: false

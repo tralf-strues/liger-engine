@@ -25,13 +25,18 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "liger/core/log/default_log.hpp"
+#include <liger/core/log/console_log_writer.hpp>
+#include <liger/core/log/default_log.hpp>
 
-liger::Log liger::default_log::g_Log = CreateDefaultLog();
+namespace liger {
 
-liger::Log liger::default_log::CreateDefaultLog() {
+Log default_log::g_Log = CreateDefaultLog();
+
+Log default_log::CreateDefaultLog() {
   Log log;
   log.AddWriter(std::make_unique<ConsoleLogWriter>(kDefaultConsoleLogStyle));
 
   return log;
 }
+
+}  // namespace liger

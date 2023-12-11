@@ -1,0 +1,8 @@
+<map id="buffer.hpp" name="buffer.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="30,5,109,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,153,134,178"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="57,33,38,54,23,80,21,96,25,112,46,140,42,143,21,114,16,96,18,78,34,51,53,30"/>
+<area shape="rect" id="Node000003" href="$device__resource_8hpp.html" title=" " alt="" coords="32,79,259,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="84,30,124,66,120,70,81,33"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="134,107,95,144,91,140,131,103"/>
+</map>

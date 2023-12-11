@@ -25,11 +25,9 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "liger/core/log/console_log_writer.hpp"
-#include "liger/core/log/log_channels.hpp"
-#include "liger/core/log/log_level.hpp"
+#include <liger/core/log/console_log_writer.hpp>
 
-using namespace liger;
+namespace liger {
 
 ConsoleLogWriter::ConsoleLogWriter(const ConsoleLogWriter::Style& style) : style_(style) {}
 
@@ -42,7 +40,7 @@ void ConsoleLogWriter::OnMessageAdded(const LogMessage& message) {
   }
 
   if (style_.write_channel) {
-    fmt::print(GetTextStyle(message.level), "{0} ", GetChannelName(message.channel));
+    fmt::print(GetTextStyle(message.level), "{0} ", message.channel);
   }
 
   fmt::print(GetTextStyle(message.level), "{0}\n", message.message);
@@ -57,40 +55,9 @@ const fmt::text_style& ConsoleLogWriter::GetLevelStyle(LogLevel level) const {
   return (it != style_.level_styles.end()) ? it->second : style_.default_style;
 }
 
-cstring ConsoleLogWriter::GetLevelName(LogLevel level) const {
+const char* ConsoleLogWriter::GetLevelName(LogLevel level) const {
   auto it = style_.level_names.find(level);
   return (it != style_.level_names.end()) ? it->second.c_str() : "";
 }
 
-cstring ConsoleLogWriter::GetChannelName(uint64 channel) const {
-  auto it = style_.channel_names.find(channel);
-  return (it != style_.channel_names.end()) ? it->second.c_str() : "";
-}
-
-const liger::ConsoleLogWriter::Style liger::kDefaultConsoleLogStyle = {
-  /*default_style=*/{},
-
-  /*write_level=*/true,
-  /*use_level_style_for_entire_message=*/true,
-  /*level_styles=*/
-  {{LogLevel::kInfo,    {}},
-   {LogLevel::kTrace,   fg(fmt::color::olive_drab)},
-   {LogLevel::kWarning, fg(fmt::color::purple)},
-   {LogLevel::kError,   fg(fmt::color::red)},
-   {LogLevel::kFatal,   fmt::emphasis::bold | fg(fmt::color::red)}},
-  /*level_names=*/
-  {{LogLevel::kInfo,    "[INFO] "},
-   {LogLevel::kTrace,   "[TRACE]"},
-   {LogLevel::kWarning, "[WARN] "},
-   {LogLevel::kError,   "[ERROR]"},
-   {LogLevel::kFatal,   "[FATAL]"}},
-  
-  /*write_channel=*/true,
-  /*channel_names=*/
-  {{(uint64_t)LogChannel::kNone,     "          "},
-   {(uint64_t)LogChannel::kCore,     "[Core]    "},
-   {(uint64_t)LogChannel::kRender,   "[Render]  "},
-   {(uint64_t)LogChannel::kECS,      "[ECS]     "},
-   {(uint64_t)LogChannel::kPhysics,  "[Physics] "},
-   {(uint64_t)LogChannel::kGameCore, "[GameCore]"},}
-};
+}  // namespace liger

@@ -1,4 +1,4 @@
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 # Debug/Release
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")

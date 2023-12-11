@@ -1,8 +1,28 @@
 var searchData=
 [
-  ['declare_5fenum_5fclass_0',['DECLARE_ENUM_CLASS',['../enum__class_8hpp.html#a4d2184af770c0de875a18828ceafdd63',1,'enum_class.hpp']]],
+  ['declare_5fenum_5fclass_0',['declare_enum_class',['../deprecated_2graphics__pipeline_8hpp.html#a1047cb1ecdf0e3952abda394df149277',1,'liger::rhi::DECLARE_ENUM_CLASS(ColorBlendOperation, uint32, kAdd, kSubtract, kReverseSubtract, kMin, kMax)'],['../deprecated_2graphics__pipeline_8hpp.html#a8220aa2d60df3044d1ee3a38040c1c6a',1,'liger::rhi::DECLARE_ENUM_CLASS(ColorBlendFactor, uint32, kZero, kOne, kSrcColor, kOneMinusSrcColor, kDstColor, kOneMinusDstColor, kSrcAlpha, kOneMinusSrcAlpha, kDstAlpha, kOneMinusDstAlpha)'],['../deprecated_2graphics__pipeline_8hpp.html#a492349c9b99cd2685f35de1692aa7ef2',1,'liger::rhi::DECLARE_ENUM_CLASS(PolygonMode, uint32, kFill, kLine)'],['../deprecated_2graphics__pipeline_8hpp.html#a51a8ae99efaf0710a563a1187b479ab7',1,'liger::rhi::DECLARE_ENUM_CLASS(Topology, uint32, kPointList, kLineList, kLineStrip, kTriangleList, kTriangleStrip, kTriangleFan)'],['../deprecated_2format_8hpp.html#af7413f1a8d1ac78828a52b356cb16592',1,'liger::rhi::DECLARE_ENUM_CLASS(Format, uint32, kInvalid, kR32_UINT, kR32_SINT, kR32_SFLOAT, kD16_UNORM, kD32_SFLOAT, kR32G32_UINT, kR32G32_SINT, kR32G32_SFLOAT, kD24_UNORM_S8_UINT, kR8G8B8_UNORM, kR8G8B8_SRGB, kR16G16B16_SFLOAT, kR32G32B32_SFLOAT, kR8G8B8A8_UNORM, kR8G8B8A8_SRGB, kB8G8R8A8_SRGB, kR32G32B32A32_SFLOAT)']]],
   ['default_5flog_2ecpp_1',['default_log.cpp',['../default__log_8cpp.html',1,'']]],
   ['default_5flog_2ehpp_2',['default_log.hpp',['../default__log_8hpp.html',1,'']]],
   ['delta_3',['delta',['../structliger_1_1_mouse_move_event.html#a4c05968037b5ed2c61fccbfe2f4614ce',1,'liger::MouseMoveEvent']]],
-  ['dispatch_4',['dispatch',['../classliger_1_1_event_dispatcher.html#a9b1925719669de0708433b6e14d1693b',1,'liger::EventDispatcher::Dispatch()'],['../classliger_1_1_event_sink.html#a6f906d2cf0219b66fc1612d234809502',1,'liger::EventSink::Dispatch()']]]
+  ['deprecated_2fbuffer_2ehpp_4',['buffer.hpp',['../deprecated_2buffer_8hpp.html',1,'']]],
+  ['deprecated_2fcommand_5fqueue_2ehpp_5',['command_queue.hpp',['../deprecated_2command__queue_8hpp.html',1,'']]],
+  ['deprecated_2fcompute_5fpipeline_2ehpp_6',['compute_pipeline.hpp',['../deprecated_2compute__pipeline_8hpp.html',1,'']]],
+  ['deprecated_2fdevice_5finfo_2ehpp_7',['device_info.hpp',['../deprecated_2device__info_8hpp.html',1,'']]],
+  ['deprecated_2fformat_2ehpp_8',['format.hpp',['../deprecated_2format_8hpp.html',1,'']]],
+  ['deprecated_2fframebuffer_2ehpp_9',['framebuffer.hpp',['../deprecated_2framebuffer_8hpp.html',1,'']]],
+  ['deprecated_2fgraphics_5fpipeline_2ehpp_10',['graphics_pipeline.hpp',['../deprecated_2graphics__pipeline_8hpp.html',1,'']]],
+  ['deprecated_2fper_5fframe_5fdata_2ehpp_11',['per_frame_data.hpp',['../deprecated_2per__frame__data_8hpp.html',1,'']]],
+  ['deprecated_2frender_5fpass_2ehpp_12',['render_pass.hpp',['../deprecated_2render__pass_8hpp.html',1,'']]],
+  ['deprecated_2frhi_2ehpp_13',['rhi.hpp',['../deprecated_2rhi_8hpp.html',1,'']]],
+  ['deprecated_2fshader_5fmodule_2ehpp_14',['shader_module.hpp',['../deprecated_2shader__module_8hpp.html',1,'']]],
+  ['deprecated_2ftexture_2ehpp_15',['texture.hpp',['../deprecated_2texture_8hpp.html',1,'']]],
+  ['depthtestdescription_16',['DepthTestDescription',['../structliger_1_1rhi_1_1_depth_test_description.html',1,'liger::rhi']]],
+  ['depthtestinfo_17',['DepthTestInfo',['../structliger_1_1rhi_1_1_depth_test_info.html',1,'liger::rhi']]],
+  ['descriptor_2ehpp_18',['descriptor.hpp',['../descriptor_8hpp.html',1,'']]],
+  ['descriptorsetlayoutdescription_19',['DescriptorSetLayoutDescription',['../structliger_1_1rhi_1_1_descriptor_set_layout_description.html',1,'liger::rhi']]],
+  ['device_5finfo_2ehpp_20',['device_info.hpp',['../device__info_8hpp.html',1,'']]],
+  ['device_5fresource_2ehpp_21',['device_resource.hpp',['../device__resource_8hpp.html',1,'']]],
+  ['deviceinfo_22',['DeviceInfo',['../structliger_1_1rhi_1_1_device_info.html',1,'liger::rhi']]],
+  ['deviceresource_23',['DeviceResource',['../classliger_1_1rhi_1_1_device_resource.html',1,'liger::rhi']]],
+  ['dispatch_24',['dispatch',['../classliger_1_1_event_sink.html#a6f906d2cf0219b66fc1612d234809502',1,'liger::EventSink::Dispatch()'],['../classliger_1_1_event_dispatcher.html#a9b1925719669de0708433b6e14d1693b',1,'liger::EventDispatcher::Dispatch()']]]
 ];

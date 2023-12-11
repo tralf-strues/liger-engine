@@ -27,7 +27,7 @@
 
 #pragma once
 
-#include "liger/core/event/detail/callback.hpp"
+#include <liger/core/event/detail/callback.hpp>
 
 namespace liger {
 

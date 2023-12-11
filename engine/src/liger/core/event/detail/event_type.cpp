@@ -25,11 +25,15 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "liger/core/event/detail/event_type.hpp"
+#include <liger/core/event/detail/event_type.hpp>
 
-using namespace liger::detail;
+namespace liger {
+namespace detail {
 
 EventTypeId EventTypeIdGenerator::NextId() {
   static EventTypeId id{0};
   return ++id;
 }
+
+}  // namespace detail
+}  // namespace liger

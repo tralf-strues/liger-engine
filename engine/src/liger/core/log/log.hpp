@@ -29,8 +29,8 @@
 
 #include <fmt/core.h>
 
-#include "liger/core/log/log_message.hpp"
-#include "liger/core/log/log_writer.hpp"
+#include <liger/core/log/log_message.hpp>
+#include <liger/core/log/log_writer.hpp>
 
 namespace liger {
 
@@ -45,7 +45,7 @@ class Log {
   void AddWriter(std::unique_ptr<ILogWriter> writer);
 
   template <typename... Args>
-  void Message(LogLevel level, uint64 channel, Args&&... args);
+  void Message(LogLevel level, const std::string_view channel, const std::string_view format, Args&&... args);
 
   MessageIterator begin() const;
   MessageIterator end() const;
@@ -59,8 +59,9 @@ class Log {
 };
 
 template <typename... Args>
-void Log::Message(LogLevel level, uint64 channel, Args&&... args) {
-  messages_.emplace_back(level, channel, std::move(fmt::format(args...)));
+void Log::Message(LogLevel level, const std::string_view channel, const std::string_view format, Args&&... args) {
+  // FIXME (tralf-strues): Get rid of fmt::runtime
+  messages_.emplace_back(level, channel, std::move(fmt::format(fmt::runtime(format), args...)));
   OnMessageAdded();
 }
 

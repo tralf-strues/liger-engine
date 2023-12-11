@@ -126,16 +126,19 @@ $(document).ready(function(){initNavTree('event__type_8cpp_source.html',''); ini
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment"> * DEALINGS IN THE SOFTWARE.</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;<a class="code" href="event__type_8hpp.html">liger/core/event/detail/event_type.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &lt;<a class="code" href="event__type_8hpp.html">liger/core/event/detail/event_type.hpp</a>&gt;</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">using namespace </span>liger::detail;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>EventTypeId EventTypeIdGenerator::NextId() {</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keyword">static</span> EventTypeId <span class="keywordtype">id</span>{0};</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keywordflow">return</span> ++<a class="code hl_struct" href="structliger_1_1_enum_bit_mask.html">id</a>;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>}</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">namespace </span>liger {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">namespace </span>detail {</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>EventTypeId EventTypeIdGenerator::NextId() {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keyword">static</span> EventTypeId <span class="keywordtype">id</span>{0};</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keywordflow">return</span> ++id;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>}</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>}  <span class="comment">// namespace detail</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>}  <span class="comment">// namespace liger</span></div>
 <div class="ttc" id="aevent__type_8hpp_html"><div class="ttname"><a href="event__type_8hpp.html">event_type.hpp</a></div></div>
-<div class="ttc" id="astructliger_1_1_enum_bit_mask_html"><div class="ttname"><a href="structliger_1_1_enum_bit_mask.html">liger::EnumBitMask</a></div><div class="ttdoc">Convenience struct for storing a bit mask of the specified enum class values.</div><div class="ttdef"><b>Definition</b> <a href="enum__bitmask_8hpp_source.html#l00068">enum_bitmask.hpp:68</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

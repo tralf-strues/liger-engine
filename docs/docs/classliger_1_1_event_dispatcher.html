@@ -105,12 +105,12 @@ $(document).ready(function(){initNavTree('classliger_1_1_event_dispatcher.html',
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a8ac7b11eeafffdaa7199f120877c4ee1" id="r_a8ac7b11eeafffdaa7199f120877c4ee1"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structliger_1_1_enum_bit_mask.html">typename</a> <a class="el" href="structliger_1_1_enum_bit_mask.html">EventT</a> &gt; </td></tr>
-<tr class="memitem:a8ac7b11eeafffdaa7199f120877c4ee1"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classliger_1_1_event_sink.html">EventSink</a>&lt; <a class="el" href="structliger_1_1_enum_bit_mask.html">EventT</a> &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classliger_1_1_event_dispatcher.html#a8ac7b11eeafffdaa7199f120877c4ee1">GetSink</a> ()</td></tr>
-<tr class="memdesc:a8ac7b11eeafffdaa7199f120877c4ee1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the sink for the particular EventT.  <br /></td></tr>
+<tr class="memitem:a8ac7b11eeafffdaa7199f120877c4ee1" id="r_a8ac7b11eeafffdaa7199f120877c4ee1"><td class="memTemplParams" colspan="2">template&lt;typename EventT &gt; </td></tr>
+<tr class="memitem:a8ac7b11eeafffdaa7199f120877c4ee1"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classliger_1_1_event_sink.html">EventSink</a>&lt; EventT &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classliger_1_1_event_dispatcher.html#a8ac7b11eeafffdaa7199f120877c4ee1">GetSink</a> ()</td></tr>
+<tr class="memdesc:a8ac7b11eeafffdaa7199f120877c4ee1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the sink for the particular <a class="el" href="classliger_1_1_event_dispatcher.html#a8ac7b11eeafffdaa7199f120877c4ee1">EventT</a>.  <br /></td></tr>
 <tr class="separator:a8ac7b11eeafffdaa7199f120877c4ee1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b1925719669de0708433b6e14d1693b" id="r_a9b1925719669de0708433b6e14d1693b"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structliger_1_1_enum_bit_mask.html">typename</a> <a class="el" href="structliger_1_1_enum_bit_mask.html">EventT</a> &gt; </td></tr>
-<tr class="memitem:a9b1925719669de0708433b6e14d1693b"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classliger_1_1_event_dispatcher.html#a9b1925719669de0708433b6e14d1693b">Dispatch</a> (<a class="el" href="structliger_1_1_enum_bit_mask.html">const</a> <a class="el" href="structliger_1_1_enum_bit_mask.html">EventT</a> &amp;<a class="el" href="structliger_1_1_enum_bit_mask.html">event</a>, bool <a class="el" href="structliger_1_1_enum_bit_mask.html">dispatch_to_all</a>=<a class="el" href="structliger_1_1_enum_bit_mask.html">false</a>)</td></tr>
+<tr class="memitem:a9b1925719669de0708433b6e14d1693b" id="r_a9b1925719669de0708433b6e14d1693b"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="classliger_1_1_event_dispatcher.html#a8ac7b11eeafffdaa7199f120877c4ee1">typename</a> <a class="el" href="classliger_1_1_event_dispatcher.html#a8ac7b11eeafffdaa7199f120877c4ee1">EventT</a> &gt; </td></tr>
+<tr class="memitem:a9b1925719669de0708433b6e14d1693b"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classliger_1_1_event_dispatcher.html#a9b1925719669de0708433b6e14d1693b">Dispatch</a> (<a class="el" href="classliger_1_1_event_dispatcher.html#a8ac7b11eeafffdaa7199f120877c4ee1">const</a> <a class="el" href="classliger_1_1_event_dispatcher.html#a8ac7b11eeafffdaa7199f120877c4ee1">EventT</a> &amp;<a class="el" href="classliger_1_1_event_dispatcher.html#a8ac7b11eeafffdaa7199f120877c4ee1">event</a>, bool <a class="el" href="classliger_1_1_event_dispatcher.html#a8ac7b11eeafffdaa7199f120877c4ee1">dispatch_to_all</a>=<a class="el" href="classliger_1_1_event_dispatcher.html#a8ac7b11eeafffdaa7199f120877c4ee1">false</a>)</td></tr>
 <tr class="memdesc:a9b1925719669de0708433b6e14d1693b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dispatch the event to its corresponding <a class="el" href="classliger_1_1_event_sink.html">EventSink</a>.  <br /></td></tr>
 <tr class="separator:a9b1925719669de0708433b6e14d1693b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -125,19 +125,19 @@ Public Member Functions</h2></td></tr>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="structliger_1_1_enum_bit_mask.html">typename</a> <a class="el" href="structliger_1_1_enum_bit_mask.html">EventT</a> &gt; </div>
+template&lt;<a class="el" href="classliger_1_1_event_dispatcher.html#a8ac7b11eeafffdaa7199f120877c4ee1">typename</a> <a class="el" href="classliger_1_1_event_dispatcher.html#a8ac7b11eeafffdaa7199f120877c4ee1">EventT</a> &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">bool liger::EventDispatcher::Dispatch </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structliger_1_1_enum_bit_mask.html">const</a> <a class="el" href="structliger_1_1_enum_bit_mask.html">EventT</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classliger_1_1_event_dispatcher.html#a8ac7b11eeafffdaa7199f120877c4ee1">const</a> <a class="el" href="classliger_1_1_event_dispatcher.html#a8ac7b11eeafffdaa7199f120877c4ee1">EventT</a> &amp;&#160;</td>
           <td class="paramname"><em>event</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>dispatch_to_all</em> = <code><a class="el" href="structliger_1_1_enum_bit_mask.html">false</a></code>&#160;</td>
+          <td class="paramname"><em>dispatch_to_all</em> = <code><a class="el" href="classliger_1_1_event_dispatcher.html#a8ac7b11eeafffdaa7199f120877c4ee1">false</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -173,10 +173,10 @@ template&lt;<a class="el" href="structliger_1_1_enum_bit_mask.html">typename</a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="structliger_1_1_enum_bit_mask.html">typename</a> <a class="el" href="structliger_1_1_enum_bit_mask.html">EventT</a> &gt; </div>
+template&lt;typename EventT &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classliger_1_1_event_sink.html">EventSink</a>&lt; <a class="el" href="structliger_1_1_enum_bit_mask.html">EventT</a> &gt; &amp; liger::EventDispatcher::GetSink </td>
+          <td class="memname"><a class="el" href="classliger_1_1_event_sink.html">EventSink</a>&lt; EventT &gt; &amp; liger::EventDispatcher::GetSink </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -184,7 +184,7 @@ template&lt;<a class="el" href="structliger_1_1_enum_bit_mask.html">typename</a>
       </table>
 </div><div class="memdoc">
 
-<p>Get the sink for the particular EventT. </p>
+<p>Get the sink for the particular <a class="el" href="classliger_1_1_event_dispatcher.html#a8ac7b11eeafffdaa7199f120877c4ee1">EventT</a>. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">EventT</td><td></td></tr>

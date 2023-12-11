@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['new_5fposition_0',['new_position',['../structliger_1_1_mouse_move_event.html#a0e36b5e02cc5b2b4284c3288fec58f25',1,'liger::MouseMoveEvent']]]
+  ['layers_0',['layers',['../structliger_1_1rhi_1_1_texture_1_1_info.html#a486cbeb9330ec36a6b127005a775c0ff',1,'liger::rhi::Texture::Info']]],
+  ['level_1',['level',['../structliger_1_1_log_message.html#aa1c4ad507a7af0b9ed0614db727005d7',1,'liger::LogMessage']]]
 ];

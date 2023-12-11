@@ -93,43 +93,61 @@ $(document).ready(function(){initNavTree('enum__bitmask_8hpp.html',''); initResi
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">enum_bitmask.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;initializer_list&gt;</code><br />
-<code>#include &quot;<a class="el" href="types_8hpp_source.html">liger/core/types.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;type_traits&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for enum_bitmask.hpp:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="enum__bitmask_8hpp__incl.svg" width="100%" height="437"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="enum__bitmask_8hpp__incl.svg" width="143" height="111"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="enum__bitmask_8hpp__dep__incl.svg" width="143" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="enum__bitmask_8hpp__dep__incl.svg" width="308" height="331"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="enum__bitmask_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1_enum_bit_mask.html">liger::EnumBitMask&lt; EnumT, UnderlyingT &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience struct for storing a bit mask of the specified enum class values.  <a href="structliger_1_1_enum_bit_mask.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1_enum_enable_bitmask.html">liger::EnumEnableBitmask&lt; Enum &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a1d7566beadde4e281e34ee6d04117c36" id="r_a1d7566beadde4e281e34ee6d04117c36"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enum__bitmask_8hpp.html#a1d7566beadde4e281e34ee6d04117c36">ENABLE_ENUM_BITMASK</a>(Enum)</td></tr>
+<tr class="separator:a1d7566beadde4e281e34ee6d04117c36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a3cd031e2867650cfe969757dcd39eca9" id="r_a3cd031e2867650cfe969757dcd39eca9"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structliger_1_1_enum_bit_mask.html">typename</a> <a class="el" href="structliger_1_1_enum_bit_mask.html">T</a> &gt; </td></tr>
-<tr class="memitem:a3cd031e2867650cfe969757dcd39eca9"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structliger_1_1_enum_bit_mask.html">constexpr</a> <a class="el" href="structliger_1_1_enum_bit_mask.html">T</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="enum__bitmask_8hpp.html#a3cd031e2867650cfe969757dcd39eca9">liger::Bit</a> (uint32 <a class="el" href="structliger_1_1_enum_bit_mask.html">bit</a>)</td></tr>
-<tr class="memdesc:a3cd031e2867650cfe969757dcd39eca9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the specified bit.  <br /></td></tr>
-<tr class="separator:a3cd031e2867650cfe969757dcd39eca9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b5fdea68f10a8e38c7e4253ac52b381" id="r_a0b5fdea68f10a8e38c7e4253ac52b381"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structliger_1_1_enum_bit_mask.html">typename</a> <a class="el" href="structliger_1_1_enum_bit_mask.html">EnumT</a> , <a class="el" href="structliger_1_1_enum_bit_mask.html">typename</a> <a class="el" href="structliger_1_1_enum_bit_mask.html">UnderlyingT</a> &gt; </td></tr>
-<tr class="memitem:a0b5fdea68f10a8e38c7e4253ac52b381"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structliger_1_1_enum_bit_mask.html">EnumBitMask</a>&lt; <a class="el" href="structliger_1_1_enum_bit_mask.html">EnumT</a>, <a class="el" href="structliger_1_1_enum_bit_mask.html">UnderlyingT</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="enum__bitmask_8hpp.html#a0b5fdea68f10a8e38c7e4253ac52b381">liger::operator|</a> (<a class="el" href="structliger_1_1_enum_bit_mask.html">EnumBitMask</a>&lt; <a class="el" href="structliger_1_1_enum_bit_mask.html">EnumT</a>, <a class="el" href="structliger_1_1_enum_bit_mask.html">UnderlyingT</a> &gt; <a class="el" href="structliger_1_1_enum_bit_mask.html">lhs</a>, <a class="el" href="structliger_1_1_enum_bit_mask.html">EnumBitMask</a>&lt; <a class="el" href="structliger_1_1_enum_bit_mask.html">EnumT</a>, <a class="el" href="structliger_1_1_enum_bit_mask.html">UnderlyingT</a> &gt; <a class="el" href="structliger_1_1_enum_bit_mask.html">rhs</a>)</td></tr>
-<tr class="separator:a0b5fdea68f10a8e38c7e4253ac52b381"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0da168c8b243c9cb141578a0e8899747" id="r_a0da168c8b243c9cb141578a0e8899747"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structliger_1_1_enum_bit_mask.html">typename</a> <a class="el" href="structliger_1_1_enum_bit_mask.html">EnumT</a> , <a class="el" href="structliger_1_1_enum_bit_mask.html">typename</a> <a class="el" href="structliger_1_1_enum_bit_mask.html">UnderlyingT</a> &gt; </td></tr>
-<tr class="memitem:a0da168c8b243c9cb141578a0e8899747"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structliger_1_1_enum_bit_mask.html">EnumBitMask</a>&lt; <a class="el" href="structliger_1_1_enum_bit_mask.html">EnumT</a>, <a class="el" href="structliger_1_1_enum_bit_mask.html">UnderlyingT</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="enum__bitmask_8hpp.html#a0da168c8b243c9cb141578a0e8899747">liger::operator&amp;</a> (<a class="el" href="structliger_1_1_enum_bit_mask.html">EnumBitMask</a>&lt; <a class="el" href="structliger_1_1_enum_bit_mask.html">EnumT</a>, <a class="el" href="structliger_1_1_enum_bit_mask.html">UnderlyingT</a> &gt; <a class="el" href="structliger_1_1_enum_bit_mask.html">lhs</a>, <a class="el" href="structliger_1_1_enum_bit_mask.html">EnumBitMask</a>&lt; <a class="el" href="structliger_1_1_enum_bit_mask.html">EnumT</a>, <a class="el" href="structliger_1_1_enum_bit_mask.html">UnderlyingT</a> &gt; <a class="el" href="structliger_1_1_enum_bit_mask.html">rhs</a>)</td></tr>
-<tr class="separator:a0da168c8b243c9cb141578a0e8899747"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee2094d5199b530e09feb4e6a0aaacfa" id="r_aee2094d5199b530e09feb4e6a0aaacfa"><td class="memTemplParams" colspan="2">template&lt;typename T  = std::uint32_t&gt; </td></tr>
+<tr class="memitem:aee2094d5199b530e09feb4e6a0aaacfa"><td class="memTemplItemLeft" align="right" valign="top">constexpr T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="enum__bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">liger::Bit</a> (std::uint32_t bit)</td></tr>
+<tr class="memdesc:aee2094d5199b530e09feb4e6a0aaacfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the specified bit.  <br /></td></tr>
+<tr class="separator:aee2094d5199b530e09feb4e6a0aaacfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f962cde3766ac1e8cdb83501f41eace" id="r_a1f962cde3766ac1e8cdb83501f41eace"><td class="memTemplParams" colspan="2">template&lt;typename Enum &gt; <br />
+requires <a class="el" href="structliger_1_1_enum_enable_bitmask.html">EnumEnableBitmask</a>&lt;Enum&gt;</td></tr>
+<tr class="memitem:a1f962cde3766ac1e8cdb83501f41eace"><td class="memTemplItemLeft" align="right" valign="top">::enabled constexpr Enum&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="enum__bitmask_8hpp.html#a1f962cde3766ac1e8cdb83501f41eace">liger::operator|</a> (Enum lhs, Enum rhs)</td></tr>
+<tr class="separator:a1f962cde3766ac1e8cdb83501f41eace"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92ad9c3ac68db3bd80567661ef4fe2b6" id="r_a92ad9c3ac68db3bd80567661ef4fe2b6"><td class="memTemplParams" colspan="2">template&lt;typename Enum &gt; <br />
+requires <a class="el" href="structliger_1_1_enum_enable_bitmask.html">EnumEnableBitmask</a>&lt;Enum&gt;</td></tr>
+<tr class="memitem:a92ad9c3ac68db3bd80567661ef4fe2b6"><td class="memTemplItemLeft" align="right" valign="top">::enabled constexpr Enum&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="enum__bitmask_8hpp.html#a92ad9c3ac68db3bd80567661ef4fe2b6">liger::operator&amp;</a> (Enum lhs, Enum rhs)</td></tr>
+<tr class="separator:a92ad9c3ac68db3bd80567661ef4fe2b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51d9bac2e39adc2dc09536e02015de62" id="r_a51d9bac2e39adc2dc09536e02015de62"><td class="memTemplParams" colspan="2">template&lt;typename Enum &gt; <br />
+requires <a class="el" href="structliger_1_1_enum_enable_bitmask.html">EnumEnableBitmask</a>&lt;Enum&gt;</td></tr>
+<tr class="memitem:a51d9bac2e39adc2dc09536e02015de62"><td class="memTemplItemLeft" align="right" valign="top">::enabled constexpr Enum&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="enum__bitmask_8hpp.html#a51d9bac2e39adc2dc09536e02015de62">liger::operator^</a> (Enum lhs, Enum rhs)</td></tr>
+<tr class="separator:a51d9bac2e39adc2dc09536e02015de62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdcd18c83fed83a4e90340628fe75a27" id="r_acdcd18c83fed83a4e90340628fe75a27"><td class="memTemplParams" colspan="2">template&lt;typename Enum &gt; <br />
+requires <a class="el" href="structliger_1_1_enum_enable_bitmask.html">EnumEnableBitmask</a>&lt;Enum&gt;</td></tr>
+<tr class="memitem:acdcd18c83fed83a4e90340628fe75a27"><td class="memTemplItemLeft" align="right" valign="top">::enabled constexpr Enum&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="enum__bitmask_8hpp.html#acdcd18c83fed83a4e90340628fe75a27">liger::operator~</a> (Enum lhs)</td></tr>
+<tr class="separator:acdcd18c83fed83a4e90340628fe75a27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35e2e7252aa9183b2ced69ae6ef5cf0a" id="r_a35e2e7252aa9183b2ced69ae6ef5cf0a"><td class="memTemplParams" colspan="2">template&lt;typename Enum &gt; <br />
+requires <a class="el" href="structliger_1_1_enum_enable_bitmask.html">EnumEnableBitmask</a>&lt;Enum&gt;</td></tr>
+<tr class="memitem:a35e2e7252aa9183b2ced69ae6ef5cf0a"><td class="memTemplItemLeft" align="right" valign="top">::enabled constexpr Enum&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="enum__bitmask_8hpp.html#a35e2e7252aa9183b2ced69ae6ef5cf0a">liger::operator|=</a> (Enum &amp;lhs, Enum rhs)</td></tr>
+<tr class="separator:a35e2e7252aa9183b2ced69ae6ef5cf0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Nikita Mochalov (github.com/tralf-strues)</dd></dl>
@@ -140,14 +158,40 @@ Functions</h2></td></tr>
 <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </p>
 
 <p class="definition">Definition in file <a class="el" href="enum__bitmask_8hpp_source.html">enum_bitmask.hpp</a>.</p>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a3cd031e2867650cfe969757dcd39eca9" name="a3cd031e2867650cfe969757dcd39eca9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3cd031e2867650cfe969757dcd39eca9">&#9670;&#160;</a></span>Bit()</h2>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a1d7566beadde4e281e34ee6d04117c36" name="a1d7566beadde4e281e34ee6d04117c36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d7566beadde4e281e34ee6d04117c36">&#9670;&#160;</a></span>ENABLE_ENUM_BITMASK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ENABLE_ENUM_BITMASK</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Enum</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">  <span class="keyword">template</span> &lt;&gt;                             \</div>
+<div class="line">  <span class="keyword">struct </span><a class="code hl_struct" href="structliger_1_1_enum_enable_bitmask.html">liger::EnumEnableBitmask</a>&lt;Enum&gt; { \</div>
+<div class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> enabled = <span class="keyword">true</span>; \</div>
+<div class="line">  };</div>
+<div class="ttc" id="astructliger_1_1_enum_enable_bitmask_html"><div class="ttname"><a href="structliger_1_1_enum_enable_bitmask.html">liger::EnumEnableBitmask</a></div><div class="ttdef"><b>Definition</b> <a href="enum__bitmask_8hpp_source.html#l00051">enum_bitmask.hpp:51</a></div></div>
+</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="enum__bitmask_8hpp_source.html#l00032">32</a> of file <a class="el" href="enum__bitmask_8hpp_source.html">enum_bitmask.hpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="aee2094d5199b530e09feb4e6a0aaacfa" name="aee2094d5199b530e09feb4e6a0aaacfa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee2094d5199b530e09feb4e6a0aaacfa">&#9670;&#160;</a></span>Bit()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T &gt; </div>
+template&lt;typename T  = std::uint32_t&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -155,14 +199,14 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">constexpr T liger::Bit </td>
           <td>(</td>
-          <td class="paramtype">uint32&#160;</td>
+          <td class="paramtype">std::uint32_t&#160;</td>
           <td class="paramname"><em>bit</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -182,26 +226,32 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>1 &lt;&lt; bit </dd></dl>
 
+<p class="definition">Definition at line <a class="el" href="enum__bitmask_8hpp_source.html#l00048">48</a> of file <a class="el" href="enum__bitmask_8hpp_source.html">enum_bitmask.hpp</a>.</p>
+
 </div>
 </div>
-<a id="a0da168c8b243c9cb141578a0e8899747" name="a0da168c8b243c9cb141578a0e8899747"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0da168c8b243c9cb141578a0e8899747">&#9670;&#160;</a></span>operator&amp;()</h2>
+<a id="a92ad9c3ac68db3bd80567661ef4fe2b6" name="a92ad9c3ac68db3bd80567661ef4fe2b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92ad9c3ac68db3bd80567661ef4fe2b6">&#9670;&#160;</a></span>operator&amp;()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename EnumT , typename UnderlyingT &gt; </div>
+template&lt;typename Enum &gt; <br />
+requires EnumEnableBitmask&lt;Enum&gt;</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">EnumBitMask&lt; EnumT, UnderlyingT &gt; <a class="el" href="structliger_1_1_enum_bit_mask.html">liger::operator</a>&amp; </td>
+          <td class="memname">::enabled constexpr Enum liger::operator&amp; </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structliger_1_1_enum_bit_mask.html">EnumBitMask</a>&lt; <a class="el" href="structliger_1_1_enum_bit_mask.html">EnumT</a>, <a class="el" href="structliger_1_1_enum_bit_mask.html">UnderlyingT</a> &gt;&#160;</td>
+          <td class="paramtype">Enum&#160;</td>
           <td class="paramname"><em>lhs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structliger_1_1_enum_bit_mask.html">EnumBitMask</a>&lt; <a class="el" href="structliger_1_1_enum_bit_mask.html">EnumT</a>, <a class="el" href="structliger_1_1_enum_bit_mask.html">UnderlyingT</a> &gt;&#160;</td>
+          <td class="paramtype">Enum&#160;</td>
           <td class="paramname"><em>rhs</em>&#160;</td>
         </tr>
         <tr>
@@ -210,30 +260,39 @@ template&lt;typename EnumT , typename UnderlyingT &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enum__bitmask_8hpp_source.html#l00124">124</a> of file <a class="el" href="enum__bitmask_8hpp_source.html">enum_bitmask.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enum__bitmask_8hpp_source.html#l00064">64</a> of file <a class="el" href="enum__bitmask_8hpp_source.html">enum_bitmask.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a0b5fdea68f10a8e38c7e4253ac52b381" name="a0b5fdea68f10a8e38c7e4253ac52b381"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b5fdea68f10a8e38c7e4253ac52b381">&#9670;&#160;</a></span>operator|()</h2>
+<a id="a51d9bac2e39adc2dc09536e02015de62" name="a51d9bac2e39adc2dc09536e02015de62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51d9bac2e39adc2dc09536e02015de62">&#9670;&#160;</a></span>operator^()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename EnumT , typename UnderlyingT &gt; </div>
+template&lt;typename Enum &gt; <br />
+requires EnumEnableBitmask&lt;Enum&gt;</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">EnumBitMask&lt; EnumT, UnderlyingT &gt; <a class="el" href="structliger_1_1_enum_bit_mask.html">liger::operator</a>| </td>
+          <td class="memname">::enabled constexpr Enum liger::operator^ </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structliger_1_1_enum_bit_mask.html">EnumBitMask</a>&lt; <a class="el" href="structliger_1_1_enum_bit_mask.html">EnumT</a>, <a class="el" href="structliger_1_1_enum_bit_mask.html">UnderlyingT</a> &gt;&#160;</td>
+          <td class="paramtype">Enum&#160;</td>
           <td class="paramname"><em>lhs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structliger_1_1_enum_bit_mask.html">EnumBitMask</a>&lt; <a class="el" href="structliger_1_1_enum_bit_mask.html">EnumT</a>, <a class="el" href="structliger_1_1_enum_bit_mask.html">UnderlyingT</a> &gt;&#160;</td>
+          <td class="paramtype">Enum&#160;</td>
           <td class="paramname"><em>rhs</em>&#160;</td>
         </tr>
         <tr>
@@ -242,9 +301,127 @@ template&lt;typename EnumT , typename UnderlyingT &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enum__bitmask_8hpp_source.html#l00117">117</a> of file <a class="el" href="enum__bitmask_8hpp_source.html">enum_bitmask.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enum__bitmask_8hpp_source.html#l00071">71</a> of file <a class="el" href="enum__bitmask_8hpp_source.html">enum_bitmask.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a1f962cde3766ac1e8cdb83501f41eace" name="a1f962cde3766ac1e8cdb83501f41eace"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f962cde3766ac1e8cdb83501f41eace">&#9670;&#160;</a></span>operator|()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Enum &gt; <br />
+requires EnumEnableBitmask&lt;Enum&gt;</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">::enabled constexpr Enum liger::operator| </td>
+          <td>(</td>
+          <td class="paramtype">Enum&#160;</td>
+          <td class="paramname"><em>lhs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Enum&#160;</td>
+          <td class="paramname"><em>rhs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="enum__bitmask_8hpp_source.html#l00057">57</a> of file <a class="el" href="enum__bitmask_8hpp_source.html">enum_bitmask.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a35e2e7252aa9183b2ced69ae6ef5cf0a" name="a35e2e7252aa9183b2ced69ae6ef5cf0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35e2e7252aa9183b2ced69ae6ef5cf0a">&#9670;&#160;</a></span>operator|=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Enum &gt; <br />
+requires EnumEnableBitmask&lt;Enum&gt;</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">::enabled constexpr Enum liger::operator|= </td>
+          <td>(</td>
+          <td class="paramtype">Enum &amp;&#160;</td>
+          <td class="paramname"><em>lhs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Enum&#160;</td>
+          <td class="paramname"><em>rhs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="enum__bitmask_8hpp_source.html#l00085">85</a> of file <a class="el" href="enum__bitmask_8hpp_source.html">enum_bitmask.hpp</a>.</p>
+
+</div>
+</div>
+<a id="acdcd18c83fed83a4e90340628fe75a27" name="acdcd18c83fed83a4e90340628fe75a27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acdcd18c83fed83a4e90340628fe75a27">&#9670;&#160;</a></span>operator~()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Enum &gt; <br />
+requires EnumEnableBitmask&lt;Enum&gt;</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">::enabled constexpr Enum liger::operator~ </td>
+          <td>(</td>
+          <td class="paramtype">Enum&#160;</td>
+          <td class="paramname"><em>lhs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="enum__bitmask_8hpp_source.html#l00078">78</a> of file <a class="el" href="enum__bitmask_8hpp_source.html">enum_bitmask.hpp</a>.</p>
 
 </div>
 </div>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['platformlayer_0',['PlatformLayer',['../classliger_1_1_platform_layer.html',1,'liger']]]
+  ['handle_0',['Handle',['../structliger_1_1rhi_1_1_handle.html',1,'liger::rhi']]]
 ];

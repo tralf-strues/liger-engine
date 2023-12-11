@@ -4,13 +4,10 @@ var dir_f2fdbd745c0d6e6eb4e34e31c74fc19e =
     [ "log", "dir_61e0d4cc473d0f584c2472a554d1d7b3.html", "dir_61e0d4cc473d0f584c2472a554d1d7b3" ],
     [ "math", "dir_f1cd153eb288736c3e95443d3100c620.html", "dir_f1cd153eb288736c3e95443d3100c620" ],
     [ "platform", "dir_0ee47a11b0862611369a0729fa501343.html", "dir_0ee47a11b0862611369a0729fa501343" ],
-    [ "core.hpp", "core_8hpp.html", null ],
     [ "enum_bitmask.hpp", "enum__bitmask_8hpp.html", "enum__bitmask_8hpp" ],
-    [ "enum_class.cpp", "enum__class_8cpp.html", null ],
-    [ "enum_class.hpp", "enum__class_8hpp.html", "enum__class_8hpp" ],
+    [ "enum_reflect.hpp", "enum__reflect_8hpp.html", null ],
     [ "time.cpp", "time_8cpp.html", null ],
     [ "time.hpp", "time_8hpp.html", "time_8hpp" ],
-    [ "types.hpp", "types_8hpp.html", null ],
     [ "uuid.cpp", "uuid_8cpp.html", null ],
     [ "uuid.hpp", "uuid_8hpp.html", "uuid_8hpp" ]
 ];

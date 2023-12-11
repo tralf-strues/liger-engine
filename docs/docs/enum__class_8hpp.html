@@ -97,7 +97,7 @@ $(document).ready(function(){initNavTree('enum__class_8hpp.html',''); initResiza
   <div class="headertitle"><div class="title">enum_class.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="types_8hpp_source.html">liger/core/types.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;<a class="el" href="types_8hpp_source.html">liger/core/types.hpp</a>&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for enum_class.hpp:</div>
 <div class="dyncontent">
@@ -119,8 +119,8 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a62cefd284879474d0b8e6aef05bee283" id="r_a62cefd284879474d0b8e6aef05bee283"><td class="memItemLeft" align="right" valign="top">int32&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enum__class_8hpp.html#a62cefd284879474d0b8e6aef05bee283">liger::detail::TokenizeEnumString</a> (<a class="el" href="structliger_1_1_enum_bit_mask.html">char</a> *<a class="el" href="structliger_1_1_enum_bit_mask.html">base</a>, int32 <a class="el" href="structliger_1_1_enum_bit_mask.html">length</a>, cstring <a class="el" href="structliger_1_1_enum_bit_mask.html">tokens</a>[], int32 <a class="el" href="structliger_1_1_enum_bit_mask.html">size</a>)</td></tr>
-<tr class="separator:a62cefd284879474d0b8e6aef05bee283"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abab56c262dbb813df8d4a314a80350cb" id="r_abab56c262dbb813df8d4a314a80350cb"><td class="memItemLeft" align="right" valign="top">int32&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enum__class_8hpp.html#abab56c262dbb813df8d4a314a80350cb">liger::core::detail::TokenizeEnumString</a> (char *base, int32 length, cstring tokens[], int32 size)</td></tr>
+<tr class="separator:abab56c262dbb813df8d4a314a80350cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Nikita Mochalov (github.com/tralf-strues)</dd></dl>
@@ -163,29 +163,29 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">  <span class="keyword">enum class</span> Type : UnderlyingType { __VA_ARGS__, kCount };                                                            \</div>
-<div class="line">                                                                                                                       \</div>
-<div class="line">  <span class="keyword">namespace </span>detail {                                                                                                   \</div>
-<div class="line">  <span class="keyword">static</span> <span class="keywordtype">char</span> kBaseEnumToString##Type[] = {#__VA_ARGS__};                                                              \</div>
-<div class="line">  <span class="keyword">static</span> cstring kTokensEnumToString##Type[<span class="keyword">static_cast&lt;</span>UnderlyingType<span class="keyword">&gt;</span>(Type::kCount)];                                 \</div>
-<div class="line">                                                                                                                       \</div>
-<div class="line">  <span class="keyword">static</span> int32 kTmpTokensEnumToString##Type =                                                                          \</div>
-<div class="line">      liger::detail::TokenizeEnumString(<span class="keyword">const_cast&lt;</span><span class="keywordtype">char</span>*<span class="keyword">&gt;</span>(kBaseEnumToString##Type), <span class="keyword">sizeof</span>(kBaseEnumToString##Type), \</div>
-<div class="line">                                          kTokensEnumToString##Type, <span class="keyword">static_cast&lt;</span>UnderlyingType<span class="keyword">&gt;</span>(Type::kCount));       \</div>
-<div class="line">  } <span class="comment">/* namespace detail */</span>                                                                                             \</div>
-<div class="line">                                                                                                                       \</div>
-<div class="line">  [[nodiscard]] <span class="keyword">inline</span> cstring Type##ToStr(Type value) {                                                               \</div>
-<div class="line">    <span class="keywordflow">return</span> detail::kTokensEnumToString##Type[<span class="keyword">static_cast&lt;</span>UnderlyingType<span class="keyword">&gt;</span>(value)];                                      \</div>
-<div class="line">  }                                                                                                                    \</div>
-<div class="line">                                                                                                                       \</div>
-<div class="line">  [[nodiscard]] <span class="keyword">inline</span> Type StrTo##Type(cstring str) {                                                                 \</div>
-<div class="line">    for (UnderlyingType i = 0; i &lt; static_cast&lt;UnderlyingType&gt;(Type::kCount); ++i) {                                   \</div>
-<div class="line">      if (std::strcmp(str, detail::kTokensEnumToString##Type[i]) == 0) {                                               \</div>
-<div class="line">        <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>Type<span class="keyword">&gt;</span>(i);                                                                                   \</div>
-<div class="line">      }                                                                                                                \</div>
-<div class="line">    }                                                                                                                  \</div>
-<div class="line">                                                                                                                       \</div>
-<div class="line">    <span class="keywordflow">return</span> Type::kCount;                                                                                               \</div>
+<b>Value:</b><div class="fragment"><div class="line">  <span class="keyword">enum class</span> Type : UnderlyingType { __VA_ARGS__, kCount };                                                   \</div>
+<div class="line">                                                                                                              \</div>
+<div class="line">  <span class="keyword">namespace </span>detail {                                                                                          \</div>
+<div class="line">  <span class="keyword">static</span> <span class="keywordtype">char</span> kBaseEnumToString##Type[] = {#__VA_ARGS__};                                                     \</div>
+<div class="line">  <span class="keyword">static</span> cstring kTokensEnumToString##Type[<span class="keyword">static_cast&lt;</span>UnderlyingType<span class="keyword">&gt;</span>(Type::kCount)];                        \</div>
+<div class="line">                                                                                                              \</div>
+<div class="line">  <span class="keyword">static</span> int32 kTmpTokensEnumToString##Type = ::liger::core::detail::TokenizeEnumString(                      \</div>
+<div class="line">      <span class="keyword">const_cast&lt;</span><span class="keywordtype">char</span>*<span class="keyword">&gt;</span>(kBaseEnumToString##Type), <span class="keyword">sizeof</span>(kBaseEnumToString##Type), kTokensEnumToString##Type, \</div>
+<div class="line">      <span class="keyword">static_cast&lt;</span>UnderlyingType<span class="keyword">&gt;</span>(Type::kCount));                                                             \</div>
+<div class="line">  } <span class="comment">/* namespace detail */</span>                                                                                    \</div>
+<div class="line">                                                                                                              \</div>
+<div class="line">  [[nodiscard]] <span class="keyword">inline</span> cstring Type##ToStr(Type value) {                                                      \</div>
+<div class="line">    <span class="keywordflow">return</span> detail::kTokensEnumToString##Type[<span class="keyword">static_cast&lt;</span>UnderlyingType<span class="keyword">&gt;</span>(value)];                             \</div>
+<div class="line">  }                                                                                                           \</div>
+<div class="line">                                                                                                              \</div>
+<div class="line">  [[nodiscard]] <span class="keyword">inline</span> Type StrTo##Type(cstring str) {                                                        \</div>
+<div class="line">    for (UnderlyingType i = 0; i &lt; static_cast&lt;UnderlyingType&gt;(Type::kCount); ++i) {                          \</div>
+<div class="line">      if (std::strcmp(str, detail::kTokensEnumToString##Type[i]) == 0) {                                      \</div>
+<div class="line">        <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>Type<span class="keyword">&gt;</span>(i);                                                                          \</div>
+<div class="line">      }                                                                                                       \</div>
+<div class="line">    }                                                                                                         \</div>
+<div class="line">                                                                                                              \</div>
+<div class="line">    <span class="keywordflow">return</span> Type::kCount;                                                                                      \</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
 <p>Declares an enum class. </p>
@@ -211,8 +211,8 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a62cefd284879474d0b8e6aef05bee283" name="a62cefd284879474d0b8e6aef05bee283"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a62cefd284879474d0b8e6aef05bee283">&#9670;&#160;</a></span>TokenizeEnumString()</h2>
+<a id="abab56c262dbb813df8d4a314a80350cb" name="abab56c262dbb813df8d4a314a80350cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abab56c262dbb813df8d4a314a80350cb">&#9670;&#160;</a></span>TokenizeEnumString()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -221,9 +221,9 @@ Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int32 liger::detail::TokenizeEnumString </td>
+          <td class="memname">int32 liger::core::detail::TokenizeEnumString </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structliger_1_1_enum_bit_mask.html">char</a> *&#160;</td>
+          <td class="paramtype">char *&#160;</td>
           <td class="paramname"><em>base</em>, </td>
         </tr>
         <tr>
