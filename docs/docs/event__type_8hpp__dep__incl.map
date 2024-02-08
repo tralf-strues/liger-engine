@@ -1,9 +1,0 @@
-<map id="event_type.hpp" name="event_type.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="99,5,209,31"/>
-<area shape="rect" id="Node000002" href="$event__dispatcher_8hpp.html" title=" " alt="" coords="5,79,151,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,44,93,80,89,76,128,40"/>
-<area shape="rect" id="Node000004" href="$event__type_8cpp.html" title=" " alt="" coords="175,79,285,104"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="180,40,219,76,215,80,176,44"/>
-<area shape="rect" id="Node000003" href="$core_8hpp.html" title=" " alt="" coords="42,152,114,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="81,120,81,151,75,151,75,120"/>
-</map>
