@@ -7,7 +7,7 @@ add_subdirectory(editor)
 add_subdirectory(sandbox)
 
 # Documentation
-option(LIGER_BUILD_DOCS "Build Doxygen documentation" ON)
+option(LIGER_BUILD_DOCS "Build Doxygen documentation" OFF)
 
 find_package(Doxygen)
 if (DOXYGEN_FOUND AND LIGER_BUILD_DOCS)

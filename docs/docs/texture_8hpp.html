@@ -93,22 +93,24 @@ $(document).ready(function(){initNavTree('texture_8hpp.html',''); initResizable(
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#enum-members">Enumerations</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle"><div class="title">texture.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;<a class="el" href="device__resource_8hpp_source.html">liger/render/rhi/device_resource.hpp</a>&gt;</code><br />
+<div class="textblock"><code>#include &lt;<a class="el" href="device__resource__state_8hpp_source.html">liger/render/rhi/device_resource_state.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="extent_8hpp_source.html">liger/render/rhi/extent.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="format_8hpp_source.html">liger/render/rhi/format.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="sampler__info_8hpp_source.html">liger/render/rhi/sampler_info.hpp</a>&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for texture.hpp:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="texture_8hpp__incl.svg" width="432" height="184"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="texture_8hpp__incl.svg" width="100%" height="493"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="texture_8hpp__dep__incl.svg" width="100%" height="493"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="texture_8hpp__dep__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div>
 <p><a href="texture_8hpp_source.html">Go to the source code of this file.</a></p>
@@ -117,25 +119,50 @@ This graph shows which files directly or indirectly include this file:</div>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_texture_view_info.html">liger::rhi::TextureViewInfo</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_texture.html">liger::rhi::Texture</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_texture.html">liger::rhi::ITexture</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_texture_1_1_info.html">liger::rhi::Texture::Info</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_i_texture_1_1_info.html">liger::rhi::ITexture::Info</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:aabe5069204c6d81297f607756af9bc86" id="r_aabe5069204c6d81297f607756af9bc86"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>TextureType</b> : uint8 { <br />
+<tr class="memitem:a820dc605222f7ce1101f0d25052180c8" id="r_a820dc605222f7ce1101f0d25052180c8"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>TextureType</b> : uint8_t { <br />
 &#160;&#160;<b>kTexture2D</b>
 , <b>kTextureCube</b>
 , <b>kTexture2DArray</b>
+, <b>kTexture1D</b>
+, <br />
+&#160;&#160;<b>kTexture2D</b>
+, <b>kTexture3D</b>
+, <b>kTexture1D</b>
 , <b>kTexture2D</b>
 , <br />
-&#160;&#160;<b>kTextureCube</b>
-, <b>kTexture2DArray</b>
+&#160;&#160;<b>kTexture3D</b>
 <br />
  }</td></tr>
-<tr class="separator:aabe5069204c6d81297f607756af9bc86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae31f2debbb9b15322544b28fae66af4a" id="r_ae31f2debbb9b15322544b28fae66af4a"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>CubeMapFaceLayer</b> : uint8 { <br />
+<tr class="separator:a820dc605222f7ce1101f0d25052180c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a234bac76dd5d2b5bf207ad979232d116" id="r_a234bac76dd5d2b5bf207ad979232d116"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>TextureViewType</b> : uint8_t { <br />
+&#160;&#160;<b>k1D</b>
+, <b>k2D</b>
+, <b>k3D</b>
+, <b>kCube</b>
+, <br />
+&#160;&#160;<b>kArray1D</b>
+, <b>kArray2D</b>
+, <b>kArrayCube</b>
+, <b>k1D</b>
+, <br />
+&#160;&#160;<b>k2D</b>
+, <b>k3D</b>
+, <b>kCube</b>
+, <b>kArray1D</b>
+, <br />
+&#160;&#160;<b>kArray2D</b>
+, <b>kArrayCube</b>
+<br />
+ }</td></tr>
+<tr class="separator:a234bac76dd5d2b5bf207ad979232d116"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3649a39fe8159309f20fa8ec9d802ba" id="r_aa3649a39fe8159309f20fa8ec9d802ba"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>CubeMapFaceLayer</b> : uint8_t { <br />
 &#160;&#160;<b>kRightPositiveX</b> = 0
 , <b>kLeftNegativeX</b> = 1
 , <b>kTopPositiveY</b> = 2
@@ -150,21 +177,18 @@ Enumerations</h2></td></tr>
 , <b>kBottomNegativeY</b> = 3
 , <b>kFrontPositiveZ</b> = 4
 , <b>kBackNegativeZ</b> = 5
-<br />
- }</td></tr>
-<tr class="separator:ae31f2debbb9b15322544b28fae66af4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb788b82c4ce8124b8347e94e305bf39" id="r_adb788b82c4ce8124b8347e94e305bf39"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>TextureUsage</b> : uint32 { <br />
-&#160;&#160;<b>kNone</b> = 0
-, <b>kTransferSrc</b> = 0x0000'0001
-, <b>kTransferDst</b> = 0x0000'0002
-, <b>kSampled</b> = 0x0000'0004
 , <br />
-&#160;&#160;<b>kRenderTarget</b> = 0x0000'0010
-, <b>kDepthStencilBuffer</b> = 0x0000'0020
+&#160;&#160;<b>kRightPositiveX</b> = 0
+, <b>kLeftNegativeX</b> = 1
+, <b>kTopPositiveY</b> = 2
+, <b>kBottomNegativeY</b> = 3
+, <br />
+&#160;&#160;<b>kFrontPositiveZ</b> = 4
+, <b>kBackNegativeZ</b> = 5
 <br />
  }</td></tr>
-<tr class="separator:adb788b82c4ce8124b8347e94e305bf39"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb146145fba2ed8bc26f078ded232dd8" id="r_adb146145fba2ed8bc26f078ded232dd8"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>TextureLayout</b> : uint32 { <br />
+<tr class="separator:aa3649a39fe8159309f20fa8ec9d802ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02c49f97af5798f5d5fb5204816c8c85" id="r_a02c49f97af5798f5d5fb5204816c8c85"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>TextureLayout</b> : uint32_t { <br />
 &#160;&#160;<b>kUndefined</b>
 , <b>kGeneral</b>
 , <b>kPresentSrc</b>
@@ -173,19 +197,22 @@ Enumerations</h2></td></tr>
 &#160;&#160;<b>kReadOnly</b>
 , <b>kTransferSrc</b>
 , <b>kTransferDst</b>
+, <b>kUndefined</b>
+, <br />
+&#160;&#160;<b>kGeneral</b>
+, <b>kPresentSrc</b>
+, <b>kWrite</b>
+, <b>kReadOnly</b>
+, <br />
+&#160;&#160;<b>kTransferSrc</b>
+, <b>kTransferDst</b>
 <br />
  }</td></tr>
-<tr class="separator:adb146145fba2ed8bc26f078ded232dd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a2283852f73d88a94e71d9077b6138af9" id="r_a2283852f73d88a94e71d9077b6138af9"><td class="memItemLeft" align="right" valign="top"><a id="a2283852f73d88a94e71d9077b6138af9" name="a2283852f73d88a94e71d9077b6138af9"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ENABLE_ENUM_BITMASK</b> (liger::rhi::TextureUsage)</td></tr>
-<tr class="separator:a2283852f73d88a94e71d9077b6138af9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a02c49f97af5798f5d5fb5204816c8c85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Nikita Mochalov (github.com/tralf-strues)</dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2023-09-26</dd></dl>
+<dl class="section date"><dt>Date</dt><dd>2024-01-02</dd></dl>
 <p>The MIT License (MIT) Copyright (c) 2023 Nikita Mochalov</p>
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
 <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
@@ -193,8 +220,8 @@ Functions</h2></td></tr>
 
 <p class="definition">Definition in file <a class="el" href="texture_8hpp_source.html">texture.hpp</a>.</p>
 </div><h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="ae31f2debbb9b15322544b28fae66af4a" name="ae31f2debbb9b15322544b28fae66af4a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae31f2debbb9b15322544b28fae66af4a">&#9670;&#160;</a></span>CubeMapFaceLayer</h2>
+<a id="aa3649a39fe8159309f20fa8ec9d802ba" name="aa3649a39fe8159309f20fa8ec9d802ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3649a39fe8159309f20fa8ec9d802ba">&#9670;&#160;</a></span>CubeMapFaceLayer</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -203,7 +230,55 @@ Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum class liger::rhi::CubeMapFaceLayer : uint8</td>
+          <td class="memname">enum class liger::rhi::CubeMapFaceLayer : uint8_t</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="texture_8hpp_source.html#l00059">59</a> of file <a class="el" href="texture_8hpp_source.html">texture.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a02c49f97af5798f5d5fb5204816c8c85" name="a02c49f97af5798f5d5fb5204816c8c85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02c49f97af5798f5d5fb5204816c8c85">&#9670;&#160;</a></span>TextureLayout</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class liger::rhi::TextureLayout : uint32_t</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="texture_8hpp_source.html#l00070">70</a> of file <a class="el" href="texture_8hpp_source.html">texture.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a820dc605222f7ce1101f0d25052180c8" name="a820dc605222f7ce1101f0d25052180c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a820dc605222f7ce1101f0d25052180c8">&#9670;&#160;</a></span>TextureType</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class liger::rhi::TextureType : uint8_t</td>
         </tr>
       </table>
   </td>
@@ -217,8 +292,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="adb146145fba2ed8bc26f078ded232dd8" name="adb146145fba2ed8bc26f078ded232dd8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb146145fba2ed8bc26f078ded232dd8">&#9670;&#160;</a></span>TextureLayout</h2>
+<a id="a234bac76dd5d2b5bf207ad979232d116" name="a234bac76dd5d2b5bf207ad979232d116"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a234bac76dd5d2b5bf207ad979232d116">&#9670;&#160;</a></span>TextureViewType</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -227,7 +302,7 @@ Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum class liger::rhi::TextureLayout : uint32</td>
+          <td class="memname">enum class liger::rhi::TextureViewType : uint8_t</td>
         </tr>
       </table>
   </td>
@@ -237,55 +312,7 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="texture_8hpp_source.html#l00061">61</a> of file <a class="el" href="texture_8hpp_source.html">texture.hpp</a>.</p>
-
-</div>
-</div>
-<a id="aabe5069204c6d81297f607756af9bc86" name="aabe5069204c6d81297f607756af9bc86"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aabe5069204c6d81297f607756af9bc86">&#9670;&#160;</a></span>TextureType</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class liger::rhi::TextureType : uint8</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="texture_8hpp_source.html#l00035">35</a> of file <a class="el" href="texture_8hpp_source.html">texture.hpp</a>.</p>
-
-</div>
-</div>
-<a id="adb788b82c4ce8124b8347e94e305bf39" name="adb788b82c4ce8124b8347e94e305bf39"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb788b82c4ce8124b8347e94e305bf39">&#9670;&#160;</a></span>TextureUsage</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class liger::rhi::TextureUsage : uint32</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="texture_8hpp_source.html#l00052">52</a> of file <a class="el" href="texture_8hpp_source.html">texture.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="texture_8hpp_source.html#l00047">47</a> of file <a class="el" href="texture_8hpp_source.html">texture.hpp</a>.</p>
 
 </div>
 </div>

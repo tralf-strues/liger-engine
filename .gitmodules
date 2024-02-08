@@ -16,3 +16,6 @@
 [submodule "engine/third_party/magic_enum"]
 	path = engine/third_party/magic_enum
 	url = https://github.com/Neargye/magic_enum.git
+[submodule "engine/third_party/vma"]
+	path = engine/third_party/vma
+	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git

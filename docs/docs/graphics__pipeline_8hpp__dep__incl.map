@@ -1,15 +1,24 @@
 <map id="graphics_pipeline.hpp" name="graphics_pipeline.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="165,5,311,31"/>
-<area shape="rect" id="Node000002" href="$command__buffer_8hpp.html" title=" " alt="" coords="94,153,236,178"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,34,68,53,35,66,15,81,9,93,9,103,16,113,27,122,60,138,100,150,98,155,58,143,24,127,12,117,4,105,4,92,11,77,32,61,66,48,149,29"/>
-<area shape="rect" id="Node000003" href="$deprecated_2compute__pipeline_8hpp.html" title=" " alt="" coords="25,79,172,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="202,41,123,81,121,76,200,36"/>
-<area shape="rect" id="Node000004" href="$deprecated_2device_8hpp_source.html" title=" " alt="" coords="196,79,280,105"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="241,46,241,79,236,79,236,46"/>
-<area shape="rect" id="Node000005" href="$device_8hpp_source.html" title=" " alt="" coords="384,153,468,178"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="327,30,405,49,436,62,456,77,463,97,459,119,439,154,434,151,454,117,458,98,452,81,434,67,403,54,326,35"/>
-<area shape="rect" id="Node000006" href="$synchronization_8hpp.html" title=" " alt="" coords="304,79,442,105"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="276,36,351,76,349,81,273,41"/>
-<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="324,113,201,155,200,150,323,108"/>
-<area shape="poly" id="edge7_Node000006_Node000005" title=" " alt="" coords="393,115,419,151,415,154,389,119"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="366,5,512,31"/>
+<area shape="rect" id="Node000002" href="$first__draft_2command__buffer_8hpp.html" title=" " alt="" coords="5,79,148,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="363,37,139,81,138,76,362,32"/>
+<area shape="rect" id="Node000003" href="$deprecated_2compute__pipeline_8hpp.html" title=" " alt="" coords="172,79,320,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="393,39,280,81,278,76,391,34"/>
+<area shape="rect" id="Node000004" href="$deprecated_2device_8hpp_source.html" title=" " alt="" coords="344,79,428,105"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="423,45,397,80,393,77,419,42"/>
+<area shape="rect" id="Node000005" href="$device_8hpp.html" title=" " alt="" coords="452,79,536,105"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="459,41,487,77,482,80,455,45"/>
+<area shape="rect" id="Node000010" href="$first__draft_2device_8hpp_source.html" title=" " alt="" coords="560,79,644,105"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="482,35,575,76,573,81,480,40"/>
+<area shape="rect" id="Node000011" href="$synchronization_8hpp.html" title=" " alt="" coords="668,79,805,105"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="505,33,687,76,685,81,504,38"/>
+<area shape="rect" id="Node000006" href="$instance_8hpp.html" title=" " alt="" coords="396,153,491,178"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="479,119,454,154,450,151,475,116"/>
+<area shape="rect" id="Node000009" href="$vulkan__utils_8hpp.html" title=" " alt="" coords="504,226,620,252"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="508,117,559,225,554,227,503,120"/>
+<area shape="rect" id="Node000007" href="$vulkan__instance_8hpp.html" title=" " alt="" coords="340,226,480,252"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="434,193,418,227,413,225,429,191"/>
+<area shape="rect" id="Node000008" href="$vulkan__instance_8cpp.html" title=" " alt="" coords="416,300,556,326"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="436,261,475,298,471,302,432,265"/>
+<area shape="poly" id="edge9_Node000009_Node000008" title=" " alt="" coords="540,265,500,302,497,298,536,261"/>
 </map>

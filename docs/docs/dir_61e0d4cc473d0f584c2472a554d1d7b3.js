@@ -6,7 +6,6 @@ var dir_61e0d4cc473d0f584c2472a554d1d7b3 =
     [ "default_log.hpp", "default__log_8hpp.html", null ],
     [ "log.cpp", "log_8cpp.html", null ],
     [ "log.hpp", "log_8hpp.html", "log_8hpp" ],
-    [ "log_channels.hpp", "log__channels_8hpp_source.html", null ],
     [ "log_message.cpp", "log__message_8cpp.html", null ],
     [ "log_message.hpp", "log__message_8hpp.html", "log__message_8hpp" ],
     [ "log_writer.hpp", "log__writer_8hpp.html", "log__writer_8hpp" ]

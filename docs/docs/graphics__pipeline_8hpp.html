@@ -92,400 +92,58 @@ $(document).ready(function(){initNavTree('graphics__pipeline_8hpp.html',''); ini
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#enum-members">Enumerations</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#nested-classes">Classes</a>  </div>
   <div class="headertitle"><div class="title">graphics_pipeline.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;<a class="el" href="format_8hpp_source.html">liger/render/rhi/format.hpp</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="shader__module_8hpp_source.html">liger/render/rhi/shader_module.hpp</a>&gt;</code><br />
+<code>#include &lt;vector&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for graphics_pipeline.hpp:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="graphics__pipeline_8hpp__incl.svg" width="432" height="258"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="graphics__pipeline_8hpp__incl.svg" width="262" height="184"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="graphics__pipeline_8hpp__dep__incl.svg" width="474" height="184"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="graphics__pipeline_8hpp__dep__incl.svg" width="100%" height="548"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div>
 <p><a href="graphics__pipeline_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_input_vertex_info.html">liger::rhi::InputVertexInfo</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_input_vertex_info_1_1_attribute.html">liger::rhi::InputVertexInfo::Attribute</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_input_vertex_info_1_1_binding.html">liger::rhi::InputVertexInfo::Binding</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_input_assembly_info.html">liger::rhi::InputAssemblyInfo</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_input_assembly_info_1_1_vertex_info.html">liger::rhi::InputAssemblyInfo::VertexInfo</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_input_assembly_info_1_1_vertex_info_1_1_attribute.html">liger::rhi::InputAssemblyInfo::VertexInfo::Attribute</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_input_assembly_info_1_1_vertex_info_1_1_binding.html">liger::rhi::InputAssemblyInfo::VertexInfo::Binding</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_rasterization_info.html">liger::rhi::RasterizationInfo</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_depth_test_info.html">liger::rhi::DepthTestInfo</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_depth_stencil_test_info.html">liger::rhi::DepthStencilTestInfo</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_stencil_test_info.html">liger::rhi::StencilTestInfo</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_blend_info.html">liger::rhi::BlendInfo</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_color_blend_info.html">liger::rhi::ColorBlendInfo</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_push_constant_info.html">liger::rhi::PushConstantInfo</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_graphics_pipeline.html">liger::rhi::GraphicsPipeline</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_graphics_pipeline.html">liger::rhi::IGraphicsPipeline</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_graphics_pipeline_1_1_info.html">liger::rhi::GraphicsPipeline::Info</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_i_graphics_pipeline_1_1_info.html">liger::rhi::IGraphicsPipeline::Info</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:a76c3729d6ea218c92a96fd9fcc570863" id="r_a76c3729d6ea218c92a96fd9fcc570863"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863">liger::rhi::PipelineStages</a> : uint32 { <br />
-&#160;&#160;<b>kNone</b> = 0x0000'0000
-, <a class="el" href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863a4b168bfcedb2ce2e00e21f6c4662bf01">kDrawIndirect</a> = 0x0000'0002
-, <a class="el" href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863afdfd0a065065b64ba069de69559d48c5">kVertexInput</a> = 0x0000'0004
-, <a class="el" href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863ab174ab101f1bcb017b241604a63cfe64">kVertexShader</a> = 0x0000'0008
-, <br />
-&#160;&#160;<a class="el" href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863a2519b629528d1e3f47518b0efe76679b">kEarlyFragmentTests</a> = 0x0000'0100
-, <a class="el" href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863a61b5fd8ddca075bc43792a0daaa0e90e">kFragmentShader</a> = 0x0000'0080
-, <a class="el" href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863a59e7a03f85d5fa799506fad3b1e101fa">kLateFragmentTests</a> = 0x0000'0200
-, <a class="el" href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863abe28af38d755546e41134ad0cb1a2a66">kRenderTargetOutput</a> = 0x0000'0400
-, <br />
-&#160;&#160;<a class="el" href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863ad8f3b9029206e3a9f316a86c1ed6c947">kComputeShader</a> = 0x0000'0800
-, <a class="el" href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863aeffeb5d6b6b48003306b50b0c5c60ec8">kTransfer</a> = 0x0000'1000
-, <a class="el" href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863a6afd82ecfa2e9dbfc5b945cfd5b8be85">kAllCommands</a> = 0x0001'0000
-<br />
- }</td></tr>
-<tr class="separator:a76c3729d6ea218c92a96fd9fcc570863"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab064b3f3c0173a62b45e2ce4a3b92da3" id="r_ab064b3f3c0173a62b45e2ce4a3b92da3"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>MemoryAccess</b> : uint32 { <br />
-&#160;&#160;<b>kNone</b> = 0x0000'0000
-, <b>kIndirectCommandRead</b> = 0x0000'0001
-, <b>kIndexRead</b> = 0x0000'0002
-, <b>kVertexAttributeRead</b> = 0x0000'0004
-, <br />
-&#160;&#160;<b>kUniformRead</b> = 0x0000'0008
-, <b>kShaderRead</b> = 0x0000'0020
-, <b>kShaderWrite</b> = 0x0000'0040
-, <b>kAttachmentRead</b> = 0x0000'0080
-, <br />
-&#160;&#160;<b>kAttachmentWrite</b> = 0x0000'0100
-, <b>kTransferRead</b> = 0x0000'0800
-, <b>kTransferWrite</b> = 0x0000'1000
-<br />
- }</td></tr>
-<tr class="separator:ab064b3f3c0173a62b45e2ce4a3b92da3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:accc16f5e105657ef65bcd395f67e4b3c" id="r_accc16f5e105657ef65bcd395f67e4b3c"><td class="memItemLeft" align="right" valign="top"><a id="accc16f5e105657ef65bcd395f67e4b3c" name="accc16f5e105657ef65bcd395f67e4b3c"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>liger::rhi::DECLARE_ENUM_CLASS</b> (Topology, uint8, kPointList, kLineList, kLineStrip, kTriangleList, kTriangleStrip, kTriangleFan)</td></tr>
-<tr class="separator:accc16f5e105657ef65bcd395f67e4b3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f0b852c0e50c7f0f38b23a6dac3d29f" id="r_a9f0b852c0e50c7f0f38b23a6dac3d29f"><td class="memItemLeft" align="right" valign="top"><a id="a9f0b852c0e50c7f0f38b23a6dac3d29f" name="a9f0b852c0e50c7f0f38b23a6dac3d29f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>liger::rhi::DECLARE_ENUM_CLASS</b> (CullMode, uint8, kNone, kFrontOnly, kBackOnly, kFrontAndBack)</td></tr>
-<tr class="separator:a9f0b852c0e50c7f0f38b23a6dac3d29f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc991285186f0bac451d886c4b208d2b" id="r_abc991285186f0bac451d886c4b208d2b"><td class="memItemLeft" align="right" valign="top"><a id="abc991285186f0bac451d886c4b208d2b" name="abc991285186f0bac451d886c4b208d2b"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>liger::rhi::DECLARE_ENUM_CLASS</b> (FrontFace, uint8, kClockwise, kCounterClockwise)</td></tr>
-<tr class="separator:abc991285186f0bac451d886c4b208d2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa80c8bb59bf2804bdc96b263b0b72966" id="r_aa80c8bb59bf2804bdc96b263b0b72966"><td class="memItemLeft" align="right" valign="top"><a id="aa80c8bb59bf2804bdc96b263b0b72966" name="aa80c8bb59bf2804bdc96b263b0b72966"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>liger::rhi::DECLARE_ENUM_CLASS</b> (PolygonMode, uint8, kFill, kLine)</td></tr>
-<tr class="separator:aa80c8bb59bf2804bdc96b263b0b72966"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8a27f19184d8fd4daf9ffbc24799ff7" id="r_ac8a27f19184d8fd4daf9ffbc24799ff7"><td class="memItemLeft" align="right" valign="top"><a id="ac8a27f19184d8fd4daf9ffbc24799ff7" name="ac8a27f19184d8fd4daf9ffbc24799ff7"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>liger::rhi::DECLARE_ENUM_CLASS</b> (CompareOperation, uint32, kNever, kLess, kEqual, kLessOrEqual, kGreater, kNotEqual, kGreaterOrEqual, kAlways)</td></tr>
-<tr class="separator:ac8a27f19184d8fd4daf9ffbc24799ff7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8220aa2d60df3044d1ee3a38040c1c6a" id="r_a8220aa2d60df3044d1ee3a38040c1c6a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="deprecated_2graphics__pipeline_8hpp.html#a8220aa2d60df3044d1ee3a38040c1c6a">liger::rhi::DECLARE_ENUM_CLASS</a> (ColorBlendFactor, uint32, kZero, kOne, kSrcColor, kOneMinusSrcColor, kDstColor, kOneMinusDstColor, kSrcAlpha, kOneMinusSrcAlpha, kDstAlpha, kOneMinusDstAlpha)</td></tr>
-<tr class="memdesc:a8220aa2d60df3044d1ee3a38040c1c6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies blending factor.  <br /></td></tr>
-<tr class="separator:a8220aa2d60df3044d1ee3a38040c1c6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1047cb1ecdf0e3952abda394df149277" id="r_a1047cb1ecdf0e3952abda394df149277"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="deprecated_2graphics__pipeline_8hpp.html#a1047cb1ecdf0e3952abda394df149277">liger::rhi::DECLARE_ENUM_CLASS</a> (ColorBlendOperation, uint32, kAdd, kSubtract, kReverseSubtract, kMin, kMax)</td></tr>
-<tr class="memdesc:a1047cb1ecdf0e3952abda394df149277"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies blending operation.  <br /></td></tr>
-<tr class="separator:a1047cb1ecdf0e3952abda394df149277"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Nikita Mochalov (github.com/tralf-strues)</dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2023-09-27</dd></dl>
+<dl class="section date"><dt>Date</dt><dd>2024-02-03</dd></dl>
 <p>The MIT License (MIT) Copyright (c) 2023 Nikita Mochalov</p>
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
 <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
 <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </p>
 
 <p class="definition">Definition in file <a class="el" href="graphics__pipeline_8hpp_source.html">graphics_pipeline.hpp</a>.</p>
-</div><h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="ab064b3f3c0173a62b45e2ce4a3b92da3" name="ab064b3f3c0173a62b45e2ce4a3b92da3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab064b3f3c0173a62b45e2ce4a3b92da3">&#9670;&#160;</a></span>MemoryAccess</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class liger::rhi::MemoryAccess : uint32</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="graphics__pipeline_8hpp_source.html#l00088">88</a> of file <a class="el" href="graphics__pipeline_8hpp_source.html">graphics_pipeline.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a76c3729d6ea218c92a96fd9fcc570863" name="a76c3729d6ea218c92a96fd9fcc570863"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a76c3729d6ea218c92a96fd9fcc570863">&#9670;&#160;</a></span>PipelineStages</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class <a class="el" href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863">liger::rhi::PipelineStages</a> : uint32</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a76c3729d6ea218c92a96fd9fcc570863a4b168bfcedb2ce2e00e21f6c4662bf01" name="a76c3729d6ea218c92a96fd9fcc570863a4b168bfcedb2ce2e00e21f6c4662bf01"></a>kDrawIndirect&#160;</td><td class="fielddoc"><p>Stage in which indirect draw structures are consumed. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a76c3729d6ea218c92a96fd9fcc570863afdfd0a065065b64ba069de69559d48c5" name="a76c3729d6ea218c92a96fd9fcc570863afdfd0a065065b64ba069de69559d48c5"></a>kVertexInput&#160;</td><td class="fielddoc"><p>Stage in which vertex and index buffers are consumed. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a76c3729d6ea218c92a96fd9fcc570863ab174ab101f1bcb017b241604a63cfe64" name="a76c3729d6ea218c92a96fd9fcc570863ab174ab101f1bcb017b241604a63cfe64"></a>kVertexShader&#160;</td><td class="fielddoc"><p>Vertex shader stage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a76c3729d6ea218c92a96fd9fcc570863a2519b629528d1e3f47518b0efe76679b" name="a76c3729d6ea218c92a96fd9fcc570863a2519b629528d1e3f47518b0efe76679b"></a>kEarlyFragmentTests&#160;</td><td class="fielddoc"><p>Stage in which depth/stencil tests before the fragment shader are performed. Additionally, in this stage load operations are performed for framebuffer depth/stencil attachments. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a76c3729d6ea218c92a96fd9fcc570863a61b5fd8ddca075bc43792a0daaa0e90e" name="a76c3729d6ea218c92a96fd9fcc570863a61b5fd8ddca075bc43792a0daaa0e90e"></a>kFragmentShader&#160;</td><td class="fielddoc"><p>Fragment shader stage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a76c3729d6ea218c92a96fd9fcc570863a59e7a03f85d5fa799506fad3b1e101fa" name="a76c3729d6ea218c92a96fd9fcc570863a59e7a03f85d5fa799506fad3b1e101fa"></a>kLateFragmentTests&#160;</td><td class="fielddoc"><p>Stage in which depth/stencil tests after the fragment shader are performed. Additionally, in this stage store operations are performed for framebuffer depth/stencil attachments. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a76c3729d6ea218c92a96fd9fcc570863abe28af38d755546e41134ad0cb1a2a66" name="a76c3729d6ea218c92a96fd9fcc570863abe28af38d755546e41134ad0cb1a2a66"></a>kRenderTargetOutput&#160;</td><td class="fielddoc"><p>Stage in which the final color values are output from the pipeline. </p>
-<p>This stage is after:</p><ol type="1">
-<li>Blending final colors</li>
-<li>Render pass store operations</li>
-<li>Multisample resolve </li>
-</ol>
-</td></tr>
-<tr><td class="fieldname"><a id="a76c3729d6ea218c92a96fd9fcc570863ad8f3b9029206e3a9f316a86c1ed6c947" name="a76c3729d6ea218c92a96fd9fcc570863ad8f3b9029206e3a9f316a86c1ed6c947"></a>kComputeShader&#160;</td><td class="fielddoc"><p>Compute shader stage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a76c3729d6ea218c92a96fd9fcc570863aeffeb5d6b6b48003306b50b0c5c60ec8" name="a76c3729d6ea218c92a96fd9fcc570863aeffeb5d6b6b48003306b50b0c5c60ec8"></a>kTransfer&#160;</td><td class="fielddoc"><p>Specifies all transfer commands. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a76c3729d6ea218c92a96fd9fcc570863a6afd82ecfa2e9dbfc5b945cfd5b8be85" name="a76c3729d6ea218c92a96fd9fcc570863a6afd82ecfa2e9dbfc5b945cfd5b8be85"></a>kAllCommands&#160;</td><td class="fielddoc"><p>Specifies all commands. </p>
-</td></tr>
-</table>
-
-<p class="definition">Definition at line <a class="el" href="graphics__pipeline_8hpp_source.html#l00036">36</a> of file <a class="el" href="graphics__pipeline_8hpp_source.html">graphics_pipeline.hpp</a>.</p>
-
-</div>
-</div>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a8220aa2d60df3044d1ee3a38040c1c6a" name="a8220aa2d60df3044d1ee3a38040c1c6a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8220aa2d60df3044d1ee3a38040c1c6a">&#9670;&#160;</a></span>DECLARE_ENUM_CLASS() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">liger::rhi::DECLARE_ENUM_CLASS </td>
-          <td>(</td>
-          <td class="paramtype">ColorBlendFactor&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">kZero&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">kOne&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">kSrcColor&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">kOneMinusSrcColor&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">kDstColor&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">kOneMinusDstColor&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">kSrcAlpha&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">kOneMinusSrcAlpha&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">kDstAlpha&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">kOneMinusDstAlpha&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Specifies blending factor. </p>
-<p>Let</p><ol type="1">
-<li>R_src, G_src, B_src, A_src - source color components</li>
-<li>R_dst, G_dst, B_dst, A_dst - destination color components</li>
-</ol>
-<p>Then factors are defined as follows:</p>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadRight">Factor   </th><th class="markdownTableHeadCenter">RGB blend factors   </th><th class="markdownTableHeadCenter">Alpha blend factor    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyRight">kZero   </td><td class="markdownTableBodyCenter">(0, 0, 0)   </td><td class="markdownTableBodyCenter">0    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyRight">kOne   </td><td class="markdownTableBodyCenter">(1, 1, 1)   </td><td class="markdownTableBodyCenter">1    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyRight">kSrcColor   </td><td class="markdownTableBodyCenter">(R_src, G_src, B_src)   </td><td class="markdownTableBodyCenter">A_src    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyRight">kOneMinusSrcColor   </td><td class="markdownTableBodyCenter">(1 - R_src, 1 - G_src, 1 - B_src)   </td><td class="markdownTableBodyCenter">1 - A_src    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyRight">kDstColor   </td><td class="markdownTableBodyCenter">(R_dst, G_dst, B_dst)   </td><td class="markdownTableBodyCenter">A_dst    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyRight">kOneMinusDstColor   </td><td class="markdownTableBodyCenter">(1 - R_dst, 1 - G_dst, 1 - B_dst)   </td><td class="markdownTableBodyCenter">1 - A_dst    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyRight">kSrcAlpha   </td><td class="markdownTableBodyCenter">(A_src, A_src, A_src)   </td><td class="markdownTableBodyCenter">A_src    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyRight">kOneMinusSrcAlpha   </td><td class="markdownTableBodyCenter">(1 - A_src, 1 - A_src, 1 - A_src)   </td><td class="markdownTableBodyCenter">1 - A_src    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyRight">kDstAlpha   </td><td class="markdownTableBodyCenter">(A_dst, A_dst, A_dst)   </td><td class="markdownTableBodyCenter">A_dst    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyRight">kOneMinusDstAlpha   </td><td class="markdownTableBodyCenter">(1 - A_dst, 1 - A_dst, 1 - A_dst)   </td><td class="markdownTableBodyCenter">1 - A_dst   </td></tr>
-</table>
-
-</div>
-</div>
-<a id="a1047cb1ecdf0e3952abda394df149277" name="a1047cb1ecdf0e3952abda394df149277"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1047cb1ecdf0e3952abda394df149277">&#9670;&#160;</a></span>DECLARE_ENUM_CLASS() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">liger::rhi::DECLARE_ENUM_CLASS </td>
-          <td>(</td>
-          <td class="paramtype">ColorBlendOperation&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">kAdd&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">kSubtract&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">kReverseSubtract&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">kMin&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">kMax&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Specifies blending operation. </p>
-<p>Let</p><ol type="1">
-<li>R_src, G_src, B_src, A_src - source color components</li>
-<li>R_dst, G_dst, B_dst, A_dst - destination color components</li>
-<li>SF_r, SF_g, SF_b, SF_a - source blend factor components</li>
-<li>DF_r, DF_g, DF_b, DF_a - destination blend factor components</li>
-</ol>
-<p>Then operations are defined as follows:</p>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadRight">Operation   </th><th class="markdownTableHeadCenter">Final R/G/B   </th><th class="markdownTableHeadCenter">Final A    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyRight">kAdd   </td><td class="markdownTableBodyCenter">R_src * SF_r + R_dst * DF_r   </td><td class="markdownTableBodyCenter">A_src * SF_a + A_dst * DF_a    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyRight">kSubtract   </td><td class="markdownTableBodyCenter">R_src * SF_r - R_dst * DF_r   </td><td class="markdownTableBodyCenter">A_src * SF_a - A_dst * DF_a    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyRight">kReverseSubtract   </td><td class="markdownTableBodyCenter">R_dst * DF_r - R_src * SF_r   </td><td class="markdownTableBodyCenter">A_dst * DF_a - A_src * SF_a    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyRight">kMin   </td><td class="markdownTableBodyCenter">min(R_src, R_dst)   </td><td class="markdownTableBodyCenter">min(A_src, A_dst)    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyRight">kMax   </td><td class="markdownTableBodyCenter">max(R_src, R_dst)   </td><td class="markdownTableBodyCenter">max(A_src, A_dst)   </td></tr>
-</table>
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

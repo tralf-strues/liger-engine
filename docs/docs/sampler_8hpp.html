@@ -97,16 +97,11 @@ $(document).ready(function(){initNavTree('sampler_8hpp.html',''); initResizable(
   <div class="headertitle"><div class="title">sampler.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;<a class="el" href="device__resource_8hpp_source.html">liger/render/rhi/device_resource.hpp</a>&gt;</code><br />
+<div class="textblock"><code>#include &lt;liger/render/rhi/device_resource.hpp&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for sampler.hpp:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="sampler_8hpp__incl.svg" width="239" height="184"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div><div class="textblock"><div class="dynheader">
-This graph shows which files directly or indirectly include this file:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="sampler_8hpp__dep__incl.svg" width="262" height="111"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="sampler_8hpp__incl.svg" width="239" height="111"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="sampler_8hpp_source.html">Go to the source code of this file.</a></p>
@@ -120,11 +115,13 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:afbe0b8490a75bb9778606ea041b8edb0" id="r_afbe0b8490a75bb9778606ea041b8edb0"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>Filter</b> : uint8 { <b>kNearest</b>
+<tr class="memitem:ae1500dc84a59ad52c646e304b25e8ac0" id="r_ae1500dc84a59ad52c646e304b25e8ac0"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>Filter</b> : uint8_t { <b>kNearest</b>
+, <b>kLinear</b>
+, <b>kNearest</b>
 , <b>kLinear</b>
  }</td></tr>
-<tr class="separator:afbe0b8490a75bb9778606ea041b8edb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada6aba0be0f1e16adf24ac121c77985a" id="r_ada6aba0be0f1e16adf24ac121c77985a"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>SamplerAddressMode</b> : uint8 { <br />
+<tr class="separator:ae1500dc84a59ad52c646e304b25e8ac0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9289ef5e7ee902f078a151849ee94ccf" id="r_a9289ef5e7ee902f078a151849ee94ccf"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>SamplerAddressMode</b> : uint8_t { <br />
 &#160;&#160;<b>kRepeat</b>
 , <b>kMirroredRepeat</b>
 , <b>kClampToEdge</b>
@@ -136,14 +133,14 @@ Enumerations</h2></td></tr>
 , <b>kClampToBorder</b>
 <br />
  }</td></tr>
-<tr class="separator:ada6aba0be0f1e16adf24ac121c77985a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a923315a817fd8b559c29f0dbcad419b0" id="r_a923315a817fd8b559c29f0dbcad419b0"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>SamplerMipmapMode</b> : uint8 { <b>kNearest</b>
+<tr class="separator:a9289ef5e7ee902f078a151849ee94ccf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51404bd1637c9de00a8f805d61490f8a" id="r_a51404bd1637c9de00a8f805d61490f8a"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>SamplerMipmapMode</b> : uint8_t { <b>kNearest</b>
 , <b>kLinear</b>
 , <b>kNearest</b>
 , <b>kLinear</b>
  }</td></tr>
-<tr class="separator:a923315a817fd8b559c29f0dbcad419b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1fe54d9e62e8bf40a12586970a9ad1e" id="r_af1fe54d9e62e8bf40a12586970a9ad1e"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>SamplerBorderColor</b> : uint8 { <br />
+<tr class="separator:a51404bd1637c9de00a8f805d61490f8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad99214b4fbe4268cc7f1aa265df3e185" id="r_ad99214b4fbe4268cc7f1aa265df3e185"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>SamplerBorderColor</b> : uint8_t { <br />
 &#160;&#160;<b>kFloatTransparentBlack</b>
 , <b>kIntTransparentBlack</b>
 , <b>kFloatOpaqueBlack</b>
@@ -160,7 +157,7 @@ Enumerations</h2></td></tr>
 , <b>kIntOpaqueWhite</b>
 <br />
  }</td></tr>
-<tr class="separator:af1fe54d9e62e8bf40a12586970a9ad1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:ad99214b4fbe4268cc7f1aa265df3e185"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Nikita Mochalov (github.com/tralf-strues)</dd></dl>
@@ -172,8 +169,8 @@ Enumerations</h2></td></tr>
 
 <p class="definition">Definition in file <a class="el" href="sampler_8hpp_source.html">sampler.hpp</a>.</p>
 </div><h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="afbe0b8490a75bb9778606ea041b8edb0" name="afbe0b8490a75bb9778606ea041b8edb0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afbe0b8490a75bb9778606ea041b8edb0">&#9670;&#160;</a></span>Filter</h2>
+<a id="ae1500dc84a59ad52c646e304b25e8ac0" name="ae1500dc84a59ad52c646e304b25e8ac0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1500dc84a59ad52c646e304b25e8ac0">&#9670;&#160;</a></span>Filter</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -182,7 +179,7 @@ Enumerations</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum class liger::rhi::Filter : uint8</td>
+          <td class="memname">enum class liger::rhi::Filter : uint8_t</td>
         </tr>
       </table>
   </td>
@@ -196,8 +193,8 @@ Enumerations</h2></td></tr>
 
 </div>
 </div>
-<a id="ada6aba0be0f1e16adf24ac121c77985a" name="ada6aba0be0f1e16adf24ac121c77985a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ada6aba0be0f1e16adf24ac121c77985a">&#9670;&#160;</a></span>SamplerAddressMode</h2>
+<a id="a9289ef5e7ee902f078a151849ee94ccf" name="a9289ef5e7ee902f078a151849ee94ccf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9289ef5e7ee902f078a151849ee94ccf">&#9670;&#160;</a></span>SamplerAddressMode</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -206,7 +203,7 @@ Enumerations</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum class liger::rhi::SamplerAddressMode : uint8</td>
+          <td class="memname">enum class liger::rhi::SamplerAddressMode : uint8_t</td>
         </tr>
       </table>
   </td>
@@ -220,8 +217,8 @@ Enumerations</h2></td></tr>
 
 </div>
 </div>
-<a id="af1fe54d9e62e8bf40a12586970a9ad1e" name="af1fe54d9e62e8bf40a12586970a9ad1e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af1fe54d9e62e8bf40a12586970a9ad1e">&#9670;&#160;</a></span>SamplerBorderColor</h2>
+<a id="ad99214b4fbe4268cc7f1aa265df3e185" name="ad99214b4fbe4268cc7f1aa265df3e185"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad99214b4fbe4268cc7f1aa265df3e185">&#9670;&#160;</a></span>SamplerBorderColor</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -230,7 +227,7 @@ Enumerations</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum class liger::rhi::SamplerBorderColor : uint8</td>
+          <td class="memname">enum class liger::rhi::SamplerBorderColor : uint8_t</td>
         </tr>
       </table>
   </td>
@@ -244,8 +241,8 @@ Enumerations</h2></td></tr>
 
 </div>
 </div>
-<a id="a923315a817fd8b559c29f0dbcad419b0" name="a923315a817fd8b559c29f0dbcad419b0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a923315a817fd8b559c29f0dbcad419b0">&#9670;&#160;</a></span>SamplerMipmapMode</h2>
+<a id="a51404bd1637c9de00a8f805d61490f8a" name="a51404bd1637c9de00a8f805d61490f8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51404bd1637c9de00a8f805d61490f8a">&#9670;&#160;</a></span>SamplerMipmapMode</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -254,7 +251,7 @@ Enumerations</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum class liger::rhi::SamplerMipmapMode : uint8</td>
+          <td class="memname">enum class liger::rhi::SamplerMipmapMode : uint8_t</td>
         </tr>
       </table>
   </td>
@@ -273,7 +270,7 @@ Enumerations</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_3d9126aa00c041bc0b8f859d1965a0f4.html">src</a></li><li class="navelem"><a class="el" href="dir_bf657e2376c4e6f050f9c84fca518581.html">liger</a></li><li class="navelem"><a class="el" href="dir_429dd79c34274212c3d78e5c4f3daadc.html">render</a></li><li class="navelem"><a class="el" href="dir_b4735eb260161decbb2f95f24b7ed8e2.html">rhi</a></li><li class="navelem"><a class="el" href="sampler_8hpp.html">sampler.hpp</a></li>
+    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_3d9126aa00c041bc0b8f859d1965a0f4.html">src</a></li><li class="navelem"><a class="el" href="dir_bf657e2376c4e6f050f9c84fca518581.html">liger</a></li><li class="navelem"><a class="el" href="dir_429dd79c34274212c3d78e5c4f3daadc.html">render</a></li><li class="navelem"><a class="el" href="dir_b4735eb260161decbb2f95f24b7ed8e2.html">rhi</a></li><li class="navelem"><a class="el" href="dir_df1a9dd0d77388a95f20393e72c90884.html">first_draft</a></li><li class="navelem"><a class="el" href="sampler_8hpp.html">sampler.hpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

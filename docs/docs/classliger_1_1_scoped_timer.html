@@ -105,19 +105,19 @@ $(document).ready(function(){initNavTree('classliger_1_1_scoped_timer.html','');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a67b8a19512bbb00ddd85214bf54fa3bc" id="r_a67b8a19512bbb00ddd85214bf54fa3bc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1_scoped_timer.html#a67b8a19512bbb00ddd85214bf54fa3bc">ScopedTimer</a> (uint64 channel, const std::string &amp;name)</td></tr>
-<tr class="separator:a67b8a19512bbb00ddd85214bf54fa3bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82ff9d0efc13594984e97bd39a343ea1" id="r_a82ff9d0efc13594984e97bd39a343ea1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1_scoped_timer.html#a82ff9d0efc13594984e97bd39a343ea1">~ScopedTimer</a> ()</td></tr>
-<tr class="memdesc:a82ff9d0efc13594984e97bd39a343ea1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs the lifetime of the object with specified log channel and name.  <br /></td></tr>
-<tr class="separator:a82ff9d0efc13594984e97bd39a343ea1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe280f421b352b77a9859659a42f96f0" id="r_abe280f421b352b77a9859659a42f96f0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1_scoped_timer.html#abe280f421b352b77a9859659a42f96f0">ScopedTimer</a> (const std::string_view channel, const std::string_view message)</td></tr>
+<tr class="separator:abe280f421b352b77a9859659a42f96f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae06b0a466ff8310be09f8e512cfdf5cc" id="r_ae06b0a466ff8310be09f8e512cfdf5cc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1_scoped_timer.html#ae06b0a466ff8310be09f8e512cfdf5cc">~ScopedTimer</a> ()</td></tr>
+<tr class="memdesc:ae06b0a466ff8310be09f8e512cfdf5cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs the lifetime of the object with specified log channel and name.  <br /></td></tr>
+<tr class="separator:ae06b0a466ff8310be09f8e512cfdf5cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utility class for measuring time taking to execute a scope of code. </p>
 
-<p class="definition">Definition at line <a class="el" href="time_8hpp_source.html#l00068">68</a> of file <a class="el" href="time_8hpp_source.html">time.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="time_8hpp_source.html#l00069">69</a> of file <a class="el" href="time_8hpp_source.html">time.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a67b8a19512bbb00ddd85214bf54fa3bc" name="a67b8a19512bbb00ddd85214bf54fa3bc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a67b8a19512bbb00ddd85214bf54fa3bc">&#9670;&#160;</a></span>ScopedTimer()</h2>
+<a id="abe280f421b352b77a9859659a42f96f0" name="abe280f421b352b77a9859659a42f96f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe280f421b352b77a9859659a42f96f0">&#9670;&#160;</a></span>ScopedTimer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -126,16 +126,16 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">liger::core::ScopedTimer::ScopedTimer </td>
+          <td class="memname">liger::ScopedTimer::ScopedTimer </td>
           <td>(</td>
-          <td class="paramtype">uint64&#160;</td>
+          <td class="paramtype">const std::string_view&#160;</td>
           <td class="paramname"><em>channel</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>name</em>&#160;</td>
+          <td class="paramtype">const std::string_view&#160;</td>
+          <td class="paramname"><em>message</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -152,23 +152,23 @@ Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">channel</td><td><a class="el" href="classliger_1_1_log.html" title="Container of messages, that can have several ILogWriter writers.">Log</a> channel for the timer. </td></tr>
-    <tr><td class="paramname">name</td><td>Message to log upon destruction. </td></tr>
+    <tr><td class="paramname">message</td><td>Message to log upon destruction. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="time_8cpp_source.html#l00043">43</a> of file <a class="el" href="time_8cpp_source.html">time.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="time_8cpp_source.html#l00044">44</a> of file <a class="el" href="time_8cpp_source.html">time.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a82ff9d0efc13594984e97bd39a343ea1" name="a82ff9d0efc13594984e97bd39a343ea1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a82ff9d0efc13594984e97bd39a343ea1">&#9670;&#160;</a></span>~ScopedTimer()</h2>
+<a id="ae06b0a466ff8310be09f8e512cfdf5cc" name="ae06b0a466ff8310be09f8e512cfdf5cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae06b0a466ff8310be09f8e512cfdf5cc">&#9670;&#160;</a></span>~ScopedTimer()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">liger::core::ScopedTimer::~ScopedTimer </td>
+          <td class="memname">liger::ScopedTimer::~ScopedTimer </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -178,7 +178,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Logs the lifetime of the object with specified log channel and name. </p>
 
-<p class="definition">Definition at line <a class="el" href="time_8cpp_source.html#l00045">45</a> of file <a class="el" href="time_8cpp_source.html">time.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="time_8cpp_source.html#l00047">47</a> of file <a class="el" href="time_8cpp_source.html">time.cpp</a>.</p>
 
 </div>
 </div>

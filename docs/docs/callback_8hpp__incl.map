@@ -1,23 +1,20 @@
 <map id="callback.hpp" name="callback.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="329,5,423,31"/>
-<area shape="rect" id="Node000002" href="$default__log_8hpp.html" title=" " alt="" coords="91,79,278,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="345,34,232,76,230,71,343,29"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="239,374,375,399"/>
-<area shape="poly" id="edge11_Node000001_Node000006" title=" " alt="" coords="379,32,379,164,379,241,374,276,361,309,329,363,324,360,357,307,369,275,374,240,374,164,374,32"/>
-<area shape="rect" id="Node000008" href="$log__channels_8hpp_source.html" title=" " alt="" coords="413,79,614,105"/>
-<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="401,29,478,69,475,74,398,34"/>
-<area shape="rect" id="Node000003" href="$log_8hpp.html" title=" " alt="" coords="83,153,224,178"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="182,106,167,139,162,137,177,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="76,5,170,31"/>
+<area shape="rect" id="Node000002" href="$default__log_8hpp.html" title=" " alt="" coords="29,79,217,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,31,126,63,120,63,120,31"/>
+<area shape="rect" id="Node000003" href="$log_8hpp.html" title=" " alt="" coords="52,153,194,178"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="126,105,126,137,120,137,120,105"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="5,226,86,252"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="137,181,78,220,75,215,134,177"/>
-<area shape="rect" id="Node000005" href="$log__message_8hpp.html" title=" " alt="" coords="137,300,338,326"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="152,179,144,213,145,233,151,251,169,273,194,290,190,295,165,277,146,253,140,233,139,213,146,178"/>
-<area shape="rect" id="Node000007" href="$log__writer_8hpp.html" title=" " alt="" coords="160,226,339,252"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="171,177,223,215,220,219,168,181"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="251,324,287,361,283,364,247,328"/>
-<area shape="poly" id="edge7_Node000007_Node000005" title=" " alt="" coords="250,253,245,285,239,284,245,252"/>
-<area shape="rect" id="Node000009" href="$enum__bitmask_8hpp.html" title=" " alt="" coords="419,153,608,178"/>
-<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="516,105,516,137,511,137,511,105"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="472,226,555,252"/>
-<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="516,179,516,211,511,211,511,179"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="112,181,71,218,68,214,108,177"/>
+<area shape="rect" id="Node000005" href="$log__message_8hpp.html" title=" " alt="" coords="85,300,286,326"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="128,178,136,212,151,251,171,286,166,289,146,253,131,213,123,179"/>
+<area shape="rect" id="Node000009" href="$log__writer_8hpp.html" title=" " alt="" coords="160,226,339,252"/>
+<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="146,177,216,216,214,221,143,181"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="74,374,134,399"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="173,328,131,365,127,361,170,324"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="159,374,212,399"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="188,326,188,358,183,358,183,326"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="237,374,324,399"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="203,324,254,362,251,366,200,328"/>
+<area shape="poly" id="edge9_Node000009_Node000005" title=" " alt="" coords="241,254,208,290,204,287,237,250"/>
 </map>

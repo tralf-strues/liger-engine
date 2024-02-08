@@ -93,17 +93,42 @@ $(document).ready(function(){initNavTree('classliger_1_1rhi_1_1_i_device.html','
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classliger_1_1rhi_1_1_i_device-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">liger::rhi::IDevice Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Logical device, an interface for working with a physical device (e.g. GPU).  
+ <a href="classliger_1_1rhi_1_1_i_device.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="device_8hpp_source.html">device.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_i_device_1_1_info.html">Info</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Device info, which can be used to identify the device needed.  <a href="structliger_1_1rhi_1_1_i_device_1_1_info.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_i_device_1_1_properties.html">Properties</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structliger_1_1rhi_1_1_i_device_1_1_properties.html" title="Properties, features and limits of the device.">Properties</a>, features and limits of the device.  <a href="structliger_1_1rhi_1_1_i_device_1_1_properties.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_i_device_1_1_submit_description.html">SubmitDescription</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a656bbc63c4af594149bf15816c08b53b" id="r_a656bbc63c4af594149bf15816c08b53b"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#a656bbc63c4af594149bf15816c08b53b">Type</a> : uint8_t { <br />
+&#160;&#160;<b>kUndefined</b>
+, <b>kIntegratedGPU</b>
+, <b>kDiscreteGPU</b>
+, <b>kVirtualGPU</b>
+, <br />
+&#160;&#160;<b>kCPU</b>
+<br />
+ }</td></tr>
+<tr class="memdesc:a656bbc63c4af594149bf15816c08b53b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of the device.  <a href="classliger_1_1rhi_1_1_i_device.html#a656bbc63c4af594149bf15816c08b53b">More...</a><br /></td></tr>
+<tr class="separator:a656bbc63c4af594149bf15816c08b53b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -141,7 +166,7 @@ virtual <a class="el" href="structliger_1_1rhi_1_1_handle.html">SemaphoreHandle<
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>DeleteSemaphore</b> (<a class="el" href="structliger_1_1rhi_1_1_handle.html">SemaphoreHandle</a> semaphore)=0</td></tr>
 <tr class="separator:ac0a31c75559f662075be37fe50c79667"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ac518701dcf23729631f09e00b3f700" id="r_a7ac518701dcf23729631f09e00b3f700"><td class="memItemLeft" align="right" valign="top"><a id="a7ac518701dcf23729631f09e00b3f700" name="a7ac518701dcf23729631f09e00b3f700"></a>
-virtual <a class="el" href="structliger_1_1rhi_1_1_handle.html">WindowSurfaceHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><b>CreateWindowSurface</b> (Window *window)=0</td></tr>
+virtual <a class="el" href="structliger_1_1rhi_1_1_handle.html">WindowSurfaceHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><b>CreateWindowSurface</b> (<a class="el" href="classliger_1_1_window.html">Window</a> *window)=0</td></tr>
 <tr class="separator:a7ac518701dcf23729631f09e00b3f700"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c24fe660e360a386411613f835f421b" id="r_a5c24fe660e360a386411613f835f421b"><td class="memItemLeft" align="right" valign="top"><a id="a5c24fe660e360a386411613f835f421b" name="a5c24fe660e360a386411613f835f421b"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>DeleteWindowSurface</b> (<a class="el" href="structliger_1_1rhi_1_1_handle.html">WindowSurfaceHandle</a> window_surface)=0</td></tr>
@@ -311,7 +336,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>GenerateMipLe
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>TransitionLayout</b> (<a class="el" href="structliger_1_1rhi_1_1_handle.html">TextureHandle</a> texture, TextureLayout old_layout, TextureLayout new_layout)=0</td></tr>
 <tr class="separator:ab15d32973f0a28a78fd66b589b4f584d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab578181aecbe67cb59bbf938bb0a8a50" id="r_ab578181aecbe67cb59bbf938bb0a8a50"><td class="memItemLeft" align="right" valign="top"><a id="ab578181aecbe67cb59bbf938bb0a8a50" name="ab578181aecbe67cb59bbf938bb0a8a50"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>SetBufferBarrier</b> (<a class="el" href="structliger_1_1rhi_1_1_handle.html">BufferHandle</a> buffer, MemoryAccessDependencies src_access, MemoryAccessDependencies dst_access, <a class="el" href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863">PipelineStages</a> src_stages, <a class="el" href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863">PipelineStages</a> dst_stages, uint32 offset, uint32 size)=0</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>SetBufferBarrier</b> (<a class="el" href="structliger_1_1rhi_1_1_handle.html">BufferHandle</a> buffer, MemoryAccessDependencies src_access, MemoryAccessDependencies dst_access, <a class="el" href="first__draft_2graphics__pipeline_8hpp.html#a04924eaa9e269ba92b62074582cc296f">PipelineStages</a> src_stages, <a class="el" href="first__draft_2graphics__pipeline_8hpp.html#a04924eaa9e269ba92b62074582cc296f">PipelineStages</a> dst_stages, uint32 offset, uint32 size)=0</td></tr>
 <tr class="separator:ab578181aecbe67cb59bbf938bb0a8a50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc2c698bb6c8f8e9062126122d1df60d" id="r_acc2c698bb6c8f8e9062126122d1df60d"><td class="memItemLeft" align="right" valign="top"><a id="acc2c698bb6c8f8e9062126122d1df60d" name="acc2c698bb6c8f8e9062126122d1df60d"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>CopyBuffer</b> (<a class="el" href="structliger_1_1rhi_1_1_handle.html">BufferHandle</a> src_buffer, <a class="el" href="structliger_1_1rhi_1_1_handle.html">BufferHandle</a> dst_buffer, uint32 size, uint32 src_offset=0, uint32 dst_offset=0)=0</td></tr>
@@ -325,6 +350,53 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>CopyBuffer</b
 <tr class="memitem:ab9f2a2fdb532c47d1ad0e66439d56e38" id="r_ab9f2a2fdb532c47d1ad0e66439d56e38"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#ab9f2a2fdb532c47d1ad0e66439d56e38">CopyTexture</a> (<a class="el" href="structliger_1_1rhi_1_1_handle.html">TextureHandle</a> src_texture, <a class="el" href="structliger_1_1rhi_1_1_handle.html">TextureHandle</a> dst_texture, uint32 width, uint32 height)=0</td></tr>
 <tr class="memdesc:ab9f2a2fdb532c47d1ad0e66439d56e38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy data from the src to the dst texture.  <br /></td></tr>
 <tr class="separator:ab9f2a2fdb532c47d1ad0e66439d56e38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affb3130b25d81c5a7eb821df941b70f1" id="r_affb3130b25d81c5a7eb821df941b70f1"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="structliger_1_1rhi_1_1_i_device_1_1_info.html">Info</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#affb3130b25d81c5a7eb821df941b70f1">GetInfo</a> () const =0</td></tr>
+<tr class="memdesc:affb3130b25d81c5a7eb821df941b70f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the device info, which is exactly the same as the corresponding info returned by.  <br /></td></tr>
+<tr class="separator:affb3130b25d81c5a7eb821df941b70f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87866901716b84a969ebbeaa90c5d773" id="r_a87866901716b84a969ebbeaa90c5d773"><td class="memItemLeft" align="right" valign="top">virtual uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#a87866901716b84a969ebbeaa90c5d773">GetFramesInFlight</a> () const =0</td></tr>
+<tr class="memdesc:a87866901716b84a969ebbeaa90c5d773"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of frames in flight the device is configured to work with.  <br /></td></tr>
+<tr class="separator:a87866901716b84a969ebbeaa90c5d773"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87b07b61c661759cbc1102a4b1c5e840" id="r_a87b07b61c661759cbc1102a4b1c5e840"><td class="memItemLeft" align="right" valign="top">virtual uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#a87b07b61c661759cbc1102a4b1c5e840">BeginFrame</a> (<a class="el" href="classliger_1_1rhi_1_1_i_swapchain.html">ISwapchain</a> *swapchain)=0</td></tr>
+<tr class="memdesc:a87b07b61c661759cbc1102a4b1c5e840"><td class="mdescLeft">&#160;</td><td class="mdescRight">Begin a frame with the specified swapchain as the main target.  <br /></td></tr>
+<tr class="separator:a87b07b61c661759cbc1102a4b1c5e840"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad83fb74600394ac3145db9d3c9d1cf88" id="r_ad83fb74600394ac3145db9d3c9d1cf88"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#ad83fb74600394ac3145db9d3c9d1cf88">EndFrame</a> ()=0</td></tr>
+<tr class="memdesc:ad83fb74600394ac3145db9d3c9d1cf88"><td class="mdescLeft">&#160;</td><td class="mdescRight">End the frame and present to screen (with the swapchain specified in.  <br /></td></tr>
+<tr class="separator:ad83fb74600394ac3145db9d3c9d1cf88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17bc745605be8227cbeea3250b5a4653" id="r_a17bc745605be8227cbeea3250b5a4653"><td class="memItemLeft" align="right" valign="top"><a id="a17bc745605be8227cbeea3250b5a4653" name="a17bc745605be8227cbeea3250b5a4653"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>BeginOffscreenFrame</b> ()=0</td></tr>
+<tr class="memdesc:a17bc745605be8227cbeea3250b5a4653"><td class="mdescLeft">&#160;</td><td class="mdescRight">Begin an offscreen frame, i.e. without rendering and presenting to screen. <br /></td></tr>
+<tr class="separator:a17bc745605be8227cbeea3250b5a4653"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5a9ee9fdd875c69471d2cde6bc89d96" id="r_aa5a9ee9fdd875c69471d2cde6bc89d96"><td class="memItemLeft" align="right" valign="top"><a id="aa5a9ee9fdd875c69471d2cde6bc89d96" name="aa5a9ee9fdd875c69471d2cde6bc89d96"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>EndOffscreenFrame</b> ()=0</td></tr>
+<tr class="memdesc:aa5a9ee9fdd875c69471d2cde6bc89d96"><td class="mdescLeft">&#160;</td><td class="mdescRight">End the offscreen frame. <br /></td></tr>
+<tr class="separator:aa5a9ee9fdd875c69471d2cde6bc89d96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40ad4d4d0a7f8bc88a0ab9638f09c9dd" id="r_a40ad4d4d0a7f8bc88a0ab9638f09c9dd"><td class="memItemLeft" align="right" valign="top">virtual uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#a40ad4d4d0a7f8bc88a0ab9638f09c9dd">CurrentFrame</a> () const =0</td></tr>
+<tr class="memdesc:a40ad4d4d0a7f8bc88a0ab9638f09c9dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current frame index in range 0...FIF-1.  <br /></td></tr>
+<tr class="separator:a40ad4d4d0a7f8bc88a0ab9638f09c9dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aebf617f0bcd8fdfcb08400fc341455f4" id="r_aebf617f0bcd8fdfcb08400fc341455f4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#aebf617f0bcd8fdfcb08400fc341455f4">Execute</a> (<a class="el" href="classliger_1_1rhi_1_1_render_graph.html">RenderGraph</a> &amp;render_graph)=0</td></tr>
+<tr class="memdesc:aebf617f0bcd8fdfcb08400fc341455f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the render graph.  <br /></td></tr>
+<tr class="separator:aebf617f0bcd8fdfcb08400fc341455f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:accd4879102fe8e90a14c48397121af05" id="r_accd4879102fe8e90a14c48397121af05"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classliger_1_1rhi_1_1_render_graph_builder.html">RenderGraphBuilder</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#accd4879102fe8e90a14c48397121af05">NewRenderGraphBuilder</a> ()=0</td></tr>
+<tr class="memdesc:accd4879102fe8e90a14c48397121af05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a render graph builder, the object for constructing a render graph.  <br /></td></tr>
+<tr class="separator:accd4879102fe8e90a14c48397121af05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb6d908edda4997cfe15e75095f49f98" id="r_adb6d908edda4997cfe15e75095f49f98"><td class="memItemLeft" align="right" valign="top"><a id="adb6d908edda4997cfe15e75095f49f98" name="adb6d908edda4997cfe15e75095f49f98"></a>
+virtual std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_i_swapchain.html">ISwapchain</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CreateSwapchain</b> (const <a class="el" href="structliger_1_1rhi_1_1_i_swapchain_1_1_info.html">ISwapchain::Info</a> &amp;info)=0</td></tr>
+<tr class="separator:adb6d908edda4997cfe15e75095f49f98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84c7f54650fac708c816100cbc4fe345" id="r_a84c7f54650fac708c816100cbc4fe345"><td class="memItemLeft" align="right" valign="top"><a id="a84c7f54650fac708c816100cbc4fe345" name="a84c7f54650fac708c816100cbc4fe345"></a>
+virtual std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_i_texture.html">ITexture</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CreateTexture</b> (const <a class="el" href="structliger_1_1rhi_1_1_i_texture_1_1_info.html">ITexture::Info</a> &amp;info)=0</td></tr>
+<tr class="separator:a84c7f54650fac708c816100cbc4fe345"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6870e4582de4d81e9f34fbf2ca171776" id="r_a6870e4582de4d81e9f34fbf2ca171776"><td class="memItemLeft" align="right" valign="top"><a id="a6870e4582de4d81e9f34fbf2ca171776" name="a6870e4582de4d81e9f34fbf2ca171776"></a>
+virtual std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_i_buffer.html">IBuffer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CreateBuffer</b> (const <a class="el" href="structliger_1_1rhi_1_1_i_buffer_1_1_info.html">IBuffer::Info</a> &amp;info)=0</td></tr>
+<tr class="separator:a6870e4582de4d81e9f34fbf2ca171776"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afdafd8d42f5dcfd5c03eac378a42100c" id="r_afdafd8d42f5dcfd5c03eac378a42100c"><td class="memItemLeft" align="right" valign="top"><a id="afdafd8d42f5dcfd5c03eac378a42100c" name="afdafd8d42f5dcfd5c03eac378a42100c"></a>
+virtual std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_i_shader_module.html">IShaderModule</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CreateShaderModule</b> (const <a class="el" href="structliger_1_1rhi_1_1_i_shader_module_1_1_source.html">IShaderModule::Source</a> &amp;source)=0</td></tr>
+<tr class="separator:afdafd8d42f5dcfd5c03eac378a42100c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b9e51475c915443b89c674578ea5b40" id="r_a1b9e51475c915443b89c674578ea5b40"><td class="memItemLeft" align="right" valign="top"><a id="a1b9e51475c915443b89c674578ea5b40" name="a1b9e51475c915443b89c674578ea5b40"></a>
+virtual std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_i_compute_pipeline.html">IComputePipeline</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CreatePipeline</b> (const <a class="el" href="classliger_1_1rhi_1_1_i_shader_module.html">IShaderModule</a> *compute_shader)=0</td></tr>
+<tr class="separator:a1b9e51475c915443b89c674578ea5b40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a417bc73f4b5def996a295c6a069a4e86" id="r_a417bc73f4b5def996a295c6a069a4e86"><td class="memItemLeft" align="right" valign="top"><a id="a417bc73f4b5def996a295c6a069a4e86" name="a417bc73f4b5def996a295c6a069a4e86"></a>
+virtual std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_i_graphics_pipeline.html">IGraphicsPipeline</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CreatePipeline</b> (const <a class="el" href="structliger_1_1rhi_1_1_i_graphics_pipeline_1_1_info.html">IGraphicsPipeline::Info</a> &amp;info)=0</td></tr>
+<tr class="separator:a417bc73f4b5def996a295c6a069a4e86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a775644be26dc0aeb6c982e37bd7fec35" id="r_a775644be26dc0aeb6c982e37bd7fec35"><td class="memItemLeft" align="right" valign="top"><a id="a775644be26dc0aeb6c982e37bd7fec35" name="a775644be26dc0aeb6c982e37bd7fec35"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>IDevice</b> (const <a class="el" href="classliger_1_1rhi_1_1_i_device.html">IDevice</a> &amp;other)=delete</td></tr>
 <tr class="separator:a775644be26dc0aeb6c982e37bd7fec35"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -340,31 +412,28 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>CopyBuffer</b
 <tr class="memitem:af9544b9ea13f78afe2a9d264ce2eb9e0" id="r_af9544b9ea13f78afe2a9d264ce2eb9e0"><td class="memItemLeft" align="right" valign="top"><a id="af9544b9ea13f78afe2a9d264ce2eb9e0" name="af9544b9ea13f78afe2a9d264ce2eb9e0"></a>
 virtual const <a class="el" href="structliger_1_1rhi_1_1_device_info.html">DeviceInfo</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetInfo</b> () const =0</td></tr>
 <tr class="separator:af9544b9ea13f78afe2a9d264ce2eb9e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab09ab9705612871f0e74463a88883d08" id="r_ab09ab9705612871f0e74463a88883d08"><td class="memItemLeft" align="right" valign="top"><a id="ab09ab9705612871f0e74463a88883d08" name="ab09ab9705612871f0e74463a88883d08"></a>
-virtual <a class="el" href="classliger_1_1rhi_1_1_fence.html">Fence</a>&#160;</td><td class="memItemRight" valign="bottom"><b>CreateFence</b> ()=0</td></tr>
-<tr class="separator:ab09ab9705612871f0e74463a88883d08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc7eac1725b4a08feddca4cefa216162" id="r_abc7eac1725b4a08feddca4cefa216162"><td class="memItemLeft" align="right" valign="top"><a id="abc7eac1725b4a08feddca4cefa216162" name="abc7eac1725b4a08feddca4cefa216162"></a>
+virtual <a class="el" href="classliger_1_1rhi_1_1_fence.html">Fence</a>&#160;</td><td class="memItemRight" valign="bottom"><b>CreateFence</b> (bool device_only=true)=0</td></tr>
+<tr class="separator:abc7eac1725b4a08feddca4cefa216162"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e4e766a8b32e88eb4a8e59a2f60dbbf" id="r_a6e4e766a8b32e88eb4a8e59a2f60dbbf"><td class="memItemLeft" align="right" valign="top"><a id="a6e4e766a8b32e88eb4a8e59a2f60dbbf" name="a6e4e766a8b32e88eb4a8e59a2f60dbbf"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>WaitForFences</b> (std::span&lt; const <a class="el" href="classliger_1_1rhi_1_1_fence.html">Fence</a> &gt; fences)=0</td></tr>
 <tr class="separator:a6e4e766a8b32e88eb4a8e59a2f60dbbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24832b19b45d2eb5befd4b3af9d54f42" id="r_a24832b19b45d2eb5befd4b3af9d54f42"><td class="memItemLeft" align="right" valign="top"><a id="a24832b19b45d2eb5befd4b3af9d54f42" name="a24832b19b45d2eb5befd4b3af9d54f42"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>ResetFence</b> (const <a class="el" href="classliger_1_1rhi_1_1_fence.html">Fence</a> &amp;fence)=0</td></tr>
 <tr class="separator:a24832b19b45d2eb5befd4b3af9d54f42"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83226c7966fc76a582bf5d780b852bdf" id="r_a83226c7966fc76a582bf5d780b852bdf"><td class="memItemLeft" align="right" valign="top"><a id="a83226c7966fc76a582bf5d780b852bdf" name="a83226c7966fc76a582bf5d780b852bdf"></a>
-virtual <a class="el" href="classliger_1_1rhi_1_1_semaphore.html">Semaphore</a>&#160;</td><td class="memItemRight" valign="bottom"><b>CreateSemaphore</b> ()=0</td></tr>
-<tr class="separator:a83226c7966fc76a582bf5d780b852bdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f9b933c16c2fc2e1a3edf043b8fff5e" id="r_a8f9b933c16c2fc2e1a3edf043b8fff5e"><td class="memItemLeft" align="right" valign="top"><a id="a8f9b933c16c2fc2e1a3edf043b8fff5e" name="a8f9b933c16c2fc2e1a3edf043b8fff5e"></a>
-virtual <a class="el" href="classliger_1_1rhi_1_1_surface.html">Surface</a>&#160;</td><td class="memItemRight" valign="bottom"><b>CreateSurface</b> (<a class="el" href="classliger_1_1core_1_1_window.html">core::Window</a> *window)=0</td></tr>
-<tr class="separator:a8f9b933c16c2fc2e1a3edf043b8fff5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61a86d069557dea39b676f28becaae5f" id="r_a61a86d069557dea39b676f28becaae5f"><td class="memItemLeft" align="right" valign="top"><a id="a61a86d069557dea39b676f28becaae5f" name="a61a86d069557dea39b676f28becaae5f"></a>
+virtual <a class="el" href="classliger_1_1rhi_1_1_surface.html">Surface</a>&#160;</td><td class="memItemRight" valign="bottom"><b>CreateSurface</b> (<a class="el" href="classliger_1_1_window.html">Window</a> *window)=0</td></tr>
+<tr class="separator:a61a86d069557dea39b676f28becaae5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a505a70d711232fc3eeb55d21cfa0ab66" id="r_a505a70d711232fc3eeb55d21cfa0ab66"><td class="memItemLeft" align="right" valign="top"><a id="a505a70d711232fc3eeb55d21cfa0ab66" name="a505a70d711232fc3eeb55d21cfa0ab66"></a>
 virtual <a class="el" href="classliger_1_1rhi_1_1_swapchain.html">Swapchain</a>&#160;</td><td class="memItemRight" valign="bottom"><b>CreateSwapchain</b> (const <a class="el" href="structliger_1_1rhi_1_1_swapchain_1_1_info.html">Swapchain::Info</a> &amp;info)=0</td></tr>
 <tr class="separator:a505a70d711232fc3eeb55d21cfa0ab66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9a48cf993079b50cc2aa82537daf4aa" id="r_ab9a48cf993079b50cc2aa82537daf4aa"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#ab9a48cf993079b50cc2aa82537daf4aa">GetSwapchainTextures</a> (const <a class="el" href="classliger_1_1rhi_1_1_swapchain.html">Swapchain</a> &amp;swapchain, std::span&lt; <a class="el" href="classliger_1_1rhi_1_1_texture.html">Texture</a> &gt; textures)=0</td></tr>
 <tr class="memdesc:ab9a48cf993079b50cc2aa82537daf4aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get swapchain textures.  <br /></td></tr>
 <tr class="separator:ab9a48cf993079b50cc2aa82537daf4aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5aa49bb960b64d07155db7a0f9454ab1" id="r_a5aa49bb960b64d07155db7a0f9454ab1"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#a5aa49bb960b64d07155db7a0f9454ab1">AcquireNextTexture</a> (const <a class="el" href="classliger_1_1rhi_1_1_swapchain.html">Swapchain</a> &amp;swapchain, uint32 &amp;texture_idx, const <a class="el" href="classliger_1_1rhi_1_1_semaphore.html">Semaphore</a> *signal_semaphore=nullptr, const <a class="el" href="classliger_1_1rhi_1_1_fence.html">Fence</a> *signal_fence=nullptr)=0</td></tr>
+<tr class="memitem:a5aa49bb960b64d07155db7a0f9454ab1" id="r_a5aa49bb960b64d07155db7a0f9454ab1"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#a5aa49bb960b64d07155db7a0f9454ab1">AcquireNextTexture</a> (const <a class="el" href="classliger_1_1rhi_1_1_swapchain.html">Swapchain</a> &amp;swapchain, uint32 &amp;texture_idx, const Semaphore *signal_semaphore=nullptr, const <a class="el" href="classliger_1_1rhi_1_1_fence.html">Fence</a> *signal_fence=nullptr)=0</td></tr>
 <tr class="memdesc:a5aa49bb960b64d07155db7a0f9454ab1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get next texture from the swapchain.  <br /></td></tr>
 <tr class="separator:a5aa49bb960b64d07155db7a0f9454ab1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4787a37abf76a704948c243dc339724" id="r_ad4787a37abf76a704948c243dc339724"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#ad4787a37abf76a704948c243dc339724">Present</a> (const <a class="el" href="classliger_1_1rhi_1_1_command_queue.html">CommandQueue</a> &amp;present_queue, const <a class="el" href="classliger_1_1rhi_1_1_swapchain.html">Swapchain</a> &amp;swapchain, std::span&lt; const <a class="el" href="classliger_1_1rhi_1_1_semaphore.html">Semaphore</a> &gt; wait_semaphores)=0</td></tr>
+<tr class="memitem:ad4787a37abf76a704948c243dc339724" id="r_ad4787a37abf76a704948c243dc339724"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#ad4787a37abf76a704948c243dc339724">Present</a> (const <a class="el" href="classliger_1_1rhi_1_1_command_queue.html">CommandQueue</a> &amp;present_queue, const <a class="el" href="classliger_1_1rhi_1_1_swapchain.html">Swapchain</a> &amp;swapchain, std::span&lt; const Semaphore &gt; wait_semaphores)=0</td></tr>
 <tr class="memdesc:ad4787a37abf76a704948c243dc339724"><td class="mdescLeft">&#160;</td><td class="mdescRight">Present rendered window surface.  <br /></td></tr>
 <tr class="separator:ad4787a37abf76a704948c243dc339724"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad7300c7facef65da75fe3258186ba8db" id="r_ad7300c7facef65da75fe3258186ba8db"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#ad7300c7facef65da75fe3258186ba8db">RecreateSwapchain</a> (<a class="el" href="classliger_1_1rhi_1_1_swapchain.html">Swapchain</a> &amp;swapchain)=0</td></tr>
@@ -434,7 +503,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>GenerateMipLe
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>TransitionLayout</b> (<a class="el" href="structliger_1_1rhi_1_1_handle.html">TextureHandle</a> texture, TextureLayout old_layout, TextureLayout new_layout)=0</td></tr>
 <tr class="separator:ab15d32973f0a28a78fd66b589b4f584d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab578181aecbe67cb59bbf938bb0a8a50" id="r_ab578181aecbe67cb59bbf938bb0a8a50"><td class="memItemLeft" align="right" valign="top"><a id="ab578181aecbe67cb59bbf938bb0a8a50" name="ab578181aecbe67cb59bbf938bb0a8a50"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>SetBufferBarrier</b> (<a class="el" href="structliger_1_1rhi_1_1_handle.html">BufferHandle</a> buffer, MemoryAccessDependencies src_access, MemoryAccessDependencies dst_access, <a class="el" href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863">PipelineStages</a> src_stages, <a class="el" href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863">PipelineStages</a> dst_stages, uint32 offset, uint32 size)=0</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>SetBufferBarrier</b> (<a class="el" href="structliger_1_1rhi_1_1_handle.html">BufferHandle</a> buffer, MemoryAccessDependencies src_access, MemoryAccessDependencies dst_access, <a class="el" href="first__draft_2graphics__pipeline_8hpp.html#a04924eaa9e269ba92b62074582cc296f">PipelineStages</a> src_stages, <a class="el" href="first__draft_2graphics__pipeline_8hpp.html#a04924eaa9e269ba92b62074582cc296f">PipelineStages</a> dst_stages, uint32 offset, uint32 size)=0</td></tr>
 <tr class="separator:ab578181aecbe67cb59bbf938bb0a8a50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc2c698bb6c8f8e9062126122d1df60d" id="r_acc2c698bb6c8f8e9062126122d1df60d"><td class="memItemLeft" align="right" valign="top"><a id="acc2c698bb6c8f8e9062126122d1df60d" name="acc2c698bb6c8f8e9062126122d1df60d"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>CopyBuffer</b> (<a class="el" href="structliger_1_1rhi_1_1_handle.html">BufferHandle</a> src_buffer, <a class="el" href="structliger_1_1rhi_1_1_handle.html">BufferHandle</a> dst_buffer, uint32 size, uint32 src_offset=0, uint32 dst_offset=0)=0</td></tr>
@@ -448,16 +517,39 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>CopyBuffer</b
 <tr class="memitem:ab9f2a2fdb532c47d1ad0e66439d56e38" id="r_ab9f2a2fdb532c47d1ad0e66439d56e38"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#ab9f2a2fdb532c47d1ad0e66439d56e38">CopyTexture</a> (<a class="el" href="structliger_1_1rhi_1_1_handle.html">TextureHandle</a> src_texture, <a class="el" href="structliger_1_1rhi_1_1_handle.html">TextureHandle</a> dst_texture, uint32 width, uint32 height)=0</td></tr>
 <tr class="memdesc:ab9f2a2fdb532c47d1ad0e66439d56e38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy data from the src to the dst texture.  <br /></td></tr>
 <tr class="separator:ab9f2a2fdb532c47d1ad0e66439d56e38"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr class="memitem:ab3c571fd99bdb335fea515b33bf97092" id="r_ab3c571fd99bdb335fea515b33bf97092"><td class="memItemLeft" align="right" valign="top">static constexpr uint32&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#ab3c571fd99bdb335fea515b33bf97092">kTextureDefaultViewIdx</a> = 0</td></tr>
-<tr class="separator:ab3c571fd99bdb335fea515b33bf97092"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
+<div class="textblock"><p>Logical device, an interface for working with a physical device (e.g. GPU). </p>
+
 <p class="definition">Definition at line <a class="el" href="deprecated_2device_8hpp_source.html#l00043">43</a> of file <a class="el" href="deprecated_2device_8hpp_source.html">deprecated/device.hpp</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+</div><h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="a656bbc63c4af594149bf15816c08b53b" name="a656bbc63c4af594149bf15816c08b53b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a656bbc63c4af594149bf15816c08b53b">&#9670;&#160;</a></span>Type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="classliger_1_1rhi_1_1_i_device.html#a656bbc63c4af594149bf15816c08b53b">liger::rhi::IDevice::Type</a> : uint8_t</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type of the device. </p>
+
+<p class="definition">Definition at line <a class="el" href="device_8hpp_source.html#l00049">49</a> of file <a class="el" href="device_8hpp_source.html">device.hpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="a5aa49bb960b64d07155db7a0f9454ab1" name="a5aa49bb960b64d07155db7a0f9454ab1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5aa49bb960b64d07155db7a0f9454ab1">&#9670;&#160;</a></span>AcquireNextTexture() <span class="overload">[1/2]</span></h2>
 
@@ -482,7 +574,7 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classliger_1_1rhi_1_1_semaphore.html">Semaphore</a> *&#160;</td>
+          <td class="paramtype">const Semaphore *&#160;</td>
           <td class="paramname"><em>signal_semaphore</em> = <code>nullptr</code>, </td>
         </tr>
         <tr>
@@ -577,6 +669,41 @@ Static Public Attributes</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true If swapchain is up to date and DOESN'T need recreating. </dd></dl>
+
+</div>
+</div>
+<a id="a87b07b61c661759cbc1102a4b1c5e840" name="a87b07b61c661759cbc1102a4b1c5e840"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87b07b61c661759cbc1102a4b1c5e840">&#9670;&#160;</a></span>BeginFrame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual uint32_t liger::rhi::IDevice::BeginFrame </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classliger_1_1rhi_1_1_i_swapchain.html">ISwapchain</a> *&#160;</td>
+          <td class="paramname"><em>swapchain</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Begin a frame with the specified swapchain as the main target. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">swapchain</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Index of the swapchain texture for this frame. </dd></dl>
 
 </div>
 </div>
@@ -1414,6 +1541,100 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="a40ad4d4d0a7f8bc88a0ab9638f09c9dd" name="a40ad4d4d0a7f8bc88a0ab9638f09c9dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40ad4d4d0a7f8bc88a0ab9638f09c9dd">&#9670;&#160;</a></span>CurrentFrame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual uint32_t liger::rhi::IDevice::CurrentFrame </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the current frame index in range 0...FIF-1. </p>
+<dl class="section warning"><dt>Warning</dt><dd>Calling this method outside of begin and end frame scope (either default or offscreen) can cause UB! </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Current frame in flight index. </dd></dl>
+
+</div>
+</div>
+<a id="ad83fb74600394ac3145db9d3c9d1cf88" name="ad83fb74600394ac3145db9d3c9d1cf88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad83fb74600394ac3145db9d3c9d1cf88">&#9670;&#160;</a></span>EndFrame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void liger::rhi::IDevice::EndFrame </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>End the frame and present to screen (with the swapchain specified in. </p>
+<dl class="section see"><dt>See also</dt><dd>{<a class="el" href="classliger_1_1rhi_1_1_i_device.html#a87b07b61c661759cbc1102a4b1c5e840" title="Begin a frame with the specified swapchain as the main target.">BeginFrame</a>} method). </dd></dl>
+
+</div>
+</div>
+<a id="aebf617f0bcd8fdfcb08400fc341455f4" name="aebf617f0bcd8fdfcb08400fc341455f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aebf617f0bcd8fdfcb08400fc341455f4">&#9670;&#160;</a></span>Execute()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void liger::rhi::IDevice::Execute </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classliger_1_1rhi_1_1_render_graph.html">RenderGraph</a> &amp;&#160;</td>
+          <td class="paramname"><em>render_graph</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Execute the render graph. </p>
+<dl class="section warning"><dt>Warning</dt><dd>Calling this method outside of begin and end frame scope (either default or offscreen) can cause UB! </dd>
+<dd>
+Consequent executions of render graphs during a single frame are not synchronized! // TODO:</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">render_graph</td><td>Render graph to execute, which must be created by this particular device. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a69c46d795abb1639bb37ba0c3fa62c05" name="a69c46d795abb1639bb37ba0c3fa62c05"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a69c46d795abb1639bb37ba0c3fa62c05">&#9670;&#160;</a></span>FlushBufferMemory() <span class="overload">[1/2]</span></h2>
 
@@ -1550,6 +1771,65 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classliger_1_1rhi_1_1_buffer.html">Buffer</a>'s binding index. </dd></dl>
+
+</div>
+</div>
+<a id="a87866901716b84a969ebbeaa90c5d773" name="a87866901716b84a969ebbeaa90c5d773"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87866901716b84a969ebbeaa90c5d773">&#9670;&#160;</a></span>GetFramesInFlight()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual uint32_t liger::rhi::IDevice::GetFramesInFlight </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the number of frames in flight the device is configured to work with. </p>
+<dl class="section note"><dt>Note</dt><dd>This number is set upon creating a device via </dd></dl>
+<dl class="section see"><dt>See also</dt><dd>{<a class="el" href="classliger_1_1rhi_1_1_i_instance.html#a4c90c4799ec7a5d05137a2df65122e56" title="Create device, based on the physical device type.">IInstance::CreateDevice</a>}. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The number of frames in flight. </dd></dl>
+
+</div>
+</div>
+<a id="affb3130b25d81c5a7eb821df941b70f1" name="affb3130b25d81c5a7eb821df941b70f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affb3130b25d81c5a7eb821df941b70f1">&#9670;&#160;</a></span>GetInfo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual const <a class="el" href="structliger_1_1rhi_1_1_i_device_1_1_info.html">Info</a> &amp; liger::rhi::IDevice::GetInfo </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the device info, which is exactly the same as the corresponding info returned by. </p>
+<dl class="section see"><dt>See also</dt><dd>{<a class="el" href="classliger_1_1rhi_1_1_i_instance.html#a5cdb4b8958e629023166d8386a2506c8" title="Get the available devices&#39; info list.">IInstance::GetDeviceInfoList</a>} method.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Device info. </dd></dl>
 
 </div>
 </div>
@@ -1915,6 +2195,34 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="accd4879102fe8e90a14c48397121af05" name="accd4879102fe8e90a14c48397121af05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#accd4879102fe8e90a14c48397121af05">&#9670;&#160;</a></span>NewRenderGraphBuilder()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="classliger_1_1rhi_1_1_render_graph_builder.html">RenderGraphBuilder</a> liger::rhi::IDevice::NewRenderGraphBuilder </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a render graph builder, the object for constructing a render graph. </p>
+<dl class="section return"><dt>Returns</dt><dd>Render graph builder. </dd></dl>
+
+</div>
+</div>
 <a id="ad4787a37abf76a704948c243dc339724" name="ad4787a37abf76a704948c243dc339724"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad4787a37abf76a704948c243dc339724">&#9670;&#160;</a></span>Present() <span class="overload">[1/2]</span></h2>
 
@@ -1939,7 +2247,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::span&lt; const <a class="el" href="classliger_1_1rhi_1_1_semaphore.html">Semaphore</a> &gt;&#160;</td>
+          <td class="paramtype">std::span&lt; const Semaphore &gt;&#160;</td>
           <td class="paramname"><em>wait_semaphores</em>&#160;</td>
         </tr>
         <tr>
@@ -2086,34 +2394,10 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="ab3c571fd99bdb335fea515b33bf97092" name="ab3c571fd99bdb335fea515b33bf97092"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab3c571fd99bdb335fea515b33bf97092">&#9670;&#160;</a></span>kTextureDefaultViewIdx</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr uint32 liger::rhi::IDevice::kTextureDefaultViewIdx = 0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="device_8hpp_source.html#l00128">128</a> of file <a class="el" href="device_8hpp_source.html">device.hpp</a>.</p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="deprecated_2device_8hpp_source.html">deprecated/device.hpp</a></li>
 <li><a class="el" href="device_8hpp_source.html">device.hpp</a></li>
+<li><a class="el" href="first__draft_2device_8hpp_source.html">first_draft/device.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

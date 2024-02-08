@@ -1,7 +1,5 @@
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
-set(YAML_BUILD_SHARED_LIBS off)
-
 add_subdirectory(fmt)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGLFW_INCLUDE_NONE")
@@ -15,4 +13,7 @@ add_subdirectory(glm)
 
 add_subdirectory(magic_enum)
 
+add_subdirectory(vma)
+
+set(YAML_BUILD_SHARED_LIBS off)
 add_subdirectory(yaml_cpp)

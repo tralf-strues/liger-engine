@@ -29,10 +29,10 @@
 
 #include <type_traits>
 
-#define ENABLE_ENUM_BITMASK(Enum)         \
-  template <>                             \
-  struct liger::EnumEnableBitmask<Enum> { \
-    static constexpr bool enabled = true; \
+#define ENABLE_ENUM_BITMASK(Enum)          \
+  template <>                              \
+  struct liger::EnumEnableBitmask<Enum> {  \
+    static constexpr bool kEnabled = true; \
   };
 
 namespace liger {
@@ -49,39 +49,39 @@ inline constexpr T Bit(std::uint32_t bit) { return 1 << bit; }
 
 template <typename Enum>
 struct EnumEnableBitmask {
-  static constexpr bool enabled = false;
+  static constexpr bool kEnabled = false;
 };
 
 template <typename Enum>
-requires EnumEnableBitmask<Enum>::enabled
+requires EnumEnableBitmask<Enum>::kEnabled
 inline constexpr Enum operator|(Enum lhs, Enum rhs) {
   using UnderlyingType = std::underlying_type<Enum>::type;
   return static_cast<Enum>(static_cast<UnderlyingType>(lhs) | static_cast<UnderlyingType>(rhs));
 }
 
 template <typename Enum>
-requires EnumEnableBitmask<Enum>::enabled
+requires EnumEnableBitmask<Enum>::kEnabled
 inline constexpr Enum operator&(Enum lhs, Enum rhs) {
   using UnderlyingType = std::underlying_type<Enum>::type;
   return static_cast<Enum>(static_cast<UnderlyingType>(lhs) & static_cast<UnderlyingType>(rhs));
 }
 
 template <typename Enum>
-requires EnumEnableBitmask<Enum>::enabled
+requires EnumEnableBitmask<Enum>::kEnabled
 inline constexpr Enum operator^(Enum lhs, Enum rhs) {
   using UnderlyingType = std::underlying_type<Enum>::type;
   return static_cast<Enum>(static_cast<UnderlyingType>(lhs) ^ static_cast<UnderlyingType>(rhs));
 }
 
 template <typename Enum>
-requires EnumEnableBitmask<Enum>::enabled
+requires EnumEnableBitmask<Enum>::kEnabled
 inline constexpr Enum operator~(Enum lhs) {
   using UnderlyingType = std::underlying_type<Enum>::type;
   return static_cast<Enum>(~static_cast<UnderlyingType>(lhs));
 }
 
 template <typename Enum>
-requires EnumEnableBitmask<Enum>::enabled
+requires EnumEnableBitmask<Enum>::kEnabled
 inline constexpr Enum operator|=(Enum& lhs, Enum rhs) {
   using UnderlyingType = std::underlying_type<Enum>::type;
   lhs = static_cast<Enum>(static_cast<UnderlyingType>(lhs) | static_cast<UnderlyingType>(rhs));

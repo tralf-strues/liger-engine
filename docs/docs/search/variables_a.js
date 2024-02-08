@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['type_0',['type',['../structliger_1_1rhi_1_1_texture_1_1_info.html#a2afd0b09f99491f58116dcba274251fc',1,'liger::rhi::Texture::Info']]]
+  ['offset_0',['offset',['../structliger_1_1rhi_1_1_render_area.html#af04cddbf0e118025232cd8765da59cb5',1,'liger::rhi::RenderArea']]]
 ];

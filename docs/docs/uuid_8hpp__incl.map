@@ -1,5 +1,5 @@
 <map id="uuid.hpp" name="uuid.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="38,5,108,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,141,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,31,76,63,70,63,70,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,76,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="10,79,71,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="43,31,43,63,38,63,38,31"/>
 </map>

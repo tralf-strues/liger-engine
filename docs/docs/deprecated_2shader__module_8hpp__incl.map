@@ -1,8 +1,9 @@
 <map id="shader_module.hpp" name="shader_module.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,140,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="8,153,137,178"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="65,33,50,54,39,80,38,95,41,111,55,139,51,142,36,112,32,95,34,78,46,51,60,30"/>
-<area shape="rect" id="Node000003" href="$format_8hpp.html" title=" " alt="" coords="49,79,219,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="85,29,116,65,112,69,81,33"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="126,107,95,142,91,139,122,103"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="89,5,223,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,134,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,34,97,71,94,67,140,29"/>
+<area shape="rect" id="Node000003" href="$format_8hpp.html" title=" " alt="" coords="158,79,328,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="173,29,218,67,215,71,169,34"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="213,153,273,178"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="246,105,246,137,240,137,240,105"/>
 </map>

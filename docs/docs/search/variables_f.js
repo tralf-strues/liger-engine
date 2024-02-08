@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['y_0',['y',['../structliger_1_1rhi_1_1_viewport.html#a912eebcdbc94b475eb1ece00f7792dc0',1,'liger::rhi::Viewport::y'],['../structliger_1_1rhi_1_1_render_area.html#a64dc52f7f8aa6ab76481a1be27e0d49a',1,'liger::rhi::RenderArea::y']]]
+  ['width_0',['width',['../structliger_1_1rhi_1_1_viewport.html#a5c59f6be989b727486da0402684c8adb',1,'liger::rhi::Viewport']]],
+  ['window_1',['window',['../structliger_1_1rhi_1_1_i_swapchain_1_1_info.html#a50d96f540868107c52321355ab8bc7a3',1,'liger::rhi::ISwapchain::Info']]]
 ];

@@ -92,177 +92,42 @@ $(document).ready(function(){initNavTree('shader__module_8hpp.html',''); initRes
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#enum-members">Enumerations</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#nested-classes">Classes</a>  </div>
   <div class="headertitle"><div class="title">shader_module.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;<a class="el" href="device__resource_8hpp_source.html">liger/render/rhi/device_resource.hpp</a>&gt;</code><br />
+<div class="textblock"><code>#include &lt;cstdint&gt;</code><br />
+<code>#include &lt;span&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for shader_module.hpp:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="shader__module_8hpp__incl.svg" width="239" height="184"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="shader__module_8hpp__incl.svg" width="147" height="111"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="shader__module_8hpp__dep__incl.svg" width="100%" height="493"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="shader__module_8hpp__dep__incl.svg" width="100%" height="548"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div>
 <p><a href="shader__module_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_shader_module_binary.html">liger::rhi::ShaderModuleBinary</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_shader_module.html">liger::rhi::IShaderModule</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_shader_module.html">liger::rhi::ShaderModule</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_i_shader_module_1_1_source.html">liger::rhi::IShaderModule::Source</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:aba849388b4d3e59226d58993c4638e3f" id="r_aba849388b4d3e59226d58993c4638e3f"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>ShaderModuleType</b> : uint8 { <br />
-&#160;&#160;<b>kVertex</b>
-, <b>kFragment</b>
-, <b>kCompute</b>
-, <b>kVertex</b>
-, <br />
-&#160;&#160;<b>kFragment</b>
-, <b>kCompute</b>
-<br />
- }</td></tr>
-<tr class="separator:aba849388b4d3e59226d58993c4638e3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a92e1c201dc0e43f9b47bbe9a14c2b04c" id="r_a92e1c201dc0e43f9b47bbe9a14c2b04c"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>ShaderStages</b> : uint32 { <b>kNone</b> = 0
-, <b>kVertex</b> = 0x0000'0001
-, <b>kFragment</b> = 0x0000'0010
-, <b>kCompute</b> = 0x0000'0020
- }</td></tr>
-<tr class="separator:a92e1c201dc0e43f9b47bbe9a14c2b04c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ff8728a1ae91e248f49efa374c6e017" id="r_a7ff8728a1ae91e248f49efa374c6e017"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>ShaderLanguage</b> : uint8 { <b>kVulkanGLSL</b>
-, <b>kVulkanGLSL</b>
- }</td></tr>
-<tr class="separator:a7ff8728a1ae91e248f49efa374c6e017"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a080b7e244b88b63e2d141579a4f999b1" id="r_a080b7e244b88b63e2d141579a4f999b1"><td class="memItemLeft" align="right" valign="top">constexpr ShaderStages&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="shader__module_8hpp.html#a080b7e244b88b63e2d141579a4f999b1">liger::rhi::GetShaderStageFromShaderModuleType</a> (ShaderModuleType type)</td></tr>
-<tr class="separator:a080b7e244b88b63e2d141579a4f999b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ea18d3f25506667d48051793c98a473" id="r_a8ea18d3f25506667d48051793c98a473"><td class="memItemLeft" align="right" valign="top"><a id="a8ea18d3f25506667d48051793c98a473" name="a8ea18d3f25506667d48051793c98a473"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ENABLE_ENUM_BITMASK</b> (liger::rhi::ShaderStages)</td></tr>
-<tr class="separator:a8ea18d3f25506667d48051793c98a473"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Nikita Mochalov (github.com/tralf-strues)</dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2023-09-26</dd></dl>
+<dl class="section date"><dt>Date</dt><dd>2024-02-03</dd></dl>
 <p>The MIT License (MIT) Copyright (c) 2023 Nikita Mochalov</p>
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
 <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
 <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </p>
 
 <p class="definition">Definition in file <a class="el" href="shader__module_8hpp_source.html">shader_module.hpp</a>.</p>
-</div><h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="a7ff8728a1ae91e248f49efa374c6e017" name="a7ff8728a1ae91e248f49efa374c6e017"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7ff8728a1ae91e248f49efa374c6e017">&#9670;&#160;</a></span>ShaderLanguage</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class liger::rhi::ShaderLanguage : uint8</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="shader__module_8hpp_source.html#l00050">50</a> of file <a class="el" href="shader__module_8hpp_source.html">shader_module.hpp</a>.</p>
-
-</div>
-</div>
-<a id="aba849388b4d3e59226d58993c4638e3f" name="aba849388b4d3e59226d58993c4638e3f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba849388b4d3e59226d58993c4638e3f">&#9670;&#160;</a></span>ShaderModuleType</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class liger::rhi::ShaderModuleType : uint8</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="shader__module_8hpp_source.html#l00034">34</a> of file <a class="el" href="shader__module_8hpp_source.html">shader_module.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a92e1c201dc0e43f9b47bbe9a14c2b04c" name="a92e1c201dc0e43f9b47bbe9a14c2b04c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a92e1c201dc0e43f9b47bbe9a14c2b04c">&#9670;&#160;</a></span>ShaderStages</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class liger::rhi::ShaderStages : uint32</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="shader__module_8hpp_source.html#l00040">40</a> of file <a class="el" href="shader__module_8hpp_source.html">shader_module.hpp</a>.</p>
-
-</div>
-</div>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a080b7e244b88b63e2d141579a4f999b1" name="a080b7e244b88b63e2d141579a4f999b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a080b7e244b88b63e2d141579a4f999b1">&#9670;&#160;</a></span>GetShaderStageFromShaderModuleType()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr ShaderStages liger::rhi::GetShaderStageFromShaderModuleType </td>
-          <td>(</td>
-          <td class="paramtype">ShaderModuleType&#160;</td>
-          <td class="paramname"><em>type</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="shader__module_8hpp_source.html#l00056">56</a> of file <a class="el" href="shader__module_8hpp_source.html">shader_module.hpp</a>.</p>
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

@@ -1,9 +1,9 @@
 <map id="descriptor.hpp" name="descriptor.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="68,5,170,31"/>
-<area shape="rect" id="Node000002" href="$shader__module_8hpp.html" title=" " alt="" coords="9,79,229,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,31,122,63,116,63,116,31"/>
-<area shape="rect" id="Node000003" href="$device__resource_8hpp.html" title=" " alt="" coords="5,153,233,178"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="122,105,122,137,116,137,116,105"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="55,226,183,252"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="122,179,122,211,116,211,116,179"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="64,5,167,31"/>
+<area shape="rect" id="Node000002" href="$shader__module_8hpp.html" title=" " alt="" coords="5,79,226,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,31,118,63,113,63,113,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="47,153,107,178"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="111,106,93,140,88,138,107,104"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="131,153,180,178"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="124,104,144,138,139,140,120,106"/>
 </map>

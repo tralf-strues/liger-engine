@@ -5,7 +5,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   add_compile_options("-DLIGER_DEBUG_MODE")
 
   if(WIN32)
-    add_compile_options("/Od")    
+    add_compile_options("/Od")
   else()
     add_compile_options("-g")
     add_compile_options("-O0")

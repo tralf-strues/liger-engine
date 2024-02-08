@@ -129,93 +129,85 @@ $(document).ready(function(){initNavTree('synchronization_8hpp_source.html','');
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &lt;<a class="code" href="buffer_8hpp.html">liger/render/rhi/buffer.hpp</a>&gt;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &lt;<a class="code" href="command__queue_8hpp.html">liger/render/rhi/command_queue.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &lt;liger/render/rhi/command_queue.hpp&gt;</span></div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &lt;<a class="code" href="graphics__pipeline_8hpp.html">liger/render/rhi/graphics_pipeline.hpp</a>&gt;</span></div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &lt;<a class="code" href="texture_8hpp.html">liger/render/rhi/texture.hpp</a>&gt;</span></div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">namespace </span>liger::rhi {</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="comment">/* Semaphore */</span></div>
-<div class="foldopen" id="foldopen00038" data-start="{" data-end="};">
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classliger_1_1rhi_1_1_semaphore.html">   38</a></span><span class="keyword">class </span><a class="code hl_class" href="classliger_1_1rhi_1_1_semaphore.html">Semaphore</a> final : <a class="code hl_class" href="classliger_1_1rhi_1_1_device_resource.html">DeviceResource</a> {</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="keyword">explicit</span> <a class="code hl_class" href="classliger_1_1rhi_1_1_semaphore.html">Semaphore</a>(DeviceResource::InternalHandle internal = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <a class="code hl_class" href="classliger_1_1rhi_1_1_semaphore.html">~Semaphore</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;  </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>};</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="comment"></span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="comment">/**</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment"> * @brief Synchronization primitive which can be used for sync between command queues and/or the CPU.</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment"> */</span></div>
+<div class="foldopen" id="foldopen00040" data-start="{" data-end="};">
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classliger_1_1rhi_1_1_fence.html">   40</a></span><span class="keyword">class </span><a class="code hl_class" href="classliger_1_1rhi_1_1_fence.html">Fence</a> final : <a class="code hl_class" href="classliger_1_1rhi_1_1_device_resource.html">DeviceResource</a> {</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keyword">explicit</span> <a class="code hl_class" href="classliger_1_1rhi_1_1_fence.html">Fence</a>(DeviceResource::InternalHandle internal = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <a class="code hl_class" href="classliger_1_1rhi_1_1_fence.html">~Fence</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;  </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>};</div>
 </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>Semaphore::Semaphore(DeviceResource::InternalHandle internal) : <a class="code hl_class" href="classliger_1_1rhi_1_1_device_resource.html">DeviceResource</a>(internal) {}</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="comment">/* Fence */</span></div>
-<div class="foldopen" id="foldopen00047" data-start="{" data-end="};">
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classliger_1_1rhi_1_1_fence.html">   47</a></span><span class="keyword">class </span><a class="code hl_class" href="classliger_1_1rhi_1_1_fence.html">Fence</a> final : <a class="code hl_class" href="classliger_1_1rhi_1_1_device_resource.html">DeviceResource</a> {</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keyword">explicit</span> <a class="code hl_class" href="classliger_1_1rhi_1_1_fence.html">Fence</a>(DeviceResource::InternalHandle internal = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <a class="code hl_class" href="classliger_1_1rhi_1_1_fence.html">~Fence</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;  </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>};</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>Fence::Fence(DeviceResource::InternalHandle internal) : <a class="code hl_class" href="classliger_1_1rhi_1_1_device_resource.html">DeviceResource</a>(internal) {}</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment">/* Buffer Barrier */</span></div>
+<div class="foldopen" id="foldopen00049" data-start="{" data-end="};">
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_buffer_barrier_info.html">   49</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structliger_1_1rhi_1_1_buffer_barrier_info.html">BufferBarrierInfo</a> {</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keyword">const</span> <a class="code hl_class" href="classliger_1_1rhi_1_1_buffer.html">Buffer</a>*       buffer;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  uint64_t            offset;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  uint64_t            size;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <a class="code hl_enumeration" href="first__draft_2graphics__pipeline_8hpp.html#a04924eaa9e269ba92b62074582cc296f">PipelineStages</a>      src_stages;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  MemoryAccess        src_access;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  <a class="code hl_enumeration" href="first__draft_2graphics__pipeline_8hpp.html#a04924eaa9e269ba92b62074582cc296f">PipelineStages</a>      dst_stages;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  MemoryAccess        dst_access;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <span class="keyword">const</span> <a class="code hl_class" href="classliger_1_1rhi_1_1_command_queue.html">CommandQueue</a>* src_queue{<span class="keyword">nullptr</span>};</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <span class="keyword">const</span> <a class="code hl_class" href="classliger_1_1rhi_1_1_command_queue.html">CommandQueue</a>* dst_queue{<span class="keyword">nullptr</span>};</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>};</div>
 </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>Fence::Fence(DeviceResource::InternalHandle internal) : <a class="code hl_class" href="classliger_1_1rhi_1_1_device_resource.html">DeviceResource</a>(internal) {}</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="comment">/* Buffer Barrier */</span></div>
-<div class="foldopen" id="foldopen00056" data-start="{" data-end="};">
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_buffer_barrier_info.html">   56</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structliger_1_1rhi_1_1_buffer_barrier_info.html">BufferBarrierInfo</a> {</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  <span class="keyword">const</span> <a class="code hl_class" href="classliger_1_1rhi_1_1_buffer.html">Buffer</a>*          buffer;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  uint32                 offset;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  uint32                 size;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <a class="code hl_enumeration" href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863">PipelineStages</a>         src_stages;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  MemoryAccessDependency src_access;</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <a class="code hl_enumeration" href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863">PipelineStages</a>         dst_stages;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  MemoryAccessDependency dst_access;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  <span class="keyword">const</span> <a class="code hl_class" href="classliger_1_1rhi_1_1_command_queue.html">CommandQueue</a>*    src_queue{<span class="keyword">nullptr</span>};</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <span class="keyword">const</span> <a class="code hl_class" href="classliger_1_1rhi_1_1_command_queue.html">CommandQueue</a>*    dst_queue{<span class="keyword">nullptr</span>};</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>};</div>
-</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="comment">/* Texture Barrier */</span></div>
-<div class="foldopen" id="foldopen00072" data-start="{" data-end="};">
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_texture_barrier_info.html">   72</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structliger_1_1rhi_1_1_texture_barrier_info.html">TextureBarrierInfo</a> {</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="keyword">const</span> <a class="code hl_class" href="classliger_1_1rhi_1_1_texture.html">Texture</a>*         texture;</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  <a class="code hl_struct" href="structliger_1_1rhi_1_1_texture_view_info.html">TextureViewInfo</a>        view;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment">/* Texture Barrier */</span></div>
+<div class="foldopen" id="foldopen00065" data-start="{" data-end="};">
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_texture_barrier_info.html">   65</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structliger_1_1rhi_1_1_texture_barrier_info.html">TextureBarrierInfo</a> {</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <span class="keyword">const</span> <a class="code hl_class" href="classliger_1_1rhi_1_1_texture.html">Texture</a>*      texture;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  uint32_t            first_mip;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  uint32_t            mip_count;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  uint32_t            first_layer;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  uint32_t            layer_count;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <a class="code hl_enumeration" href="first__draft_2graphics__pipeline_8hpp.html#a04924eaa9e269ba92b62074582cc296f">PipelineStages</a>      src_stages;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  MemoryAccess        src_access;</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <a class="code hl_enumeration" href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863">PipelineStages</a>         src_stages;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  MemoryAccessDependency src_access;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <a class="code hl_enumeration" href="first__draft_2graphics__pipeline_8hpp.html#a04924eaa9e269ba92b62074582cc296f">PipelineStages</a>      dst_stages;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  MemoryAccess        dst_access;</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  <a class="code hl_enumeration" href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863">PipelineStages</a>         dst_stages;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  MemoryAccessDependency dst_access;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  TextureLayout       old_layout;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  TextureLayout       new_layout;</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  TextureLayout          old_layout;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  TextureLayout          new_layout;</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  <span class="keyword">const</span> <a class="code hl_class" href="classliger_1_1rhi_1_1_command_queue.html">CommandQueue</a>*    src_queue{<span class="keyword">nullptr</span>};</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  <span class="keyword">const</span> <a class="code hl_class" href="classliger_1_1rhi_1_1_command_queue.html">CommandQueue</a>*    dst_queue{<span class="keyword">nullptr</span>};</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>};</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  <span class="keyword">const</span> <a class="code hl_class" href="classliger_1_1rhi_1_1_command_queue.html">CommandQueue</a>* src_queue{<span class="keyword">nullptr</span>};</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  <span class="keyword">const</span> <a class="code hl_class" href="classliger_1_1rhi_1_1_command_queue.html">CommandQueue</a>* dst_queue{<span class="keyword">nullptr</span>};</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>};</div>
 </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>}  <span class="comment">// namespace liger::rhi</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>}  <span class="comment">// namespace liger::rhi</span></div>
 <div class="ttc" id="abuffer_8hpp_html"><div class="ttname"><a href="buffer_8hpp.html">buffer.hpp</a></div></div>
-<div class="ttc" id="aclassliger_1_1rhi_1_1_buffer_html"><div class="ttname"><a href="classliger_1_1rhi_1_1_buffer.html">liger::rhi::Buffer</a></div><div class="ttdef"><b>Definition</b> <a href="buffer_8hpp_source.html#l00045">buffer.hpp:45</a></div></div>
-<div class="ttc" id="aclassliger_1_1rhi_1_1_command_queue_html"><div class="ttname"><a href="classliger_1_1rhi_1_1_command_queue.html">liger::rhi::CommandQueue</a></div><div class="ttdef"><b>Definition</b> <a href="command__queue_8hpp_source.html#l00042">command_queue.hpp:42</a></div></div>
+<div class="ttc" id="aclassliger_1_1rhi_1_1_buffer_html"><div class="ttname"><a href="classliger_1_1rhi_1_1_buffer.html">liger::rhi::Buffer</a></div><div class="ttdef"><b>Definition</b> <a href="first__draft_2buffer_8hpp_source.html#l00047">first_draft/buffer.hpp:47</a></div></div>
+<div class="ttc" id="aclassliger_1_1rhi_1_1_command_queue_html"><div class="ttname"><a href="classliger_1_1rhi_1_1_command_queue.html">liger::rhi::CommandQueue</a></div><div class="ttdef"><b>Definition</b> <a href="first__draft_2command__queue_8hpp_source.html#l00043">first_draft/command_queue.hpp:43</a></div></div>
 <div class="ttc" id="aclassliger_1_1rhi_1_1_device_resource_html"><div class="ttname"><a href="classliger_1_1rhi_1_1_device_resource.html">liger::rhi::DeviceResource</a></div><div class="ttdef"><b>Definition</b> <a href="device__resource_8hpp_source.html#l00034">device_resource.hpp:34</a></div></div>
-<div class="ttc" id="aclassliger_1_1rhi_1_1_fence_html"><div class="ttname"><a href="classliger_1_1rhi_1_1_fence.html">liger::rhi::Fence</a></div><div class="ttdef"><b>Definition</b> <a href="synchronization_8hpp_source.html#l00047">synchronization.hpp:47</a></div></div>
-<div class="ttc" id="aclassliger_1_1rhi_1_1_semaphore_html"><div class="ttname"><a href="classliger_1_1rhi_1_1_semaphore.html">liger::rhi::Semaphore</a></div><div class="ttdef"><b>Definition</b> <a href="synchronization_8hpp_source.html#l00038">synchronization.hpp:38</a></div></div>
-<div class="ttc" id="aclassliger_1_1rhi_1_1_texture_html"><div class="ttname"><a href="classliger_1_1rhi_1_1_texture.html">liger::rhi::Texture</a></div><div class="ttdef"><b>Definition</b> <a href="texture_8hpp_source.html#l00082">texture.hpp:82</a></div></div>
-<div class="ttc" id="acommand__queue_8hpp_html"><div class="ttname"><a href="command__queue_8hpp.html">command_queue.hpp</a></div></div>
+<div class="ttc" id="aclassliger_1_1rhi_1_1_fence_html"><div class="ttname"><a href="classliger_1_1rhi_1_1_fence.html">liger::rhi::Fence</a></div><div class="ttdoc">Synchronization primitive which can be used for sync between command queues and/or the CPU.</div><div class="ttdef"><b>Definition</b> <a href="synchronization_8hpp_source.html#l00040">synchronization.hpp:40</a></div></div>
+<div class="ttc" id="aclassliger_1_1rhi_1_1_texture_html"><div class="ttname"><a href="classliger_1_1rhi_1_1_texture.html">liger::rhi::Texture</a></div><div class="ttdef"><b>Definition</b> <a href="first__draft_2texture_8hpp_source.html#l00102">first_draft/texture.hpp:102</a></div></div>
+<div class="ttc" id="afirst__draft_2graphics__pipeline_8hpp_html_a04924eaa9e269ba92b62074582cc296f"><div class="ttname"><a href="first__draft_2graphics__pipeline_8hpp.html#a04924eaa9e269ba92b62074582cc296f">liger::rhi::PipelineStages</a></div><div class="ttdeci">PipelineStages</div><div class="ttdef"><b>Definition</b> <a href="first__draft_2graphics__pipeline_8hpp_source.html#l00036">first_draft/graphics_pipeline.hpp:36</a></div></div>
 <div class="ttc" id="agraphics__pipeline_8hpp_html"><div class="ttname"><a href="graphics__pipeline_8hpp.html">graphics_pipeline.hpp</a></div></div>
-<div class="ttc" id="agraphics__pipeline_8hpp_html_a76c3729d6ea218c92a96fd9fcc570863"><div class="ttname"><a href="graphics__pipeline_8hpp.html#a76c3729d6ea218c92a96fd9fcc570863">liger::rhi::PipelineStages</a></div><div class="ttdeci">PipelineStages</div><div class="ttdef"><b>Definition</b> <a href="graphics__pipeline_8hpp_source.html#l00036">graphics_pipeline.hpp:36</a></div></div>
-<div class="ttc" id="astructliger_1_1rhi_1_1_buffer_barrier_info_html"><div class="ttname"><a href="structliger_1_1rhi_1_1_buffer_barrier_info.html">liger::rhi::BufferBarrierInfo</a></div><div class="ttdef"><b>Definition</b> <a href="synchronization_8hpp_source.html#l00056">synchronization.hpp:56</a></div></div>
-<div class="ttc" id="astructliger_1_1rhi_1_1_texture_barrier_info_html"><div class="ttname"><a href="structliger_1_1rhi_1_1_texture_barrier_info.html">liger::rhi::TextureBarrierInfo</a></div><div class="ttdef"><b>Definition</b> <a href="synchronization_8hpp_source.html#l00072">synchronization.hpp:72</a></div></div>
-<div class="ttc" id="astructliger_1_1rhi_1_1_texture_view_info_html"><div class="ttname"><a href="structliger_1_1rhi_1_1_texture_view_info.html">liger::rhi::TextureViewInfo</a></div><div class="ttdef"><b>Definition</b> <a href="texture_8hpp_source.html#l00074">texture.hpp:74</a></div></div>
+<div class="ttc" id="astructliger_1_1rhi_1_1_buffer_barrier_info_html"><div class="ttname"><a href="structliger_1_1rhi_1_1_buffer_barrier_info.html">liger::rhi::BufferBarrierInfo</a></div><div class="ttdef"><b>Definition</b> <a href="synchronization_8hpp_source.html#l00049">synchronization.hpp:49</a></div></div>
+<div class="ttc" id="astructliger_1_1rhi_1_1_texture_barrier_info_html"><div class="ttname"><a href="structliger_1_1rhi_1_1_texture_barrier_info.html">liger::rhi::TextureBarrierInfo</a></div><div class="ttdef"><b>Definition</b> <a href="synchronization_8hpp_source.html#l00065">synchronization.hpp:65</a></div></div>
 <div class="ttc" id="atexture_8hpp_html"><div class="ttname"><a href="texture_8hpp.html">texture.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_3d9126aa00c041bc0b8f859d1965a0f4.html">src</a></li><li class="navelem"><a class="el" href="dir_bf657e2376c4e6f050f9c84fca518581.html">liger</a></li><li class="navelem"><a class="el" href="dir_429dd79c34274212c3d78e5c4f3daadc.html">render</a></li><li class="navelem"><a class="el" href="dir_b4735eb260161decbb2f95f24b7ed8e2.html">rhi</a></li><li class="navelem"><a class="el" href="synchronization_8hpp.html">synchronization.hpp</a></li>
+    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_3d9126aa00c041bc0b8f859d1965a0f4.html">src</a></li><li class="navelem"><a class="el" href="dir_bf657e2376c4e6f050f9c84fca518581.html">liger</a></li><li class="navelem"><a class="el" href="dir_429dd79c34274212c3d78e5c4f3daadc.html">render</a></li><li class="navelem"><a class="el" href="dir_b4735eb260161decbb2f95f24b7ed8e2.html">rhi</a></li><li class="navelem"><a class="el" href="dir_df1a9dd0d77388a95f20393e72c90884.html">first_draft</a></li><li class="navelem"><a class="el" href="synchronization_8hpp.html">synchronization.hpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

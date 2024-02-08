@@ -84,7 +84,8 @@ void PlatformLayer::WindowCloseCallback(GLFWwindow* glfw_window) {
   platform->dispatcher_.Dispatch(event);
 }
 
-void PlatformLayer::KeyCallback(GLFWwindow* glfw_window, int32_t key, int32_t scancode, int32_t action, int32_t mods) {
+void PlatformLayer::KeyCallback(GLFWwindow* glfw_window, int32_t key, int32_t /*scancode*/, int32_t action,
+                                int32_t mods) {
   PlatformLayer* platform = static_cast<PlatformLayer*>(glfwGetWindowUserPointer(glfw_window));
   LIGER_ASSERT(platform, "PlatformLayer", "GLFW window is not associated with a PlatformLayer!");
 

@@ -92,90 +92,42 @@ $(document).ready(function(){initNavTree('buffer_8hpp.html',''); initResizable()
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#enum-members">Enumerations</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#nested-classes">Classes</a>  </div>
   <div class="headertitle"><div class="title">buffer.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;liger/core/core.hpp&gt;</code><br />
-<code>#include &lt;<a class="el" href="device__resource_8hpp_source.html">liger/render/rhi/device_resource.hpp</a>&gt;</code><br />
+<div class="textblock"><code>#include &lt;<a class="el" href="device__resource__state_8hpp_source.html">liger/render/rhi/device_resource_state.hpp</a>&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for buffer.hpp:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="buffer_8hpp__incl.svg" width="264" height="184"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="buffer_8hpp__incl.svg" width="352" height="258"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="buffer_8hpp__dep__incl.svg" width="300" height="184"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="buffer_8hpp__dep__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div>
 <p><a href="buffer_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_buffer.html">liger::rhi::Buffer</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_buffer.html">liger::rhi::IBuffer</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_buffer_1_1_info.html">liger::rhi::Buffer::Info</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_i_buffer_1_1_info.html">liger::rhi::IBuffer::Info</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:a7452e882370ab2e17111c3c10b549fbd" id="r_a7452e882370ab2e17111c3c10b549fbd"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>BufferUsage</b> : uint32 { <br />
-&#160;&#160;<b>kNone</b> = 0
-, <b>kTransferSrc</b> = 0x0000'0001
-, <b>kTransferDst</b> = 0x0000'0002
-, <b>kUniformBuffer</b> = 0x0000'0010
-, <br />
-&#160;&#160;<b>kStorageBuffer</b> = 0x0000'0020
-, <b>kIndexBuffer</b> = 0x0000'0040
-, <b>kVertexBuffer</b> = 0x0000'0080
-<br />
- }</td></tr>
-<tr class="separator:a7452e882370ab2e17111c3c10b549fbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:afb33c7f493b852382a2f790d9032cbcf" id="r_afb33c7f493b852382a2f790d9032cbcf"><td class="memItemLeft" align="right" valign="top"><a id="afb33c7f493b852382a2f790d9032cbcf" name="afb33c7f493b852382a2f790d9032cbcf"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ENABLE_ENUM_BITMASK</b> (liger::rhi::BufferUsage)</td></tr>
-<tr class="separator:afb33c7f493b852382a2f790d9032cbcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Nikita Mochalov (github.com/tralf-strues)</dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2023-09-26</dd></dl>
+<dl class="section date"><dt>Date</dt><dd>2024-01-06</dd></dl>
 <p>The MIT License (MIT) Copyright (c) 2023 Nikita Mochalov</p>
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
 <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
 <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </p>
 
 <p class="definition">Definition in file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
-</div><h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="a7452e882370ab2e17111c3c10b549fbd" name="a7452e882370ab2e17111c3c10b549fbd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7452e882370ab2e17111c3c10b549fbd">&#9670;&#160;</a></span>BufferUsage</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class liger::rhi::BufferUsage : uint32</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="buffer_8hpp_source.html#l00035">35</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

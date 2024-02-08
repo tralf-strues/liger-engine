@@ -92,22 +92,24 @@ $(document).ready(function(){initNavTree('command__buffer_8hpp.html',''); initRe
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">command_buffer.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;<a class="el" href="buffer_8hpp_source.html">liger/render/rhi/buffer.hpp</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="command__queue_8hpp_source.html">liger/render/rhi/command_queue.hpp</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="compute__pipeline_8hpp_source.html">liger/render/rhi/compute_pipeline.hpp</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="graphics__pipeline_8hpp_source.html">liger/render/rhi/graphics_pipeline.hpp</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="render__pass_8hpp_source.html">liger/render/rhi/render_pass.hpp</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="sampler_8hpp_source.html">liger/render/rhi/sampler.hpp</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="synchronization_8hpp_source.html">liger/render/rhi/synchronization.hpp</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="texture_8hpp_source.html">liger/render/rhi/texture.hpp</a>&gt;</code><br />
+<div class="textblock"><code>#include &lt;<a class="el" href="enum__bitmask_8hpp_source.html">liger/core/enum_bitmask.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="extent_8hpp_source.html">liger/render/rhi/extent.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="filter_8hpp_source.html">liger/render/rhi/filter.hpp</a>&gt;</code><br />
+<code>#include &lt;span&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for command_buffer.hpp:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="command__buffer_8hpp__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="command__buffer_8hpp__incl.svg" width="646" height="184"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div><div class="textblock"><div class="dynheader">
+This graph shows which files directly or indirectly include this file:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="command__buffer_8hpp__dep__incl.svg" width="344" height="406"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="command__buffer_8hpp_source.html">Go to the source code of this file.</a></p>
@@ -118,14 +120,18 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_render_area.html">liger::rhi::RenderArea</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_command_buffer.html">liger::rhi::CommandBuffer</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_command_buffer.html">liger::rhi::ICommandBuffer</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_command_buffer_1_1_render_pass_begin_info.html">liger::rhi::CommandBuffer::RenderPassBeginInfo</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ae57379dd4d8f23c31082a26496829679" id="r_ae57379dd4d8f23c31082a26496829679"><td class="memItemLeft" align="right" valign="top"><a id="ae57379dd4d8f23c31082a26496829679" name="ae57379dd4d8f23c31082a26496829679"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ENABLE_ENUM_BITMASK</b> (liger::rhi::ICommandBuffer::Capability)</td></tr>
+<tr class="separator:ae57379dd4d8f23c31082a26496829679"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Nikita Mochalov (github.com/tralf-strues)</dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2023-11-05</dd></dl>
+<dl class="section date"><dt>Date</dt><dd>2024-02-03</dd></dl>
 <p>The MIT License (MIT) Copyright (c) 2023 Nikita Mochalov</p>
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
 <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>

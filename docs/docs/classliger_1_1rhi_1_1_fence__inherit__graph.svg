@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="Synchronization primitive which can be used for sync between command queues and/or the CPU.">
 <polygon fill="#999999" stroke="none" points="100,-64 23,-64 23,0 100,0 100,-64"/>
 <text text-anchor="start" x="27.75" y="-50.5" font-family="Helvetica,sans-Serif" font-size="10.00">liger::rhi::Fence</text>
 <text text-anchor="start" x="60" y="-35.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>

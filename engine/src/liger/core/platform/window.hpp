@@ -29,7 +29,7 @@
 
 #include <string_view>
 
-class GLFWwindow;
+struct GLFWwindow;
 
 namespace liger {
 

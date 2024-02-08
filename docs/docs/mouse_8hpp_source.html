@@ -128,60 +128,62 @@ $(document).ready(function(){initNavTree('mouse_8hpp_source.html',''); initResiz
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &lt;<a class="code" href="keyboard_8hpp.html">liger/core/platform/keyboard.hpp</a>&gt;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">namespace </span>liger {</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">enum class</span> MouseButton : uint8 {</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  kLeft,</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  kRight,</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  kMiddle,</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  kCustom</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>};</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="foldopen" id="foldopen00041" data-start="{" data-end="};">
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="structliger_1_1_mouse_scroll_event.html">   41</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structliger_1_1_mouse_scroll_event.html">MouseScrollEvent</a> {</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  glm::vec2 delta;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>};</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &lt;<a class="code" href="math_8hpp.html">liger/core/math/math.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &lt;<a class="code" href="keyboard_8hpp.html">liger/core/platform/keyboard.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">namespace </span>liger {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">enum class</span> MouseButton : uint8_t {</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  kLeft,</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  kRight,</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  kMiddle,</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  kCustom</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>};</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="foldopen" id="foldopen00042" data-start="{" data-end="};">
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="structliger_1_1_mouse_scroll_event.html">   42</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structliger_1_1_mouse_scroll_event.html">MouseScrollEvent</a> {</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  glm::vec2 delta;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>};</div>
 </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="foldopen" id="foldopen00045" data-start="{" data-end="};">
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="structliger_1_1_mouse_move_event.html">   45</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structliger_1_1_mouse_move_event.html">MouseMoveEvent</a> {<span class="comment"></span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="comment">  /** @brief New cursor position relative to the top-left corner of the window */</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="structliger_1_1_mouse_move_event.html#a0e36b5e02cc5b2b4284c3288fec58f25">   47</a></span>  glm::vec2 <a class="code hl_variable" href="structliger_1_1_mouse_move_event.html#a0e36b5e02cc5b2b4284c3288fec58f25">new_position</a>;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment"></span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment">  /** @brief Delta cursor position */</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="structliger_1_1_mouse_move_event.html#a4c05968037b5ed2c61fccbfe2f4614ce">   50</a></span>  glm::vec2 <a class="code hl_variable" href="structliger_1_1_mouse_move_event.html#a4c05968037b5ed2c61fccbfe2f4614ce">delta</a>;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>};</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="foldopen" id="foldopen00046" data-start="{" data-end="};">
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="structliger_1_1_mouse_move_event.html">   46</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structliger_1_1_mouse_move_event.html">MouseMoveEvent</a> {<span class="comment"></span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment">  /** @brief New cursor position relative to the top-left corner of the window */</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="structliger_1_1_mouse_move_event.html#a0e36b5e02cc5b2b4284c3288fec58f25">   48</a></span>  glm::vec2 <a class="code hl_variable" href="structliger_1_1_mouse_move_event.html#a0e36b5e02cc5b2b4284c3288fec58f25">new_position</a>;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment"></span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment">  /** @brief Delta cursor position */</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="structliger_1_1_mouse_move_event.html#a4c05968037b5ed2c61fccbfe2f4614ce">   51</a></span>  glm::vec2 <a class="code hl_variable" href="structliger_1_1_mouse_move_event.html#a4c05968037b5ed2c61fccbfe2f4614ce">delta</a>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>};</div>
 </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="foldopen" id="foldopen00053" data-start="{" data-end="};">
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="structliger_1_1_mouse_button_event.html">   53</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structliger_1_1_mouse_button_event.html">MouseButtonEvent</a> {<span class="comment"></span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="comment">  /** @brief Mouse button type */</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="structliger_1_1_mouse_button_event.html#a1b260f835833a40a67c60760f0b43c79">   55</a></span>  MouseButton <a class="code hl_variable" href="structliger_1_1_mouse_button_event.html#a1b260f835833a40a67c60760f0b43c79">button</a>;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="comment"></span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="comment">  /** @brief Custom mouse button number in case button = MouseButton::kCustom */</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="structliger_1_1_mouse_button_event.html#ad98b99d44082c83559df3ee2ee5b33f1">   58</a></span>  uint8 <a class="code hl_variable" href="structliger_1_1_mouse_button_event.html#ad98b99d44082c83559df3ee2ee5b33f1">custom_button_num</a>;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="comment"></span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment">  /** @brief Type of mouse button action */</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="structliger_1_1_mouse_button_event.html#a3523aca50a25dbd0ed8ceaa6fd7decee">   61</a></span>  PressAction <a class="code hl_variable" href="structliger_1_1_mouse_button_event.html#a3523aca50a25dbd0ed8ceaa6fd7decee">action</a>;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="comment"></span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="comment">  /** @brief Keyboard key modifiers */</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="structliger_1_1_mouse_button_event.html#ab0183b501aba5d5fa5a56a20edbae9c6">   64</a></span>  KeyMods <a class="code hl_variable" href="structliger_1_1_mouse_button_event.html#ab0183b501aba5d5fa5a56a20edbae9c6">mods</a>;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>};</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="foldopen" id="foldopen00054" data-start="{" data-end="};">
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="structliger_1_1_mouse_button_event.html">   54</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structliger_1_1_mouse_button_event.html">MouseButtonEvent</a> {<span class="comment"></span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="comment">  /** @brief Mouse button type */</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="structliger_1_1_mouse_button_event.html#a1b260f835833a40a67c60760f0b43c79">   56</a></span>  MouseButton <a class="code hl_variable" href="structliger_1_1_mouse_button_event.html#a1b260f835833a40a67c60760f0b43c79">button</a>;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="comment"></span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="comment">  /** @brief Custom mouse button number in case button = MouseButton::kCustom */</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="structliger_1_1_mouse_button_event.html#a4d764aae2b067f40432c7d05e8c63805">   59</a></span>  uint8_t <a class="code hl_variable" href="structliger_1_1_mouse_button_event.html#a4d764aae2b067f40432c7d05e8c63805">custom_button_num</a>;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment"></span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">  /** @brief Type of mouse button action */</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="structliger_1_1_mouse_button_event.html#a3523aca50a25dbd0ed8ceaa6fd7decee">   62</a></span>  PressAction <a class="code hl_variable" href="structliger_1_1_mouse_button_event.html#a3523aca50a25dbd0ed8ceaa6fd7decee">action</a>;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="comment"></span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment">  /** @brief Keyboard key modifiers */</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="structliger_1_1_mouse_button_event.html#ab0183b501aba5d5fa5a56a20edbae9c6">   65</a></span>  KeyMods <a class="code hl_variable" href="structliger_1_1_mouse_button_event.html#ab0183b501aba5d5fa5a56a20edbae9c6">mods</a>;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>};</div>
 </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>}  <span class="comment">// namespace liger</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>}  <span class="comment">// namespace liger</span></div>
 <div class="ttc" id="akeyboard_8hpp_html"><div class="ttname"><a href="keyboard_8hpp.html">keyboard.hpp</a></div></div>
-<div class="ttc" id="astructliger_1_1_mouse_button_event_html"><div class="ttname"><a href="structliger_1_1_mouse_button_event.html">liger::MouseButtonEvent</a></div><div class="ttdef"><b>Definition</b> <a href="mouse_8hpp_source.html#l00053">mouse.hpp:53</a></div></div>
-<div class="ttc" id="astructliger_1_1_mouse_button_event_html_a1b260f835833a40a67c60760f0b43c79"><div class="ttname"><a href="structliger_1_1_mouse_button_event.html#a1b260f835833a40a67c60760f0b43c79">liger::MouseButtonEvent::button</a></div><div class="ttdeci">MouseButton button</div><div class="ttdoc">Mouse button type.</div><div class="ttdef"><b>Definition</b> <a href="mouse_8hpp_source.html#l00055">mouse.hpp:55</a></div></div>
-<div class="ttc" id="astructliger_1_1_mouse_button_event_html_a3523aca50a25dbd0ed8ceaa6fd7decee"><div class="ttname"><a href="structliger_1_1_mouse_button_event.html#a3523aca50a25dbd0ed8ceaa6fd7decee">liger::MouseButtonEvent::action</a></div><div class="ttdeci">PressAction action</div><div class="ttdoc">Type of mouse button action.</div><div class="ttdef"><b>Definition</b> <a href="mouse_8hpp_source.html#l00061">mouse.hpp:61</a></div></div>
-<div class="ttc" id="astructliger_1_1_mouse_button_event_html_ab0183b501aba5d5fa5a56a20edbae9c6"><div class="ttname"><a href="structliger_1_1_mouse_button_event.html#ab0183b501aba5d5fa5a56a20edbae9c6">liger::MouseButtonEvent::mods</a></div><div class="ttdeci">KeyMods mods</div><div class="ttdoc">Keyboard key modifiers.</div><div class="ttdef"><b>Definition</b> <a href="mouse_8hpp_source.html#l00064">mouse.hpp:64</a></div></div>
-<div class="ttc" id="astructliger_1_1_mouse_button_event_html_ad98b99d44082c83559df3ee2ee5b33f1"><div class="ttname"><a href="structliger_1_1_mouse_button_event.html#ad98b99d44082c83559df3ee2ee5b33f1">liger::MouseButtonEvent::custom_button_num</a></div><div class="ttdeci">uint8 custom_button_num</div><div class="ttdoc">Custom mouse button number in case button = MouseButton::kCustom.</div><div class="ttdef"><b>Definition</b> <a href="mouse_8hpp_source.html#l00058">mouse.hpp:58</a></div></div>
-<div class="ttc" id="astructliger_1_1_mouse_move_event_html"><div class="ttname"><a href="structliger_1_1_mouse_move_event.html">liger::MouseMoveEvent</a></div><div class="ttdef"><b>Definition</b> <a href="mouse_8hpp_source.html#l00045">mouse.hpp:45</a></div></div>
-<div class="ttc" id="astructliger_1_1_mouse_move_event_html_a0e36b5e02cc5b2b4284c3288fec58f25"><div class="ttname"><a href="structliger_1_1_mouse_move_event.html#a0e36b5e02cc5b2b4284c3288fec58f25">liger::MouseMoveEvent::new_position</a></div><div class="ttdeci">glm::vec2 new_position</div><div class="ttdoc">New cursor position relative to the top-left corner of the window.</div><div class="ttdef"><b>Definition</b> <a href="mouse_8hpp_source.html#l00047">mouse.hpp:47</a></div></div>
-<div class="ttc" id="astructliger_1_1_mouse_move_event_html_a4c05968037b5ed2c61fccbfe2f4614ce"><div class="ttname"><a href="structliger_1_1_mouse_move_event.html#a4c05968037b5ed2c61fccbfe2f4614ce">liger::MouseMoveEvent::delta</a></div><div class="ttdeci">glm::vec2 delta</div><div class="ttdoc">Delta cursor position.</div><div class="ttdef"><b>Definition</b> <a href="mouse_8hpp_source.html#l00050">mouse.hpp:50</a></div></div>
-<div class="ttc" id="astructliger_1_1_mouse_scroll_event_html"><div class="ttname"><a href="structliger_1_1_mouse_scroll_event.html">liger::MouseScrollEvent</a></div><div class="ttdef"><b>Definition</b> <a href="mouse_8hpp_source.html#l00041">mouse.hpp:41</a></div></div>
+<div class="ttc" id="amath_8hpp_html"><div class="ttname"><a href="math_8hpp.html">math.hpp</a></div></div>
+<div class="ttc" id="astructliger_1_1_mouse_button_event_html"><div class="ttname"><a href="structliger_1_1_mouse_button_event.html">liger::MouseButtonEvent</a></div><div class="ttdef"><b>Definition</b> <a href="mouse_8hpp_source.html#l00054">mouse.hpp:54</a></div></div>
+<div class="ttc" id="astructliger_1_1_mouse_button_event_html_a1b260f835833a40a67c60760f0b43c79"><div class="ttname"><a href="structliger_1_1_mouse_button_event.html#a1b260f835833a40a67c60760f0b43c79">liger::MouseButtonEvent::button</a></div><div class="ttdeci">MouseButton button</div><div class="ttdoc">Mouse button type.</div><div class="ttdef"><b>Definition</b> <a href="mouse_8hpp_source.html#l00056">mouse.hpp:56</a></div></div>
+<div class="ttc" id="astructliger_1_1_mouse_button_event_html_a3523aca50a25dbd0ed8ceaa6fd7decee"><div class="ttname"><a href="structliger_1_1_mouse_button_event.html#a3523aca50a25dbd0ed8ceaa6fd7decee">liger::MouseButtonEvent::action</a></div><div class="ttdeci">PressAction action</div><div class="ttdoc">Type of mouse button action.</div><div class="ttdef"><b>Definition</b> <a href="mouse_8hpp_source.html#l00062">mouse.hpp:62</a></div></div>
+<div class="ttc" id="astructliger_1_1_mouse_button_event_html_a4d764aae2b067f40432c7d05e8c63805"><div class="ttname"><a href="structliger_1_1_mouse_button_event.html#a4d764aae2b067f40432c7d05e8c63805">liger::MouseButtonEvent::custom_button_num</a></div><div class="ttdeci">uint8_t custom_button_num</div><div class="ttdoc">Custom mouse button number in case button = MouseButton::kCustom.</div><div class="ttdef"><b>Definition</b> <a href="mouse_8hpp_source.html#l00059">mouse.hpp:59</a></div></div>
+<div class="ttc" id="astructliger_1_1_mouse_button_event_html_ab0183b501aba5d5fa5a56a20edbae9c6"><div class="ttname"><a href="structliger_1_1_mouse_button_event.html#ab0183b501aba5d5fa5a56a20edbae9c6">liger::MouseButtonEvent::mods</a></div><div class="ttdeci">KeyMods mods</div><div class="ttdoc">Keyboard key modifiers.</div><div class="ttdef"><b>Definition</b> <a href="mouse_8hpp_source.html#l00065">mouse.hpp:65</a></div></div>
+<div class="ttc" id="astructliger_1_1_mouse_move_event_html"><div class="ttname"><a href="structliger_1_1_mouse_move_event.html">liger::MouseMoveEvent</a></div><div class="ttdef"><b>Definition</b> <a href="mouse_8hpp_source.html#l00046">mouse.hpp:46</a></div></div>
+<div class="ttc" id="astructliger_1_1_mouse_move_event_html_a0e36b5e02cc5b2b4284c3288fec58f25"><div class="ttname"><a href="structliger_1_1_mouse_move_event.html#a0e36b5e02cc5b2b4284c3288fec58f25">liger::MouseMoveEvent::new_position</a></div><div class="ttdeci">glm::vec2 new_position</div><div class="ttdoc">New cursor position relative to the top-left corner of the window.</div><div class="ttdef"><b>Definition</b> <a href="mouse_8hpp_source.html#l00048">mouse.hpp:48</a></div></div>
+<div class="ttc" id="astructliger_1_1_mouse_move_event_html_a4c05968037b5ed2c61fccbfe2f4614ce"><div class="ttname"><a href="structliger_1_1_mouse_move_event.html#a4c05968037b5ed2c61fccbfe2f4614ce">liger::MouseMoveEvent::delta</a></div><div class="ttdeci">glm::vec2 delta</div><div class="ttdoc">Delta cursor position.</div><div class="ttdef"><b>Definition</b> <a href="mouse_8hpp_source.html#l00051">mouse.hpp:51</a></div></div>
+<div class="ttc" id="astructliger_1_1_mouse_scroll_event_html"><div class="ttname"><a href="structliger_1_1_mouse_scroll_event.html">liger::MouseScrollEvent</a></div><div class="ttdef"><b>Definition</b> <a href="mouse_8hpp_source.html#l00042">mouse.hpp:42</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

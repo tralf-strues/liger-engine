@@ -1,5 +1,5 @@
 <map id="event_type.hpp" name="event_type.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="18,5,128,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,141,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,31,76,63,70,63,70,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,116,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="30,79,91,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,31,63,63,58,63,58,31"/>
 </map>

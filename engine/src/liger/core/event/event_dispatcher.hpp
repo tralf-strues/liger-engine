@@ -64,8 +64,6 @@ class EventDispatcher {
 
 template <typename EventT>
 EventSink<EventT>& EventDispatcher::GetSink() {
-  EventSink<EventT>* sink = nullptr;
-
   detail::EventTypeId type_id = detail::EventTypeIdHolder<EventT>::Value();
 
   auto it = sinks_.find(type_id);
