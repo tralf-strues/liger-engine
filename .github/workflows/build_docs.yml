@@ -15,8 +15,11 @@ jobs:
       with:
         submodules: recursive
 
+    - name: Install tools
+      run: sudo apt-get install doxygen graphviz
+
     - name: Generate docs
-      run: sh ./build_docs.sh
+      run: ./build_docs.sh
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
