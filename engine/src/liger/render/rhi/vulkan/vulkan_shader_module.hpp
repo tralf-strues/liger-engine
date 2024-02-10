@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file shader_module.hpp
- * @date 2024-02-03
+ * @file vulkan_shader_module.hpp
+ * @date 2024-02-10
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,30 +27,23 @@
 
 #pragma once
 
-#include <cstdint>
-#include <span>
+#include <liger/render/rhi/shader_module.hpp>
+#include <liger/render/rhi/vulkan/vulkan_utils.hpp>
 
 namespace liger::rhi {
 
-class IShaderModule {
+class VulkanShaderModule : public IShaderModule {
  public:
-  enum class Type : uint8_t {
-    kVertex,
-    kFragment,
-    kCompute
+  explicit VulkanShaderModule(VkDevice vk_device);
+  ~VulkanShaderModule() override;
 
-    // TODO(tralf-strues): add other shader types
-  };
+  bool Init(const IShaderModule::Source& source);
 
-  struct Source {
-    /** Shader module type of the source binary. */
-    Type type;
+  VkShaderModule GetModule();
 
-    /** Source binary in SPIR-V format. */
-    std::span<const uint32_t> source_binary;
-  };
-
-  virtual ~IShaderModule() = 0;
+ private:
+  VkDevice       vk_device_{VK_NULL_HANDLE};
+  VkShaderModule vk_shader_module_{VK_NULL_HANDLE};
 };
 
 }  // namespace liger::rhi

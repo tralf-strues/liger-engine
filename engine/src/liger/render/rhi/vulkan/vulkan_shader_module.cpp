@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file shader_module.hpp
- * @date 2024-02-03
+ * @file vulkan_shader_module.cpp
+ * @date 2024-02-10
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -25,32 +25,35 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#pragma once
-
-#include <cstdint>
-#include <span>
+#include <liger/render/rhi/vulkan/vulkan_shader_module.hpp>
 
 namespace liger::rhi {
 
-class IShaderModule {
- public:
-  enum class Type : uint8_t {
-    kVertex,
-    kFragment,
-    kCompute
+VulkanShaderModule::VulkanShaderModule(VkDevice vk_device) : vk_device_(vk_device) {}
 
-    // TODO(tralf-strues): add other shader types
+VulkanShaderModule::~VulkanShaderModule() {
+  if (vk_shader_module_ != VK_NULL_HANDLE) {
+    vkDestroyShaderModule(vk_device_, vk_shader_module_, nullptr);
+    vk_shader_module_ = VK_NULL_HANDLE;
+  }
+}
+
+bool VulkanShaderModule::Init(const IShaderModule::Source& source) {
+  const VkShaderModuleCreateInfo create_info {
+    .sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
+    .pNext = nullptr,
+    .flags = 0,
+    .codeSize = source.source_binary.size_bytes(),
+    .pCode = source.source_binary.data(),
   };
 
-  struct Source {
-    /** Shader module type of the source binary. */
-    Type type;
+  VULKAN_CALL(vkCreateShaderModule(vk_device_, &create_info, nullptr, &vk_shader_module_));
 
-    /** Source binary in SPIR-V format. */
-    std::span<const uint32_t> source_binary;
-  };
+  return true;
+}
 
-  virtual ~IShaderModule() = 0;
-};
+VkShaderModule VulkanShaderModule::GetModule() {
+  return vk_shader_module_;
+}
 
 }  // namespace liger::rhi
