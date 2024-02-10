@@ -27,10 +27,17 @@
 
 #pragma once
 
+#include <liger/render/rhi/push_constant_info.hpp>
+
 namespace liger::rhi {
 
 class IComputePipeline {
  public:
+  struct Info {
+    PushConstantInfo push_constant;
+    IShaderModule*   shader_module;
+  };
+
   virtual ~IComputePipeline() = 0;
 };
 

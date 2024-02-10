@@ -139,7 +139,7 @@ class IDevice {
   [[nodiscard]] virtual std::unique_ptr<ITexture> CreateTexture(const ITexture::Info& info) = 0;
   [[nodiscard]] virtual std::unique_ptr<IBuffer> CreateBuffer(const IBuffer::Info& info) = 0;
   [[nodiscard]] virtual std::unique_ptr<IShaderModule> CreateShaderModule(const IShaderModule::Source& source) = 0;
-  [[nodiscard]] virtual std::unique_ptr<IComputePipeline> CreatePipeline(const IShaderModule* compute_shader) = 0;
+  [[nodiscard]] virtual std::unique_ptr<IComputePipeline> CreatePipeline(const IComputePipeline::Info& info) = 0;
   [[nodiscard]] virtual std::unique_ptr<IGraphicsPipeline> CreatePipeline(const IGraphicsPipeline::Info& info) = 0;
 };
 

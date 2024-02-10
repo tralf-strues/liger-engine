@@ -52,7 +52,7 @@ bool VulkanShaderModule::Init(const IShaderModule::Source& source) {
   return true;
 }
 
-VkShaderModule VulkanShaderModule::GetModule() {
+VkShaderModule VulkanShaderModule::GetVulkanHandle() {
   return vk_shader_module_;
 }
 

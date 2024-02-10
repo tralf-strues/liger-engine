@@ -1,6 +1,6 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file vulkan_shader_module.hpp
+ * @file vulkan_compute_pipeline.hpp
  * @date 2024-02-10
  *
  * The MIT License (MIT)
@@ -27,23 +27,24 @@
 
 #pragma once
 
-#include <liger/render/rhi/shader_module.hpp>
+#include <liger/render/rhi/compute_pipeline.hpp>
 #include <liger/render/rhi/vulkan/vulkan_utils.hpp>
 
 namespace liger::rhi {
 
-class VulkanShaderModule : public IShaderModule {
+class VulkanComputePipeline : public IComputePipeline {
  public:
-  explicit VulkanShaderModule(VkDevice vk_device);
-  ~VulkanShaderModule() override;
+  explicit VulkanComputePipeline(VkDevice vk_device);
+  ~VulkanComputePipeline() override;
 
-  bool Init(const IShaderModule::Source& source);
+  bool Init(const Info& info);
 
-  VkShaderModule GetVulkanHandle();
+  VkPipeline GetVulkanHandle();
 
  private:
-  VkDevice       vk_device_{VK_NULL_HANDLE};
-  VkShaderModule vk_shader_module_{VK_NULL_HANDLE};
+  VkDevice         vk_device_{VK_NULL_HANDLE};
+  VkPipelineLayout vk_layout_{VK_NULL_HANDLE};
+  VkPipeline       vk_pipeline_{VK_NULL_HANDLE};
 };
 
 }  // namespace liger::rhi

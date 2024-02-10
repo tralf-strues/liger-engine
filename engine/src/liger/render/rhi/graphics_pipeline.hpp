@@ -28,6 +28,7 @@
 #pragma once
 
 #include <liger/render/rhi/format.hpp>
+#include <liger/render/rhi/push_constant_info.hpp>
 
 #include <vector>
 
@@ -117,7 +118,7 @@ struct DepthStencilTestInfo {
   bool             depth_write_enable      {true};
   CompareOperation depth_compare_operation {CompareOperation::kNever};
 
-  // TODO: Stencil test
+  // TODO(tralf-strues): Stencil test
 };
 
 struct ColorBlendInfo {
@@ -196,10 +197,6 @@ struct ColorBlendInfo {
   Factor    src_alpha_factor {Factor::kZero};
   Factor    dst_alpha_factor {Factor::kZero};
   Operation alpha_operation  {Operation::kAdd};
-};
-
-struct PushConstantInfo {
-  uint32_t size{0};
 };
 
 class IShaderModule;

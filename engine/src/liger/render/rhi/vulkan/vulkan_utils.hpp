@@ -58,6 +58,15 @@ inline constexpr IDevice::Type GetDeviceTypeFromVulkan(VkPhysicalDeviceType vk_d
   }
 }
 
+inline constexpr VkShaderStageFlags GetVulkanShaderStageFlags(IShaderModule::Type mask) {
+  VkShaderStageFlags vk_flags = 0;
+  if (static_cast<uint16_t>(mask & IShaderModule::Type::kVertex) != 0) { vk_flags = VK_SHADER_STAGE_VERTEX_BIT; }
+  if (static_cast<uint16_t>(mask & IShaderModule::Type::kFragment) != 0) { vk_flags = VK_SHADER_STAGE_FRAGMENT_BIT; }
+  if (static_cast<uint16_t>(mask & IShaderModule::Type::kCompute) != 0) { vk_flags = VK_SHADER_STAGE_COMPUTE_BIT; }
+
+  return vk_flags;
+}
+
 inline constexpr uint8_t GetMaxSamplesFromVulkan(const VkPhysicalDeviceProperties& vk_properties) {
   VkSampleCountFlags counts =
       vk_properties.limits.framebufferColorSampleCounts & vk_properties.limits.framebufferDepthSampleCounts;

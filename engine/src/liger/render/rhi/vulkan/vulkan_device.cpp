@@ -28,6 +28,9 @@
 #include <liger/render/rhi/vulkan/vulkan_device.hpp>
 
 #include <liger/render/rhi/vulkan/vulkan_buffer.hpp>
+#include <liger/render/rhi/vulkan/vulkan_compute_pipeline.hpp>
+#include <liger/render/rhi/vulkan/vulkan_shader_module.hpp>
+#include <liger/render/rhi/vulkan/vulkan_swapchain.hpp>
 #include <liger/render/rhi/vulkan/vulkan_texture.hpp>
 #include <liger/render/rhi/vulkan/vulkan_utils.hpp>
 
@@ -194,6 +197,16 @@ bool VulkanDevice::FindQueueFamilies() {
   return true;
 }
 
+std::unique_ptr<ISwapchain> VulkanDevice::CreateSwapchain(const ISwapchain::Info& info) {
+  auto swapchain = std::make_unique<VulkanSwapchain>(info, instance_, device_);
+
+  if (!swapchain->Init(physical_device_)) {
+    return nullptr;
+  }
+
+  return swapchain;
+}
+
 std::unique_ptr<ITexture> VulkanDevice::CreateTexture(const ITexture::Info& info) {
   auto texture = std::make_unique<VulkanTexture>(info, device_, vma_allocator_);
 
@@ -212,6 +225,26 @@ std::unique_ptr<IBuffer> VulkanDevice::CreateBuffer(const IBuffer::Info& info) {
   }
 
   return buffer;
+}
+
+std::unique_ptr<IShaderModule> VulkanDevice::CreateShaderModule(const IShaderModule::Source& source) {
+  auto shader_module = std::make_unique<VulkanShaderModule>(device_);
+
+  if (!shader_module->Init(source)) {
+    return nullptr;
+  }
+
+  return shader_module;
+}
+
+std::unique_ptr<IComputePipeline> VulkanDevice::CreatePipeline(const IComputePipeline::Info& info) {
+  auto compute_pipeline = std::make_unique<VulkanComputePipeline>(device_);
+
+  if (!compute_pipeline->Init(info)) {
+    return nullptr;
+  }
+
+  return compute_pipeline;
 }
 
 }  // namespace liger::rhi

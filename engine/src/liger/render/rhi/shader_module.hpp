@@ -27,6 +27,8 @@
 
 #pragma once
 
+#include <liger/core/enum_bitmask.hpp>
+
 #include <cstdint>
 #include <span>
 
@@ -34,10 +36,11 @@ namespace liger::rhi {
 
 class IShaderModule {
  public:
-  enum class Type : uint8_t {
-    kVertex,
-    kFragment,
-    kCompute
+  enum class Type : uint16_t {
+    kNone     = 0,
+    kVertex   = Bit(0),
+    kFragment = Bit(1),
+    kCompute  = Bit(2),
 
     // TODO(tralf-strues): add other shader types
   };
@@ -54,3 +57,5 @@ class IShaderModule {
 };
 
 }  // namespace liger::rhi
+
+ENABLE_ENUM_BITMASK(liger::rhi::IShaderModule::Type);

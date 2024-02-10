@@ -1,6 +1,6 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file vulkan_shader_module.hpp
+ * @file push_constant_info.hpp
  * @date 2024-02-10
  *
  * The MIT License (MIT)
@@ -28,22 +28,12 @@
 #pragma once
 
 #include <liger/render/rhi/shader_module.hpp>
-#include <liger/render/rhi/vulkan/vulkan_utils.hpp>
 
 namespace liger::rhi {
 
-class VulkanShaderModule : public IShaderModule {
- public:
-  explicit VulkanShaderModule(VkDevice vk_device);
-  ~VulkanShaderModule() override;
-
-  bool Init(const IShaderModule::Source& source);
-
-  VkShaderModule GetVulkanHandle();
-
- private:
-  VkDevice       vk_device_{VK_NULL_HANDLE};
-  VkShaderModule vk_shader_module_{VK_NULL_HANDLE};
+struct PushConstantInfo {
+  uint32_t            size{0};
+  IShaderModule::Type shader_types{0};
 };
 
 }  // namespace liger::rhi
