@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file vulkan_texture.hpp
- * @date 2024-02-08
+ * @file vulkan_swapchain.hpp
+ * @date 2024-02-10
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,37 +27,39 @@
 
 #pragma once
 
-#include <liger/render/rhi/texture.hpp>
+#include <liger/render/rhi/swapchain.hpp>
+#include <liger/render/rhi/vulkan/vulkan_texture.hpp>
 #include <liger/render/rhi/vulkan/vulkan_utils.hpp>
 
 namespace liger::rhi {
 
-class VulkanTexture : public ITexture {
+class VulkanSwapchain : public ISwapchain {
  public:
-  VulkanTexture(Info info, VkDevice vk_device, VmaAllocator vma_allocator);
-  VulkanTexture(Info info, VkDevice vk_device, VkImage vk_image);
-  ~VulkanTexture() override;
+  VulkanSwapchain(Info info, VkInstance vk_instance, VkDevice vk_device);
+  ~VulkanSwapchain() override;
 
-  bool Init();
+  bool Init(VkPhysicalDevice vk_physical_device);
 
-  uint32_t CreateView(const TextureViewInfo& info) override;
-  uint32_t GetViewBinding(uint32_t view) override;
-  bool SetSampler(const SamplerInfo& sampler_info, uint32_t view = kTextureDefaultViewIdx) override;
+  std::vector<ITexture*> GetTextures() override;
+
+  bool Recreate() override;
 
  private:
-  struct SampledView {
-    VkImageView vk_view{VK_NULL_HANDLE};
-    VkSampler   vk_custom_sampler{VK_NULL_HANDLE};
+  struct SurfaceInfo {
+    VkSurfaceCapabilitiesKHR        capabilities;
+    std::vector<VkSurfaceFormatKHR> formats;
+    std::vector<VkPresentModeKHR>   present_modes;
   };
 
-  uint32_t GetLayerCount() const;
+  bool CreateSwapchain();
+  SurfaceInfo QuerySurfaceInfo(VkPhysicalDevice vk_physical_device) const;
 
-  bool                     owning_{true};
-  VkDevice                 vk_device_{VK_NULL_HANDLE};
-  VmaAllocator             vma_allocator_{VK_NULL_HANDLE};
-  VkImage                  vk_image_{VK_NULL_HANDLE};
-  VmaAllocation            vma_allocation_{VK_NULL_HANDLE};
-  std::vector<SampledView> views_;
+  VkInstance                                  vk_instance_{VK_NULL_HANDLE};
+  VkDevice                                    vk_device_{VK_NULL_HANDLE};
+  VkSwapchainKHR                              vk_swapchain_{VK_NULL_HANDLE};
+  VkSurfaceKHR                                vk_surface_{VK_NULL_HANDLE};
+  SurfaceInfo                                 surface_info_{};
+  std::vector<std::unique_ptr<VulkanTexture>> textures_;
 };
 
 }  // namespace liger::rhi

@@ -32,6 +32,9 @@ namespace liger::rhi {
 VulkanTexture::VulkanTexture(Info info, VkDevice vk_device, VmaAllocator vma_allocator)
     : ITexture(std::move(info)), vk_device_(vk_device), vma_allocator_(vma_allocator) {}
 
+VulkanTexture::VulkanTexture(Info info, VkDevice vk_device, VkImage vk_image)
+    : ITexture(std::move(info)), owning_(false), vk_device_(vk_device), vk_image_(vk_image) {}
+
 VulkanTexture::~VulkanTexture() {
   for (auto& view : views_) {
     if (view.vk_view != VK_NULL_HANDLE) {
@@ -46,7 +49,7 @@ VulkanTexture::~VulkanTexture() {
     view.vk_custom_sampler = VK_NULL_HANDLE;
   }
 
-  if (vk_image_ != VK_NULL_HANDLE) {
+  if (vk_image_ != VK_NULL_HANDLE && owning_) {
     vmaDestroyImage(vma_allocator_, vk_image_, vma_allocation_);
     vk_image_ = VK_NULL_HANDLE;
     vma_allocation_ = VK_NULL_HANDLE;
@@ -54,49 +57,51 @@ VulkanTexture::~VulkanTexture() {
 }
 
 bool VulkanTexture::Init() {
-  /* Create image */
-  const uint8_t sample_count = GetInfo().samples;
-  if (sample_count == 0 || (sample_count & (sample_count - 1)) != 0) {
-    LIGER_LOG_ERROR(kLogChannelRHI,
-                    "Texture sample count must be greater than zero and be a power of two, but it is set to {}!",
-                    sample_count);
-    return false;
+  if (owning_) {
+    /* Create image */
+    const uint8_t sample_count = GetInfo().samples;
+    if (sample_count == 0 || (sample_count & (sample_count - 1)) != 0) {
+      LIGER_LOG_ERROR(kLogChannelRHI,
+                      "Texture sample count must be greater than zero and be a power of two, but it is set to {}!",
+                      sample_count);
+      return false;
+    }
+
+    const VkImageCreateInfo image_info {
+      .sType     = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
+      .pNext     = nullptr,
+      .flags     = static_cast<VkImageCreateFlags>(GetInfo().cube_compatible ? VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT : 0),
+      .imageType = GetVulkanImageType(GetInfo().type),
+      .format    = GetVulkanFormat(GetInfo().format),
+      .extent    = GetVulkanExtent3D(GetInfo().extent),
+      .mipLevels = GetInfo().mip_levels,
+      .arrayLayers           = GetLayerCount(),
+      .samples               = static_cast<VkSampleCountFlagBits>(sample_count),
+      .tiling                = VK_IMAGE_TILING_OPTIMAL, // TODO(tralf-strues): CPU visible textures
+      .usage                 = GetVulkanImageUsage(GetInfo().usage),
+      .sharingMode           = VK_SHARING_MODE_EXCLUSIVE,
+      .queueFamilyIndexCount = 0,
+      .pQueueFamilyIndices   = nullptr,
+      .initialLayout         = VK_IMAGE_LAYOUT_UNDEFINED
+    };
+
+    VmaAllocationCreateInfo alloc_info = {};
+    alloc_info.usage  = VMA_MEMORY_USAGE_AUTO_PREFER_DEVICE; // TODO(tralf-strues): CPU visible textures
+    alloc_info.flags |= 0; // TODO(tralf-strues): CPU visible textures
+    
+    VULKAN_CALL(vmaCreateImage(vma_allocator_, &image_info, &alloc_info, &vk_image_, &vma_allocation_, nullptr));
   }
-
-  const VkImageCreateInfo image_info {
-    .sType     = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
-    .pNext     = nullptr,
-    .flags     = static_cast<VkImageCreateFlags>(GetInfo().cube_compatible ? VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT : 0),
-    .imageType = GetVulkanImageType(GetInfo().type),
-    .format    = GetVulkanFormat(GetInfo().format),
-    .extent    = GetVulkanExtent3D(GetInfo().extent),
-    .mipLevels = GetInfo().mip_levels,
-    .arrayLayers           = (GetInfo().type != TextureType::kTexture3D) ? GetInfo().extent.z : 1,
-    .samples               = static_cast<VkSampleCountFlagBits>(sample_count),
-    .tiling                = VK_IMAGE_TILING_OPTIMAL, // TODO(tralf-strues): CPU visible textures
-    .usage                 = GetVulkanImageUsage(GetInfo().usage),
-    .sharingMode           = VK_SHARING_MODE_EXCLUSIVE,
-    .queueFamilyIndexCount = 0,
-    .pQueueFamilyIndices   = nullptr,
-    .initialLayout         = VK_IMAGE_LAYOUT_UNDEFINED
-  };
-
-  VmaAllocationCreateInfo alloc_info = {};
-  alloc_info.usage  = VMA_MEMORY_USAGE_AUTO_PREFER_DEVICE; // TODO(tralf-strues): CPU visible textures
-  alloc_info.flags |= 0; // TODO(tralf-strues): CPU visible textures
-  
-  VULKAN_CALL(vmaCreateImage(vma_allocator_, &image_info, &alloc_info, &vk_image_, &vma_allocation_, nullptr));
 
   /* Create default image view */
   TextureViewType view_type;
   if (GetInfo().type == TextureType::kTexture3D) { view_type = TextureViewType::k3D; }
 
   if (GetInfo().type == TextureType::kTexture1D) {
-    view_type = (image_info.arrayLayers == 1) ? TextureViewType::k1D : TextureViewType::kArray1D;
+    view_type = (GetLayerCount() == 1) ? TextureViewType::k1D : TextureViewType::kArray1D;
   }
 
   if (GetInfo().type == TextureType::kTexture2D) {
-    view_type = (image_info.arrayLayers == 1) ? TextureViewType::k2D : TextureViewType::kArray2D;
+    view_type = (GetLayerCount() == 1) ? TextureViewType::k2D : TextureViewType::kArray2D;
   }
 
   const TextureViewInfo default_view_info{
@@ -104,7 +109,7 @@ bool VulkanTexture::Init() {
     .first_mip   = 0,
     .mip_count   = GetInfo().mip_levels,
     .first_layer = 0,
-    .layer_count = image_info.arrayLayers
+    .layer_count = GetLayerCount()
   };
 
   CreateView(default_view_info);
@@ -192,6 +197,10 @@ bool VulkanTexture::SetSampler(const SamplerInfo& info, uint32_t view_idx) {
   // TODO(tralf-strues): Bindless resources!
 
   return true;
+}
+
+uint32_t VulkanTexture::GetLayerCount() const {
+  return (GetInfo().type != TextureType::kTexture3D) ? GetInfo().extent.z : 1;
 }
 
 }  // namespace liger::rhi

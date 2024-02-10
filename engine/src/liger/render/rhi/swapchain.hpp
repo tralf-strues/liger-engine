@@ -40,8 +40,8 @@ class ISwapchain {
     /** Target window. It must be valid for the lifetime of swapchain. */
     Window* window = nullptr;
 
-    /** The number of swapchain textures. */
-    uint8_t size = 2;
+    /** The minimal number of swapchain textures. The actual number of textures is available only after creation. */
+    uint8_t min_size = 2;
 
     /** Whether vertical synchronization is enabled. */
     bool vsync = true;
@@ -50,7 +50,6 @@ class ISwapchain {
     DeviceResourceState usage = DeviceResourceState::kColorTarget;
   };
 
- public:
   virtual ~ISwapchain() = default;
 
   const Info& GetInfo() const;
@@ -63,14 +62,17 @@ class ISwapchain {
    *
    * @return Swapchain textures.
    */
-  virtual std::span<ITexture*> GetTextures() = 0;
+  virtual std::vector<ITexture*> GetTextures() = 0;
 
   /**
    * @brief Recreate the swapchain.
+   *
    * @note It's recommended to recreate a swapchain using this method instead of deleting and creating a new one.
    * @note After recreating the swapchain, one should retrieve the textures once more.
+   *
+   * @return Whether recreation was successful.
    */
-  virtual void Recreate() = 0;
+  virtual bool Recreate() = 0;
 
  protected:
   ISwapchain() = default;
