@@ -29,27 +29,169 @@
 
 namespace liger::rhi {
 
-VulkanTexture::VulkanTexture(Info info, VmaAllocator vma_allocator)
-    : ITexture(std::move(info)), vma_allocator_(vma_allocator) {}
+VulkanTexture::VulkanTexture(Info info, VkDevice vk_device, VmaAllocator vma_allocator)
+    : ITexture(std::move(info)), vk_device_(vk_device), vma_allocator_(vma_allocator) {}
 
 VulkanTexture::~VulkanTexture() {
+  for (auto& view : views_) {
+    if (view.vk_view != VK_NULL_HANDLE) {
+      vkDestroyImageView(vk_device_, view.vk_view, nullptr);
+    }
 
+    if (view.vk_custom_sampler != VK_NULL_HANDLE) {
+      vkDestroySampler(vk_device_, view.vk_custom_sampler, nullptr);
+    }
+
+    view.vk_view           = VK_NULL_HANDLE;
+    view.vk_custom_sampler = VK_NULL_HANDLE;
+  }
+
+  if (vk_image_ != VK_NULL_HANDLE) {
+    vmaDestroyImage(vma_allocator_, vk_image_, vma_allocation_);
+    vk_image_ = VK_NULL_HANDLE;
+    vma_allocation_ = VK_NULL_HANDLE;
+  }
 }
 
 bool VulkanTexture::Init() {
+  /* Create image */
+  const uint8_t sample_count = GetInfo().samples;
+  if (sample_count == 0 || (sample_count & (sample_count - 1)) != 0) {
+    LIGER_LOG_ERROR(kLogChannelRHI,
+                    "Texture sample count must be greater than zero and be a power of two, but it is set to {}!",
+                    sample_count);
+    return false;
+  }
+
+  const VkImageCreateInfo image_info {
+    .sType     = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
+    .pNext     = nullptr,
+    .flags     = static_cast<VkImageCreateFlags>(GetInfo().cube_compatible ? VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT : 0),
+    .imageType = GetVulkanImageType(GetInfo().type),
+    .format    = GetVulkanFormat(GetInfo().format),
+    .extent    = GetVulkanExtent3D(GetInfo().extent),
+    .mipLevels = GetInfo().mip_levels,
+    .arrayLayers           = (GetInfo().type != TextureType::kTexture3D) ? GetInfo().extent.z : 1,
+    .samples               = static_cast<VkSampleCountFlagBits>(sample_count),
+    .tiling                = VK_IMAGE_TILING_OPTIMAL, // TODO(tralf-strues): CPU visible textures
+    .usage                 = GetVulkanImageUsage(GetInfo().usage),
+    .sharingMode           = VK_SHARING_MODE_EXCLUSIVE,
+    .queueFamilyIndexCount = 0,
+    .pQueueFamilyIndices   = nullptr,
+    .initialLayout         = VK_IMAGE_LAYOUT_UNDEFINED
+  };
+
+  VmaAllocationCreateInfo alloc_info = {};
+  alloc_info.usage  = VMA_MEMORY_USAGE_AUTO_PREFER_DEVICE; // TODO(tralf-strues): CPU visible textures
+  alloc_info.flags |= 0; // TODO(tralf-strues): CPU visible textures
   
+  VULKAN_CALL(vmaCreateImage(vma_allocator_, &image_info, &alloc_info, &vk_image_, &vma_allocation_, nullptr));
+
+  /* Create default image view */
+  TextureViewType view_type;
+  if (GetInfo().type == TextureType::kTexture3D) { view_type = TextureViewType::k3D; }
+
+  if (GetInfo().type == TextureType::kTexture1D) {
+    view_type = (image_info.arrayLayers == 1) ? TextureViewType::k1D : TextureViewType::kArray1D;
+  }
+
+  if (GetInfo().type == TextureType::kTexture2D) {
+    view_type = (image_info.arrayLayers == 1) ? TextureViewType::k2D : TextureViewType::kArray2D;
+  }
+
+  const TextureViewInfo default_view_info{
+    .type        = view_type,
+    .first_mip   = 0,
+    .mip_count   = GetInfo().mip_levels,
+    .first_layer = 0,
+    .layer_count = image_info.arrayLayers
+  };
+
+  CreateView(default_view_info);
+
+  return true;
 }
 
 uint32_t VulkanTexture::CreateView(const TextureViewInfo& info) {
+  VkImageAspectFlags aspect_mask = VK_IMAGE_ASPECT_NONE;
+  if (IsDepthStencilFormat(GetInfo().format)) {
+    aspect_mask |= VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+  } else if (IsDepthContainingFormat(GetInfo().format)) {
+    aspect_mask |= VK_IMAGE_ASPECT_DEPTH_BIT;
+  } else {
+    aspect_mask |= VK_IMAGE_ASPECT_COLOR_BIT;
+  }
 
+  const VkImageViewCreateInfo view_info {
+    .sType    = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+    .pNext    = nullptr,
+    .flags    = 0,
+    .image    = vk_image_,
+    .viewType = GetVulkanImageViewType(info.type),
+    .format   = GetVulkanFormat(GetInfo().format),
+
+    .components = {
+      .r = VK_COMPONENT_SWIZZLE_IDENTITY,
+      .g = VK_COMPONENT_SWIZZLE_IDENTITY,
+      .b = VK_COMPONENT_SWIZZLE_IDENTITY,
+      .a = VK_COMPONENT_SWIZZLE_IDENTITY
+    },
+
+    .subresourceRange = {
+      .aspectMask     = aspect_mask,
+      .baseMipLevel   = info.first_mip,
+      .levelCount     = info.mip_count,
+      .baseArrayLayer = info.first_layer,
+      .layerCount     = info.layer_count,
+    }
+  };
+
+  VkImageView vk_view{VK_NULL_HANDLE};
+  VULKAN_CALL(vkCreateImageView(vk_device_, &view_info, nullptr, &vk_view));
+
+  const auto view_idx = static_cast<uint32_t>(views_.size());
+  views_.emplace_back(SampledView{.vk_view = vk_view, .vk_custom_sampler = VK_NULL_HANDLE});
+
+  // TODO(tralf-strues): Bindless resources!
+
+  return view_idx;
 }
 
-uint32_t VulkanTexture::GetViewBinding(uint32_t view) {
-
+uint32_t VulkanTexture::GetViewBinding(uint32_t /* view */) {
+  // TODO(tralf-strues): Bindless resources!
+  return 0;
 }
 
-bool VulkanTexture::SetSampler(const SamplerInfo& sampler_info, uint32_t view = kTextureDefaultViewIdx) {
+bool VulkanTexture::SetSampler(const SamplerInfo& info, uint32_t view_idx) {
+  const VkSamplerCreateInfo sampler_info{
+    .sType                   = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
+    .pNext                   = nullptr,
+    .flags                   = 0,
+    .magFilter               = GetVulkanFilter(info.mag_filter),
+    .minFilter               = GetVulkanFilter(info.min_filter),
+    .mipmapMode              = GetVulkanSamplerMipmapMode(info.mipmap_mode),
+    .addressModeU            = GetVulkanSamplerAddressMode(info.address_mode_u),
+    .addressModeV            = GetVulkanSamplerAddressMode(info.address_mode_v),
+    .addressModeW            = GetVulkanSamplerAddressMode(info.address_mode_w),
+    .mipLodBias              = info.lod_bias,
+    .anisotropyEnable        = static_cast<VkBool32>(info.anisotropy_enabled),
+    .maxAnisotropy           = info.max_anisotropy,
+    .compareEnable           = VK_FALSE,  // TODO(tralf-strues): What is this? (Mainly used for shadow maps)
+    .compareOp               = VK_COMPARE_OP_ALWAYS,
+    .minLod                  = info.min_lod,
+    .maxLod                  = info.max_lod,
+    .borderColor             = GetVulkanBorderColor(info.border_color),
+    .unnormalizedCoordinates = VK_FALSE
+  };
 
+  VkSampler vk_sampler{VK_NULL_HANDLE};
+  VULKAN_CALL(vkCreateSampler(vk_device_, &sampler_info, nullptr, &vk_sampler));
+
+  views_[view_idx].vk_custom_sampler = vk_sampler;
+
+  // TODO(tralf-strues): Bindless resources!
+
+  return true;
 }
 
 }  // namespace liger::rhi

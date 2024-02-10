@@ -34,15 +34,15 @@ namespace liger::rhi {
 enum class DeviceResourceState : uint32_t {
   /* Common resource states */
   kUndefined          = 0,
-  kComputeWrite       = Bit(0),
-  kTransferSrc        = Bit(1),
-  kTransferDst        = Bit(2),
+  kTransferSrc        = Bit(0),
+  kTransferDst        = Bit(1),
 
   /* Texture specific states */
-  kShaderSampled      = Bit(3),
-  kColorTarget        = Bit(4),
-  kDepthStencilTarget = Bit(5),
-  kDepthStencilRead   = Bit(6),
+  kShaderSampled      = Bit(2),
+  kColorTarget        = Bit(3),
+  kDepthStencilTarget = Bit(4),
+  kDepthStencilRead   = Bit(5),
+  kStorageTexture     = Bit(6),
 
   /* Buffer specific states */
   kVertexBuffer       = Bit(7),

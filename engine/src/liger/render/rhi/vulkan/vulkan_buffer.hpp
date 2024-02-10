@@ -44,7 +44,7 @@ class VulkanBuffer : public IBuffer {
   void UnmapMemory() override;
 
  private:
-  VmaAllocator vma_allocator_{nullptr};
+  VmaAllocator vma_allocator_{VK_NULL_HANDLE};
 
   VkBuffer vk_buffer_{VK_NULL_HANDLE};
   VmaAllocation vma_allocation_{VK_NULL_HANDLE};

@@ -58,7 +58,7 @@ inline constexpr IDevice::Type GetDeviceTypeFromVulkan(VkPhysicalDeviceType vk_d
   }
 }
 
-inline uint8_t GetMaxSamplesFromVulkan(const VkPhysicalDeviceProperties& vk_properties) {
+inline constexpr uint8_t GetMaxSamplesFromVulkan(const VkPhysicalDeviceProperties& vk_properties) {
   VkSampleCountFlags counts =
       vk_properties.limits.framebufferColorSampleCounts & vk_properties.limits.framebufferDepthSampleCounts;
 
@@ -73,7 +73,49 @@ inline uint8_t GetMaxSamplesFromVulkan(const VkPhysicalDeviceProperties& vk_prop
   return max_samples;
 }
 
-inline VkBufferUsageFlags GetVulkanBufferUsage(DeviceResourceState states) {
+inline constexpr VkFormat GetVulkanFormat(Format format) {
+  switch (format) {
+    /* One-component */
+    case (Format::kR32_UINT):            { return VK_FORMAT_R32_UINT; }
+    case (Format::kR32_SINT):            { return VK_FORMAT_R32_SINT; }
+    case (Format::kR32_SFLOAT):          { return VK_FORMAT_R32_SFLOAT; }
+
+    case (Format::kD16_UNORM):           { return VK_FORMAT_D16_UNORM; }
+    case (Format::kD32_SFLOAT):          { return VK_FORMAT_D32_SFLOAT; }
+
+    /* Two-component */
+    case (Format::kR32G32_UINT):         { return VK_FORMAT_R32G32_UINT; }
+    case (Format::kR32G32_SINT):         { return VK_FORMAT_R32G32_SINT; }
+    case (Format::kR32G32_SFLOAT):       { return VK_FORMAT_R32G32_SFLOAT; }
+
+    case (Format::kD24_UNORM_S8_UINT):   { return VK_FORMAT_D24_UNORM_S8_UINT; }
+
+    /* Three-component */
+    case (Format::kR8G8B8_UNORM):        { return VK_FORMAT_R8G8B8_UNORM; }
+    case (Format::kR8G8B8_SRGB):         { return VK_FORMAT_R8G8B8_SRGB; }
+
+    case (Format::kR16G16B16_SFLOAT):    { return VK_FORMAT_R16G16B16_SFLOAT; }
+    case (Format::kR32G32B32_SFLOAT):    { return VK_FORMAT_R32G32B32_SFLOAT; }
+
+    /* Four-component */
+    case (Format::kR8G8B8A8_UNORM):      { return VK_FORMAT_R8G8B8A8_UNORM; }
+    case (Format::kR8G8B8A8_SRGB):       { return VK_FORMAT_R8G8B8A8_SRGB; }
+    case (Format::kB8G8R8A8_SRGB):       { return VK_FORMAT_B8G8R8A8_SRGB; }
+    case (Format::kR32G32B32A32_SFLOAT): { return VK_FORMAT_R32G32B32A32_SFLOAT; }
+
+    default:                             { return VK_FORMAT_UNDEFINED; }
+  }
+}
+
+inline constexpr VkExtent2D GetVulkanExtent2D(Extent2D extent) {
+  return VkExtent2D{.width = extent.x, .height = extent.y};
+}
+
+inline constexpr VkExtent3D GetVulkanExtent3D(Extent3D extent) {
+  return VkExtent3D{.width = extent.x, .height = extent.y, .depth = extent.z};
+}
+
+inline constexpr VkBufferUsageFlags GetVulkanBufferUsage(DeviceResourceState states) {
   VkBufferUsageFlags vk_usage = 0;
 
   if ((states & DeviceResourceState::kTransferSrc) != DeviceResourceState::kUndefined) {
@@ -105,6 +147,64 @@ inline VkBufferUsageFlags GetVulkanBufferUsage(DeviceResourceState states) {
   }
 
   return vk_usage;
+}
+
+inline constexpr VkImageUsageFlags GetVulkanImageUsage(DeviceResourceState states) {
+  VkImageUsageFlags vk_usage = 0;
+
+  if ((states & DeviceResourceState::kTransferSrc) != DeviceResourceState::kUndefined) {
+    vk_usage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+  }
+
+  if ((states & DeviceResourceState::kTransferDst) != DeviceResourceState::kUndefined) {
+    vk_usage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+  }
+
+  if ((states & DeviceResourceState::kShaderSampled) != DeviceResourceState::kUndefined) {
+    vk_usage |= VK_IMAGE_USAGE_SAMPLED_BIT;
+  }
+
+  if ((states & DeviceResourceState::kColorTarget) != DeviceResourceState::kUndefined) {
+    vk_usage |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+  }
+
+  if ((states & DeviceResourceState::kDepthStencilTarget) != DeviceResourceState::kUndefined) {
+    vk_usage |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+  }
+
+  if ((states & DeviceResourceState::kDepthStencilRead) != DeviceResourceState::kUndefined) {
+    vk_usage |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+  }
+
+  if ((states & DeviceResourceState::kStorageTexture) != DeviceResourceState::kUndefined) {
+    vk_usage |= VK_IMAGE_USAGE_STORAGE_BIT;
+  }
+
+  return vk_usage;
+}
+
+inline constexpr VkImageType GetVulkanImageType(TextureType type) {
+  return static_cast<VkImageType>(type);
+}
+
+inline constexpr VkImageViewType GetVulkanImageViewType(TextureViewType type) {
+  return static_cast<VkImageViewType>(type);
+}
+
+inline constexpr VkFilter GetVulkanFilter(Filter filter) {
+  return static_cast<VkFilter>(filter);
+}
+
+inline constexpr VkSamplerMipmapMode GetVulkanSamplerMipmapMode(Filter mipmap_mode) {
+  return static_cast<VkSamplerMipmapMode>(mipmap_mode);
+}
+
+inline constexpr VkSamplerAddressMode GetVulkanSamplerAddressMode(SamplerInfo::AddressMode address_mode) {
+  return static_cast<VkSamplerAddressMode>(address_mode);
+}
+
+inline constexpr VkBorderColor GetVulkanBorderColor(SamplerInfo::BorderColor border_color) {
+  return static_cast<VkBorderColor>(border_color);
 }
 
 }  // namespace liger::rhi

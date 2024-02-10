@@ -34,7 +34,7 @@ namespace liger::rhi {
 
 class VulkanTexture : public ITexture {
  public:
-  VulkanTexture(Info info, VmaAllocator vma_allocator);
+  VulkanTexture(Info info, VkDevice vk_device, VmaAllocator vma_allocator);
   ~VulkanTexture() override;
 
   bool Init();
@@ -44,12 +44,16 @@ class VulkanTexture : public ITexture {
   bool SetSampler(const SamplerInfo& sampler_info, uint32_t view = kTextureDefaultViewIdx) override;
 
  private:
-  VmaAllocator vma_allocator_{nullptr};
+  struct SampledView {
+    VkImageView vk_view{VK_NULL_HANDLE};
+    VkSampler   vk_custom_sampler{VK_NULL_HANDLE};
+  };
 
-  VkImage vk_image_{VK_NULL_HANDLE};
-  VmaAllocation vma_allocation_{nullptr};
-
-  std::vector<VkImageView> vk_views_;
+  VkDevice                 vk_device_{VK_NULL_HANDLE};
+  VmaAllocator             vma_allocator_{VK_NULL_HANDLE};
+  VkImage                  vk_image_{VK_NULL_HANDLE};
+  VmaAllocation            vma_allocation_{VK_NULL_HANDLE};
+  std::vector<SampledView> views_;
 };
 
 }  // namespace liger::rhi

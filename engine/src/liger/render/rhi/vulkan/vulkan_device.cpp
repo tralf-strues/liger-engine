@@ -28,6 +28,7 @@
 #include <liger/render/rhi/vulkan/vulkan_device.hpp>
 
 #include <liger/render/rhi/vulkan/vulkan_buffer.hpp>
+#include <liger/render/rhi/vulkan/vulkan_texture.hpp>
 #include <liger/render/rhi/vulkan/vulkan_utils.hpp>
 
 #define VMA_IMPLEMENTATION
@@ -38,6 +39,7 @@
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #include <vk_mem_alloc.h>
+#pragma GCC diagnostic pop
 
 namespace liger::rhi {
 
@@ -190,6 +192,16 @@ bool VulkanDevice::FindQueueFamilies() {
   queue_family_indices_ = indices;
 
   return true;
+}
+
+std::unique_ptr<ITexture> VulkanDevice::CreateTexture(const ITexture::Info& info) {
+  auto texture = std::make_unique<VulkanTexture>(info, device_, vma_allocator_);
+
+  if (!texture->Init()) {
+    return nullptr;
+  }
+
+  return texture;
 }
 
 std::unique_ptr<IBuffer> VulkanDevice::CreateBuffer(const IBuffer::Info& info) {

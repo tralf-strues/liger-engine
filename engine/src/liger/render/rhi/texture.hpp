@@ -102,6 +102,9 @@ class ITexture {
     /** Bitmask of all possible usages of the texture which will be needed. */
     DeviceResourceState usage{DeviceResourceState::kUndefined};
 
+    /** Whether any views of the texture can be @see{TextureViewType::kCube} or @see{TextureViewType::kArrayCube}. */
+    bool cube_compatible{false};
+
     /**
      * @brief Extent of the texture in pixels.
      * @note extent.z is either depth of the texture if it is 3D, or array size if it is 1D or 2D
@@ -118,6 +121,7 @@ class ITexture {
      * @brief Number of samples (for multi-sampling).
      * @warning Must be greater than 0.
      * @warning Must be less or equal to @see{IDevice::Properties::max_msaa_samples}.
+     * @warning Must be power of 2, i.e. 1, 2, 4, 8 etc.
      */
     uint8_t samples{1};
 
