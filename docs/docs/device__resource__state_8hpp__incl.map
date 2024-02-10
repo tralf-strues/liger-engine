@@ -1,7 +1,0 @@
-<map id="device_resource_state.hpp" name="device_resource_state.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="11,5,188,31"/>
-<area shape="rect" id="Node000002" href="$enum__bitmask_8hpp.html" title=" " alt="" coords="5,79,194,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,31,102,63,97,63,97,31"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="58,153,141,178"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="102,105,102,137,97,137,97,105"/>
-</map>

@@ -1,9 +1,0 @@
-<map id="graphics_pipeline.hpp" name="graphics_pipeline.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="85,5,231,31"/>
-<area shape="rect" id="Node000002" href="$format_8hpp.html" title=" " alt="" coords="5,79,175,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,33,114,70,110,66,145,29"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="199,79,256,105"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="171,29,207,66,203,70,168,33"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="60,153,120,178"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="93,105,93,137,87,137,87,105"/>
-</map>

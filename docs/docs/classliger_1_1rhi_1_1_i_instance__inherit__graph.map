@@ -1,5 +1,0 @@
-<map id="liger::rhi::IInstance" name="liger::rhi::IInstance">
-<area shape="rect" id="Node000001" title="The RHI instance over particular GraphicsAPIs. Allows creating devices." alt="" coords="16,5,152,191"/>
-<area shape="rect" id="Node000002" href="$classliger_1_1rhi_1_1_vulkan_instance.html" title=" " alt="" coords="5,239,163,364"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,205,87,239,81,239,81,205"/>
-</map>

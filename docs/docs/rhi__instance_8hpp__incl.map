@@ -1,9 +1,0 @@
-<map id="rhi_instance.hpp" name="rhi_instance.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="99,5,215,31"/>
-<area shape="rect" id="Node000002" href="$device_8hpp.html" title=" " alt="" coords="5,79,176,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,33,114,69,110,66,144,29"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="199,79,249,105"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="170,29,204,66,200,69,166,33"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="64,153,117,178"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="93,105,93,137,88,137,88,105"/>
-</map>
