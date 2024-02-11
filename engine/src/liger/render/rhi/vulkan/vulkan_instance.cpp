@@ -104,9 +104,6 @@ std::vector<const char*> GetInstanceExtensions(IInstance::ValidationLevel valida
   extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
 #endif
 
-//   extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
-//   extensions.push_back(VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME);
-
   if (validation != IInstance::ValidationLevel::kNone) {
     extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
   }
@@ -320,8 +317,6 @@ bool VulkanInstance::FillDeviceInfoList() {
                           static_cast<bool>(indexing_features.runtimeDescriptorArray),
 
       .properties = {
-              // .swapchain              = swapchain_supported,
-              // .sampler_anisotropy     = static_cast<bool>(features.samplerAnisotropy),
               .max_msaa_samples       = GetMaxSamplesFromVulkan(properties),
               .max_sampler_anisotropy = properties.limits.maxSamplerAnisotropy,
       },
