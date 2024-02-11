@@ -53,20 +53,16 @@ class IShaderModule {
     std::span<const uint32_t> source_binary;
   };
 
-  virtual ~IShaderModule() = 0;
+  virtual ~IShaderModule() = default;
 
-  Type GetType() const;
+  Type GetType() const { return type_; }
 
  protected:
-  explicit IShaderModule(Type type);
+  explicit IShaderModule(Type type) : type_(type) {}
 
  private:
   Type type_{Type::kNone};
 };
-
-IShaderModule::IShaderModule(Type type) : type_(type) {}
-
-IShaderModule::Type IShaderModule::GetType() const { return type_; }
 
 }  // namespace liger::rhi
 

@@ -219,7 +219,7 @@ class IGraphicsPipeline {
     std::span<const IShaderModule*> shader_modules;
   };
 
-  virtual ~IGraphicsPipeline() = 0;
+  virtual ~IGraphicsPipeline() = default;
 };
 
 }  // namespace liger::rhi

@@ -29,13 +29,17 @@
 
 #include <liger/render/rhi/device.hpp>
 
-#ifdef __APPLE__
-#define VK_USE_PLATFORM_MACOS_MVK
-#define VK_USE_PLATFORM_METAL_EXT
-#define VK_ENABLE_BETA_EXTENSIONS
-#endif
-#include <vulkan/vulkan.h>
+#define VK_NO_PROTOTYPES
+#include <volk.h>
+// #ifdef __APPLE__
+// #define VK_USE_PLATFORM_MACOS_MVK
+// #define VK_USE_PLATFORM_METAL_EXT
+// #define VK_ENABLE_BETA_EXTENSIONS
+// #endif
+// #include <vulkan/vulkan.h>
 
+#define VMA_STATIC_VULKAN_FUNCTIONS 0
+#define VMA_DYNAMIC_VULKAN_FUNCTIONS 1
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wnullability-extension"
 #include <vk_mem_alloc.h>
@@ -43,14 +47,19 @@
 
 namespace liger::rhi {
 
-constexpr const char* kValidationLayerName = "VK_LAYER_KHRONOS_validation";
-
-constexpr const char* kRequiredDeviceExtensions[] = {VK_KHR_MAINTENANCE1_EXTENSION_NAME,
-                                                     VK_KHR_MAINTENANCE2_EXTENSION_NAME,
-                                                     VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME};
-
 class VulkanDevice : public IDevice {
  public:
+  static constexpr const char* kValidationLayerName = "VK_LAYER_KHRONOS_validation";
+
+  static constexpr const char* kRequiredDeviceExtensions[] = {VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME};
+
+  static constexpr uint32_t kBindingUniformBuffer  = 0;
+  static constexpr uint32_t kBindingStorageBuffer  = 1;
+  static constexpr uint32_t kBindingSampledTexture = 2;
+  static constexpr uint32_t kBindingStorageTexture = 3;
+
+  static constexpr uint32_t kMaxBindlessResourcesPerType = 1024;
+
   VulkanDevice(Info info, uint32_t frames_in_flight, VkInstance instance, VkPhysicalDevice physical_device);
   ~VulkanDevice() override;
 
@@ -58,6 +67,18 @@ class VulkanDevice : public IDevice {
 
   const Info& GetInfo() const override;
   uint32_t GetFramesInFlight() const override;
+
+  uint32_t BeginFrame(ISwapchain* swapchain) override;
+  void EndFrame() override;
+
+  void BeginOffscreenFrame() override;
+  void EndOffscreenFrame() override;
+
+  uint32_t CurrentFrame() const override;
+
+  void Execute(RenderGraph& render_graph) override;
+
+  RenderGraphBuilder NewRenderGraphBuilder() override;
 
   [[nodiscard]] std::unique_ptr<ISwapchain> CreateSwapchain(const ISwapchain::Info& info) override;
   [[nodiscard]] std::unique_ptr<ITexture> CreateTexture(const ITexture::Info& info) override;
@@ -74,18 +95,23 @@ class VulkanDevice : public IDevice {
   };
 
   bool FindQueueFamilies();
+  bool SetupBindless();
 
-  Info info_;
+  Info     info_;
   uint32_t frames_in_flight_{0};
 
-  VkInstance instance_{VK_NULL_HANDLE};
+  VkInstance       instance_{VK_NULL_HANDLE};
   VkPhysicalDevice physical_device_{VK_NULL_HANDLE};
-  VkDevice device_{VK_NULL_HANDLE};
+  VkDevice         device_{VK_NULL_HANDLE};
+
+  VkDescriptorPool      bindless_descriptor_pool_{VK_NULL_HANDLE};
+  VkDescriptorSetLayout bindless_descriptor_set_layout_{VK_NULL_HANDLE};
+  VkDescriptorSet       bindless_descriptor_set_{VK_NULL_HANDLE};
 
   QueueFamilyIndices queue_family_indices_;
-  VkQueue main_queue_{VK_NULL_HANDLE};
-  VkQueue compute_queue_{VK_NULL_HANDLE};
-  VkQueue transfer_queue_{VK_NULL_HANDLE};
+  VkQueue            main_queue_{VK_NULL_HANDLE};
+  VkQueue            compute_queue_{VK_NULL_HANDLE};
+  VkQueue            transfer_queue_{VK_NULL_HANDLE};
 
   VmaAllocator vma_allocator_{nullptr};
 };

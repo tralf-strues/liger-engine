@@ -29,18 +29,20 @@
 
 namespace liger {
 
-ConsoleLogWriter::ConsoleLogWriter(const ConsoleLogWriter::Style& style) : style_(style) {}
+ConsoleLogWriter::ConsoleLogWriter(Style style) : style_(std::move(style)) {}
 
 void ConsoleLogWriter::SetStyle(const ConsoleLogWriter::Style& style) { style_ = style; }
 const ConsoleLogWriter::Style& ConsoleLogWriter::GetStyle() const { return style_; }
 
 void ConsoleLogWriter::OnMessageAdded(const LogMessage& message) {
   if (style_.write_level) {
-    fmt::print(GetLevelStyle(message.level), "{0} ", GetLevelName(message.level));
+    fmt::print(GetTextStyle(message.level) | fmt::emphasis::bold, "- [");
+    fmt::print(GetLevelStyle(message.level) | fmt::emphasis::bold, "{0}", GetLevelName(message.level));
+    fmt::print(GetTextStyle(message.level) | fmt::emphasis::bold, "] ");
   }
 
   if (style_.write_channel) {
-    fmt::print(GetTextStyle(message.level), "{0} ", message.channel);
+    fmt::print(GetTextStyle(message.level), "[{0}] ", message.channel);
   }
 
   fmt::print(GetTextStyle(message.level), "{0}\n", message.message);

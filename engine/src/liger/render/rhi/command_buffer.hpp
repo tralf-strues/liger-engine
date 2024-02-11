@@ -155,7 +155,9 @@ class ICommandBuffer {
    * @param binding
    * @param vertex_buffer
    */
-  void BindVertexBuffer(uint32_t binding, const IBuffer* vertex_buffer);
+  void BindVertexBuffer(uint32_t binding, const IBuffer* vertex_buffer)  {
+    BindVertexBuffers(binding, std::span<const IBuffer*>(&vertex_buffer, 1));
+  }
 
   /**
    * @brief Bind index buffer.
@@ -248,10 +250,6 @@ class ICommandBuffer {
   virtual void CopyTexture(const ITexture* src_texture, ITexture* dst_texture, Extent3D extent,
                            Extent3D offset = Extent3D{}, uint32_t src_mip_level = 0, uint32_t dst_mip_level = 0) = 0;
 };
-
-void ICommandBuffer::BindVertexBuffer(uint32_t binding, const IBuffer* vertex_buffer) {
-  BindVertexBuffers(binding, std::span<const IBuffer*>(&vertex_buffer, 1));
-}
 
 }  // namespace liger::rhi
 

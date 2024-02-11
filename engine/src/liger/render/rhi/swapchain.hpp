@@ -52,7 +52,7 @@ class ISwapchain {
 
   virtual ~ISwapchain() = default;
 
-  const Info& GetInfo() const;
+  const Info& GetInfo() const { return info_; }
 
   /**
    * @brief Get the swapchain textures.
@@ -76,7 +76,7 @@ class ISwapchain {
 
  protected:
   ISwapchain() = default;
-  explicit ISwapchain(const Info& info);
+  explicit ISwapchain(Info info) : info_(std::move(info)) {}
 
  private:
   Info info_{};

@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file compute_pipeline.hpp
- * @date 2024-02-03
+ * @file instance.cpp
+ * @date 2024-02-11
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -25,20 +25,25 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#pragma once
-
-#include <liger/render/rhi/push_constant_info.hpp>
+#include <liger/core/enum_reflection.hpp>
+#include <liger/core/log/default_log.hpp>
+#include <liger/render/rhi/rhi_log_channel.hpp>
+#include <liger/render/rhi/vulkan/vulkan_instance.hpp>
 
 namespace liger::rhi {
 
-class IComputePipeline {
- public:
-  struct Info {
-    PushConstantInfo push_constant;
-    IShaderModule*   shader_module;
-  };
+std::unique_ptr<IInstance> IInstance::Create(GraphicsAPI api, ValidationLevel validation) {
+  switch (api) {
+    case GraphicsAPI::kVulkan: {
+      auto instance = std::make_unique<VulkanInstance>();
+      return instance->Init(validation) ? std::move(instance) : nullptr;
+    }
 
-  virtual ~IComputePipeline() = default;
-};
+    default: {
+      LIGER_LOG_ERROR(kLogChannelRHI, "Graphics API \"{0}\" is not yet implemented!", EnumToString(api));
+      return nullptr;
+    }
+  }
+}
 
 }  // namespace liger::rhi

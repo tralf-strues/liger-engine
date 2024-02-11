@@ -15,5 +15,25 @@ add_subdirectory(magic_enum)
 
 add_subdirectory(vma)
 
+set(VOLK_STATIC_DEFINES "-DVK_ENABLE_BETA_EXTENSIONS")
+
+if (WIN32)
+  set(VOLK_STATIC_DEFINES "${VOLK_STATIC_DEFINES} -DVK_USE_PLATFORM_WIN32_KHR")
+elseif(APPLE)
+  set(VOLK_STATIC_DEFINES "${VOLK_STATIC_DEFINES} -DVK_USE_PLATFORM_METAL_EXT")
+elseif(UNIX)
+  pkg_check_modules(X11 x11 REQUIRED)
+  if (X11_FOUND)
+      set(VOLK_STATIC_DEFINES "${VOLK_STATIC_DEFINES} -DVK_USE_PLATFORM_XLIB_KHR")
+  endif()
+
+  pkg_check_modules(WAYLAND wayland-client REQUIRED)
+  if (WAYLAND_FOUND)
+      set(VOLK_STATIC_DEFINES "${VOLK_STATIC_DEFINES} -DVK_USE_PLATFORM_WAYLAND_KHR")
+  endif()
+endif()
+
+add_subdirectory(volk)
+
 set(YAML_BUILD_SHARED_LIBS off)
 add_subdirectory(yaml_cpp)

@@ -25,6 +25,9 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#define VOLK_IMPLEMENTATION
+#include <volk.h>
+
 #include <GLFW/glfw3.h>
 
 #include <liger/core/enum_reflection.hpp>
@@ -34,6 +37,36 @@
 #include <array>
 
 namespace liger::rhi {
+
+VKAPI_ATTR VkBool32 VKAPI_CALL DebugMessengerCallback(VkDebugUtilsMessageSeverityFlagBitsEXT      message_severity,
+                                                      VkDebugUtilsMessageTypeFlagsEXT             /*message_type*/,
+                                                      const VkDebugUtilsMessengerCallbackDataEXT* callback_data,
+                                                      void*                                       /*user_data*/) {
+  switch (message_severity) {
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT: {
+      LIGER_LOG_INFO(kLogChannelRHI, "{0} - {1}: {2}", callback_data->messageIdNumber, callback_data->pMessageIdName,
+                     callback_data->pMessage);
+      break;
+    }
+
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT: {
+      LIGER_LOG_WARN(kLogChannelRHI, "{0} - {1}: {2}", callback_data->messageIdNumber, callback_data->pMessageIdName,
+                     callback_data->pMessage);
+      break;
+    }
+
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT: {
+      LIGER_LOG_ERROR(kLogChannelRHI, "{0} - {1}: {2}", callback_data->messageIdNumber, callback_data->pMessageIdName,
+                      callback_data->pMessage);
+      break;
+    }
+
+    default: {}
+  }
+
+  return VK_FALSE;
+}
 
 bool CheckValidationLayerSupport() {
   uint32_t layer_count = 0;
@@ -45,7 +78,7 @@ bool CheckValidationLayerSupport() {
   bool layer_found = false;
 
   for (const auto& layer_properties : available_layers) {
-    if (strcmp(layer_properties.layerName, kValidationLayerName) == 0) {
+    if (strcmp(layer_properties.layerName, VulkanDevice::kValidationLayerName) == 0) {
       layer_found = true;
       break;
     }
@@ -54,7 +87,7 @@ bool CheckValidationLayerSupport() {
   return layer_found;
 }
 
-std::vector<const char*> GetInstanceExtensions() {
+std::vector<const char*> GetInstanceExtensions(IInstance::ValidationLevel validation) {
   std::vector<const char*> extensions;
 
   /* GLFW extensions */
@@ -66,17 +99,27 @@ std::vector<const char*> GetInstanceExtensions() {
   }
 
 #ifdef __APPLE__
-  extensions.push_back(VK_MVK_MACOS_SURFACE_EXTENSION_NAME);
+  extensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
+  extensions.push_back(VK_EXT_METAL_SURFACE_EXTENSION_NAME);
   extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
-  extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
 #endif
 
-  extensions.push_back(VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME);
+//   extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
+//   extensions.push_back(VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME);
+
+  if (validation != IInstance::ValidationLevel::kNone) {
+    extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+  }
 
   return extensions;
 }
 
 VulkanInstance::~VulkanInstance() {
+  if (debug_utils_messenger_ != VK_NULL_HANDLE) {
+    vkDestroyDebugUtilsMessengerEXT(instance_, debug_utils_messenger_, nullptr);
+    debug_utils_messenger_ = VK_NULL_HANDLE;
+  }
+
   if (instance_ != VK_NULL_HANDLE) {
     vkDestroyInstance(instance_, nullptr);
     instance_ = VK_NULL_HANDLE;
@@ -86,9 +129,11 @@ VulkanInstance::~VulkanInstance() {
 bool VulkanInstance::Init(ValidationLevel validation) {
   LIGER_LOG_INFO(kLogChannelRHI, "Initializing VulkanInstance with validation={0}", EnumToString(validation));
 
+  VULKAN_CALL(volkInitialize());
+
   if (validation != IInstance::ValidationLevel::kNone && !CheckValidationLayerSupport()) {
     validation = IInstance::ValidationLevel::kNone;
-    LIGER_LOG_ERROR(kLogChannelRHI, "Validation layer \"{0}\" is not found", kValidationLayerName);
+    LIGER_LOG_ERROR(kLogChannelRHI, "Validation layer \"{0}\" is not found", VulkanDevice::kValidationLayerName);
   }
 
   const VkApplicationInfo app_info{
@@ -98,10 +143,10 @@ bool VulkanInstance::Init(ValidationLevel validation) {
     .applicationVersion = 0,
     .pEngineName        = "Liger Engine",
     .engineVersion      = VK_MAKE_VERSION(1, 0, 0),
-    .apiVersion         = VK_API_VERSION_1_3
+    .apiVersion         = VK_API_VERSION_1_2
   };
 
-  auto extensions = GetInstanceExtensions();
+  auto extensions = GetInstanceExtensions(validation);
 
   VkInstanceCreateInfo instance_info{
     .sType                   = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
@@ -118,9 +163,21 @@ bool VulkanInstance::Init(ValidationLevel validation) {
   instance_info.flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
 #endif
 
+  VkDebugUtilsMessengerCreateInfoEXT debug_utils_create_info = {
+      .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
+      .pNext = nullptr,
+      .flags = 0,
+      .messageSeverity =
+          VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT |
+          VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
+      .messageType     = VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT,
+      .pfnUserCallback = DebugMessengerCallback,
+      .pUserData       = nullptr,
+  };
+
   if (validation != IInstance::ValidationLevel::kNone) {
     instance_info.enabledLayerCount = 1;
-    instance_info.ppEnabledLayerNames = &kValidationLayerName;
+    instance_info.ppEnabledLayerNames = &VulkanDevice::kValidationLayerName;
   }
 
   const VkValidationFeatureEnableEXT extra_features[] = {
@@ -138,11 +195,20 @@ bool VulkanInstance::Init(ValidationLevel validation) {
     .pDisabledValidationFeatures    = nullptr
   };
 
-  if (validation == IInstance::ValidationLevel::kExtensive) {
+  if (validation == IInstance::ValidationLevel::kBasic) {
+    instance_info.pNext = &debug_utils_create_info;
+  } else if (validation == IInstance::ValidationLevel::kExtensive) {
+    features_info.pNext = &debug_utils_create_info;
     instance_info.pNext = &features_info;
   }
-
+  
   VULKAN_CALL(vkCreateInstance(&instance_info, nullptr, &instance_));
+
+  volkLoadInstanceOnly(instance_);
+
+  if (validation != IInstance::ValidationLevel::kNone) {
+    VULKAN_CALL(vkCreateDebugUtilsMessengerEXT(instance_, &debug_utils_create_info, nullptr, &debug_utils_messenger_));
+  }
 
   return FillDeviceInfoList();
 }
@@ -156,11 +222,13 @@ std::unique_ptr<IDevice> VulkanInstance::CreateDevice(uint32_t id, uint32_t fram
                  frames_in_flight);
 
   VkPhysicalDevice physical_device = VK_NULL_HANDLE;
+  uint32_t device_info_index = 0;
 
   const uint32_t device_count = physical_device_ids_.size();
   for (uint32_t i = 0; i < device_count; ++i) {
     if (physical_device_ids_[i] == id) {
       physical_device = physical_devices_[i];
+      device_info_index = i;
     }
   }
 
@@ -169,9 +237,13 @@ std::unique_ptr<IDevice> VulkanInstance::CreateDevice(uint32_t id, uint32_t fram
     return nullptr;
   }
 
-  // TODO (tralf-strues): return device
+  auto device = std::make_unique<VulkanDevice>(device_info_list_[device_info_index], frames_in_flight, instance_,
+                                               physical_device);
+  if (!device->Init()) {
+    return nullptr;
+  }
 
-  return nullptr;
+  return std::move(device);
 }
 
 bool VulkanInstance::FillDeviceInfoList() {
@@ -189,11 +261,20 @@ bool VulkanInstance::FillDeviceInfoList() {
   physical_device_ids_.reserve(device_count);
 
   for (auto physical_device : physical_devices_) {
-    VkPhysicalDeviceFeatures features;
-    vkGetPhysicalDeviceFeatures(physical_device, &features);
-
     VkPhysicalDeviceProperties properties;
     vkGetPhysicalDeviceProperties(physical_device, &properties);
+
+    VkPhysicalDeviceDescriptorIndexingFeatures indexing_features {
+      .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES,
+      .pNext = nullptr,
+    };
+
+    VkPhysicalDeviceFeatures2 features2 {
+      .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
+      .pNext = &indexing_features
+    };
+
+    vkGetPhysicalDeviceFeatures2(physical_device, &features2);
 
     physical_device_ids_.push_back(properties.deviceID);
 
@@ -205,7 +286,7 @@ bool VulkanInstance::FillDeviceInfoList() {
                                                      available_extensions.data()));
 
     bool required_extensions_supported = true;
-    for (auto required_extension : kRequiredDeviceExtensions) {
+    for (auto required_extension : VulkanDevice::kRequiredDeviceExtensions) {
       bool found = false;
 
       for (auto available_extension : available_extensions) {
@@ -230,18 +311,20 @@ bool VulkanInstance::FillDeviceInfoList() {
     }
 
     IDevice::Info info {
-        .id   = properties.deviceID,
-        .name = properties.deviceName,
-        .type = GetDeviceTypeFromVulkan(properties.deviceType),
-        .engine_supported =
-            required_extensions_supported && swapchain_supported && static_cast<bool>(features.samplerAnisotropy),
+      .id               = properties.deviceID,
+      .name             = properties.deviceName,
+      .type             = GetDeviceTypeFromVulkan(properties.deviceType),
+      .engine_supported = required_extensions_supported && swapchain_supported &&
+                          static_cast<bool>(features2.features.samplerAnisotropy) &&
+                          static_cast<bool>(indexing_features.descriptorBindingPartiallyBound) &&
+                          static_cast<bool>(indexing_features.runtimeDescriptorArray),
 
-        .properties = {
-          // .swapchain              = swapchain_supported,
-          // .sampler_anisotropy     = static_cast<bool>(features.samplerAnisotropy),
-          .max_msaa_samples       = GetMaxSamplesFromVulkan(properties),
-          .max_sampler_anisotropy = properties.limits.maxSamplerAnisotropy,
-        },
+      .properties = {
+              // .swapchain              = swapchain_supported,
+              // .sampler_anisotropy     = static_cast<bool>(features.samplerAnisotropy),
+              .max_msaa_samples       = GetMaxSamplesFromVulkan(properties),
+              .max_sampler_anisotropy = properties.limits.maxSamplerAnisotropy,
+      },
     };
 
     device_info_list_.emplace_back(std::move(info));

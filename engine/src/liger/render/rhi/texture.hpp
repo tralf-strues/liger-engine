@@ -131,7 +131,7 @@ class ITexture {
 
   virtual ~ITexture() = default;
 
-  const Info& GetInfo() const;
+  const Info& GetInfo() const { return info_; }
 
   /**
    * @brief Create a view for the texture.
@@ -165,14 +165,10 @@ class ITexture {
 
  protected:
   ITexture() = default;
-  explicit ITexture(Info info);
+  explicit ITexture(Info info) : info_(std::move(info)) {}
 
  private:
   Info info_{};
 };
-
-ITexture::ITexture(Info info) : info_(std::move(info)) {}
-
-const ITexture::Info& ITexture::GetInfo() const { return info_; }
 
 }  // namespace liger::rhi

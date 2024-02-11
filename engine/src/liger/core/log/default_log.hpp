@@ -46,12 +46,8 @@
     std::terminate();                         \
   }
 
-namespace liger {
-namespace default_log {
+namespace liger::default_log {
 
 extern Log g_Log;
 
-Log CreateDefaultLog();
-
-}  // namespace default_log
-}  // namespace liger
+}  // namespace liger::default_log

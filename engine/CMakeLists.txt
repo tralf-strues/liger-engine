@@ -6,7 +6,7 @@ add_subdirectory(src)
 
 target_include_directories(liger PUBLIC "third_party/taskflow")
 
-find_package(Vulkan REQUIRED)
+# find_package(Vulkan REQUIRED)
 
 target_link_libraries(liger
   PUBLIC
@@ -14,7 +14,8 @@ target_link_libraries(liger
     glfw
     glm
     magic_enum
-    Vulkan::Vulkan
+    # Vulkan::Vulkan
     VulkanMemoryAllocator
+    volk
     yaml-cpp
   )

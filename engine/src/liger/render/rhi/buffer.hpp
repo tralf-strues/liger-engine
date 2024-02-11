@@ -54,7 +54,7 @@ class IBuffer {
 
   virtual ~IBuffer() = default;
 
-  const Info& GetInfo() const;
+  const Info& GetInfo() const { return info_; }
 
   /**
    * @brief Get the binding of the buffer for accessing inside shaders.
@@ -84,14 +84,10 @@ class IBuffer {
 
  protected:
   IBuffer() = default;
-  explicit IBuffer(Info info);
+  explicit IBuffer(Info info) : info_(std::move(info)) {}
 
  private:
   Info info_{};
 };
-
-IBuffer::IBuffer(Info info) : info_(std::move(info)) {}
-
-const IBuffer::Info& IBuffer::GetInfo() const { return info_; }
 
 }  // namespace liger::rhi

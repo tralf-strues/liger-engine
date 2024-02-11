@@ -109,13 +109,13 @@ inline uint32_t GetFormatSize(Format format) {
   }
 }
 
-inline bool IsDepthContainingFormat(Format format) {
+inline constexpr bool IsDepthContainingFormat(Format format) {
   return format == Format::kD16_UNORM ||
          format == Format::kD32_SFLOAT ||
          format == Format::kD24_UNORM_S8_UINT;
 }
 
-inline bool IsDepthStencilFormat(Format format) {
+inline constexpr bool IsDepthStencilFormat(Format format) {
   return format == Format::kD24_UNORM_S8_UINT;
 }
 

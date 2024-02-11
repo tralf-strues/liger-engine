@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file compute_pipeline.hpp
- * @date 2024-02-03
+ * @file test_rhi.cpp
+ * @date 2024-02-11
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -25,20 +25,25 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#pragma once
+#include <liger/core/enum_reflection.hpp>
+#include <liger/core/log/default_log.hpp>
+#include <liger/render/rhi/instance.hpp>
 
-#include <liger/render/rhi/push_constant_info.hpp>
+int main() {
+  auto rhi_instance = liger::rhi::IInstance::Create(liger::rhi::GraphicsAPI::kVulkan,
+                                                    liger::rhi::IInstance::ValidationLevel::kExtensive);
 
-namespace liger::rhi {
+  std::string str_devices_list;
+  for (auto& device_info : rhi_instance->GetDeviceInfoList()) {
+    str_devices_list += fmt::format(
+        "    - [id={0}] \"{1}\", type={2}, engine_supported={3}, max_msaa={4}, max_sampler_anisotropy={5}\n",
+        device_info.id, device_info.name, liger::EnumToString(device_info.type), device_info.engine_supported,
+        device_info.properties.max_msaa_samples, device_info.properties.max_sampler_anisotropy);
+  }
 
-class IComputePipeline {
- public:
-  struct Info {
-    PushConstantInfo push_constant;
-    IShaderModule*   shader_module;
-  };
+  LIGER_LOG_INFO("TestRHI", "Devices available:\n{0}", str_devices_list);
 
-  virtual ~IComputePipeline() = default;
-};
+  auto device = rhi_instance->CreateDevice(rhi_instance->GetDeviceInfoList()[0].id, 2);
 
-}  // namespace liger::rhi
+  return 0;
+}

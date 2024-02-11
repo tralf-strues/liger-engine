@@ -50,6 +50,8 @@ class VulkanInstance : public IInstance {
   std::vector<uint32_t> physical_device_ids_;
 
   std::vector<IDevice::Info> device_info_list_;
+
+  VkDebugUtilsMessengerEXT debug_utils_messenger_{VK_NULL_HANDLE};
 };
 
 }  // namespace liger::rhi

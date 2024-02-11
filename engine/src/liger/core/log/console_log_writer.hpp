@@ -52,8 +52,7 @@ class ConsoleLogWriter : public ILogWriter {
     bool write_channel{true};
   };
 
- public:
-  explicit ConsoleLogWriter(const Style& style);
+  explicit ConsoleLogWriter(Style style);
   ~ConsoleLogWriter() override = default;
 
   void SetStyle(const Style& style);
@@ -67,10 +66,7 @@ class ConsoleLogWriter : public ILogWriter {
   const fmt::text_style& GetLevelStyle(LogLevel level) const;
   const char* GetLevelName(LogLevel level) const;
 
- private:
   Style style_;
 };
-
-extern const ConsoleLogWriter::Style kDefaultConsoleLogStyle;
 
 }  // namespace liger

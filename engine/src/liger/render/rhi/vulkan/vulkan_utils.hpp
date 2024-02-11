@@ -31,7 +31,8 @@
 #include <liger/render/rhi/rhi_log_channel.hpp>
 #include <liger/render/rhi/device.hpp>
 
-#include <vulkan/vulkan.h>
+#define VK_NO_PROTOTYPES
+#include <volk.h>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wnullability-extension"
