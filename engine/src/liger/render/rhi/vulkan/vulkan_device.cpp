@@ -29,6 +29,7 @@
 
 #include <liger/render/rhi/vulkan/vulkan_buffer.hpp>
 #include <liger/render/rhi/vulkan/vulkan_compute_pipeline.hpp>
+#include <liger/render/rhi/vulkan/vulkan_graphics_pipeline.hpp>
 #include <liger/render/rhi/vulkan/vulkan_shader_module.hpp>
 #include <liger/render/rhi/vulkan/vulkan_swapchain.hpp>
 #include <liger/render/rhi/vulkan/vulkan_texture.hpp>
@@ -94,9 +95,14 @@ bool VulkanDevice::Init() {
   extensions.push_back(VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME);
 #endif
 
+  constexpr VkPhysicalDeviceDynamicRenderingFeaturesKHR dynamic_rendering_feature {
+    .sType            = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES_KHR,
+    .dynamicRendering = VK_TRUE
+  };
+
   VkDeviceCreateInfo create_info {
     .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
-    .pNext = nullptr,
+    .pNext = &dynamic_rendering_feature,
     .flags = 0,
     .queueCreateInfoCount = static_cast<uint32_t>(queue_count),
     .pQueueCreateInfos = queue_create_infos,
@@ -228,7 +234,7 @@ std::unique_ptr<IBuffer> VulkanDevice::CreateBuffer(const IBuffer::Info& info) {
 }
 
 std::unique_ptr<IShaderModule> VulkanDevice::CreateShaderModule(const IShaderModule::Source& source) {
-  auto shader_module = std::make_unique<VulkanShaderModule>(device_);
+  auto shader_module = std::make_unique<VulkanShaderModule>(device_, source.type);
 
   if (!shader_module->Init(source)) {
     return nullptr;
@@ -245,6 +251,16 @@ std::unique_ptr<IComputePipeline> VulkanDevice::CreatePipeline(const IComputePip
   }
 
   return compute_pipeline;
+}
+
+std::unique_ptr<IGraphicsPipeline> VulkanDevice::CreatePipeline(const IGraphicsPipeline::Info& info) {
+  auto graphics_pipeline = std::make_unique<VulkanGraphicsPipeline>(device_);
+
+  if (!graphics_pipeline->Init(info)) {
+    return nullptr;
+  }
+
+  return graphics_pipeline;
 }
 
 }  // namespace liger::rhi

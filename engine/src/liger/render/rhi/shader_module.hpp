@@ -54,7 +54,19 @@ class IShaderModule {
   };
 
   virtual ~IShaderModule() = 0;
+
+  Type GetType() const;
+
+ protected:
+  explicit IShaderModule(Type type);
+
+ private:
+  Type type_{Type::kNone};
 };
+
+IShaderModule::IShaderModule(Type type) : type_(type) {}
+
+IShaderModule::Type IShaderModule::GetType() const { return type_; }
 
 }  // namespace liger::rhi
 

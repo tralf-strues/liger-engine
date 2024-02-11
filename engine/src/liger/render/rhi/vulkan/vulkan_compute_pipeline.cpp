@@ -91,7 +91,8 @@ bool VulkanComputePipeline::Init(const Info& info) {
     .basePipelineIndex  = 0
   };
 
-  VULKAN_CALL(vkCreateComputePipelines(vk_device_, nullptr, 1, &pipeline_info, nullptr, &vk_pipeline_));
+  // TODO(tralf-strues): Add pipeline cache!
+  VULKAN_CALL(vkCreateComputePipelines(vk_device_, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &vk_pipeline_));
 
   return true;
 }

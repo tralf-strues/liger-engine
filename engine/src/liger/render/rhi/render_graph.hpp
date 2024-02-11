@@ -51,7 +51,6 @@ class RenderGraph {
     virtual void Execute(ICommandBuffer& cmds) = 0;
   };
 
- public:
   virtual ~RenderGraph() = default;
 
   ITexture* GetTexture(ResourceVersion version);
@@ -60,7 +59,7 @@ class RenderGraph {
   virtual void ReimportTexture(ResourceVersion version, ITexture* new_texture) = 0;
   virtual void ReimportBuffer(ResourceVersion version, IBuffer* new_buffer) = 0;
 
-  void SetJob(const std::string_view node_name, std::unique_ptr<IJob> job);
+  void SetJob(std::string_view node_name, std::unique_ptr<IJob> job);
 
   virtual void Execute(IRenderDevice& device) = 0;
 
@@ -90,10 +89,8 @@ class RenderGraph {
     std::unique_ptr<IJob>      job;
   };
 
- protected:
   virtual void Compile(IRenderDevice& device) = 0;
 
- protected:
   DAG<Node>                                           dag_;
   DAG<Node>::SortedList                               sorted_nodes_;
   DAG<Node>::DepthList                                node_depths_;
@@ -108,7 +105,6 @@ class RenderGraphBuilder {
  public:
   using ResourceVersion = RenderGraph::ResourceVersion;
 
- public:
   explicit RenderGraphBuilder(std::unique_ptr<RenderGraph> graph);
 
   RenderGraphBuilder(const RenderGraphBuilder& other) = delete;
@@ -120,15 +116,15 @@ class RenderGraphBuilder {
   ResourceVersion ImportTexture(ITexture* texture);
   ResourceVersion ImportBuffer(IBuffer* buffer);
 
-  void BeginRenderPass(const std::string_view     name,
+  void BeginRenderPass(std::string_view           name,
                        ICommandBuffer::Capability capabilities = ICommandBuffer::Capability::kGraphics);
   void EndRenderPass();
 
-  void BeginCompute(const std::string_view     name,
+  void BeginCompute(std::string_view           name,
                     ICommandBuffer::Capability capabilities = ICommandBuffer::Capability::kCompute);
   void EndCompute();
 
-  void BeginTransfer(const std::string_view     name,
+  void BeginTransfer(std::string_view           name,
                      ICommandBuffer::Capability capabilities = ICommandBuffer::Capability::kTransfer);
   void EndTransfer();
 
@@ -144,14 +140,12 @@ class RenderGraphBuilder {
   using Node       = RenderGraph::Node;
   using NodeHandle = DAG<Node>::NodeHandle;
 
- private:
-  void BeginNode(RenderGraph::Node::Type type, ICommandBuffer::Capability capabilities, const std::string_view name);
+  void BeginNode(RenderGraph::Node::Type type, ICommandBuffer::Capability capabilities, std::string_view name);
   void EndNode(RenderGraph::Node::Type type);
 
   RenderGraphBuilder::ResourceVersion AddWrite(RenderGraph::Node::Type type, ResourceVersion resource,
                                                DeviceResourceState usage);
 
- private:
   std::unique_ptr<RenderGraph> graph_;
   std::optional<NodeHandle> current_node_ = std::nullopt;
 };

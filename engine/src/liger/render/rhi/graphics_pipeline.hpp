@@ -46,7 +46,7 @@ struct InputAssemblyInfo {
       uint32_t binding {0};
       uint32_t stride  {0};
 
-      std::vector<Attribute> attribs;
+      std::vector<Attribute> attributes;
     };
 
     std::vector<Binding> bindings;
@@ -85,8 +85,8 @@ struct RasterizationInfo {
   };
 
   enum class FrontFace : uint8_t {
-    kClockwise,
-    kCounterClockwise
+    kCounterClockwise,
+    kClockwise
   };
 
   enum class PolygonMode : uint8_t {
@@ -199,17 +199,24 @@ struct ColorBlendInfo {
   Operation alpha_operation  {Operation::kAdd};
 };
 
+struct AttachmentInfo {
+  std::span<const Format> render_target_formats;
+  Format                  depth_stencil_format{Format::kInvalid};
+  uint8_t                 samples{1};
+};
+
 class IShaderModule;
 
 class IGraphicsPipeline {
  public:
   struct Info {
-    InputAssemblyInfo           input_assembly;
-    RasterizationInfo           rasterization;
-    DepthStencilTestInfo        depth_test;
-    ColorBlendInfo              blend;
-    PushConstantInfo            push_constant;
-    std::vector<IShaderModule*> shader_modules;
+    InputAssemblyInfo               input_assembly;
+    RasterizationInfo               rasterization;
+    DepthStencilTestInfo            depth_stencil_test;
+    ColorBlendInfo                  blend;
+    PushConstantInfo                push_constant;
+    AttachmentInfo                  attachments;
+    std::span<const IShaderModule*> shader_modules;
   };
 
   virtual ~IGraphicsPipeline() = 0;

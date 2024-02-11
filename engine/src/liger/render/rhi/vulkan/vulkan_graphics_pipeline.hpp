@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file vulkan_shader_module.cpp
- * @date 2024-02-10
+ * @file vulkan_graphics_pipeline.hpp
+ * @date 2024-02-11
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -25,35 +25,26 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <liger/render/rhi/vulkan/vulkan_shader_module.hpp>
+#pragma once
+
+#include <liger/render/rhi/graphics_pipeline.hpp>
+#include <liger/render/rhi/vulkan/vulkan_utils.hpp>
 
 namespace liger::rhi {
 
-VulkanShaderModule::VulkanShaderModule(VkDevice vk_device, Type type) : IShaderModule(type), vk_device_(vk_device) {}
+class VulkanGraphicsPipeline : public IGraphicsPipeline {
+ public:
+  explicit VulkanGraphicsPipeline(VkDevice vk_device);
+  ~VulkanGraphicsPipeline() override;
 
-VulkanShaderModule::~VulkanShaderModule() {
-  if (vk_shader_module_ != VK_NULL_HANDLE) {
-    vkDestroyShaderModule(vk_device_, vk_shader_module_, nullptr);
-    vk_shader_module_ = VK_NULL_HANDLE;
-  }
-}
+  bool Init(const Info& info);
 
-bool VulkanShaderModule::Init(const IShaderModule::Source& source) {
-  const VkShaderModuleCreateInfo create_info {
-    .sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
-    .pNext = nullptr,
-    .flags = 0,
-    .codeSize = source.source_binary.size_bytes(),
-    .pCode = source.source_binary.data(),
-  };
+  VkPipeline GetVulkanHandle();
 
-  VULKAN_CALL(vkCreateShaderModule(vk_device_, &create_info, nullptr, &vk_shader_module_));
-
-  return true;
-}
-
-VkShaderModule VulkanShaderModule::GetVulkanHandle()  const {
-  return vk_shader_module_;
-}
+ private:
+  VkDevice         vk_device_{VK_NULL_HANDLE};
+  VkPipelineLayout vk_layout_{VK_NULL_HANDLE};
+  VkPipeline       vk_pipeline_{VK_NULL_HANDLE};
+};
 
 }  // namespace liger::rhi

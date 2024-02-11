@@ -46,7 +46,8 @@ namespace liger::rhi {
 constexpr const char* kValidationLayerName = "VK_LAYER_KHRONOS_validation";
 
 constexpr const char* kRequiredDeviceExtensions[] = {VK_KHR_MAINTENANCE1_EXTENSION_NAME,
-                                                     VK_KHR_MAINTENANCE2_EXTENSION_NAME};
+                                                     VK_KHR_MAINTENANCE2_EXTENSION_NAME,
+                                                     VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME};
 
 class VulkanDevice : public IDevice {
  public:

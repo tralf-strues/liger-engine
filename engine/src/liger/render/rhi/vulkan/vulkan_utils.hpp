@@ -60,9 +60,9 @@ inline constexpr IDevice::Type GetDeviceTypeFromVulkan(VkPhysicalDeviceType vk_d
 
 inline constexpr VkShaderStageFlags GetVulkanShaderStageFlags(IShaderModule::Type mask) {
   VkShaderStageFlags vk_flags = 0;
-  if (static_cast<uint16_t>(mask & IShaderModule::Type::kVertex) != 0) { vk_flags = VK_SHADER_STAGE_VERTEX_BIT; }
-  if (static_cast<uint16_t>(mask & IShaderModule::Type::kFragment) != 0) { vk_flags = VK_SHADER_STAGE_FRAGMENT_BIT; }
-  if (static_cast<uint16_t>(mask & IShaderModule::Type::kCompute) != 0) { vk_flags = VK_SHADER_STAGE_COMPUTE_BIT; }
+  if (static_cast<uint16_t>(mask & IShaderModule::Type::kVertex) != 0) { vk_flags |= VK_SHADER_STAGE_VERTEX_BIT; }
+  if (static_cast<uint16_t>(mask & IShaderModule::Type::kFragment) != 0) { vk_flags |= VK_SHADER_STAGE_FRAGMENT_BIT; }
+  if (static_cast<uint16_t>(mask & IShaderModule::Type::kCompute) != 0) { vk_flags |= VK_SHADER_STAGE_COMPUTE_BIT; }
 
   return vk_flags;
 }
@@ -248,6 +248,40 @@ inline constexpr VkSamplerAddressMode GetVulkanSamplerAddressMode(SamplerInfo::A
 
 inline constexpr VkBorderColor GetVulkanBorderColor(SamplerInfo::BorderColor border_color) {
   return static_cast<VkBorderColor>(border_color);
+}
+
+inline constexpr VkPrimitiveTopology GetVulkanPrimitiveTopology(InputAssemblyInfo::Topology topology) {
+  return static_cast<VkPrimitiveTopology>(topology);
+}
+
+inline constexpr VkPolygonMode GetVulkanPolygonMode(RasterizationInfo::PolygonMode polygon_mode) {
+  return static_cast<VkPolygonMode>(polygon_mode);
+}
+
+inline constexpr VkCullModeFlags GetVulkanCullMode(RasterizationInfo::CullMode cull_mode) {
+  switch (cull_mode) {
+    case RasterizationInfo::CullMode::kNone:         { return VK_CULL_MODE_NONE; }
+    case RasterizationInfo::CullMode::kFrontOnly:    { return VK_CULL_MODE_FRONT_BIT; }
+    case RasterizationInfo::CullMode::kBackOnly:     { return VK_CULL_MODE_BACK_BIT; }
+    case RasterizationInfo::CullMode::kFrontAndBack: { return VK_CULL_MODE_FRONT_AND_BACK; }
+    default:                                         { return VK_CULL_MODE_NONE; }
+  }
+}
+
+inline constexpr VkFrontFace GetVulkanFrontFace(RasterizationInfo::FrontFace front_face) {
+  return static_cast<VkFrontFace>(front_face);
+}
+
+inline constexpr VkCompareOp GetVulkanCompareOp(DepthStencilTestInfo::CompareOperation operation) {
+  return static_cast<VkCompareOp>(operation);
+}
+
+inline constexpr VkBlendFactor GetVulkanBlendFactor(ColorBlendInfo::Factor factor) {
+  return static_cast<VkBlendFactor>(factor);
+}
+
+inline constexpr VkBlendOp GetVulkanBlendOp(ColorBlendInfo::Operation operation) {
+  return static_cast<VkBlendOp>(operation);
 }
 
 }  // namespace liger::rhi

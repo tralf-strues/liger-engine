@@ -34,12 +34,12 @@ namespace liger::rhi {
 
 class VulkanShaderModule : public IShaderModule {
  public:
-  explicit VulkanShaderModule(VkDevice vk_device);
+  explicit VulkanShaderModule(VkDevice vk_device, Type type);
   ~VulkanShaderModule() override;
 
   bool Init(const IShaderModule::Source& source);
 
-  VkShaderModule GetVulkanHandle();
+  VkShaderModule GetVulkanHandle() const;
 
  private:
   VkDevice       vk_device_{VK_NULL_HANDLE};
