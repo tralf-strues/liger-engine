@@ -41,11 +41,11 @@ class Log {
  public:
   using MessageIterator = std::vector<LogMessage>::const_iterator;
 
- public:
   void AddWriter(std::unique_ptr<ILogWriter> writer);
 
   template <typename... Args>
-  void Message(LogLevel level, const std::string_view channel, const std::string_view format, Args&&... args);
+  void Message(LogLevel level, std::string_view source, std::string_view channel, std::string_view format,
+               Args&&... args);
 
   MessageIterator begin() const;
   MessageIterator end() const;
@@ -53,15 +53,15 @@ class Log {
  private:
   void OnMessageAdded();
 
- private:
   std::vector<LogMessage> messages_;
   std::vector<std::unique_ptr<ILogWriter>> writers_;
 };
 
 template <typename... Args>
-void Log::Message(LogLevel level, const std::string_view channel, const std::string_view format, Args&&... args) {
+void Log::Message(LogLevel level, std::string_view source, std::string_view channel, std::string_view format,
+                  Args&&... args) {
   // FIXME (tralf-strues): Get rid of fmt::runtime
-  messages_.emplace_back(level, channel, std::move(fmt::format(fmt::runtime(format), args...)));
+  messages_.emplace_back(level, source, channel, std::move(fmt::format(fmt::runtime(format), args...)));
   OnMessageAdded();
 }
 

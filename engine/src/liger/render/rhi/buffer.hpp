@@ -27,6 +27,7 @@
 
 #pragma once
 
+#include <liger/render/rhi/descriptor_binding.hpp>
 #include <liger/render/rhi/device_resource_state.hpp>
 
 #include <string>
@@ -57,16 +58,29 @@ class IBuffer {
   const Info& GetInfo() const { return info_; }
 
   /**
-   * @brief Get the binding of the buffer for accessing inside shaders.
+   * @brief Get the descriptor index of the buffer for accessing inside shaders as a uniform buffer.
    *
-   * @return Buffer's binding index.
+   * @warning This function may return @ref BufferDescriptorBinding::kInvalid if the @ref Info::usage mask
+   * did not contain @ref DeviceResourceState::kUniformBuffer bit.
+   *
+   * @return Uniform buffer's descriptor index.
    */
-  virtual uint32_t GetBinding() = 0;
+  virtual BufferDescriptorBinding GetUniformDescriptorBinding() const = 0;
+
+  /**
+   * @brief Get the descriptor index of the buffer for accessing inside shaders as a storage buffer.
+   *
+   * @warning This function may return @ref BufferDescriptorBinding::kInvalid if the @ref Info::usage mask
+   * did not contain @ref DeviceResourceState::kStorageBuffer bit.
+   *
+   * @return Storage buffer's descriptor index.
+   */
+  virtual BufferDescriptorBinding GetStorageDescriptorBinding() const = 0;
 
   /**
    * @brief Map a range of buffer's memory.
    *
-   * @warning Only available if the buffer is created with @see{Info::cpu_visible} enabled.
+   * @warning Only available if the buffer is created with @ref Info::cpu_visible enabled.
    *
    * @param offset
    * @param size
@@ -78,7 +92,7 @@ class IBuffer {
   /**
    * @brief Unmap buffer's memory.
    *
-   * @warning It is UB when calling this method without previously successful call to @see{MapMemory}.
+   * @warning It is UB when calling this method without previously successful call to @ref MapMemory.
    */
   virtual void UnmapMemory() = 0;
 

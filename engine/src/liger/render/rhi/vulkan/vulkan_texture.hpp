@@ -28,26 +28,30 @@
 #pragma once
 
 #include <liger/render/rhi/texture.hpp>
+
+#include <liger/render/rhi/vulkan/vulkan_descriptor_manager.hpp>
 #include <liger/render/rhi/vulkan/vulkan_utils.hpp>
 
 namespace liger::rhi {
 
 class VulkanTexture : public ITexture {
  public:
-  VulkanTexture(Info info, VkDevice vk_device, VmaAllocator vma_allocator);
-  VulkanTexture(Info info, VkDevice vk_device, VkImage vk_image);
+  VulkanTexture(Info info, VkDevice vk_device, VmaAllocator vma_allocator, VulkanDescriptorManager& descriptor_manager);
+  VulkanTexture(Info info, VkDevice vk_device, VkImage vk_image, VulkanDescriptorManager& descriptor_manager);
   ~VulkanTexture() override;
 
   bool Init();
 
   uint32_t CreateView(const TextureViewInfo& info) override;
-  uint32_t GetViewBinding(uint32_t view) override;
+  TextureDescriptorBinding GetSampledDescriptorBinding(uint32_t view) const override;
+  TextureDescriptorBinding GetStorageDescriptorBinding(uint32_t view) const override;
   bool SetSampler(const SamplerInfo& sampler_info, uint32_t view = kTextureDefaultViewIdx) override;
 
  private:
   struct SampledView {
-    VkImageView vk_view{VK_NULL_HANDLE};
-    VkSampler   vk_custom_sampler{VK_NULL_HANDLE};
+    VkImageView                              vk_view           {VK_NULL_HANDLE};
+    VkSampler                                vk_custom_sampler {VK_NULL_HANDLE};
+    VulkanDescriptorManager::TextureBindings bindings          {};
   };
 
   uint32_t GetLayerCount() const;
@@ -57,6 +61,7 @@ class VulkanTexture : public ITexture {
   VmaAllocator             vma_allocator_{VK_NULL_HANDLE};
   VkImage                  vk_image_{VK_NULL_HANDLE};
   VmaAllocation            vma_allocation_{VK_NULL_HANDLE};
+  VulkanDescriptorManager& descriptor_manager_;
   std::vector<SampledView> views_;
 };
 

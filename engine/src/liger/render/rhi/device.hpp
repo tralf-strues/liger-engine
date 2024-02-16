@@ -77,7 +77,7 @@ class IDevice {
 
   /**
    * @brief Get the device info, which is exactly the same as the corresponding info returned
-   * by @see{IInstance::GetDeviceInfoList} method.
+   * by @ref IInstance::GetDeviceInfoList method.
    *
    * @return Device info.
    */
@@ -85,7 +85,7 @@ class IDevice {
 
   /**
    * @brief Get the number of frames in flight the device is configured to work with.
-   * @note This number is set upon creating a device via @see{IInstance::CreateDevice}.
+   * @note This number is set upon creating a device via @ref IInstance::CreateDevice.
    * @return The number of frames in flight.
    */
   virtual uint32_t GetFramesInFlight() const = 0;
@@ -98,7 +98,7 @@ class IDevice {
   [[nodiscard]] virtual uint32_t BeginFrame(ISwapchain* swapchain) = 0;
 
   /**
-   * @brief End the frame and present to screen (with the swapchain specified in @see{BeginFrame} method).
+   * @brief End the frame and present to screen (with the swapchain specified in @ref BeginFrame method).
    */
   virtual void EndFrame() = 0;
 

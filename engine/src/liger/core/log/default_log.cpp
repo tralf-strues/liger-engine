@@ -33,6 +33,8 @@ namespace liger::default_log {
 const ConsoleLogWriter::Style kDefaultConsoleLogStyle {
     .default_style = {},
 
+    .write_source = true,
+
     .write_level = true,
     .use_level_style_for_entire_message = true,
 

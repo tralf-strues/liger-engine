@@ -88,4 +88,10 @@ inline constexpr Enum operator|=(Enum& lhs, Enum rhs) {
   return lhs;
 }
 
+template <typename Enum>
+requires EnumEnableBitmask<Enum>::kEnabled
+inline constexpr bool EnumBitmaskContains(Enum lhs, Enum rhs) {
+  return static_cast<uint64_t>(lhs & rhs) == static_cast<uint64_t>(rhs);
+}
+
 }  // namespace liger

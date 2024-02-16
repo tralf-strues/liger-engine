@@ -54,17 +54,7 @@ VulkanDevice::VulkanDevice(Info info, uint32_t frames_in_flight, VkInstance inst
       physical_device_(physical_device) {}
 
 VulkanDevice::~VulkanDevice() {
-  if (bindless_descriptor_set_layout_ != VK_NULL_HANDLE) {
-    vkDestroyDescriptorSetLayout(device_, bindless_descriptor_set_layout_, nullptr);
-    bindless_descriptor_set_layout_ = VK_NULL_HANDLE;
-  }
-
-  if (bindless_descriptor_pool_ != VK_NULL_HANDLE) {
-    vkDestroyDescriptorPool(device_, bindless_descriptor_pool_, nullptr);
-    bindless_descriptor_pool_ = VK_NULL_HANDLE;
-  }
-
-  bindless_descriptor_set_ = VK_NULL_HANDLE;
+  descriptor_manager_.Destroy();
 
   if (vma_allocator_ != VK_NULL_HANDLE) {
     vmaDestroyAllocator(vma_allocator_);
@@ -171,7 +161,7 @@ bool VulkanDevice::Init() {
   allocator_info.vulkanApiVersion = VK_API_VERSION_1_2;
   VULKAN_CALL(vmaCreateAllocator(&allocator_info, &vma_allocator_));
 
-  return SetupBindless();
+  return descriptor_manager_.Init(device_);
 }
 
 const VulkanDevice::Info& VulkanDevice::GetInfo() const { return info_; }
@@ -207,7 +197,7 @@ RenderGraphBuilder VulkanDevice::NewRenderGraphBuilder() {
 }
 
 std::unique_ptr<ISwapchain> VulkanDevice::CreateSwapchain(const ISwapchain::Info& info) {
-  auto swapchain = std::make_unique<VulkanSwapchain>(info, instance_, device_);
+  auto swapchain = std::make_unique<VulkanSwapchain>(info, instance_, device_, descriptor_manager_);
 
   if (!swapchain->Init(physical_device_)) {
     return nullptr;
@@ -217,7 +207,7 @@ std::unique_ptr<ISwapchain> VulkanDevice::CreateSwapchain(const ISwapchain::Info
 }
 
 std::unique_ptr<ITexture> VulkanDevice::CreateTexture(const ITexture::Info& info) {
-  auto texture = std::make_unique<VulkanTexture>(info, device_, vma_allocator_);
+  auto texture = std::make_unique<VulkanTexture>(info, device_, vma_allocator_, descriptor_manager_);
 
   if (!texture->Init()) {
     return nullptr;
@@ -227,7 +217,7 @@ std::unique_ptr<ITexture> VulkanDevice::CreateTexture(const ITexture::Info& info
 }
 
 std::unique_ptr<IBuffer> VulkanDevice::CreateBuffer(const IBuffer::Info& info) {
-  auto buffer = std::make_unique<VulkanBuffer>(info, vma_allocator_);
+  auto buffer = std::make_unique<VulkanBuffer>(info, vma_allocator_, descriptor_manager_);
 
   if (!buffer->Init()) {
     return nullptr;
@@ -328,108 +318,6 @@ bool VulkanDevice::FindQueueFamilies() {
   }
 
   queue_family_indices_ = indices;
-
-  return true;
-}
-
-bool VulkanDevice::SetupBindless() {
-  /* Descriptor set layout */
-  const VkDescriptorSetLayoutBinding bindings[]{
-    {
-      .binding            = kBindingUniformBuffer,
-      .descriptorType     = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-      .descriptorCount    = kMaxBindlessResourcesPerType,
-      .stageFlags         = VK_SHADER_STAGE_ALL,
-      .pImmutableSamplers = nullptr
-    },
-    {
-      .binding            = kBindingStorageBuffer,
-      .descriptorType     = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
-      .descriptorCount    = kMaxBindlessResourcesPerType,
-      .stageFlags         = VK_SHADER_STAGE_ALL,
-      .pImmutableSamplers = nullptr
-    },
-    {
-      .binding            = kBindingSampledTexture,
-      .descriptorType     = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-      .descriptorCount    = kMaxBindlessResourcesPerType,
-      .stageFlags         = VK_SHADER_STAGE_ALL,
-      .pImmutableSamplers = nullptr
-    },
-    {
-      .binding            = kBindingStorageTexture,
-      .descriptorType     = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,
-      .descriptorCount    = kMaxBindlessResourcesPerType,
-      .stageFlags         = VK_SHADER_STAGE_ALL,
-      .pImmutableSamplers = nullptr
-    }
-  };
-
-  constexpr auto kBindingsCount = static_cast<uint32_t>(std::size(bindings));
-  constexpr auto kBindingFlags =
-      VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT | VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT;
-
-  std::array<VkDescriptorBindingFlags, kBindingsCount> binding_flags;
-  std::fill(binding_flags.begin(), binding_flags.end(), kBindingFlags);
-
-  const VkDescriptorSetLayoutBindingFlagsCreateInfo binding_flags_info {
-    .sType         = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO,
-    .pNext         = nullptr,
-    .bindingCount  = kBindingsCount,
-    .pBindingFlags = binding_flags.data()
-  };
-
-  const VkDescriptorSetLayoutCreateInfo layout_info {
-    .sType        = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
-    .pNext        = &binding_flags_info,
-    .flags        = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT,
-    .bindingCount = kBindingsCount,
-    .pBindings    = bindings
-  };
-
-  VULKAN_CALL(vkCreateDescriptorSetLayout(device_, &layout_info, nullptr, &bindless_descriptor_set_layout_));
-
-  /* Descriptor pool */
-  const VkDescriptorPoolSize pool_sizes[kBindingsCount] {
-    {
-      .type            = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-      .descriptorCount = kMaxBindlessResourcesPerType
-    },
-    {
-      .type            = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
-      .descriptorCount = kMaxBindlessResourcesPerType
-    },
-    {
-      .type            = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-      .descriptorCount = kMaxBindlessResourcesPerType
-    },
-    {
-      .type            = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,
-      .descriptorCount = kMaxBindlessResourcesPerType
-    }
-  };
-
-  const VkDescriptorPoolCreateInfo pool_info {
-    .sType         = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
-    .pNext         = nullptr,
-    .flags         = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT,
-    .maxSets       = 1,
-    .poolSizeCount = kBindingsCount,
-    .pPoolSizes    = pool_sizes
-  };
-
-  VULKAN_CALL(vkCreateDescriptorPool(device_, &pool_info, nullptr, &bindless_descriptor_pool_));
-
-  /* Allocate descriptor set */
-  const VkDescriptorSetAllocateInfo allocate_info {
-    .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
-    .pNext = nullptr,
-    .descriptorPool = bindless_descriptor_pool_,
-    .descriptorSetCount = 1,
-    .pSetLayouts = &bindless_descriptor_set_layout_,
-  };
-
-  VULKAN_CALL(vkAllocateDescriptorSets(device_, &allocate_info, &bindless_descriptor_set_));
 
   return true;
 }

@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file log_message.hpp
- * @date 2023-09-05
+ * @file descriptor_binding.hpp
+ * @date 2024-02-12
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -28,30 +28,10 @@
 #pragma once
 
 #include <cstdint>
-#include <string>
-#include <string_view>
 
-namespace liger {
+namespace liger::rhi {
 
-enum class LogLevel : uint32_t { kInfo, kTrace, kWarning, kError, kFatal };
+enum class TextureDescriptorBinding : uint32_t { kInvalid = 0 };
+enum class BufferDescriptorBinding : uint32_t { kInvalid = 0 };
 
-struct LogMessage {
-  /** @brief Source of the message (e.g. source file/line, etc.) */
-  std::string source;
-
-  /** @brief Describes the importance of the message */
-  LogLevel level{LogLevel::kInfo};
-
-  /** @brief Allows user-driven channels support (used e.g. for filtering messages) */
-  std::string channel;
-
-  /** @brief Message string itself */
-  std::string message;
-
-  LogMessage() = default;
-
-  explicit LogMessage(LogLevel level, std::string_view source, std::string_view channel, std::string_view message);
-  explicit LogMessage(LogLevel level, std::string&& source, std::string&& channel, std::string&& message);
-};
-
-}  // namespace liger
+}  // namespace liger::rhi

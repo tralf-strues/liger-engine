@@ -29,10 +29,10 @@
 
 namespace liger {
 
-LogMessage::LogMessage(LogLevel level, const std::string_view channel, const std::string_view message)
-    : level(level), channel(channel), message(message) {}
+LogMessage::LogMessage(LogLevel level, std::string_view source, std::string_view channel, std::string_view message)
+    : source(source), level(level), channel(channel), message(message) {}
 
-LogMessage::LogMessage(LogLevel level, std::string&& channel, std::string&& message)
-    : level(level), channel(std::move(channel)), message(std::move(message)) {}
+LogMessage::LogMessage(LogLevel level, std::string&& source, std::string&& channel, std::string&& message)
+    : source(source), level(level), channel(std::move(channel)), message(std::move(message)) {}
 
 }  // namespace liger

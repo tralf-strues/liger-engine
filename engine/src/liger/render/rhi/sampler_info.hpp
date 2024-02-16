@@ -67,20 +67,20 @@ struct SamplerInfo {
   /** The addressing mode for W coordinates outside normal range [0,1]. */
   AddressMode address_mode_w{AddressMode::kRepeat};
 
-  /** Specifies border color if any address mode is @see{AddressMode::kClampToBorder}. */
+  /** Specifies border color if any address mode is @ref AddressMode::kClampToBorder. */
   BorderColor border_color{BorderColor::kIntOpaqueBlack};
 
   /**
    * @brief Whether to use anisotropic filtering.
    *
-   * @warning Availability of anisotropic filtering can be checked in @see{IDevice::Properties::sampler_anisotropy}.
+   * @warning Availability of anisotropic filtering can be checked in @ref IDevice::Properties::sampler_anisotropy.
    */
   bool anisotropy_enabled{false};
 
   /**
    * @brief Anisotropy value clamp used when sampling. Ignored if anisotropic filtering is not enabled.
    *
-   * @warning Must be less or equal to @see{IDevice::Properties::max_sampler_anisotropy}. 
+   * @warning Must be less or equal to @ref IDevice::Properties::max_sampler_anisotropy. 
    */
   float max_anisotropy{0.0f};
 
@@ -93,7 +93,7 @@ struct SamplerInfo {
   /**
    * @brief Used to clamp the maximum of the computed mipmap level.
    * 
-   * @note If upper clamping is undesirable, then set this parameter to @see{kMaxLODClampNone}.
+   * @note If upper clamping is undesirable, then set this parameter to @ref kMaxLODClampNone.
    */
   float max_lod{kMaxLODClampNone};
 

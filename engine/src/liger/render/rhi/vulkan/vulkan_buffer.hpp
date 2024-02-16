@@ -28,26 +28,32 @@
 #pragma once
 
 #include <liger/render/rhi/buffer.hpp>
+
+#include <liger/render/rhi/vulkan/vulkan_descriptor_manager.hpp>
 #include <liger/render/rhi/vulkan/vulkan_utils.hpp>
 
 namespace liger::rhi {
 
 class VulkanBuffer : public IBuffer {
  public:
-  explicit VulkanBuffer(Info info, VmaAllocator vma_allocator);
+  explicit VulkanBuffer(Info info, VmaAllocator vma_allocator, VulkanDescriptorManager& descriptor_manager);
   ~VulkanBuffer() override;
 
   bool Init();
 
-  uint32_t GetBinding() override;
+  BufferDescriptorBinding GetUniformDescriptorBinding() const override;
+  BufferDescriptorBinding GetStorageDescriptorBinding() const override;
+
   void* MapMemory(uint64_t offset, uint64_t size) override;
   void UnmapMemory() override;
 
  private:
-  VmaAllocator vma_allocator_{VK_NULL_HANDLE};
-
-  VkBuffer vk_buffer_{VK_NULL_HANDLE};
+  VmaAllocator  vma_allocator_{VK_NULL_HANDLE};
+  VkBuffer      vk_buffer_{VK_NULL_HANDLE};
   VmaAllocation vma_allocation_{VK_NULL_HANDLE};
+
+  VulkanDescriptorManager&                descriptor_manager_;
+  VulkanDescriptorManager::BufferBindings bindings_;
 };
 
 }  // namespace liger::rhr

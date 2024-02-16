@@ -43,6 +43,9 @@ class ConsoleLogWriter : public ILogWriter {
  public:
   struct Style {
     fmt::text_style default_style{};
+    fmt::text_style source_style{};
+
+    bool write_source{true};
 
     bool write_level{true};
     bool use_level_style_for_entire_message{true};

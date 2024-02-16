@@ -17,6 +17,7 @@ Checks: >
   -misc-const-correctness,
   -misc-include-cleaner,
   -misc-definitions-in-headers,
+  -misc-misplaced-const,
   -modernize-return-braced-init-list,
   -modernize-use-trailing-return-type,
   -modernize-concat-nested-namespaces,

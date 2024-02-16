@@ -59,8 +59,12 @@ VkPresentModeKHR ChooseSwapchainPresentMode(std::span<const VkPresentModeKHR> pr
   return VK_PRESENT_MODE_FIFO_KHR;  // Guaranteed to be always available
 }
 
-VulkanSwapchain::VulkanSwapchain(Info info, VkInstance vk_instance, VkDevice vk_device)
-    : ISwapchain(std::move(info)), vk_instance_(vk_instance), vk_device_(vk_device) {}
+VulkanSwapchain::VulkanSwapchain(Info info, VkInstance vk_instance, VkDevice vk_device,
+                                 VulkanDescriptorManager& descriptor_manager)
+    : ISwapchain(std::move(info)),
+      vk_instance_(vk_instance),
+      vk_device_(vk_device),
+      descriptor_manager_(descriptor_manager) {}
 
 VulkanSwapchain::~VulkanSwapchain() {
   textures_.clear();
@@ -159,7 +163,7 @@ bool VulkanSwapchain::CreateSwapchain() {
   };
 
   for (auto vk_image : vk_images) {
-    auto texture = std::make_unique<VulkanTexture>(texture_info, vk_device_, vk_image);
+    auto texture = std::make_unique<VulkanTexture>(texture_info, vk_device_, vk_image, descriptor_manager_);
     if (!texture->Init()) {
       return false;
     }

@@ -70,9 +70,9 @@ class ICommandBuffer {
   virtual Capability GetCommandCapabilities() const = 0;
 
   /**
-   * @brief Generate @see{ITexture::Info::mip_levels} number of mip levels.
+   * @brief Generate @ref ITexture::Info::mip_levels number of mip levels.
    *
-   * @warning Command capabilities must contain @see{Capability::kGraphics} and @see{Capability::kTransfer}!
+   * @note Command capabilities must contain @ref Capability::kGraphics and @ref Capability::kTransfer!
    *
    * @param texture
    * @param filter
@@ -82,7 +82,7 @@ class ICommandBuffer {
   /**
    * @brief Set the push constant for the compute pipeline.
    *
-   * @warning Command capabilities must contain @see{Capability::kCompute}!
+   * @note Command capabilities must contain @ref Capability::kCompute!
    *
    * @param compute_pipeline
    * @param data
@@ -92,7 +92,7 @@ class ICommandBuffer {
   /**
    * @brief Set the push constant for the graphics pipeline.
    *
-   * @warning Command capabilities must contain @see{Capability::kGraphics}!
+   * @note Command capabilities must contain @ref Capability::kGraphics!
    *
    * @param graphics_pipeline
    * @param data
@@ -102,7 +102,7 @@ class ICommandBuffer {
   /**
    * @brief Bind compute pipeline.
    *
-   * @warning Command capabilities must contain @see{Capability::kCompute}!
+   * @note Command capabilities must contain @ref Capability::kCompute!
    *
    * @param compute_pipeline
    */
@@ -111,7 +111,7 @@ class ICommandBuffer {
   /**
    * @brief Bind graphics pipeline.
    *
-   * @warning Command capabilities must contain @see{Capability::kGraphics}!
+   * @note Command capabilities must contain @ref Capability::kGraphics!
    *
    * @param graphics_pipeline
    */
@@ -120,7 +120,7 @@ class ICommandBuffer {
   /**
    * @brief Compute dispatch call.
    *
-   * @warning Command capabilities must contain @see{Capability::kCompute}!
+   * @note Command capabilities must contain @ref Capability::kCompute!
    *
    * @param group_count_x
    * @param group_count_y
@@ -131,7 +131,7 @@ class ICommandBuffer {
   /**
    * @brief Set viewports for color targets in current render pass.
    *
-   * @warning Command capabilities must contain @see{Capability::kGraphics}!
+   * @note Command capabilities must contain @ref Capability::kGraphics!
    *
    * @param viewports
    */
@@ -140,7 +140,7 @@ class ICommandBuffer {
   /**
    * @brief Bind several vertex buffers.
    *
-   * @warning Command capabilities must contain @see{Capability::kGraphics}!
+   * @note Command capabilities must contain @ref Capability::kGraphics!
    *
    * @param first_binding
    * @param vertex_buffers
@@ -150,7 +150,7 @@ class ICommandBuffer {
   /**
    * @brief A convenience method for binding a single vertex buffer.
    *
-   * @warning Command capabilities must contain @see{Capability::kGraphics}!
+   * @note Command capabilities must contain @ref Capability::kGraphics!
    *
    * @param binding
    * @param vertex_buffer
@@ -162,7 +162,7 @@ class ICommandBuffer {
   /**
    * @brief Bind index buffer.
    *
-   * @warning Command capabilities must contain @see{Capability::kGraphics}!
+   * @note Command capabilities must contain @ref Capability::kGraphics!
    *
    * @param index_buffer
    */
@@ -171,7 +171,7 @@ class ICommandBuffer {
   /**
    * @brief Draw call without an index buffer bound.
    *
-   * @warning Command capabilities must contain @see{Capability::kGraphics}!
+   * @note Command capabilities must contain @ref Capability::kGraphics!
    *
    * @param vertices_count
    * @param first_vertex
@@ -184,7 +184,7 @@ class ICommandBuffer {
   /**
    * @brief Draw call with an index buffer bound.
    *
-   * @warning Command capabilities must contain @see{Capability::kGraphics}!
+   * @note Command capabilities must contain @ref Capability::kGraphics!
    *
    * @param indices_count
    * @param first_index
@@ -198,7 +198,7 @@ class ICommandBuffer {
   /**
    * @brief Copy a region of src buffer's memory to dst buffer's memory.
    *
-   * @warning Command capabilities must contain @see{Capability::kTransfer}!
+   * @note Command capabilities must contain @ref Capability::kTransfer!
    *
    * @param src_buffer
    * @param dst_buffer
@@ -212,7 +212,7 @@ class ICommandBuffer {
   /**
    * @brief Copy data from the buffer to the texture.
    *
-   * @warning Command capabilities must contain @see{Capability::kTransfer}!
+   * @note Command capabilities must contain @ref Capability::kTransfer!
    *
    * @param buffer
    * @param texture
@@ -225,7 +225,7 @@ class ICommandBuffer {
   /**
    * @brief Copy data from the texture to the buffer.
    *
-   * @warning Command capabilities must contain @see{Capability::kTransfer}!
+   * @note Command capabilities must contain @ref Capability::kTransfer!
    *
    * @param texture
    * @param buffer
@@ -238,7 +238,7 @@ class ICommandBuffer {
   /**
    * @brief Copy data from the src to the dst texture.
    *
-   * @warning Command capabilities must contain @see{Capability::kTransfer}!
+   * @note Command capabilities must contain @ref Capability::kTransfer!
    *
    * @param src_texture
    * @param dst_texture

@@ -27,6 +27,7 @@
 
 #pragma once
 
+#include <liger/render/rhi/descriptor_binding.hpp>
 #include <liger/render/rhi/device_resource_state.hpp>
 #include <liger/render/rhi/extent.hpp>
 #include <liger/render/rhi/format.hpp>
@@ -102,7 +103,7 @@ class ITexture {
     /** Bitmask of all possible usages of the texture which will be needed. */
     DeviceResourceState usage{DeviceResourceState::kUndefined};
 
-    /** Whether any views of the texture can be @see{TextureViewType::kCube} or @see{TextureViewType::kArrayCube}. */
+    /** Whether any views of the texture can be @ref TextureViewType::kCube or @ref TextureViewType::kArrayCube. */
     bool cube_compatible{false};
 
     /**
@@ -120,7 +121,7 @@ class ITexture {
     /**
      * @brief Number of samples (for multi-sampling).
      * @warning Must be greater than 0.
-     * @warning Must be less or equal to @see{IDevice::Properties::max_msaa_samples}.
+     * @warning Must be less or equal to @ref IDevice::Properties::max_msaa_samples.
      * @warning Must be power of 2, i.e. 1, 2, 4, 8 etc.
      */
     uint8_t samples{1};
@@ -145,16 +146,34 @@ class ITexture {
   virtual uint32_t CreateView(const TextureViewInfo& info) = 0;
 
   /**
-   * @brief Get the binding of the texture's view for accessing inside shaders.
+   * @brief Get the sampled binding of the texture's view for accessing inside shaders.
+   *
+   * @warning This function may return @ref TextureDescriptorBinding::kInvalid if the @ref Info::usage mask
+   * did not contain @ref DeviceResourceState::kShaderSampled bit.
    *
    * @param view View index. Must be created before calling this method.
    *
    * @return View's binding index.
    */
-  virtual uint32_t GetViewBinding(uint32_t view = kTextureDefaultViewIdx) = 0;
+  virtual TextureDescriptorBinding GetSampledDescriptorBinding(uint32_t view = kTextureDefaultViewIdx) const = 0;
+
+  /**
+   * @brief Get the storage binding of the texture's view for accessing inside shaders.
+   *
+   * @warning This function may return @ref TextureDescriptorBinding::kInvalid if the @ref Info::usage mask
+   * did not contain @ref DeviceResourceState::kStorageTexture bit.
+   *
+   * @param view View index. Must be created before calling this method.
+   *
+   * @return View's binding index.
+   */
+  virtual TextureDescriptorBinding GetStorageDescriptorBinding(uint32_t view = kTextureDefaultViewIdx) const = 0;
 
   /**
    * @brief Set a custom sampler to the particular texture's view.
+   *
+   * @warning This function may return false if the @ref Info::usage mask did not
+   * contain @ref DeviceResourceState::kShaderSampled bit.
    *
    * @param sampler_info
    * @param view

@@ -30,13 +30,15 @@
 
 namespace liger::rhi {
 
-VulkanBuffer::VulkanBuffer(Info info, VmaAllocator vma_allocator)
-    : IBuffer(std::move(info)), vma_allocator_(vma_allocator) {}
+VulkanBuffer::VulkanBuffer(Info info, VmaAllocator vma_allocator, VulkanDescriptorManager& descriptor_manager)
+    : IBuffer(std::move(info)), vma_allocator_(vma_allocator), descriptor_manager_(descriptor_manager) {}
 
 VulkanBuffer::~VulkanBuffer() {
   if (vk_buffer_ != VK_NULL_HANDLE) {
     vmaDestroyBuffer(vma_allocator_, vk_buffer_, vma_allocation_);
   }
+
+  descriptor_manager_.RemoveBuffer(bindings_);
 }
 
 bool VulkanBuffer::Init() {
@@ -57,13 +59,13 @@ bool VulkanBuffer::Init() {
 
   VULKAN_CALL(vmaCreateBuffer(vma_allocator_, &create_info, &alloc_info, &vk_buffer_, &vma_allocation_, nullptr));
 
+  bindings_ = descriptor_manager_.AddBuffer(vk_buffer_, GetInfo().usage);
+
   return true;
 }
 
-uint32_t VulkanBuffer::GetBinding() {
-  // TODO(tralf-strues): IMPLEMENT
-  return 0;
-}
+BufferDescriptorBinding VulkanBuffer::GetUniformDescriptorBinding() const { return bindings_.uniform; }
+BufferDescriptorBinding VulkanBuffer::GetStorageDescriptorBinding() const { return bindings_.storage; }
 
 void* VulkanBuffer::MapMemory(uint64_t offset, uint64_t /*size*/) {
   void* map_data{nullptr};

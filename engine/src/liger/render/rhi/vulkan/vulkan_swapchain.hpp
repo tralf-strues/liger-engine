@@ -35,7 +35,7 @@ namespace liger::rhi {
 
 class VulkanSwapchain : public ISwapchain {
  public:
-  VulkanSwapchain(Info info, VkInstance vk_instance, VkDevice vk_device);
+  VulkanSwapchain(Info info, VkInstance vk_instance, VkDevice vk_device, VulkanDescriptorManager& descriptor_manager);
   ~VulkanSwapchain() override;
 
   bool Init(VkPhysicalDevice vk_physical_device);
@@ -59,6 +59,7 @@ class VulkanSwapchain : public ISwapchain {
   VkSwapchainKHR                              vk_swapchain_{VK_NULL_HANDLE};
   VkSurfaceKHR                                vk_surface_{VK_NULL_HANDLE};
   SurfaceInfo                                 surface_info_{};
+  VulkanDescriptorManager&                    descriptor_manager_;
   std::vector<std::unique_ptr<VulkanTexture>> textures_;
 };
 

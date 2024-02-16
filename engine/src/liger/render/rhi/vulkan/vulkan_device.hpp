@@ -28,9 +28,7 @@
 #pragma once
 
 #include <liger/render/rhi/device.hpp>
-
-#define VK_NO_PROTOTYPES
-#include <volk.h>
+#include <liger/render/rhi/vulkan/vulkan_descriptor_manager.hpp>
 
 #define VMA_STATIC_VULKAN_FUNCTIONS 0
 #define VMA_DYNAMIC_VULKAN_FUNCTIONS 1
@@ -47,13 +45,6 @@ class VulkanDevice : public IDevice {
 
   static constexpr const char* kRequiredDeviceExtensions[] = {VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME};
 
-  static constexpr uint32_t kBindingUniformBuffer  = 0;
-  static constexpr uint32_t kBindingStorageBuffer  = 1;
-  static constexpr uint32_t kBindingSampledTexture = 2;
-  static constexpr uint32_t kBindingStorageTexture = 3;
-
-  static constexpr uint32_t kMaxBindlessResourcesPerType = 1024;
-
   VulkanDevice(Info info, uint32_t frames_in_flight, VkInstance instance, VkPhysicalDevice physical_device);
   ~VulkanDevice() override;
 
@@ -61,6 +52,8 @@ class VulkanDevice : public IDevice {
 
   const Info& GetInfo() const override;
   uint32_t GetFramesInFlight() const override;
+
+  uint32_t AddTextureDescriptor();
 
   uint32_t BeginFrame(ISwapchain* swapchain) override;
   void EndFrame() override;
@@ -89,7 +82,6 @@ class VulkanDevice : public IDevice {
   };
 
   bool FindQueueFamilies();
-  bool SetupBindless();
 
   Info     info_;
   uint32_t frames_in_flight_{0};
@@ -98,9 +90,7 @@ class VulkanDevice : public IDevice {
   VkPhysicalDevice physical_device_{VK_NULL_HANDLE};
   VkDevice         device_{VK_NULL_HANDLE};
 
-  VkDescriptorPool      bindless_descriptor_pool_{VK_NULL_HANDLE};
-  VkDescriptorSetLayout bindless_descriptor_set_layout_{VK_NULL_HANDLE};
-  VkDescriptorSet       bindless_descriptor_set_{VK_NULL_HANDLE};
+  VulkanDescriptorManager descriptor_manager_;
 
   QueueFamilyIndices queue_family_indices_;
   VkQueue            main_queue_{VK_NULL_HANDLE};

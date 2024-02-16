@@ -29,16 +29,19 @@
 
 #include <liger/core/log/log.hpp>
 
+#define LIGER_LINE_TO_STR(x) LIGER_TO_STR(x)
+#define LIGER_TO_STR(x) #x
+
 #define LIGER_LOG_INFO(channel, ...) \
-  ::liger::default_log::g_Log.Message(::liger::LogLevel::kInfo, channel, __VA_ARGS__);
+  ::liger::default_log::g_Log.Message(::liger::LogLevel::kInfo, __FILE_NAME__ ":" LIGER_LINE_TO_STR(__LINE__), channel, __VA_ARGS__);
 #define LIGER_LOG_TRACE(channel, ...) \
-  ::liger::default_log::g_Log.Message(::liger::LogLevel::kTrace, channel, __VA_ARGS__);
+  ::liger::default_log::g_Log.Message(::liger::LogLevel::kTrace, __FILE_NAME__ ":" LIGER_LINE_TO_STR(__LINE__), channel, __VA_ARGS__);
 #define LIGER_LOG_WARN(channel, ...) \
-  ::liger::default_log::g_Log.Message(::liger::LogLevel::kWarning, channel, __VA_ARGS__);
+  ::liger::default_log::g_Log.Message(::liger::LogLevel::kWarning, __FILE_NAME__ ":" LIGER_LINE_TO_STR(__LINE__), channel, __VA_ARGS__);
 #define LIGER_LOG_ERROR(channel, ...) \
-  ::liger::default_log::g_Log.Message(::liger::LogLevel::kError, channel, __VA_ARGS__);
+  ::liger::default_log::g_Log.Message(::liger::LogLevel::kError, __FILE_NAME__ ":" LIGER_LINE_TO_STR(__LINE__), channel, __VA_ARGS__);
 #define LIGER_LOG_FATAL(channel, ...) \
-  ::liger::default_log::g_Log.Message(::liger::LogLevel::kFatal, channel, __VA_ARGS__);
+  ::liger::default_log::g_Log.Message(::liger::LogLevel::kFatal, __FILE_NAME__ ":" LIGER_LINE_TO_STR(__LINE__), channel, __VA_ARGS__);
 
 #define LIGER_ASSERT(condition, channel, ...) \
   if (!(condition)) {                         \

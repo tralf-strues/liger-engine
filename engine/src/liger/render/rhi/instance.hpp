@@ -36,7 +36,7 @@ namespace liger::rhi {
 /**
  * @brief Type of graphics API.
  * 
- * @warning Only @see{GraphicsAPI::kVulkan} is supported at the moment!
+ * @warning Only @ref GraphicsAPI::kVulkan is supported at the moment!
  */
 enum class GraphicsAPI : uint8_t {
   kVulkan,
@@ -70,7 +70,7 @@ class IInstance {
   /**
    * @brief Create device, based on the physical device type.
    *
-   * @param id Device identifier, can be obtained via @see{IDevice::Info}
+   * @param id Device identifier, can be obtained via @ref IDevice::Info.
    * @param frames_in_flight The number of frames in flight the device is configured to work with.
    *
    * @return Device or nullptr in case an error occurs.
@@ -80,8 +80,8 @@ class IInstance {
   /**
    * @brief Create a RHI Instance for the particular API.
    *
-   * @param api Desired @see{GraphicsAPI}.
-   * @param validation Desired @see{ValidationLevel}.
+   * @param api Desired @ref GraphicsAPI.
+   * @param validation Desired @ref ValidationLevel.
    *
    * @return RHI instance or nullptr in case an error occurs.
    */
