@@ -12,5 +12,6 @@ target_sources(liger-sandbox
   PUBLIC
     ${SANDBOX_INCLUDE}
   PRIVATE
-    test_rhi.cpp
+    # test_rhi.cpp
+    test_dag.cpp
   )

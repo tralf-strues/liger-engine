@@ -38,11 +38,17 @@
 
 namespace liger::rhi {
 
-class IRenderDevice;
+class IDevice;
 
 class RenderGraph {
  public:
-  using ResourceVersionRegistry = ResourceVersionRegistry<ITexture*, IBuffer*>;
+  struct TextureResource {
+    ITexture* texture {nullptr};
+    uint32_t  view    {kTextureDefaultViewIdx};
+  };
+
+  using BufferResource          = IBuffer*;
+  using ResourceVersionRegistry = ResourceVersionRegistry<TextureResource, BufferResource>;
   using ResourceVersion         = ResourceVersionRegistry::ResourceVersion;
 
   class IJob {
@@ -53,15 +59,15 @@ class RenderGraph {
 
   virtual ~RenderGraph() = default;
 
-  ITexture* GetTexture(ResourceVersion version);
-  IBuffer* GetBuffer(ResourceVersion version);
+  TextureResource GetTexture(ResourceVersion version);
+  BufferResource GetBuffer(ResourceVersion version);
 
-  virtual void ReimportTexture(ResourceVersion version, ITexture* new_texture) = 0;
-  virtual void ReimportBuffer(ResourceVersion version, IBuffer* new_buffer) = 0;
+  virtual void ReimportTexture(ResourceVersion version, TextureResource new_texture) = 0;
+  virtual void ReimportBuffer(ResourceVersion version, BufferResource new_buffer) = 0;
 
   void SetJob(std::string_view node_name, std::unique_ptr<IJob> job);
 
-  virtual void Execute(IRenderDevice& device) = 0;
+  virtual void Execute(IDevice& device) = 0;
 
  protected:
   struct ResourceRead {
@@ -83,17 +89,26 @@ class RenderGraph {
 
     Type                       type;
     ICommandBuffer::Capability command_capabilities;
+    bool                       async;
     std::string                name;
     std::vector<ResourceRead>  read;
     std::vector<ResourceWrite> write;
     std::unique_ptr<IJob>      job;
   };
 
-  virtual void Compile(IRenderDevice& device) = 0;
+  using NodeGraph       = DAG<Node>;
+  using NodeHandle      = NodeGraph::NodeHandle;
+  using DependencyLevel = NodeGraph::Depth;
 
-  DAG<Node>                                           dag_;
-  DAG<Node>::SortedList                               sorted_nodes_;
-  DAG<Node>::DepthList                                node_depths_;
+  virtual void Compile(IDevice& device) = 0;
+
+  NodeHandle GetSortedNode(uint32_t sorted_idx) const;
+  DependencyLevel GetDependencyLevel(NodeHandle node_handle) const;
+
+  NodeGraph                                           dag_;
+  NodeGraph::SortedList                               sorted_nodes_;
+  NodeGraph::DepthList                                node_dependency_levels_;
+  uint32_t                                            max_dependency_level_;
   ResourceVersionRegistry                             resource_version_registry_;
   std::unordered_map<ResourceVersion, ITexture::Info> transient_texture_infos_;
   std::unordered_map<ResourceVersion, IBuffer::Info>  transient_buffer_infos_;
@@ -113,41 +128,39 @@ class RenderGraphBuilder {
   ResourceVersion DeclareTransientTexture(const ITexture::Info& info);
   ResourceVersion DeclareTransientBuffer(const IBuffer::Info& info);
 
-  ResourceVersion ImportTexture(ITexture* texture);
-  ResourceVersion ImportBuffer(IBuffer* buffer);
+  ResourceVersion ImportTexture(RenderGraph::TextureResource texture);
+  ResourceVersion ImportBuffer(RenderGraph::BufferResource buffer);
 
   void BeginRenderPass(std::string_view           name,
                        ICommandBuffer::Capability capabilities = ICommandBuffer::Capability::kGraphics);
   void EndRenderPass();
 
-  void BeginCompute(std::string_view           name,
+  void BeginCompute(std::string_view name, bool async = false,
                     ICommandBuffer::Capability capabilities = ICommandBuffer::Capability::kCompute);
   void EndCompute();
 
-  void BeginTransfer(std::string_view           name,
+  void BeginTransfer(std::string_view name, bool async = false,
                      ICommandBuffer::Capability capabilities = ICommandBuffer::Capability::kTransfer);
   void EndTransfer();
 
-  ResourceVersion AddColorTarget(ResourceVersion texture, uint32_t view = kTextureDefaultViewIdx);
-  ResourceVersion SetDepthStencil(ResourceVersion texture, uint32_t view = kTextureDefaultViewIdx);
-  void SampleTexture(ResourceVersion texture, uint32_t view = kTextureDefaultViewIdx);
+  ResourceVersion AddColorTarget(ResourceVersion texture);
+  ResourceVersion SetDepthStencil(ResourceVersion texture);
+  void SampleTexture(ResourceVersion texture);
 
   void ReadBuffer(ResourceVersion buffer, DeviceResourceState usage);
 
-  [[nodiscard]] std::unique_ptr<RenderGraph> Build(IRenderDevice& device);
+  [[nodiscard]] std::unique_ptr<RenderGraph> Build(IDevice& device);
  
  private:
-  using Node       = RenderGraph::Node;
-  using NodeHandle = DAG<Node>::NodeHandle;
-
-  void BeginNode(RenderGraph::Node::Type type, ICommandBuffer::Capability capabilities, std::string_view name);
+  void BeginNode(RenderGraph::Node::Type type, bool async, ICommandBuffer::Capability capabilities,
+                 std::string_view name);
   void EndNode(RenderGraph::Node::Type type);
 
   RenderGraphBuilder::ResourceVersion AddWrite(RenderGraph::Node::Type type, ResourceVersion resource,
                                                DeviceResourceState usage);
 
   std::unique_ptr<RenderGraph> graph_;
-  std::optional<NodeHandle> current_node_ = std::nullopt;
+  std::optional<RenderGraph::NodeHandle> current_node_ = std::nullopt;
 };
 
 }  // namespace liger::rhi

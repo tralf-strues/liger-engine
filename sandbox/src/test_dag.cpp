@@ -29,8 +29,10 @@
 #include <cassert>
 #include <fstream>
 
+template <typename Node>
+using DAG = liger::DAG<Node>;
+
 int main() {
-  using namespace liger;
 
   DAG<int> graph;
 
@@ -43,33 +45,8 @@ int main() {
   auto node_handle6 = graph.EmplaceNode(6);
   auto node_handle7 = graph.EmplaceNode(7);
   auto node_handle8 = graph.EmplaceNode(8);
-
-//   graph.GetNode(node_handle0).write.push_back(0);
-//   graph.GetNode(node_handle1).read.push_back(0);
-
-//   graph.GetNode(node_handle1).write.push_back(1);
-//   graph.GetNode(node_handle2).read.push_back(1);
-
-//   graph.GetNode(node_handle0).write.push_back(2);
-//   graph.GetNode(node_handle3).read.push_back(2);
-
-//   graph.GetNode(node_handle1).write.push_back(3);
-//   graph.GetNode(node_handle4).read.push_back(3);
-
-//   graph.GetNode(node_handle3).write.push_back(4);
-//   graph.GetNode(node_handle4).read.push_back(4);
-
-//   graph.GetNode(node_handle4).write.push_back(5);
-//   graph.GetNode(node_handle5).read.push_back(5);
-
-//   graph.GetNode(node_handle3).write.push_back(6);
-//   graph.GetNode(node_handle6).read.push_back(6);
-
-//   graph.GetNode(node_handle6).write.push_back(7);
-//   graph.GetNode(node_handle7).read.push_back(7);
-
-//   graph.GetNode(node_handle6).write.push_back(8);
-//   graph.GetNode(node_handle8).read.push_back(8);
+  auto node_handle9 = graph.EmplaceNode(9);
+  auto node_handle10 = graph.EmplaceNode(10);
 
   graph.AddEdge(node_handle0, node_handle1);
   graph.AddEdge(node_handle1, node_handle2);
@@ -81,9 +58,13 @@ int main() {
   graph.AddEdge(node_handle6, node_handle7);
   graph.AddEdge(node_handle6, node_handle8);
 
+  graph.AddEdge(node_handle9, node_handle10);
+  graph.AddEdge(node_handle10, node_handle3);
+
   DAG<int>::SortedList sorted;
   DAG<int>::DepthList depth;
-  bool acyclic = graph.TopologicalSort(sorted, depth);
+  DAG<int>::Depth max_depth;
+  bool acyclic = graph.TopologicalSort(sorted, depth, max_depth);
   assert(acyclic);
 
   std::ofstream file;
@@ -92,8 +73,8 @@ int main() {
   file << "digraph DAG {\n";
 
   for (size_t i = 0; i < sorted.size(); ++i) {
-    file << "node_" << sorted[i] << " [label=< Node" << sorted[i] << " <BR/> SortedIdx=" << i
-         << " <BR/> Depth=" << depth[sorted[i]] << " >]\n";
+    file << "node_" << sorted[i] << " [label=< Node " << sorted[i] << " <BR/> Sorted = " << i
+         << " <BR/> Depth = " << depth[sorted[i]] << " >]\n";
   }
 
   for (auto from : sorted) {

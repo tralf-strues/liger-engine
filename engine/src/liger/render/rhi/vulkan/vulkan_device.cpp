@@ -68,32 +68,7 @@ VulkanDevice::~VulkanDevice() {
 }
 
 bool VulkanDevice::Init() {
-  if (!FindQueueFamilies()) {
-    return false;
-  }
-
-  constexpr float kDefaultQueuePriority = 1.0f;
-  VkDeviceQueueCreateInfo queue_create_infos[3];
-
-  auto add_queue_create_info = [&](size_t index, uint32_t family_index) {
-    queue_create_infos[index] = {
-      .sType            = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
-      .pNext            = nullptr,
-      .flags            = 0,
-      .queueFamilyIndex = family_index,
-      .queueCount       = 1,
-      .pQueuePriorities = &kDefaultQueuePriority
-    };
-  };
-
-  size_t queue_count = 0;
-  add_queue_create_info(queue_count++, queue_family_indices_.main);
-  if (queue_family_indices_.compute.has_value()) {
-    add_queue_create_info(queue_count++, *queue_family_indices_.compute);
-  }
-  if (queue_family_indices_.transfer.has_value()) {
-    add_queue_create_info(queue_count++, *queue_family_indices_.transfer);
-  }
+  auto queue_create_infos = queue_set_.FillQueueCreateInfos(physical_device_);
 
   VkPhysicalDeviceFeatures2 device_features2{.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2};
   device_features2.features.samplerAnisotropy = VK_TRUE;
@@ -126,8 +101,8 @@ bool VulkanDevice::Init() {
     .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
     .pNext = &device_features2,
     .flags = 0,
-    .queueCreateInfoCount = static_cast<uint32_t>(queue_count),
-    .pQueueCreateInfos = queue_create_infos,
+    .queueCreateInfoCount = static_cast<uint32_t>(queue_create_infos.size()),
+    .pQueueCreateInfos = queue_create_infos.data(),
     .enabledLayerCount = 0,
     .ppEnabledLayerNames = nullptr,
     .enabledExtensionCount = static_cast<uint32_t>(extensions.size()),
@@ -139,15 +114,7 @@ bool VulkanDevice::Init() {
 
   volkLoadDevice(device_);
 
-  vkGetDeviceQueue(device_, queue_family_indices_.main, /*queueIndex=*/0, &main_queue_);
-
-  if (queue_family_indices_.compute.has_value()) {
-    vkGetDeviceQueue(device_, *queue_family_indices_.compute, /*queueIndex=*/0, &compute_queue_);
-  }
-
-  if (queue_family_indices_.transfer.has_value()) {
-    vkGetDeviceQueue(device_, *queue_family_indices_.transfer, /*queueIndex=*/0, &transfer_queue_);
-  }
+  queue_set_.InitQueues(device_);
 
   VmaVulkanFunctions vma_vulkan_functions = {};
   vma_vulkan_functions.vkGetInstanceProcAddr = vkGetInstanceProcAddr;
@@ -162,6 +129,10 @@ bool VulkanDevice::Init() {
   VULKAN_CALL(vmaCreateAllocator(&allocator_info, &vma_allocator_));
 
   return descriptor_manager_.Init(device_);
+}
+
+VulkanQueueSet& VulkanDevice::GetQueues() {
+  return queue_set_;
 }
 
 const VulkanDevice::Info& VulkanDevice::GetInfo() const { return info_; }
@@ -254,72 +225,6 @@ std::unique_ptr<IGraphicsPipeline> VulkanDevice::CreatePipeline(const IGraphicsP
   }
 
   return graphics_pipeline;
-}
-
-bool VulkanDevice::FindQueueFamilies() {
-  QueueFamilyIndices indices;
-
-  uint32_t queue_family_count = 0;
-  vkGetPhysicalDeviceQueueFamilyProperties(physical_device_, &queue_family_count, nullptr);
-
-  std::vector<VkQueueFamilyProperties> queue_families(queue_family_count);
-  vkGetPhysicalDeviceQueueFamilyProperties(physical_device_, &queue_family_count, queue_families.data());
-
-  /* Main queue */
-  bool main_queue_found = false;
-  for (indices.main = 0; indices.main < queue_family_count; ++indices.main) {
-    const auto& properties = queue_families[indices.main];
-
-    if (properties.queueFlags & (VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT)) {
-      main_queue_found = true;
-      break;
-    }
-  }
-
-  if (!main_queue_found) {
-    LIGER_LOG_ERROR(kLogChannelRHI, "Failed to find a main vulkan queue that supports graphics, compute and transfer!");
-    return false;
-  }
-
-  /* Compute queue */
-  bool compute_queue_found = false;
-  for (indices.compute = 0; indices.compute < queue_family_count; ++(*indices.compute)) {
-    const auto& properties = queue_families[*indices.compute];
-
-    if ((properties.queueFlags & VK_QUEUE_COMPUTE_BIT) && indices.compute != indices.main) {
-      compute_queue_found = true;
-      break;
-    }
-  }
-
-  if (!compute_queue_found) {
-    LIGER_LOG_INFO(kLogChannelRHI, "No async compute vulkan queue is found");
-    indices.compute = std::nullopt;
-  } else {
-    LIGER_LOG_INFO(kLogChannelRHI, "Async compute vulkan queue is found!");
-  }
-
-  /* Transfer queue */
-  bool transfer_queue_found = false;
-  for (indices.transfer = 0; indices.transfer < queue_family_count; ++(*indices.transfer)) {
-    const auto& properties = queue_families[*indices.transfer];
-
-    if (properties.queueFlags == VK_QUEUE_TRANSFER_BIT) {
-      transfer_queue_found = true;
-      break;
-    }
-  }
-
-  if (!transfer_queue_found) {
-    LIGER_LOG_INFO(kLogChannelRHI, "No dedicated vulkan queue for transfer is found");
-    indices.transfer = std::nullopt;
-  } else {
-    LIGER_LOG_INFO(kLogChannelRHI, "Dedicated vulkan queue for transfer is found!");
-  }
-
-  queue_family_indices_ = indices;
-
-  return true;
 }
 
 }  // namespace liger::rhi

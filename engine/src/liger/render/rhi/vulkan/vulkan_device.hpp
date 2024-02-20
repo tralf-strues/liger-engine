@@ -29,6 +29,7 @@
 
 #include <liger/render/rhi/device.hpp>
 #include <liger/render/rhi/vulkan/vulkan_descriptor_manager.hpp>
+#include <liger/render/rhi/vulkan/vulkan_queue_set.hpp>
 
 #define VMA_STATIC_VULKAN_FUNCTIONS 0
 #define VMA_DYNAMIC_VULKAN_FUNCTIONS 1
@@ -49,6 +50,8 @@ class VulkanDevice : public IDevice {
   ~VulkanDevice() override;
 
   bool Init();
+
+  VulkanQueueSet& GetQueues();
 
   const Info& GetInfo() const override;
   uint32_t GetFramesInFlight() const override;
@@ -75,29 +78,16 @@ class VulkanDevice : public IDevice {
   [[nodiscard]] std::unique_ptr<IGraphicsPipeline> CreatePipeline(const IGraphicsPipeline::Info& info) override;
 
  private:
-  struct QueueFamilyIndices {
-    uint32_t main;
-    std::optional<uint32_t> compute;
-    std::optional<uint32_t> transfer;
-  };
-
-  bool FindQueueFamilies();
-
   Info     info_;
   uint32_t frames_in_flight_{0};
 
   VkInstance       instance_{VK_NULL_HANDLE};
   VkPhysicalDevice physical_device_{VK_NULL_HANDLE};
   VkDevice         device_{VK_NULL_HANDLE};
+  VmaAllocator     vma_allocator_{nullptr};
 
   VulkanDescriptorManager descriptor_manager_;
-
-  QueueFamilyIndices queue_family_indices_;
-  VkQueue            main_queue_{VK_NULL_HANDLE};
-  VkQueue            compute_queue_{VK_NULL_HANDLE};
-  VkQueue            transfer_queue_{VK_NULL_HANDLE};
-
-  VmaAllocator vma_allocator_{nullptr};
+  VulkanQueueSet          queue_set_;
 };
 
 }  // namespace liger::rhi

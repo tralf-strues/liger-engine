@@ -47,6 +47,8 @@ class VulkanTexture : public ITexture {
   TextureDescriptorBinding GetStorageDescriptorBinding(uint32_t view) const override;
   bool SetSampler(const SamplerInfo& sampler_info, uint32_t view = kTextureDefaultViewIdx) override;
 
+  VkImageView GetVulkanView(uint32_t view) const;
+
  private:
   struct SampledView {
     VkImageView                              vk_view           {VK_NULL_HANDLE};

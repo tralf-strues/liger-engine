@@ -27,6 +27,7 @@
 
 #pragma once
 
+#include <optional>
 #include <variant>
 #include <vector>
 
@@ -39,7 +40,6 @@ class ResourceVersionRegistry {
 
   static constexpr ResourceVersion kInvalidVersion = 0;
 
- public:
   template <typename ResourceType>
   [[nodiscard]] ResourceVersion AddResource(ResourceType resource);
   [[nodiscard]] ResourceVersion DeclareResource();
@@ -52,11 +52,16 @@ class ResourceVersionRegistry {
   template <typename ResourceType>
   [[nodiscard]] ResourceType GetResource(ResourceVersion version);
 
+  template <typename ResourceType>
+  [[nodiscard]] std::optional<ResourceType> TryGetResource(ResourceVersion version);
+
+  template <typename ResourceType>
+  [[nodiscard]] std::optional<const ResourceType> TryGetResource(ResourceVersion version) const;
+
  private:
   using NullResource = std::monostate;
   using Resource     = std::variant<NullResource, ResourceTypes...>;
 
- private:
   std::vector<Resource> resources_;
   std::vector<uint32_t> version_to_resource_;
 };
@@ -96,6 +101,21 @@ template <typename... ResourceTypes>
 template <typename ResourceType>
 ResourceType ResourceVersionRegistry<ResourceTypes...>::GetResource(ResourceVersion version) {
   return std::get<ResourceType>(resources_[version_to_resource_[version]]);
+}
+
+template <typename... ResourceTypes>
+template <typename ResourceType>
+std::optional<ResourceType> ResourceVersionRegistry<ResourceTypes...>::TryGetResource(ResourceVersion version) {
+  auto resource = std::get_if<ResourceType>(&resources_[version_to_resource_[version]]);
+  return (resource != nullptr) ? std::optional(*resource) : std::nullopt;
+}
+
+template <typename... ResourceTypes>
+template <typename ResourceType>
+std::optional<const ResourceType> ResourceVersionRegistry<ResourceTypes...>::TryGetResource(
+    ResourceVersion version) const {
+  auto resource = std::get_if<ResourceType>(resources_[version_to_resource_[version]]);
+  return (resource != nullptr) ? *resource : std::nullopt;
 }
 
 }  // namespace liger::rhi

@@ -224,6 +224,12 @@ bool VulkanTexture::SetSampler(const SamplerInfo& info, uint32_t view_idx) {
   return true;
 }
 
+VkImageView VulkanTexture::GetVulkanView(uint32_t view_idx) const {
+  LIGER_ASSERT(view_idx < views_.size(), kLogChannelRHI, "Trying to access invalid view index!");
+
+  return views_[view_idx].vk_view;
+}
+
 uint32_t VulkanTexture::GetLayerCount() const {
   return (GetInfo().type != TextureType::kTexture3D) ? GetInfo().extent.z : 1;
 }

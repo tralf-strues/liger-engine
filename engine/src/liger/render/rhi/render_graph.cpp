@@ -31,12 +31,12 @@
 
 namespace liger::rhi {
 
-ITexture* RenderGraph::GetTexture(ResourceVersion version) {
-  return resource_version_registry_.GetResource<ITexture*>(version);
+RenderGraph::TextureResource RenderGraph::GetTexture(ResourceVersion version) {
+  return resource_version_registry_.GetResource<TextureResource>(version);
 }
 
-IBuffer* RenderGraph::GetBuffer(ResourceVersion version) {
-  return resource_version_registry_.GetResource<IBuffer*>(version);
+RenderGraph::BufferResource RenderGraph::GetBuffer(ResourceVersion version) {
+  return resource_version_registry_.GetResource<BufferResource>(version);
 }
 
 void RenderGraph::SetJob(const std::string_view node_name, std::unique_ptr<IJob> job) {
@@ -45,6 +45,14 @@ void RenderGraph::SetJob(const std::string_view node_name, std::unique_ptr<IJob>
       node.job = std::move(job);
     }
   }
+}
+
+DAG<RenderGraph::Node>::NodeHandle RenderGraph::GetSortedNode(uint32_t sorted_idx) const {
+  return sorted_nodes_[sorted_idx];
+}
+
+DAG<RenderGraph::Node>::Depth RenderGraph::GetDependencyLevel(NodeHandle node_handle) const {
+  return node_dependency_levels_[node_handle];
 }
 
 RenderGraphBuilder::RenderGraphBuilder(std::unique_ptr<RenderGraph> graph) : graph_(std::move(graph)) {}
@@ -61,47 +69,47 @@ RenderGraphBuilder::ResourceVersion RenderGraphBuilder::DeclareTransientBuffer(c
   return version;
 }
 
-RenderGraphBuilder::ResourceVersion RenderGraphBuilder::ImportTexture(ITexture* texture) {
+RenderGraphBuilder::ResourceVersion RenderGraphBuilder::ImportTexture(RenderGraph::TextureResource texture) {
   return graph_->resource_version_registry_.AddResource(texture);
 }
 
-RenderGraphBuilder::ResourceVersion RenderGraphBuilder::ImportBuffer(IBuffer* buffer) {
+RenderGraphBuilder::ResourceVersion RenderGraphBuilder::ImportBuffer(RenderGraph::BufferResource buffer) {
   return graph_->resource_version_registry_.AddResource(buffer);
 }
 
-void RenderGraphBuilder::BeginRenderPass(const std::string_view name, ICommandBuffer::Capability capabilities) {
-  BeginNode(RenderGraph::Node::Type::kRenderPass, capabilities, name);
+void RenderGraphBuilder::BeginRenderPass(std::string_view name, ICommandBuffer::Capability capabilities) {
+  BeginNode(RenderGraph::Node::Type::kRenderPass, false, capabilities, name);
 }
 
 void RenderGraphBuilder::EndRenderPass() {
   EndNode(RenderGraph::Node::Type::kRenderPass);
 }
 
-void RenderGraphBuilder::BeginCompute(const std::string_view name, ICommandBuffer::Capability capabilities) {
-  BeginNode(RenderGraph::Node::Type::kCompute, capabilities, name);
+void RenderGraphBuilder::BeginCompute(std::string_view name, bool async, ICommandBuffer::Capability capabilities) {
+  BeginNode(RenderGraph::Node::Type::kCompute, async, capabilities, name);
 }
 
 void RenderGraphBuilder::EndCompute() {
   EndNode(RenderGraph::Node::Type::kCompute);
 }
 
-void RenderGraphBuilder::BeginTransfer(const std::string_view name, ICommandBuffer::Capability capabilities) {
-  BeginNode(RenderGraph::Node::Type::kTransfer, capabilities, name);
+void RenderGraphBuilder::BeginTransfer(std::string_view name, bool async, ICommandBuffer::Capability capabilities) {
+  BeginNode(RenderGraph::Node::Type::kTransfer, async, capabilities, name);
 }
 
 void RenderGraphBuilder::EndTransfer() {
   EndNode(RenderGraph::Node::Type::kTransfer);
 }
 
-RenderGraphBuilder::ResourceVersion RenderGraphBuilder::AddColorTarget(ResourceVersion texture, uint32_t /*TODO:view*/) {
+RenderGraphBuilder::ResourceVersion RenderGraphBuilder::AddColorTarget(ResourceVersion texture) {
   return AddWrite(RenderGraph::Node::Type::kRenderPass, texture, DeviceResourceState::kColorTarget);
 }
 
-RenderGraphBuilder::ResourceVersion RenderGraphBuilder::SetDepthStencil(ResourceVersion texture, uint32_t /*TODO:view*/) {
+RenderGraphBuilder::ResourceVersion RenderGraphBuilder::SetDepthStencil(ResourceVersion texture) {
   return AddWrite(RenderGraph::Node::Type::kRenderPass, texture, DeviceResourceState::kDepthStencilTarget);
 }
 
-void RenderGraphBuilder::SampleTexture(ResourceVersion texture, uint32_t /*TODO:view*/) {
+void RenderGraphBuilder::SampleTexture(ResourceVersion texture) {
   LIGER_ASSERT(current_node_.has_value(), kLogChannelRHI, "Adding resource access outside of begin/end scope!");
 
   auto& node = graph_->dag_.GetNode(*current_node_);
@@ -117,7 +125,7 @@ void RenderGraphBuilder::ReadBuffer(ResourceVersion buffer, DeviceResourceState 
   node.read.push_back(RenderGraph::ResourceRead{buffer, usage});
 }
 
-std::unique_ptr<RenderGraph> RenderGraphBuilder::Build(IRenderDevice& device) {
+std::unique_ptr<RenderGraph> RenderGraphBuilder::Build(IDevice& device) {
   auto& dag = graph_->dag_;
 
   for (auto& from : dag) {
@@ -132,22 +140,23 @@ std::unique_ptr<RenderGraph> RenderGraphBuilder::Build(IRenderDevice& device) {
     }
   }
 
-  dag.TopologicalSort(graph_->sorted_nodes_, graph_->node_depths_);
+  dag.TopologicalSort(graph_->sorted_nodes_, graph_->node_dependency_levels_, graph_->max_dependency_level_);
   graph_->Compile(device);
 
   return std::move(graph_);
 }
 
-void RenderGraphBuilder::BeginNode(RenderGraph::Node::Type type, ICommandBuffer::Capability capabilities,
+void RenderGraphBuilder::BeginNode(RenderGraph::Node::Type type, bool async, ICommandBuffer::Capability capabilities,
                                    const std::string_view name) {
   LIGER_ASSERT(!current_node_.has_value(), kLogChannelRHI,
                "Cannot begin a render graph node without ending the previous one!");
 
-  Node node;
-  node.type = type;
+  RenderGraph::Node node;
+  node.type                 = type;
   node.command_capabilities = capabilities;
-  node.name = name;
-  current_node_ = graph_->dag_.EmplaceNode(std::move(node));
+  node.async                = async;
+  node.name                 = name;
+  current_node_             = graph_->dag_.EmplaceNode(std::move(node));
 }
 
 void RenderGraphBuilder::EndNode(RenderGraph::Node::Type type) {

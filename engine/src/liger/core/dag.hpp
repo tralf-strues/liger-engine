@@ -38,13 +38,14 @@ namespace liger {
 template <typename Node>
 class DAG {
  public:
-  using NodeHandle    = uint32_t;
-  using AdjacencyList = std::vector<NodeHandle>;
-  using SortedIndex   = uint32_t;
-  using SortedList    = std::vector<NodeHandle>;
-  using Depth         = uint32_t;
-  using DepthList     = std::vector<Depth>;
-  using NodeIterator  = std::vector<Node>::iterator;
+  using NodeHandle        = uint32_t;
+  using AdjacencyList     = std::vector<NodeHandle>;
+  using SortedIndex       = uint32_t;
+  using SortedList        = std::vector<NodeHandle>;
+  using Depth             = uint32_t;
+  using DepthList         = std::vector<Depth>;
+  using NodeIterator      = std::vector<Node>::iterator;
+  using ConstNodeIterator = std::vector<Node>::const_iterator;
 
   NodeHandle AddNode(const Node& node);
 
@@ -56,6 +57,9 @@ class DAG {
   void AddEdge(NodeHandle from, NodeHandle to);
   void AddEdge(const Node& from, const Node& to);
 
+  bool EdgeExists(NodeHandle from, NodeHandle to) const;
+  bool EdgeExists(const Node& from, const Node& to) const;
+
   Node&                GetNode(NodeHandle handle);
   const Node&          GetNode(NodeHandle handle) const;
   const AdjacencyList& GetAdjacencyList(NodeHandle handle) const;
@@ -63,10 +67,14 @@ class DAG {
   NodeHandle GetNodeHandle(const Node& node) const;
 
   bool TopologicalSort(SortedList& out_sorted);
-  bool TopologicalSort(SortedList& out_sorted, DepthList& out_depth);
+  bool TopologicalSort(SortedList& out_sorted, DepthList& out_depth, Depth& out_max_depth);
 
   NodeIterator begin();
   NodeIterator end();
+  ConstNodeIterator begin() const;
+  ConstNodeIterator end()const;
+
+  size_t Size() const;
 
  private:
   using DFSVisitedList = std::vector<bool>;
@@ -74,7 +82,7 @@ class DAG {
 
   bool TopologicalSortDFS(SortedList& out_sorted, NodeHandle from_handle, DFSVisitedList& visited,
                           DFSOnStackList& on_stack);
-  void CalculateDepths(const SortedList& sorted, DepthList& out_depth);
+  void CalculateDepths(const SortedList& sorted, DepthList& out_depth, Depth& out_max_depth);
 
   std::vector<Node>          nodes_;
   std::vector<AdjacencyList> adj_lists_;
@@ -107,6 +115,22 @@ void DAG<Node>::AddEdge(NodeHandle from, NodeHandle to) {
 template <typename Node>
 void DAG<Node>::AddEdge(const Node& from, const Node& to) {
   AddEdge(GetNodeHandle(from), GetNodeHandle(to));
+}
+
+template <typename Node>
+bool DAG<Node>::EdgeExists(NodeHandle from, NodeHandle to) const {
+  for (auto adj_node_handle : adj_lists_[from]) {
+    if (adj_node_handle == to) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+template <typename Node>
+bool DAG<Node>::EdgeExists(const Node& from, const Node& to) const {
+  return EdgeExists(GetNodeHandle(from), GetNodeHandle(to));
 }
 
 template <typename Node>
@@ -152,12 +176,14 @@ bool DAG<Node>::TopologicalSort(SortedList& out_sorted) {
 }
 
 template <typename Node>
-bool DAG<Node>::TopologicalSort(SortedList& out_sorted, DepthList& out_depth) {
+bool DAG<Node>::TopologicalSort(SortedList& out_sorted, DepthList& out_depth, Depth& out_max_depth) {
   if (!TopologicalSort(out_sorted)) {
     return false;
   }
 
-  CalculateDepths(out_sorted, out_depth);
+  CalculateDepths(out_sorted, out_depth, out_max_depth);
+
+  
 
   return true;
 }
@@ -189,13 +215,14 @@ bool DAG<Node>::TopologicalSortDFS(SortedList& out_sorted, NodeHandle from_handl
 }
 
 template <typename Node>
-void DAG<Node>::CalculateDepths(const SortedList& sorted, DepthList& out_depth) {
+void DAG<Node>::CalculateDepths(const SortedList& sorted, DepthList& out_depth, Depth& out_max_depth) {
   out_depth.resize(nodes_.size());
   std::fill(out_depth.begin(), out_depth.end(), 0);
 
   for (auto from_handle : sorted) {
     for (auto to_handle : adj_lists_[from_handle]) {
       out_depth[to_handle] = std::max(out_depth[to_handle], out_depth[from_handle] + 1);
+      out_max_depth = std::max(out_max_depth, out_depth[to_handle]);
     }
   }
 }
@@ -208,6 +235,21 @@ DAG<Node>::NodeIterator DAG<Node>::begin() {
 template <typename Node>
 DAG<Node>::NodeIterator DAG<Node>::end() {
   return nodes_.end();
+}
+
+template <typename Node>
+DAG<Node>::ConstNodeIterator DAG<Node>::begin() const {
+  return nodes_.cbegin();
+}
+
+template <typename Node>
+DAG<Node>::ConstNodeIterator DAG<Node>::end() const {
+  return nodes_.cend();
+}
+
+template <typename Node>
+size_t DAG<Node>::Size() const {
+  return nodes_.size();
 }
 
 }  // namespace liger
