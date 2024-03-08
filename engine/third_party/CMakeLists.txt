@@ -1,5 +1,7 @@
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
+find_package(Vulkan REQUIRED)
+
 add_subdirectory(fmt)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGLFW_INCLUDE_NONE")
