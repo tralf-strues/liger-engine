@@ -40,8 +40,8 @@ class ResourceVersionRegistry {
   using ResourceId      = uint32_t;
   using NullResource    = std::monostate;
   using Resource        = std::variant<NullResource, ResourceTypes...>;
-  using iterator        = std::vector<Resource>::iterator;
-  using const_iterator  = std::vector<Resource>::const_iterator;
+  using iterator        = typename std::vector<Resource>::iterator;
+  using const_iterator  = typename std::vector<Resource>::const_iterator;
 
   static constexpr ResourceVersion kInvalidVersion = 0;
 
@@ -90,7 +90,7 @@ class ResourceVersionRegistry {
 
 template <typename... ResourceTypes>
 template <typename ResourceType>
-ResourceVersionRegistry<ResourceTypes...>::ResourceVersion
+typename ResourceVersionRegistry<ResourceTypes...>::ResourceVersion
 ResourceVersionRegistry<ResourceTypes...>::AddResource(ResourceType resource) {
   auto version = static_cast<ResourceVersion>(version_to_id_.size());
   auto id      = resources_.size();
@@ -100,7 +100,7 @@ ResourceVersionRegistry<ResourceTypes...>::AddResource(ResourceType resource) {
 }
 
 template <typename... ResourceTypes>
-ResourceVersionRegistry<ResourceTypes...>::ResourceVersion
+typename ResourceVersionRegistry<ResourceTypes...>::ResourceVersion
 ResourceVersionRegistry<ResourceTypes...>::DeclareResource() {
   return AddResource(NullResource{});
 }
@@ -112,7 +112,7 @@ void ResourceVersionRegistry<ResourceTypes...>::UpdateResource(ResourceId id, Re
 }
 
 template <typename... ResourceTypes>
-ResourceVersionRegistry<ResourceTypes...>::ResourceVersion
+typename ResourceVersionRegistry<ResourceTypes...>::ResourceVersion
 ResourceVersionRegistry<ResourceTypes...>::NextVersion(ResourceVersion prev_version) {
   auto version = static_cast<ResourceVersion>(version_to_id_.size());
   version_to_id_.emplace_back(version_to_id_[prev_version]);
@@ -159,22 +159,22 @@ std::optional<const ResourceType> ResourceVersionRegistry<ResourceTypes...>::Try
 }
 
 template <typename... ResourceTypes>
-ResourceVersionRegistry<ResourceTypes...>::iterator ResourceVersionRegistry<ResourceTypes...>::begin() {
+typename ResourceVersionRegistry<ResourceTypes...>::iterator ResourceVersionRegistry<ResourceTypes...>::begin() {
   return resources_.begin();
 }
 
 template <typename... ResourceTypes>
-ResourceVersionRegistry<ResourceTypes...>::iterator ResourceVersionRegistry<ResourceTypes...>::end() {
+typename ResourceVersionRegistry<ResourceTypes...>::iterator ResourceVersionRegistry<ResourceTypes...>::end() {
   return resources_.end();
 }
 
 template <typename... ResourceTypes>
-ResourceVersionRegistry<ResourceTypes...>::const_iterator ResourceVersionRegistry<ResourceTypes...>::begin() const {
+typename ResourceVersionRegistry<ResourceTypes...>::const_iterator ResourceVersionRegistry<ResourceTypes...>::begin() const {
   return resources_.begin();
 }
 
 template <typename... ResourceTypes>
-ResourceVersionRegistry<ResourceTypes...>::const_iterator ResourceVersionRegistry<ResourceTypes...>::end() const {
+typename ResourceVersionRegistry<ResourceTypes...>::const_iterator ResourceVersionRegistry<ResourceTypes...>::end() const {
   return resources_.end();
 }
 
@@ -189,7 +189,7 @@ uint32_t ResourceVersionRegistry<ResourceTypes...>::GetResourceCount() const {
 }
 
 template <typename... ResourceTypes>
-ResourceVersionRegistry<ResourceTypes...>::ResourceId ResourceVersionRegistry<ResourceTypes...>::GetResourceId(
+typename ResourceVersionRegistry<ResourceTypes...>::ResourceId ResourceVersionRegistry<ResourceTypes...>::GetResourceId(
     ResourceVersion version) const {
   return version_to_id_[version];
 }

@@ -63,35 +63,35 @@ struct EnumEnableBitmask {
 template <typename Enum>
 requires liger::EnumEnableBitmask<Enum>::kEnabled
 inline constexpr Enum operator|(Enum lhs, Enum rhs) {
-  using UnderlyingType = std::underlying_type<Enum>::type;
+  using UnderlyingType = typename std::underlying_type<Enum>::type;
   return static_cast<Enum>(static_cast<UnderlyingType>(lhs) | static_cast<UnderlyingType>(rhs));
 }
 
 template <typename Enum>
 requires liger::EnumEnableBitmask<Enum>::kEnabled
 inline constexpr Enum operator&(Enum lhs, Enum rhs) {
-  using UnderlyingType = std::underlying_type<Enum>::type;
+  using UnderlyingType = typename std::underlying_type<Enum>::type;
   return static_cast<Enum>(static_cast<UnderlyingType>(lhs) & static_cast<UnderlyingType>(rhs));
 }
 
 template <typename Enum>
 requires liger::EnumEnableBitmask<Enum>::kEnabled
 inline constexpr Enum operator^(Enum lhs, Enum rhs) {
-  using UnderlyingType = std::underlying_type<Enum>::type;
+  using UnderlyingType = typename std::underlying_type<Enum>::type;
   return static_cast<Enum>(static_cast<UnderlyingType>(lhs) ^ static_cast<UnderlyingType>(rhs));
 }
 
 template <typename Enum>
 requires liger::EnumEnableBitmask<Enum>::kEnabled
 inline constexpr Enum operator~(Enum lhs) {
-  using UnderlyingType = std::underlying_type<Enum>::type;
+  using UnderlyingType = typename std::underlying_type<Enum>::type;
   return static_cast<Enum>(~static_cast<UnderlyingType>(lhs));
 }
 
 template <typename Enum>
 requires liger::EnumEnableBitmask<Enum>::kEnabled
 inline constexpr Enum operator|=(Enum& lhs, Enum rhs) {
-  using UnderlyingType = std::underlying_type<Enum>::type;
+  using UnderlyingType = typename std::underlying_type<Enum>::type;
   lhs = static_cast<Enum>(static_cast<UnderlyingType>(lhs) | static_cast<UnderlyingType>(rhs));
   return lhs;
 }

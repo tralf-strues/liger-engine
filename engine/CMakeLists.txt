@@ -4,6 +4,8 @@ add_subdirectory(third_party)
 include("${CMAKE_HOME_DIRECTORY}/cmake/compile_options_warnings.cmake")
 add_subdirectory(src)
 
+add_compile_options("-std=c++20")
+
 target_include_directories(liger PUBLIC "third_party/taskflow")
 
 target_link_libraries(liger

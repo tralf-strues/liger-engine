@@ -72,7 +72,7 @@ class ScopedTimer {
    * @param channel Log channel for the timer.
    * @param message Message to log upon destruction.
    */
-  explicit ScopedTimer(const std::string_view channel, const std::string_view message);
+  explicit ScopedTimer(std::string_view channel, std::string_view message);
 
   /**
    * @brief Logs the lifetime of the object with specified log channel and name.
