@@ -43,13 +43,14 @@ enum class DeviceResourceState : uint32_t {
   kDepthStencilTarget = Bit(4),
   kDepthStencilRead   = Bit(5),
   kStorageTexture     = Bit(6),
+  kPresentTexture     = Bit(7),
 
   /* Buffer specific states */
-  kVertexBuffer       = Bit(7),
-  kIndexBuffer        = Bit(8),
-  kIndirectArgument   = Bit(9),
-  kUniformBuffer      = Bit(10),
-  kStorageBuffer      = Bit(11),
+  kVertexBuffer       = Bit(8),
+  kIndexBuffer        = Bit(9),
+  kIndirectArgument   = Bit(10),
+  kUniformBuffer      = Bit(11),
+  kStorageBuffer      = Bit(12)
 };
 
 }  // namespace liger::rhi

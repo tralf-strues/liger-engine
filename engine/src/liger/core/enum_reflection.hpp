@@ -28,12 +28,18 @@
 #pragma once
 
 #include <magic_enum.hpp>
+#include <magic_enum_flags.hpp>
 
 namespace liger {
 
 template <typename Enum>
-[[nodiscard]] constexpr const std::string_view EnumToString(Enum value) noexcept {
+[[nodiscard]] constexpr auto EnumToString(Enum value) noexcept {
   return magic_enum::enum_name(value);
+}
+
+template <typename Enum>
+[[nodiscard]] constexpr auto EnumMaskToString(Enum mask, char separator = '|') noexcept {
+  return magic_enum::enum_flags_name<Enum>(mask, separator);
 }
 
 }  // namespace liger

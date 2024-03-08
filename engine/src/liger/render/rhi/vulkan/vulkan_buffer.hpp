@@ -34,9 +34,11 @@
 
 namespace liger::rhi {
 
+class VulkanDevice;
+
 class VulkanBuffer : public IBuffer {
  public:
-  explicit VulkanBuffer(Info info, VmaAllocator vma_allocator, VulkanDescriptorManager& descriptor_manager);
+  explicit VulkanBuffer(Info info, VulkanDevice& device);
   ~VulkanBuffer() override;
 
   bool Init();
@@ -47,12 +49,14 @@ class VulkanBuffer : public IBuffer {
   void* MapMemory(uint64_t offset, uint64_t size) override;
   void UnmapMemory() override;
 
- private:
-  VmaAllocator  vma_allocator_{VK_NULL_HANDLE};
-  VkBuffer      vk_buffer_{VK_NULL_HANDLE};
-  VmaAllocation vma_allocation_{VK_NULL_HANDLE};
+  VkBuffer GetVulkanBuffer() const;
 
-  VulkanDescriptorManager&                descriptor_manager_;
+ private:
+  VulkanDevice& device_;
+
+  VkBuffer      buffer_{VK_NULL_HANDLE};
+  VmaAllocation allocation_{VK_NULL_HANDLE};
+
   VulkanDescriptorManager::BufferBindings bindings_;
 };
 

@@ -47,11 +47,11 @@ const ConsoleLogWriter::Style kDefaultConsoleLogStyle {
     },
 
     .level_names = {
-      {LogLevel::kInfo,    "INFO"},
-      {LogLevel::kTrace,   "TRACE"},
-      {LogLevel::kWarning, "WARN"},
-      {LogLevel::kError,   "ERROR"},
-      {LogLevel::kFatal,   "FATAL"}
+      {LogLevel::kInfo,    "I"},
+      {LogLevel::kTrace,   "T"},
+      {LogLevel::kWarning, "W"},
+      {LogLevel::kError,   "E"},
+      {LogLevel::kFatal,   "F"}
     },
 
     .write_channel = true

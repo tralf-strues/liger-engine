@@ -43,7 +43,6 @@ VKAPI_ATTR VkBool32 VKAPI_CALL DebugMessengerCallback(VkDebugUtilsMessageSeverit
                                                       const VkDebugUtilsMessengerCallbackDataEXT* callback_data,
                                                       void*                                       /*user_data*/) {
   switch (message_severity) {
-    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
     case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT: {
       LIGER_LOG_INFO(kLogChannelRHI, "{0} - {1}: {2}", callback_data->messageIdNumber, callback_data->pMessageIdName,
                      callback_data->pMessage);
@@ -102,6 +101,7 @@ std::vector<const char*> GetInstanceExtensions(IInstance::ValidationLevel valida
   extensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
   extensions.push_back(VK_EXT_METAL_SURFACE_EXTENSION_NAME);
   extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+  extensions.push_back(VK_EXT_LAYER_SETTINGS_EXTENSION_NAME);
 #endif
 
   if (validation != IInstance::ValidationLevel::kNone) {
@@ -158,18 +158,30 @@ bool VulkanInstance::Init(ValidationLevel validation) {
 
 #ifdef __APPLE__
   instance_info.flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+
+  constexpr int32_t kUseMetalArgumentBuffers = 1;
+
+  const VkLayerSettingEXT layer_settings[] = {{"MoltenVK", "MVK_CONFIG_USE_METAL_ARGUMENT_BUFFERS",
+                                               VK_LAYER_SETTING_TYPE_INT32_EXT, 1, &kUseMetalArgumentBuffers}};
+
+  VkLayerSettingsCreateInfoEXT layer_settings_info = {
+    .sType        = VK_STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT,
+    .pNext        = nullptr,
+    .settingCount = std::size(layer_settings),
+    .pSettings    = layer_settings
+  };
 #endif
 
   VkDebugUtilsMessengerCreateInfoEXT debug_utils_create_info = {
-      .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
-      .pNext = nullptr,
-      .flags = 0,
-      .messageSeverity =
-          VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT |
-          VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
-      .messageType     = VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT,
-      .pfnUserCallback = DebugMessengerCallback,
-      .pUserData       = nullptr,
+    .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
+    .pNext = nullptr,
+    .flags = 0,
+    .messageSeverity =
+        VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT |
+        VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
+    .messageType     = VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT,
+    .pfnUserCallback = DebugMessengerCallback,
+    .pUserData       = nullptr,
   };
 
   if (validation != IInstance::ValidationLevel::kNone) {
@@ -192,13 +204,26 @@ bool VulkanInstance::Init(ValidationLevel validation) {
     .pDisabledValidationFeatures    = nullptr
   };
 
+#ifdef __APPLE__
+  if (validation == IInstance::ValidationLevel::kBasic) {
+    instance_info.pNext       = &layer_settings_info;
+    layer_settings_info.pNext = &debug_utils_create_info;
+  } else if (validation == IInstance::ValidationLevel::kExtensive) {
+    instance_info.pNext       = &features_info;
+    features_info.pNext       = &layer_settings_info;
+    layer_settings_info.pNext = &debug_utils_create_info;
+  } else {
+    instance_info.pNext = &layer_settings_info;
+  }
+#else
   if (validation == IInstance::ValidationLevel::kBasic) {
     instance_info.pNext = &debug_utils_create_info;
   } else if (validation == IInstance::ValidationLevel::kExtensive) {
     features_info.pNext = &debug_utils_create_info;
     instance_info.pNext = &features_info;
   }
-  
+#endif
+
   VULKAN_CALL(vkCreateInstance(&instance_info, nullptr, &instance_));
 
   volkLoadInstanceOnly(instance_);
@@ -206,6 +231,8 @@ bool VulkanInstance::Init(ValidationLevel validation) {
   if (validation != IInstance::ValidationLevel::kNone) {
     VULKAN_CALL(vkCreateDebugUtilsMessengerEXT(instance_, &debug_utils_create_info, nullptr, &debug_utils_messenger_));
   }
+
+  validation_ = validation;
 
   return FillDeviceInfoList();
 }
@@ -236,7 +263,7 @@ std::unique_ptr<IDevice> VulkanInstance::CreateDevice(uint32_t id, uint32_t fram
 
   auto device = std::make_unique<VulkanDevice>(device_info_list_[device_info_index], frames_in_flight, instance_,
                                                physical_device);
-  if (!device->Init()) {
+  if (!device->Init(validation_ != IInstance::ValidationLevel::kNone)) {
     return nullptr;
   }
 
@@ -261,14 +288,19 @@ bool VulkanInstance::FillDeviceInfoList() {
     VkPhysicalDeviceProperties properties;
     vkGetPhysicalDeviceProperties(physical_device, &properties);
 
-    VkPhysicalDeviceDescriptorIndexingFeatures indexing_features {
-      .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES,
-      .pNext = nullptr,
+    VkPhysicalDeviceSynchronization2FeaturesKHR sync2_feature {
+      .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES_KHR,
+      .pNext = nullptr
+    };
+
+    VkPhysicalDeviceVulkan12Features features12 {
+      .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES,
+      .pNext = &sync2_feature
     };
 
     VkPhysicalDeviceFeatures2 features2 {
       .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
-      .pNext = &indexing_features
+      .pNext = &features12
     };
 
     vkGetPhysicalDeviceFeatures2(physical_device, &features2);
@@ -313,8 +345,10 @@ bool VulkanInstance::FillDeviceInfoList() {
       .type             = GetDeviceTypeFromVulkan(properties.deviceType),
       .engine_supported = required_extensions_supported && swapchain_supported &&
                           static_cast<bool>(features2.features.samplerAnisotropy) &&
-                          static_cast<bool>(indexing_features.descriptorBindingPartiallyBound) &&
-                          static_cast<bool>(indexing_features.runtimeDescriptorArray),
+                          static_cast<bool>(features12.descriptorBindingPartiallyBound) &&
+                          static_cast<bool>(features12.runtimeDescriptorArray) &&
+                          static_cast<bool>(features12.timelineSemaphore) &&
+                          static_cast<bool>(sync2_feature.synchronization2),
 
       .properties = {
               .max_msaa_samples       = GetMaxSamplesFromVulkan(properties),

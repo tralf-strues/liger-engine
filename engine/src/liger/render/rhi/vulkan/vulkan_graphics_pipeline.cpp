@@ -45,11 +45,8 @@ VulkanGraphicsPipeline::~VulkanGraphicsPipeline() {
   }
 }
 
-bool VulkanGraphicsPipeline::Init(const Info& info) {
+bool VulkanGraphicsPipeline::Init(const Info& info, VkDescriptorSetLayout ds_layout) {
   /* Pipeline layout */
-
-  // TODO(tralf-strues): Descriptor set layout after bindless resources are added
-
   const bool push_constant_present = info.push_constant.size > 0;
 
   const VkPushConstantRange push_constant_range {
@@ -62,14 +59,13 @@ bool VulkanGraphicsPipeline::Init(const Info& info) {
     .sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
     .pNext                  = nullptr,
     .flags                  = 0,
-    .setLayoutCount         = 0, // TODO(tralf-strues): Bindless resources!
-    .pSetLayouts            = nullptr, // TODO(tralf-strues): Bindless resources!
+    .setLayoutCount         = 1,
+    .pSetLayouts            = &ds_layout,
     .pushConstantRangeCount = push_constant_present ? 1U : 0U,
     .pPushConstantRanges    = push_constant_present ? &push_constant_range : nullptr
   };
 
   VULKAN_CALL(vkCreatePipelineLayout(vk_device_, &layout_info, nullptr, &vk_layout_));
-
 
   /* Shader stages */
   std::vector<VkPipelineShaderStageCreateInfo> vk_stages_info{info.shader_modules.size()};
@@ -99,7 +95,7 @@ bool VulkanGraphicsPipeline::Init(const Info& info) {
       vk_binding_description.binding   = binding_info.binding;
       vk_binding_description.stride    = binding_info.stride;
       vk_binding_description.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-      
+
       vk_binding_descriptions.emplace_back(std::move(vk_binding_description));
 
       for (const auto& attribute_info : binding_info.attributes) {
@@ -238,14 +234,18 @@ bool VulkanGraphicsPipeline::Init(const Info& info) {
     vk_color_attachment_formats.emplace_back(GetVulkanFormat(format));
   }
 
+  auto depth_stencil_format = info.attachments.depth_stencil_format;
+  auto depth_stencil_used   = (depth_stencil_format != Format::kInvalid);
+  auto stencil_used         = depth_stencil_used && IsDepthStencilFormat(depth_stencil_format);
+
   const VkPipelineRenderingCreateInfo vk_pipeline_rendering {
     .sType                   = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO,
     .pNext                   = nullptr,
     .viewMask                = 0,
     .colorAttachmentCount    = static_cast<uint32_t>(vk_color_attachment_formats.size()),
     .pColorAttachmentFormats = vk_color_attachment_formats.data(),
-    .depthAttachmentFormat   = GetVulkanFormat(info.attachments.depth_stencil_format),
-    .stencilAttachmentFormat = GetVulkanFormat(info.attachments.depth_stencil_format)
+    .depthAttachmentFormat   = depth_stencil_used ? GetVulkanFormat(depth_stencil_format) : VK_FORMAT_UNDEFINED,
+    .stencilAttachmentFormat = stencil_used ? GetVulkanFormat(depth_stencil_format) : VK_FORMAT_UNDEFINED
   };
 
   /* Graphics pipeline */
@@ -280,8 +280,12 @@ bool VulkanGraphicsPipeline::Init(const Info& info) {
   return true;
 }
 
-VkPipeline VulkanGraphicsPipeline::GetVulkanHandle() {
+VkPipeline VulkanGraphicsPipeline::GetVulkanPipeline() const {
   return vk_pipeline_;
+}
+
+VkPipelineLayout VulkanGraphicsPipeline::GetVulkanLayout() const {
+  return vk_layout_;
 }
 
 }  // namespace liger::rhi

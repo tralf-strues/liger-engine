@@ -27,12 +27,16 @@
 
 #pragma once
 
+#include <liger/core/enum_bitmask.hpp>
+#include <liger/core/enum_reflection.hpp>
 #include <liger/core/log/default_log.hpp>
-#include <liger/render/rhi/rhi_log_channel.hpp>
 #include <liger/render/rhi/device.hpp>
+#include <liger/render/rhi/rhi_log_channel.hpp>
 
 #define VK_NO_PROTOTYPES
 #include <volk.h>
+
+#include <vulkan/vk_enum_string_helper.h>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wnullability-extension"
@@ -44,6 +48,19 @@
     VkResult result = Call;                                                            \
     LIGER_ASSERT(result == VK_SUCCESS, kLogChannelRHI, "Vulkan call error occurred!"); \
   }
+
+template <>
+struct fmt::formatter<VkResult> {
+  template <typename ParseContext>
+  constexpr auto parse(ParseContext& ctx) {
+    return ctx.begin();
+  }
+
+  template <typename FormatContext>
+  auto format(const VkResult& vk_result, FormatContext& ctx) {
+    return fmt::format_to(ctx.out(), "{}", liger::EnumToString(vk_result));
+  }
+};
 
 namespace liger::rhi {
 
@@ -284,5 +301,126 @@ inline constexpr VkBlendFactor GetVulkanBlendFactor(ColorBlendInfo::Factor facto
 inline constexpr VkBlendOp GetVulkanBlendOp(ColorBlendInfo::Operation operation) {
   return static_cast<VkBlendOp>(operation);
 }
+
+inline constexpr VkAccessFlags2 GetVulkanAccessFlags(DeviceResourceState state) {
+  VkAccessFlags2 vk_access = 0;
+
+  if ((state & DeviceResourceState::kTransferSrc) != DeviceResourceState::kUndefined) {
+    vk_access |= VK_ACCESS_2_TRANSFER_READ_BIT;
+  }
+
+  if ((state & DeviceResourceState::kTransferDst) != DeviceResourceState::kUndefined) {
+    vk_access |= VK_ACCESS_2_TRANSFER_WRITE_BIT;
+  }
+
+  if ((state & DeviceResourceState::kShaderSampled) != DeviceResourceState::kUndefined) {
+    vk_access |= VK_ACCESS_2_SHADER_SAMPLED_READ_BIT;
+  }
+
+  if ((state & DeviceResourceState::kColorTarget) != DeviceResourceState::kUndefined) {
+    vk_access |= VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT;
+  }
+
+  if ((state & DeviceResourceState::kDepthStencilTarget) != DeviceResourceState::kUndefined) {
+    vk_access |= VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+  }
+
+  if ((state & DeviceResourceState::kDepthStencilRead) != DeviceResourceState::kUndefined) {
+    vk_access |= VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
+  }
+
+  if ((state & DeviceResourceState::kStorageTexture) != DeviceResourceState::kUndefined) {
+    vk_access |= VK_ACCESS_2_SHADER_READ_BIT | VK_ACCESS_2_SHADER_WRITE_BIT;
+  }
+
+  if ((state & DeviceResourceState::kPresentTexture) != DeviceResourceState::kUndefined) {
+    vk_access |= VK_ACCESS_2_NONE;
+  }
+
+  if ((state & DeviceResourceState::kVertexBuffer) != DeviceResourceState::kUndefined) {
+    vk_access |= VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT;
+  }
+
+  if ((state & DeviceResourceState::kIndexBuffer) != DeviceResourceState::kUndefined) {
+    vk_access |= VK_ACCESS_2_INDEX_READ_BIT;
+  }
+
+  if ((state & DeviceResourceState::kIndirectArgument) != DeviceResourceState::kUndefined) {
+    vk_access |= VK_ACCESS_2_INDIRECT_COMMAND_READ_BIT;
+  }
+
+  if ((state & DeviceResourceState::kUniformBuffer) != DeviceResourceState::kUndefined) {
+    vk_access |= VK_ACCESS_2_UNIFORM_READ_BIT;
+  }
+
+  if ((state & DeviceResourceState::kStorageBuffer) != DeviceResourceState::kUndefined) {
+    vk_access |= VK_ACCESS_2_SHADER_STORAGE_READ_BIT | VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT;
+  }
+
+  return vk_access;
+}
+
+inline constexpr VkImageLayout GetVulkanImageLayout(DeviceResourceState state) {
+  switch (state) {
+    case (DeviceResourceState::kUndefined):          { return VK_IMAGE_LAYOUT_UNDEFINED; }
+    case (DeviceResourceState::kTransferSrc):        { return VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL; }
+    case (DeviceResourceState::kTransferDst):        { return VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL; }
+    case (DeviceResourceState::kShaderSampled):      { return VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL; }
+    case (DeviceResourceState::kColorTarget):        { return VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL; }
+    case (DeviceResourceState::kDepthStencilTarget): { return VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL; }
+    case (DeviceResourceState::kDepthStencilRead):   { return VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL; }
+    case (DeviceResourceState::kStorageTexture):     { return VK_IMAGE_LAYOUT_GENERAL; }
+    case (DeviceResourceState::kPresentTexture):     { return VK_IMAGE_LAYOUT_PRESENT_SRC_KHR; }
+
+    default:                                         { return VK_IMAGE_LAYOUT_UNDEFINED; }
+  }
+}
+
+inline constexpr VkAttachmentLoadOp GetVulkanAttachmentLoadOp(AttachmentLoad load) {
+  return static_cast<VkAttachmentLoadOp>(load);
+}
+
+inline constexpr VkAttachmentStoreOp GetVulkanAttachmentStoreOp(AttachmentStore store) {
+  return static_cast<VkAttachmentStoreOp>(store);
+}
+
+template <typename VulkanHandleT>
+inline constexpr VkObjectType GetVulkanObjectType();
+
+#define LIGER_GET_VULKAN_OBJECT_TYPE(VulkanHandleT, value)             \
+  template <>                                                          \
+  inline constexpr VkObjectType GetVulkanObjectType<VulkanHandleT>() { \
+    return value;                                                      \
+  }
+
+LIGER_GET_VULKAN_OBJECT_TYPE(VkInstance, VK_OBJECT_TYPE_INSTANCE)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkPhysicalDevice, VK_OBJECT_TYPE_PHYSICAL_DEVICE)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkDevice, VK_OBJECT_TYPE_DEVICE)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkQueue, VK_OBJECT_TYPE_QUEUE)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkSemaphore, VK_OBJECT_TYPE_SEMAPHORE)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkCommandBuffer, VK_OBJECT_TYPE_COMMAND_BUFFER)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkFence, VK_OBJECT_TYPE_FENCE)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkDeviceMemory, VK_OBJECT_TYPE_DEVICE_MEMORY)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkBuffer, VK_OBJECT_TYPE_BUFFER)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkImage, VK_OBJECT_TYPE_IMAGE)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkEvent, VK_OBJECT_TYPE_EVENT)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkQueryPool, VK_OBJECT_TYPE_QUERY_POOL)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkBufferView, VK_OBJECT_TYPE_BUFFER_VIEW)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkImageView, VK_OBJECT_TYPE_IMAGE_VIEW)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkShaderModule, VK_OBJECT_TYPE_SHADER_MODULE)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkPipelineCache, VK_OBJECT_TYPE_PIPELINE_CACHE)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkPipelineLayout, VK_OBJECT_TYPE_PIPELINE_LAYOUT)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkRenderPass, VK_OBJECT_TYPE_RENDER_PASS)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkPipeline, VK_OBJECT_TYPE_PIPELINE)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkDescriptorSetLayout, VK_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkSampler, VK_OBJECT_TYPE_SAMPLER)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkDescriptorPool, VK_OBJECT_TYPE_DESCRIPTOR_POOL)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkDescriptorSet, VK_OBJECT_TYPE_DESCRIPTOR_SET)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkFramebuffer, VK_OBJECT_TYPE_FRAMEBUFFER)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkCommandPool, VK_OBJECT_TYPE_COMMAND_POOL)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkSurfaceKHR, VK_OBJECT_TYPE_SURFACE_KHR)
+LIGER_GET_VULKAN_OBJECT_TYPE(VkSwapchainKHR, VK_OBJECT_TYPE_SWAPCHAIN_KHR)
+
+#undef LIGER_GET_VULKAN_OBJECT_TYPE
 
 }  // namespace liger::rhi

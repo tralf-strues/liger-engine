@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file compute_pipeline.hpp
- * @date 2024-02-03
+ * @file vulkan_command_pool.hpp
+ * @date 2024-03-02
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,21 +27,30 @@
 
 #pragma once
 
-#include <liger/render/rhi/push_constant_info.hpp>
-
-#include <string>
+#include <liger/render/rhi/vulkan/vulkan_command_buffer.hpp>
+#include <liger/render/rhi/vulkan/vulkan_queue_set.hpp>
 
 namespace liger::rhi {
 
-class IComputePipeline {
+class VulkanCommandPool {
  public:
-  struct Info {
-    PushConstantInfo push_constant;
-    IShaderModule*   shader_module;
-    std::string      name;
-  };
+  VulkanCommandPool() = default;
+  ~VulkanCommandPool();
 
-  virtual ~IComputePipeline() = default;
+  void Init(VkDevice device, uint32_t frames_in_flight, const VulkanQueueSet& queue_set);
+  void Destroy();
+
+  VulkanCommandBuffer AllocateCommandBuffer(uint32_t frame_idx, uint32_t queue_idx);
+
+  void Reset(uint32_t frame_idx);
+
+ private:
+  VkCommandPool& GetCommandPool(uint32_t frame_idx, uint32_t queue_idx);
+
+  VkDevice                   device_{VK_NULL_HANDLE};
+  uint32_t                   frames_in_flight_{0};
+  uint32_t                   queue_count_{0};
+  std::vector<VkCommandPool> pools_;
 };
 
 }  // namespace liger::rhi

@@ -49,7 +49,7 @@ class PlatformLayer {
   /************************************************************************************************
    * Window
    ************************************************************************************************/
-  Window* CreateWindow(uint32_t width, uint32_t height, const std::string_view title);
+  std::unique_ptr<Window> CreateWindow(uint32_t width, uint32_t height, std::string_view title);
 
   /************************************************************************************************
    * Input
@@ -69,10 +69,9 @@ class PlatformLayer {
   static void MouseMoveCallback(GLFWwindow* window, double x, double y);
   static void MouseButtonCallback(GLFWwindow* window, int32_t button, int32_t action, int32_t mods);
 
- private:
-  EventDispatcher& dispatcher_;
+  EventDispatcher&                           dispatcher_;
   std::unordered_map<GLFWwindow*, glm::vec2> prev_mouse_pos_;
-  std::unordered_map<GLFWwindow*, Window*> window_wrapper_;
+  std::unordered_map<GLFWwindow*, Window*>   window_wrapper_;
 };
 
 }  // namespace liger

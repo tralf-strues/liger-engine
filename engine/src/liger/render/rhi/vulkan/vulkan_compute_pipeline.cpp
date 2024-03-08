@@ -26,30 +26,27 @@
  */
 
 #include <liger/render/rhi/vulkan/vulkan_compute_pipeline.hpp>
-
+#include <liger/render/rhi/vulkan/vulkan_device.hpp>
 #include <liger/render/rhi/vulkan/vulkan_shader_module.hpp>
 
 namespace liger::rhi {
 
-VulkanComputePipeline::VulkanComputePipeline(VkDevice vk_device) : vk_device_(vk_device) {}
+VulkanComputePipeline::VulkanComputePipeline(VulkanDevice& device) : device_(device) {}
 
 VulkanComputePipeline::~VulkanComputePipeline() {
-  if (vk_pipeline_ != VK_NULL_HANDLE) {
-    vkDestroyPipeline(vk_device_, vk_pipeline_, nullptr);
-    vk_pipeline_ = VK_NULL_HANDLE;
+  if (pipeline_ != VK_NULL_HANDLE) {
+    vkDestroyPipeline(device_.GetVulkanDevice(), pipeline_, nullptr);
+    pipeline_ = VK_NULL_HANDLE;
   }
 
-  if (vk_layout_ != VK_NULL_HANDLE) {
-    vkDestroyPipelineLayout(vk_device_, vk_layout_, nullptr);
-    vk_layout_ = VK_NULL_HANDLE;
+  if (layout_ != VK_NULL_HANDLE) {
+    vkDestroyPipelineLayout(device_.GetVulkanDevice(), layout_, nullptr);
+    layout_ = VK_NULL_HANDLE;
   }
 }
 
 bool VulkanComputePipeline::Init(const Info& info) {
   /* Pipeline layout */
-
-  // TODO(tralf-strues): Descriptor set layout after bindless resources are added
-
   const bool push_constant_present = info.push_constant.size > 0;
 
   const VkPushConstantRange push_constant_range {
@@ -58,17 +55,19 @@ bool VulkanComputePipeline::Init(const Info& info) {
     .size       = info.push_constant.size
   };
 
+  const auto ds_layout = device_.GetDescriptorManager().GetLayout();
+
   const VkPipelineLayoutCreateInfo layout_info {
     .sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
     .pNext                  = nullptr,
     .flags                  = 0,
-    .setLayoutCount         = 0, // TODO(tralf-strues): Bindless resources!
-    .pSetLayouts            = nullptr, // TODO(tralf-strues): Bindless resources!
+    .setLayoutCount         = 1,
+    .pSetLayouts            = &ds_layout,
     .pushConstantRangeCount = push_constant_present ? 1U : 0U,
     .pPushConstantRanges    = push_constant_present ? &push_constant_range : nullptr
   };
 
-  VULKAN_CALL(vkCreatePipelineLayout(vk_device_, &layout_info, nullptr, &vk_layout_));
+  VULKAN_CALL(vkCreatePipelineLayout(device_.GetVulkanDevice(), &layout_info, nullptr, &layout_));
 
   /* Pipeline */
   const VkPipelineShaderStageCreateInfo stage_create_info {
@@ -86,19 +85,29 @@ bool VulkanComputePipeline::Init(const Info& info) {
     .pNext              = nullptr,
     .flags              = 0,
     .stage              = stage_create_info,
-    .layout             = vk_layout_,
+    .layout             = layout_,
     .basePipelineHandle = VK_NULL_HANDLE,
     .basePipelineIndex  = 0
   };
 
   // TODO(tralf-strues): Add pipeline cache!
-  VULKAN_CALL(vkCreateComputePipelines(vk_device_, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &vk_pipeline_));
+  VULKAN_CALL(vkCreateComputePipelines(device_.GetVulkanDevice(),
+                                       VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &pipeline_));
+
+  if (!info.name.empty()) {
+    device_.SetDebugName(pipeline_, info.name);
+    device_.SetDebugName(layout_, "{} <layout>", info.name);
+  }
 
   return true;
 }
 
-VkPipeline VulkanComputePipeline::GetVulkanHandle() {
-  return vk_pipeline_;
+VkPipeline VulkanComputePipeline::GetVulkanPipeline() const {
+  return pipeline_;
+}
+
+VkPipelineLayout VulkanComputePipeline::GetVulkanLayout() const {
+  return layout_;
 }
 
 }  // namespace liger::rhi

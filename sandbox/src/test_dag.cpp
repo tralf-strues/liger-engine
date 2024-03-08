@@ -72,9 +72,19 @@ int main() {
 
   file << "digraph DAG {\n";
 
-  for (size_t i = 0; i < sorted.size(); ++i) {
-    file << "node_" << sorted[i] << " [label=< Node " << sorted[i] << " <BR/> Sorted = " << i
-         << " <BR/> Depth = " << depth[sorted[i]] << " >]\n";
+  for (DAG<int>::Depth d = 0; d <= max_depth; ++d) {
+    file << "{\n" << "rank=same;\n";
+
+    for (size_t sort_idx = 0; sort_idx < sorted.size(); ++sort_idx) {
+      auto node_handle = sorted[sort_idx];
+
+      if (depth[node_handle] == d) {
+        file << "node_" << node_handle << " [label=< Node " << node_handle << " <BR/> Sorted = " << sort_idx
+             << " <BR/> Depth = " << d << " >]\n";
+      }
+    }
+
+    file << "}\n";
   }
 
   for (auto from : sorted) {

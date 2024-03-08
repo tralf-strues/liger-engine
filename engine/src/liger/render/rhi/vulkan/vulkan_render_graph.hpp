@@ -30,7 +30,9 @@
 #define VK_NO_PROTOTYPES
 #include <volk.h>
 
+#include <liger/render/rhi/vulkan/vulkan_command_pool.hpp>
 #include <liger/render/rhi/vulkan/vulkan_device.hpp>
+#include <liger/render/rhi/vulkan/vulkan_timeline_semaphore.hpp>
 
 #include <vector>
 
@@ -40,52 +42,67 @@ class VulkanRenderGraph : public RenderGraph {
  public:
   static constexpr uint32_t kMaxQueuesSupported = 3;
 
-  explicit VulkanRenderGraph();
-  ~VulkanRenderGraph() override;
+  ~VulkanRenderGraph() override = default;
 
   void ReimportTexture(ResourceVersion version, TextureResource new_texture) override;
 
   void ReimportBuffer(ResourceVersion version, BufferResource new_buffer) override;
 
-  void Execute(IDevice& device) override;
+  void Execute(VkSemaphore wait, uint64_t wait_value, VkSemaphore signal, uint64_t signal_value);
+
+  void DumpGraphviz(std::string_view filename) override;
 
  private:
   struct VulkanNode {
-    VkRenderingInfoKHR* rendering_info{nullptr};
+    VkRenderingInfoKHR* rendering_info   = nullptr;
+    uint32_t            queue_idx        = 0;
+    DependencyLevel     dependency_level = 0;
 
-    uint32_t queue_idx = 0;
+    uint32_t in_image_barrier_begin_idx  = 0;
+    uint32_t in_image_barrier_count      = 0;
+    uint32_t out_image_barrier_begin_idx = 0;
+    uint32_t out_image_barrier_count     = 0;
 
-    size_t image_barrier_begin_idx = 0;
-    size_t image_barrier_count = 0;
-
-    size_t buffer_barrier_begin_idx = 0;
-    size_t buffer_barrier_count = 0;
+    uint32_t in_buffer_barrier_begin_idx  = 0;
+    uint32_t in_buffer_barrier_count      = 0;
+    uint32_t out_buffer_barrier_begin_idx = 0;
+    uint32_t out_buffer_barrier_count     = 0;
   };
 
-//   struct ExecutionCommand {
-//     VulkanNode* node{nullptr};
-
-//     std::array<VkSemaphoreSubmitInfo, kMaxQueuesSupported> wait_per_queue;
-//     VkSemaphoreSubmitInfo signal;
-//   };
-
   struct Submit {
-    uint32_t                                               dependency_level;
-    std::array<VkSemaphoreSubmitInfo, kMaxQueuesSupported> wait_per_queue;
-    VkSemaphoreSubmitInfo                                  signal;
+    struct SemaphoreInfo {
+      uint64_t              base_value = 0;
+      VkPipelineStageFlags2 stages     = VK_PIPELINE_STAGE_2_NONE;
+    };
+
+    uint32_t                                       dependency_level;
+    std::array<SemaphoreInfo, kMaxQueuesSupported> wait_per_queue;
+    SemaphoreInfo                                  signal;
   };
 
   void Compile(IDevice& device) override;
 
-  void CreateTransientResources(IDevice& device);
+  bool UpdateDependentResourceValues();
+  void RecreateTransientResources();
   void SetupAttachments();
   void CalculateRenderPassCount(size_t& render_pass_count, size_t& total_attachment_count) const;
 
-  void ScheduleToQueues(VulkanDevice& device);
+  void ScheduleToQueues();
+  void SetupBarriers();
+  void LinkBarriersToResources();
+  void CreateSemaphores();
 
   VulkanNode& GetVulkanNode(const Node& node);
   VulkanNode& GetVulkanNode(NodeHandle node_handle);
   NodeHandle GetNodeHandle(const VulkanNode& vulkan_node);
+
+  uint64_t GetSemaphoreValue(uint32_t queue_idx, uint64_t base_value) const;
+  static VkPipelineStageFlags2 GetVulkanPipelineSrcStage(Node::Type node_type, DeviceResourceState resource_state);
+  static VkPipelineStageFlags2 GetVulkanPipelineDstStage(Node::Type node_type, DeviceResourceState resource_state);
+
+  VulkanDevice* device_{nullptr};
+  bool          dirty_{false};
+  bool          first_frame_{true};
 
   std::vector<VulkanNode> vulkan_nodes_;
 
@@ -95,12 +112,17 @@ class VulkanRenderGraph : public RenderGraph {
   std::vector<VkRenderingInfo>           vk_rendering_infos_;
   std::vector<VkRenderingAttachmentInfo> vk_attachments_;
 
+  uint32_t                                 queue_count_{1};
   std::array<VkQueue, kMaxQueuesSupported> vk_queues_;
+
+  VulkanCommandPool command_pool_;
 
   std::array<std::vector<VulkanNode*>, kMaxQueuesSupported> nodes_per_queue_;
   std::array<std::vector<Submit>, kMaxQueuesSupported>      submits_per_queue_;
+  std::array<VulkanTimelineSemaphore, kMaxQueuesSupported>  semaphores_per_queue_;
 
   std::vector<VkImageMemoryBarrier2>  vk_image_barriers_;
+  std::vector<ResourceId>             image_barrier_resources_;
   std::vector<VkBufferMemoryBarrier2> vk_buffer_barriers_;
 };
 

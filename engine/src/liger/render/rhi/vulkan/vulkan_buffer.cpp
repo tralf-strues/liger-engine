@@ -26,19 +26,18 @@
  */
 
 #include <liger/render/rhi/vulkan/vulkan_buffer.hpp>
-#include <liger/render/rhi/vulkan/vulkan_utils.hpp>
+#include <liger/render/rhi/vulkan/vulkan_device.hpp>
 
 namespace liger::rhi {
 
-VulkanBuffer::VulkanBuffer(Info info, VmaAllocator vma_allocator, VulkanDescriptorManager& descriptor_manager)
-    : IBuffer(std::move(info)), vma_allocator_(vma_allocator), descriptor_manager_(descriptor_manager) {}
+VulkanBuffer::VulkanBuffer(Info info, VulkanDevice& device) : IBuffer(std::move(info)), device_(device) {}
 
 VulkanBuffer::~VulkanBuffer() {
-  if (vk_buffer_ != VK_NULL_HANDLE) {
-    vmaDestroyBuffer(vma_allocator_, vk_buffer_, vma_allocation_);
+  if (buffer_ != VK_NULL_HANDLE) {
+    vmaDestroyBuffer(device_.GetAllocator(), buffer_, allocation_);
   }
 
-  descriptor_manager_.RemoveBuffer(bindings_);
+  device_.GetDescriptorManager().RemoveBuffer(bindings_);
 }
 
 bool VulkanBuffer::Init() {
@@ -57,9 +56,13 @@ bool VulkanBuffer::Init() {
   alloc_info.usage = (GetInfo().cpu_visible ? VMA_MEMORY_USAGE_AUTO : VMA_MEMORY_USAGE_AUTO_PREFER_DEVICE);
   alloc_info.flags |= (GetInfo().cpu_visible ? VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT : 0);
 
-  VULKAN_CALL(vmaCreateBuffer(vma_allocator_, &create_info, &alloc_info, &vk_buffer_, &vma_allocation_, nullptr));
+  VULKAN_CALL(vmaCreateBuffer(device_.GetAllocator(), &create_info, &alloc_info, &buffer_, &allocation_, nullptr));
 
-  bindings_ = descriptor_manager_.AddBuffer(vk_buffer_, GetInfo().usage);
+  bindings_ = device_.GetDescriptorManager().AddBuffer(buffer_, GetInfo().usage);
+
+  if (!GetInfo().name.empty()) {
+    device_.SetDebugName(buffer_, GetInfo().name);
+  }
 
   return true;
 }
@@ -69,13 +72,15 @@ BufferDescriptorBinding VulkanBuffer::GetStorageDescriptorBinding() const { retu
 
 void* VulkanBuffer::MapMemory(uint64_t offset, uint64_t /*size*/) {
   void* map_data{nullptr};
-  VULKAN_CALL(vmaMapMemory(vma_allocator_, vma_allocation_, &map_data));
+  VULKAN_CALL(vmaMapMemory(device_.GetAllocator(), allocation_, &map_data));
 
   return static_cast<void*>(static_cast<uint8_t*>(map_data) + offset);
 }
 
-void VulkanBuffer::UnmapMemory() {
-  vmaUnmapMemory(vma_allocator_, vma_allocation_);
+void VulkanBuffer::UnmapMemory() { vmaUnmapMemory(device_.GetAllocator(), allocation_); }
+
+VkBuffer VulkanBuffer::GetVulkanBuffer() const {
+  return buffer_;
 }
 
 }  // namespace liger::rhr

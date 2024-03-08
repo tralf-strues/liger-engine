@@ -32,19 +32,22 @@
 
 namespace liger::rhi {
 
+class VulkanDevice;
+
 class VulkanComputePipeline : public IComputePipeline {
  public:
-  explicit VulkanComputePipeline(VkDevice vk_device);
+  explicit VulkanComputePipeline(VulkanDevice& device);
   ~VulkanComputePipeline() override;
 
   bool Init(const Info& info);
 
-  VkPipeline GetVulkanHandle();
+  VkPipeline       GetVulkanPipeline() const;
+  VkPipelineLayout GetVulkanLayout() const;
 
  private:
-  VkDevice         vk_device_{VK_NULL_HANDLE};
-  VkPipelineLayout vk_layout_{VK_NULL_HANDLE};
-  VkPipeline       vk_pipeline_{VK_NULL_HANDLE};
+  VulkanDevice&    device_;
+  VkPipelineLayout layout_{VK_NULL_HANDLE};
+  VkPipeline       pipeline_{VK_NULL_HANDLE};
 };
 
 }  // namespace liger::rhi

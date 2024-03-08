@@ -49,7 +49,7 @@ class Window {
 
   GLFWwindow* GetGLFWwindow();
 
-  void SetTitle(const std::string_view title);
+  void SetTitle(std::string_view title);
 
   uint32_t GetWidth() const;
   uint32_t GetHeight() const;
@@ -61,9 +61,8 @@ class Window {
   float GetOpacity() const;
 
  private:
-  Window(uint32_t width, uint32_t height, const std::string_view title);
+  Window(uint32_t width, uint32_t height, std::string_view title);
 
- private:
   GLFWwindow* window_{nullptr};
 
   friend class PlatformLayer;

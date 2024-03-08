@@ -26,44 +26,35 @@
  */
 
 #include <liger/render/rhi/vulkan/vulkan_texture.hpp>
+#include <liger/render/rhi/vulkan/vulkan_device.hpp>
 
 namespace liger::rhi {
 
-VulkanTexture::VulkanTexture(Info info, VkDevice vk_device, VmaAllocator vma_allocator,
-                             VulkanDescriptorManager& descriptor_manager)
-    : ITexture(std::move(info)),
-      vk_device_(vk_device),
-      vma_allocator_(vma_allocator),
-      descriptor_manager_(descriptor_manager) {}
+VulkanTexture::VulkanTexture(Info info, VulkanDevice& device) : ITexture(std::move(info)), device_(device) {}
 
-VulkanTexture::VulkanTexture(Info info, VkDevice vk_device, VkImage vk_image,
-                             VulkanDescriptorManager& descriptor_manager)
-    : ITexture(std::move(info)),
-      owning_(false),
-      vk_device_(vk_device),
-      vk_image_(vk_image),
-      descriptor_manager_(descriptor_manager) {}
+VulkanTexture::VulkanTexture(Info info, VulkanDevice& device, VkImage image)
+    : ITexture(std::move(info)), device_(device), owning_(false), image_(image) {}
 
 VulkanTexture::~VulkanTexture() {
   for (auto& view : views_) {
-    if (view.vk_view != VK_NULL_HANDLE) {
-      vkDestroyImageView(vk_device_, view.vk_view, nullptr);
+    if (view.view != VK_NULL_HANDLE) {
+      vkDestroyImageView(device_.GetVulkanDevice(), view.view, nullptr);
     }
 
-    if (view.vk_custom_sampler != VK_NULL_HANDLE) {
-      vkDestroySampler(vk_device_, view.vk_custom_sampler, nullptr);
+    if (view.custom_sampler != VK_NULL_HANDLE) {
+      vkDestroySampler(device_.GetVulkanDevice(), view.custom_sampler, nullptr);
     }
 
-    descriptor_manager_.RemoveImageView(view.bindings);
+    device_.GetDescriptorManager().RemoveImageView(view.bindings);
 
-    view.vk_view           = VK_NULL_HANDLE;
-    view.vk_custom_sampler = VK_NULL_HANDLE;
+    view.view           = VK_NULL_HANDLE;
+    view.custom_sampler = VK_NULL_HANDLE;
   }
 
-  if (vk_image_ != VK_NULL_HANDLE && owning_) {
-    vmaDestroyImage(vma_allocator_, vk_image_, vma_allocation_);
-    vk_image_ = VK_NULL_HANDLE;
-    vma_allocation_ = VK_NULL_HANDLE;
+  if (image_ != VK_NULL_HANDLE && owning_) {
+    vmaDestroyImage(device_.GetAllocator(), image_, allocation_);
+    image_      = VK_NULL_HANDLE;
+    allocation_ = VK_NULL_HANDLE;
   }
 }
 
@@ -97,10 +88,14 @@ bool VulkanTexture::Init() {
     };
 
     VmaAllocationCreateInfo alloc_info = {};
-    alloc_info.usage  = VMA_MEMORY_USAGE_AUTO_PREFER_DEVICE; // TODO(tralf-strues): CPU visible textures
-    alloc_info.flags |= 0; // TODO(tralf-strues): CPU visible textures
-    
-    VULKAN_CALL(vmaCreateImage(vma_allocator_, &image_info, &alloc_info, &vk_image_, &vma_allocation_, nullptr));
+    alloc_info.usage = VMA_MEMORY_USAGE_AUTO_PREFER_DEVICE;  // TODO(tralf-strues): CPU visible textures
+    alloc_info.flags |= 0;                                   // TODO(tralf-strues): CPU visible textures
+
+    VULKAN_CALL(vmaCreateImage(device_.GetAllocator(), &image_info, &alloc_info, &image_, &allocation_, nullptr));
+  }
+
+  if (!GetInfo().name.empty()) {
+    device_.SetDebugName(image_, GetInfo().name);
   }
 
   /* Create default image view */
@@ -142,7 +137,7 @@ uint32_t VulkanTexture::CreateView(const TextureViewInfo& info) {
     .sType    = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
     .pNext    = nullptr,
     .flags    = 0,
-    .image    = vk_image_,
+    .image    = image_,
     .viewType = GetVulkanImageViewType(info.type),
     .format   = GetVulkanFormat(GetInfo().format),
 
@@ -163,14 +158,27 @@ uint32_t VulkanTexture::CreateView(const TextureViewInfo& info) {
   };
 
   VkImageView vk_view{VK_NULL_HANDLE};
-  VULKAN_CALL(vkCreateImageView(vk_device_, &view_info, nullptr, &vk_view));
+  VULKAN_CALL(vkCreateImageView(device_.GetVulkanDevice(), &view_info, nullptr, &vk_view));
 
-  auto const bindings = descriptor_manager_.AddImageView(vk_view, GetInfo().usage);
+  auto const bindings = device_.GetDescriptorManager().AddImageView(vk_view, GetInfo().usage);
 
   const auto view_idx = static_cast<uint32_t>(views_.size());
-  views_.emplace_back(SampledView{.vk_view = vk_view, .vk_custom_sampler = VK_NULL_HANDLE, .bindings = bindings});
+  views_.emplace_back(SampledView {
+    .view           = vk_view,
+    .custom_sampler = VK_NULL_HANDLE,
+    .bindings       = bindings,
+    .info           = info
+  });
+
+  if (!GetInfo().name.empty()) {
+    device_.SetDebugName(vk_view, "{} <view {}>", GetInfo().name, view_idx);
+  }
 
   return view_idx;
+}
+
+const TextureViewInfo& VulkanTexture::GetViewInfo(uint32_t view) const {
+  return views_[view].info;
 }
 
 TextureDescriptorBinding VulkanTexture::GetSampledDescriptorBinding(uint32_t view) const {
@@ -215,19 +223,27 @@ bool VulkanTexture::SetSampler(const SamplerInfo& info, uint32_t view_idx) {
   };
 
   VkSampler vk_sampler{VK_NULL_HANDLE};
-  VULKAN_CALL(vkCreateSampler(vk_device_, &sampler_info, nullptr, &vk_sampler));
+  VULKAN_CALL(vkCreateSampler(device_.GetVulkanDevice(), &sampler_info, nullptr, &vk_sampler));
 
-  view.vk_custom_sampler = vk_sampler;
+  view.custom_sampler = vk_sampler;
 
-  descriptor_manager_.UpdateSampler(view.bindings.sampled, view.vk_view, vk_sampler);
+  device_.GetDescriptorManager().UpdateSampler(view.bindings.sampled, view.view, vk_sampler);
+
+  if (!GetInfo().name.empty()) {
+    device_.SetDebugName(vk_sampler, "{} <sampler {}>", GetInfo().name, view_idx);
+  }
 
   return true;
 }
 
-VkImageView VulkanTexture::GetVulkanView(uint32_t view_idx) const {
-  LIGER_ASSERT(view_idx < views_.size(), kLogChannelRHI, "Trying to access invalid view index!");
+VkImage VulkanTexture::GetVulkanImage() const {
+  return image_;
+}
 
-  return views_[view_idx].vk_view;
+VkImageView VulkanTexture::GetVulkanView(uint32_t view_idx) const {
+  LIGER_ASSERT(view_idx < views_.size(), kLogChannelRHI, "Trying to access invalid view index {}!", view_idx);
+
+  return views_[view_idx].view;
 }
 
 uint32_t VulkanTexture::GetLayerCount() const {

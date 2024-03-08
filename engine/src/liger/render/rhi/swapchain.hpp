@@ -48,6 +48,9 @@ class ISwapchain {
 
     /** What swapchain textures can be used for. */
     DeviceResourceState usage = DeviceResourceState::kColorTarget;
+
+    /** Debug name */
+    std::string name;
   };
 
   virtual ~ISwapchain() = default;

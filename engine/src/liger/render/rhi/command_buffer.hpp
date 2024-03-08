@@ -65,9 +65,7 @@ class ICommandBuffer {
     kTransfer = Bit(2),
   };
 
-  virtual ~ICommandBuffer() = 0;
-
-  virtual Capability GetCommandCapabilities() const = 0;
+  virtual ~ICommandBuffer() = default;
 
   /**
    * @brief Generate @ref ITexture::Info::mip_levels number of mip levels.
@@ -87,7 +85,7 @@ class ICommandBuffer {
    * @param compute_pipeline
    * @param data
    */
-  virtual void SetPushConstant(const IComputePipeline* compute_pipeline, std::span<const void> data) = 0;
+  virtual void SetPushConstant(const IComputePipeline* compute_pipeline, std::span<const char> data) = 0;
 
   /**
    * @brief Set the push constant for the graphics pipeline.
@@ -97,7 +95,7 @@ class ICommandBuffer {
    * @param graphics_pipeline
    * @param data
    */
-  virtual void SetPushConstant(const IGraphicsPipeline* graphics_pipeline, std::span<const void> data) = 0;
+  virtual void SetPushConstant(const IGraphicsPipeline* graphics_pipeline, std::span<const char> data) = 0;
 
   /**
    * @brief Bind compute pipeline.
@@ -243,12 +241,11 @@ class ICommandBuffer {
    * @param src_texture
    * @param dst_texture
    * @param extent
-   * @param offset
    * @param src_mip_level
    * @param dst_mip_level
    */
   virtual void CopyTexture(const ITexture* src_texture, ITexture* dst_texture, Extent3D extent,
-                           Extent3D offset = Extent3D{}, uint32_t src_mip_level = 0, uint32_t dst_mip_level = 0) = 0;
+                           uint32_t src_mip_level = 0, uint32_t dst_mip_level = 0) = 0;
 };
 
 }  // namespace liger::rhi

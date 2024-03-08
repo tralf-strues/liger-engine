@@ -30,6 +30,8 @@
 #include <liger/render/rhi/device.hpp>
 #include <liger/render/rhi/vulkan/vulkan_descriptor_manager.hpp>
 #include <liger/render/rhi/vulkan/vulkan_queue_set.hpp>
+#include <liger/render/rhi/vulkan/vulkan_swapchain.hpp>
+#include <liger/render/rhi/vulkan/vulkan_timeline_semaphore.hpp>
 
 #define VMA_STATIC_VULKAN_FUNCTIONS 0
 #define VMA_DYNAMIC_VULKAN_FUNCTIONS 1
@@ -44,29 +46,42 @@ class VulkanDevice : public IDevice {
  public:
   static constexpr const char* kValidationLayerName = "VK_LAYER_KHRONOS_validation";
 
-  static constexpr const char* kRequiredDeviceExtensions[] = {VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME};
+  static constexpr const char* kRequiredDeviceExtensions[] = {VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME,
+                                                              VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+                                                              VK_KHR_SYNCHRONIZATION_2_EXTENSION_NAME};
+
+  static constexpr uint64_t kMaxRenderGraphsPerFrame = 1024;
 
   VulkanDevice(Info info, uint32_t frames_in_flight, VkInstance instance, VkPhysicalDevice physical_device);
   ~VulkanDevice() override;
 
-  bool Init();
+  bool Init(bool debug_enabled);
 
+  VkInstance GetInstance();
+  VkPhysicalDevice GetPhysicalDevice();
+  VkDevice GetVulkanDevice();
   VulkanQueueSet& GetQueues();
+  VmaAllocator GetAllocator();
+  VulkanDescriptorManager& GetDescriptorManager();
 
   const Info& GetInfo() const override;
   uint32_t GetFramesInFlight() const override;
 
-  uint32_t AddTextureDescriptor();
+  void WaitIdle() override;
 
-  uint32_t BeginFrame(ISwapchain* swapchain) override;
-  void EndFrame() override;
+  template <typename VulkanHandleT, typename... FormatArgs>
+  inline void SetDebugName(VulkanHandleT handle, std::string_view fmt, FormatArgs&&... args) const;
+
+  std::optional<uint32_t> BeginFrame(ISwapchain& swapchain) override;
+  bool EndFrame() override;
 
   void BeginOffscreenFrame() override;
   void EndOffscreenFrame() override;
 
   uint32_t CurrentFrame() const override;
+  uint64_t CurrentAbsoluteFrame() const override;
 
-  void Execute(RenderGraph& render_graph) override;
+  void ExecuteConsecutive(RenderGraph& render_graph) override;
 
   RenderGraphBuilder NewRenderGraphBuilder() override;
 
@@ -78,8 +93,21 @@ class VulkanDevice : public IDevice {
   [[nodiscard]] std::unique_ptr<IGraphicsPipeline> CreatePipeline(const IGraphicsPipeline::Info& info) override;
 
  private:
+  struct FrameSynchronization {
+    VkFence     fence_render_finished{VK_NULL_HANDLE};
+    VkSemaphore semaphore_render_finished{VK_NULL_HANDLE};
+    VkSemaphore semaphore_swapchain_acquire{VK_NULL_HANDLE};
+  };
+
+  void CreateFrameSync();
+  void IncrementFrame();
+  uint64_t CalculateRenderGraphSemaphoreValue(uint64_t render_graph_idx) const;
+
   Info     info_;
+  bool     debug_enabled_{false};
   uint32_t frames_in_flight_{0};
+  uint32_t current_frame_idx_{0};
+  uint64_t current_absolute_frame_{0};
 
   VkInstance       instance_{VK_NULL_HANDLE};
   VkPhysicalDevice physical_device_{VK_NULL_HANDLE};
@@ -88,6 +116,33 @@ class VulkanDevice : public IDevice {
 
   VulkanDescriptorManager descriptor_manager_;
   VulkanQueueSet          queue_set_;
+
+  std::vector<FrameSynchronization> frame_sync_;
+  VulkanSwapchain*                  current_swapchain_{nullptr};
+  uint32_t                          current_swapchain_image_idx_{0};
+
+  VulkanTimelineSemaphore render_graph_semaphore_;
+  uint64_t                current_graph_idx_{0};
 };
+
+template <typename VulkanHandleT, typename... FormatArgs>
+void VulkanDevice::SetDebugName(VulkanHandleT handle, std::string_view fmt,
+                                FormatArgs&&... args) const {
+  if (!debug_enabled_) {
+    return;
+  }
+
+  auto name = fmt::format(fmt::runtime(fmt), std::forward<FormatArgs>(args)...);
+
+  const VkDebugUtilsObjectNameInfoEXT name_info {
+    .sType        = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
+    .pNext        = nullptr,
+    .objectType   = GetVulkanObjectType<VulkanHandleT>(),
+    .objectHandle = reinterpret_cast<uint64_t>(handle),
+    .pObjectName  = name.c_str()
+  };
+
+  VULKAN_CALL(vkSetDebugUtilsObjectNameEXT(device_, &name_info));
+}
 
 }  // namespace liger::rhi

@@ -122,40 +122,60 @@ std::vector<VkDeviceQueueCreateInfo> VulkanQueueSet::FillQueueCreateInfos(VkPhys
 }
 
 void VulkanQueueSet::InitQueues(VkDevice device) {
-  vkGetDeviceQueue(device, queue_family_indices_.main, /*queueIndex=*/0, &main_queue_);
+  queue_count_ = 0;
+
+  vkGetDeviceQueue(device, queue_family_indices_.main, /*queueIndex=*/0, &queues_[queue_count_++]);
 
   if (queue_family_indices_.compute.has_value()) {
-    vkGetDeviceQueue(device, *queue_family_indices_.compute, /*queueIndex=*/0, &compute_queue_);
+    vkGetDeviceQueue(device, *queue_family_indices_.compute, /*queueIndex=*/0, &queues_[queue_count_++]);
   }
 
   if (queue_family_indices_.transfer.has_value()) {
-    vkGetDeviceQueue(device, *queue_family_indices_.transfer, /*queueIndex=*/0, &transfer_queue_);
+    vkGetDeviceQueue(device, *queue_family_indices_.transfer, /*queueIndex=*/0, &queues_[queue_count_++]);
   }
-}
-
-uint32_t VulkanQueueSet::GetQueueCount() const {
-  uint32_t queue_count = 1;
-
-  if (GetComputeQueue()) { ++queue_count; }
-  if (GetTransferQueue()) { ++queue_count; }
-
-  return queue_count;
 }
 
 const VulkanQueueSet::QueueFamilyIndices& VulkanQueueSet::GetQueueFamilyIndices() const {
   return queue_family_indices_;
 }
 
+uint32_t VulkanQueueSet::GetQueueCount() const {
+  return queue_count_;
+}
+
+VkQueue VulkanQueueSet::GetQueueByIdx(uint32_t queue_idx) const {
+  LIGER_ASSERT(queue_idx < queue_count_, kLogChannelRHI, "Trying to access invalid queue!");
+  return queues_[queue_idx];
+}
+
+uint32_t VulkanQueueSet::GetQueueFamilyByIdx(uint32_t queue_idx) const {
+  LIGER_ASSERT(queue_idx < queue_count_, kLogChannelRHI, "Trying to access invalid queue!");
+
+  if (queue_idx == 0) {
+    return queue_family_indices_.main;
+  }
+
+  if (queue_family_indices_.compute.has_value() && queue_idx == 1) {
+    return queue_family_indices_.compute.value();
+  }
+
+  return queue_family_indices_.transfer.value();
+}
+
 VkQueue VulkanQueueSet::GetMainQueue() const {
-  return main_queue_;
+  return queues_[0];
 }
 
 std::optional<VkQueue> VulkanQueueSet::GetComputeQueue() const {
-  return (compute_queue_ != VK_NULL_HANDLE) ? std::optional(compute_queue_) : std::nullopt;
+  return queue_family_indices_.compute.has_value() ? std::optional(queues_[1]) : std::nullopt;
 }
 
 std::optional<VkQueue> VulkanQueueSet::GetTransferQueue() const {
-  return (transfer_queue_ != VK_NULL_HANDLE) ? std::optional(transfer_queue_) : std::nullopt;
+  if (!queue_family_indices_.transfer.has_value()) {
+    return std::nullopt;
+  }
+
+  return queue_family_indices_.compute.has_value() ? std::optional(queues_[2]) : std::optional(queues_[1]);
 }
 
 }  // namespace liger::rhi

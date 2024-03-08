@@ -35,14 +35,18 @@ namespace liger::rhi {
 
 class VulkanSwapchain : public ISwapchain {
  public:
-  VulkanSwapchain(Info info, VkInstance vk_instance, VkDevice vk_device, VulkanDescriptorManager& descriptor_manager);
+  VulkanSwapchain(Info info, VulkanDevice& device);
   ~VulkanSwapchain() override;
 
-  bool Init(VkPhysicalDevice vk_physical_device);
+  bool Init();
 
   std::vector<ITexture*> GetTextures() override;
 
   bool Recreate() override;
+
+  VkSwapchainKHR GetVulkanSwapchain();
+
+  std::optional<uint32_t> AcquireNext(VkSemaphore signal_semaphore);
 
  private:
   struct SurfaceInfo {
@@ -52,14 +56,12 @@ class VulkanSwapchain : public ISwapchain {
   };
 
   bool CreateSwapchain();
-  SurfaceInfo QuerySurfaceInfo(VkPhysicalDevice vk_physical_device) const;
+  SurfaceInfo QuerySurfaceInfo() const;
 
-  VkInstance                                  vk_instance_{VK_NULL_HANDLE};
-  VkDevice                                    vk_device_{VK_NULL_HANDLE};
-  VkSwapchainKHR                              vk_swapchain_{VK_NULL_HANDLE};
-  VkSurfaceKHR                                vk_surface_{VK_NULL_HANDLE};
+  VulkanDevice&                               device_;
+  VkSwapchainKHR                              swapchain_{VK_NULL_HANDLE};
+  VkSurfaceKHR                                surface_{VK_NULL_HANDLE};
   SurfaceInfo                                 surface_info_{};
-  VulkanDescriptorManager&                    descriptor_manager_;
   std::vector<std::unique_ptr<VulkanTexture>> textures_;
 };
 

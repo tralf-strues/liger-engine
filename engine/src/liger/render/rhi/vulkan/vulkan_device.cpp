@@ -30,8 +30,8 @@
 #include <liger/render/rhi/vulkan/vulkan_buffer.hpp>
 #include <liger/render/rhi/vulkan/vulkan_compute_pipeline.hpp>
 #include <liger/render/rhi/vulkan/vulkan_graphics_pipeline.hpp>
+#include <liger/render/rhi/vulkan/vulkan_render_graph.hpp>
 #include <liger/render/rhi/vulkan/vulkan_shader_module.hpp>
-#include <liger/render/rhi/vulkan/vulkan_swapchain.hpp>
 #include <liger/render/rhi/vulkan/vulkan_texture.hpp>
 #include <liger/render/rhi/vulkan/vulkan_utils.hpp>
 
@@ -56,6 +56,25 @@ VulkanDevice::VulkanDevice(Info info, uint32_t frames_in_flight, VkInstance inst
 VulkanDevice::~VulkanDevice() {
   descriptor_manager_.Destroy();
 
+  render_graph_semaphore_.Destroy();
+
+  for (auto& frame_sync : frame_sync_) {
+    if (frame_sync.fence_render_finished != VK_NULL_HANDLE) {
+      vkDestroyFence(device_, frame_sync.fence_render_finished, nullptr);
+      frame_sync.fence_render_finished = VK_NULL_HANDLE;
+    }
+
+    if (frame_sync.semaphore_render_finished != VK_NULL_HANDLE) {
+      vkDestroySemaphore(device_, frame_sync.semaphore_render_finished, nullptr);
+      frame_sync.semaphore_render_finished = VK_NULL_HANDLE;
+    }
+
+    if (frame_sync.semaphore_swapchain_acquire != VK_NULL_HANDLE) {
+      vkDestroySemaphore(device_, frame_sync.semaphore_swapchain_acquire, nullptr);
+      frame_sync.semaphore_swapchain_acquire = VK_NULL_HANDLE;
+    }
+  }
+
   if (vma_allocator_ != VK_NULL_HANDLE) {
     vmaDestroyAllocator(vma_allocator_);
     vma_allocator_ = VK_NULL_HANDLE;
@@ -67,11 +86,23 @@ VulkanDevice::~VulkanDevice() {
   }
 }
 
-bool VulkanDevice::Init() {
+bool VulkanDevice::Init(bool debug_enable) {
+  debug_enabled_ = debug_enable;
+
   auto queue_create_infos = queue_set_.FillQueueCreateInfos(physical_device_);
 
   VkPhysicalDeviceFeatures2 device_features2{.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2};
   device_features2.features.samplerAnisotropy = VK_TRUE;
+
+  VkPhysicalDeviceVulkan12Features device_features12 {.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES};
+  device_features12.timelineSemaphore                             = VK_TRUE;
+  device_features12.pNext                                         = &device_features2;
+  device_features12.descriptorBindingPartiallyBound               = VK_TRUE;
+  device_features12.runtimeDescriptorArray                        = VK_TRUE;
+  device_features12.descriptorBindingUniformBufferUpdateAfterBind = VK_TRUE;
+  device_features12.descriptorBindingStorageBufferUpdateAfterBind = VK_TRUE;
+  device_features12.descriptorBindingStorageImageUpdateAfterBind  = VK_TRUE;
+  device_features12.descriptorBindingSampledImageUpdateAfterBind  = VK_TRUE;
 
   std::vector<const char*> extensions{std::begin(kRequiredDeviceExtensions), std::end(kRequiredDeviceExtensions)};
 
@@ -79,27 +110,23 @@ bool VulkanDevice::Init() {
   extensions.push_back(VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME);
 #endif
 
+  VkPhysicalDeviceSynchronization2FeaturesKHR sync2_features {
+    .sType            = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES_KHR,
+    .pNext            = nullptr,
+    .synchronization2 = VK_TRUE
+  };
+
   VkPhysicalDeviceDynamicRenderingFeaturesKHR dynamic_rendering_feature {
     .sType            = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES_KHR,
+    .pNext            = &sync2_features,
     .dynamicRendering = VK_TRUE
   };
 
-  VkPhysicalDeviceDescriptorIndexingFeatures indexing_features {
-    .sType                                         = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES,
-    .pNext                                         = &dynamic_rendering_feature,
-    .descriptorBindingPartiallyBound               = VK_TRUE,
-    .runtimeDescriptorArray                        = VK_TRUE,
-    .descriptorBindingUniformBufferUpdateAfterBind = VK_TRUE,
-    .descriptorBindingStorageBufferUpdateAfterBind = VK_TRUE,
-    .descriptorBindingStorageImageUpdateAfterBind  = VK_TRUE,
-    .descriptorBindingSampledImageUpdateAfterBind  = VK_TRUE
-  };
-
-  device_features2.pNext = &indexing_features;
+  device_features2.pNext = &dynamic_rendering_feature;
 
   VkDeviceCreateInfo create_info {
     .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
-    .pNext = &device_features2,
+    .pNext = &device_features12,
     .flags = 0,
     .queueCreateInfoCount = static_cast<uint32_t>(queue_create_infos.size()),
     .pQueueCreateInfos = queue_create_infos.data(),
@@ -128,22 +155,112 @@ bool VulkanDevice::Init() {
   allocator_info.vulkanApiVersion = VK_API_VERSION_1_2;
   VULKAN_CALL(vmaCreateAllocator(&allocator_info, &vma_allocator_));
 
+  render_graph_semaphore_.Init(device_, kMaxRenderGraphsPerFrame);
+  SetDebugName(render_graph_semaphore_.Get(), "VulkanDevice::render_graph_semaphore_");
+
+  CreateFrameSync();
+
   return descriptor_manager_.Init(device_);
 }
 
-VulkanQueueSet& VulkanDevice::GetQueues() {
-  return queue_set_;
+VkInstance                VulkanDevice::GetInstance()             { return instance_; }
+VkPhysicalDevice          VulkanDevice::GetPhysicalDevice()       { return physical_device_; }
+VkDevice                  VulkanDevice::GetVulkanDevice()         { return device_; }
+VulkanQueueSet&           VulkanDevice::GetQueues()               { return queue_set_; }
+VmaAllocator              VulkanDevice::GetAllocator()            { return vma_allocator_; }
+VulkanDescriptorManager&  VulkanDevice::GetDescriptorManager()    { return descriptor_manager_; }
+const VulkanDevice::Info& VulkanDevice::GetInfo() const           { return info_; }
+uint32_t                  VulkanDevice::GetFramesInFlight() const { return frames_in_flight_; }
+
+void VulkanDevice::WaitIdle() {
+  VULKAN_CALL(vkDeviceWaitIdle(device_));
 }
 
-const VulkanDevice::Info& VulkanDevice::GetInfo() const { return info_; }
-uint32_t VulkanDevice::GetFramesInFlight() const { return frames_in_flight_; }
+std::optional<uint32_t> VulkanDevice::BeginFrame(ISwapchain& swapchain) {
+  current_swapchain_ = static_cast<VulkanSwapchain*>(&swapchain);
+  auto& frame_sync = frame_sync_[CurrentFrame()];
 
-uint32_t VulkanDevice::BeginFrame(ISwapchain* /*swapchain*/) {
-  return 0;  // TODO(tralf-strues): Implement!
+  VULKAN_CALL(vkWaitForFences(device_, 1, &frame_sync.fence_render_finished, VK_TRUE, UINT64_MAX));
+  VULKAN_CALL(vkResetFences(device_, 1, &frame_sync.fence_render_finished));
+
+  auto next_texture_idx = current_swapchain_->AcquireNext(frame_sync.semaphore_swapchain_acquire);
+  if (!next_texture_idx) {
+    current_swapchain_ = nullptr;
+    IncrementFrame();
+    WaitIdle();
+    return std::nullopt;
+  }
+
+  current_swapchain_image_idx_ = next_texture_idx.value();
+  current_graph_idx_ = 0;
+
+  return next_texture_idx;
 }
 
-void VulkanDevice::EndFrame() {
-  // TODO(tralf-strues): Implement!
+bool VulkanDevice::EndFrame() {
+  auto& frame_sync  = frame_sync_[CurrentFrame()];
+  auto  empty_frame = (current_graph_idx_ == 0);
+
+  if (!empty_frame) {
+    const VkSemaphoreSubmitInfo last_graph_wait {
+      .sType       = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
+      .pNext       = nullptr,
+      .semaphore   = render_graph_semaphore_.Get(),
+      .value       = CalculateRenderGraphSemaphoreValue(current_graph_idx_),
+      .stageMask   = VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT,
+      .deviceIndex = 0
+    };
+
+    const VkSemaphoreSubmitInfo render_finished_signal {
+      .sType       = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
+      .pNext       = nullptr,
+      .semaphore   = frame_sync.semaphore_render_finished,
+      .value       = 0,
+      .stageMask   = VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT,
+      .deviceIndex = 0
+    };
+
+    const VkSubmitInfo2 submit {
+      .sType                    = VK_STRUCTURE_TYPE_SUBMIT_INFO_2,
+      .pNext                    = nullptr,
+      .flags                    = 0,
+      .waitSemaphoreInfoCount   = 1,
+      .pWaitSemaphoreInfos      = &last_graph_wait,
+      .commandBufferInfoCount   = 0,
+      .pCommandBufferInfos      = nullptr,
+      .signalSemaphoreInfoCount = 1,
+      .pSignalSemaphoreInfos    = &render_finished_signal
+    };
+
+    // FIXME (tralf-strues): fence_render_finished must always be signaled, but currently under condition
+    VULKAN_CALL(vkQueueSubmit2KHR(queue_set_.GetMainQueue(), 1, &submit, frame_sync.fence_render_finished));
+  }
+
+  const VkSwapchainKHR vk_swapchain = current_swapchain_->GetVulkanSwapchain();
+
+  const VkPresentInfoKHR present_info {
+    .sType              = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+    .pNext              = nullptr,
+    .waitSemaphoreCount = empty_frame ? 0U : 1U,
+    .pWaitSemaphores    = empty_frame ? nullptr : &frame_sync.semaphore_render_finished,
+    .swapchainCount     = 1,
+    .pSwapchains        = &vk_swapchain,
+    .pImageIndices      = &current_swapchain_image_idx_,
+    .pResults           = nullptr
+  };
+
+  const auto result = vkQueuePresentKHR(queue_set_.GetMainQueue(), &present_info);
+  bool       valid  = true;
+
+  if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
+    valid = false;
+    WaitIdle();
+  }
+
+  current_swapchain_ = nullptr;
+  IncrementFrame();
+
+  return valid;
 }
 
 void VulkanDevice::BeginOffscreenFrame() {
@@ -155,22 +272,40 @@ void VulkanDevice::EndOffscreenFrame() {
 }
 
 uint32_t VulkanDevice::CurrentFrame() const {
-  return 0;  // TODO(tralf-strues): Implement!
+  return current_frame_idx_;
 }
 
-void VulkanDevice::Execute(RenderGraph& /*render_graph*/) {
-  // TODO(tralf-strues): Implement!
+uint64_t VulkanDevice::CurrentAbsoluteFrame() const {
+  return current_absolute_frame_;
+}
+
+void VulkanDevice::ExecuteConsecutive(RenderGraph& render_graph) {
+  LIGER_ASSERT(current_graph_idx_ + 1 < kMaxRenderGraphsPerFrame, kLogChannelRHI,
+               "Trying to execute too many render graphs per frame, the limit is kMaxRenderGraphsPerFrame={}",
+               kMaxRenderGraphsPerFrame);
+
+  auto& frame_sync          = frame_sync_[CurrentFrame()];
+  auto& vulkan_render_graph = static_cast<VulkanRenderGraph&>(render_graph);
+
+  auto first_graph    = (current_graph_idx_ == 0);
+  auto wait_value     = first_graph ? 0 : CalculateRenderGraphSemaphoreValue(current_graph_idx_);
+  auto wait_semaphore = first_graph ? frame_sync.semaphore_swapchain_acquire : render_graph_semaphore_.Get();
+
+  ++current_graph_idx_;
+
+  auto signal_value = CalculateRenderGraphSemaphoreValue(current_graph_idx_);
+
+  vulkan_render_graph.Execute(wait_semaphore, wait_value, render_graph_semaphore_.Get(), signal_value);
 }
 
 RenderGraphBuilder VulkanDevice::NewRenderGraphBuilder() {
-  // TODO(tralf-strues): Implement!
-  return RenderGraphBuilder{nullptr};
+  return RenderGraphBuilder(std::make_unique<VulkanRenderGraph>());
 }
 
 std::unique_ptr<ISwapchain> VulkanDevice::CreateSwapchain(const ISwapchain::Info& info) {
-  auto swapchain = std::make_unique<VulkanSwapchain>(info, instance_, device_, descriptor_manager_);
+  auto swapchain = std::make_unique<VulkanSwapchain>(info, *this);
 
-  if (!swapchain->Init(physical_device_)) {
+  if (!swapchain->Init()) {
     return nullptr;
   }
 
@@ -178,7 +313,7 @@ std::unique_ptr<ISwapchain> VulkanDevice::CreateSwapchain(const ISwapchain::Info
 }
 
 std::unique_ptr<ITexture> VulkanDevice::CreateTexture(const ITexture::Info& info) {
-  auto texture = std::make_unique<VulkanTexture>(info, device_, vma_allocator_, descriptor_manager_);
+  auto texture = std::make_unique<VulkanTexture>(info, *this);
 
   if (!texture->Init()) {
     return nullptr;
@@ -188,7 +323,7 @@ std::unique_ptr<ITexture> VulkanDevice::CreateTexture(const ITexture::Info& info
 }
 
 std::unique_ptr<IBuffer> VulkanDevice::CreateBuffer(const IBuffer::Info& info) {
-  auto buffer = std::make_unique<VulkanBuffer>(info, vma_allocator_, descriptor_manager_);
+  auto buffer = std::make_unique<VulkanBuffer>(info, *this);
 
   if (!buffer->Init()) {
     return nullptr;
@@ -208,7 +343,7 @@ std::unique_ptr<IShaderModule> VulkanDevice::CreateShaderModule(const IShaderMod
 }
 
 std::unique_ptr<IComputePipeline> VulkanDevice::CreatePipeline(const IComputePipeline::Info& info) {
-  auto compute_pipeline = std::make_unique<VulkanComputePipeline>(device_);
+  auto compute_pipeline = std::make_unique<VulkanComputePipeline>(*this);
 
   if (!compute_pipeline->Init(info)) {
     return nullptr;
@@ -220,11 +355,52 @@ std::unique_ptr<IComputePipeline> VulkanDevice::CreatePipeline(const IComputePip
 std::unique_ptr<IGraphicsPipeline> VulkanDevice::CreatePipeline(const IGraphicsPipeline::Info& info) {
   auto graphics_pipeline = std::make_unique<VulkanGraphicsPipeline>(device_);
 
-  if (!graphics_pipeline->Init(info)) {
+  if (!graphics_pipeline->Init(info, descriptor_manager_.GetLayout())) {
     return nullptr;
   }
 
   return graphics_pipeline;
+}
+
+void VulkanDevice::CreateFrameSync() {
+  frame_sync_.resize(GetFramesInFlight());
+
+  for (uint32_t frame_idx = 0; frame_idx < GetFramesInFlight(); ++frame_idx) {
+    auto& frame_sync = frame_sync_[frame_idx];
+
+    constexpr VkFenceCreateInfo kFenceInfo {
+      .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+      .pNext = nullptr,
+      .flags = VK_FENCE_CREATE_SIGNALED_BIT
+    };
+
+    VULKAN_CALL(vkCreateFence(device_, &kFenceInfo, nullptr, &frame_sync.fence_render_finished));
+
+    SetDebugName(frame_sync.fence_render_finished, "VulkanDevice::frame_sync_[{0}].fence_render_finished", frame_idx);
+
+    constexpr VkSemaphoreCreateInfo kSemaphoreInfo {
+      .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
+      .pNext = nullptr,
+      .flags = 0
+    };
+
+    VULKAN_CALL(vkCreateSemaphore(device_, &kSemaphoreInfo, nullptr, &frame_sync.semaphore_render_finished));
+    VULKAN_CALL(vkCreateSemaphore(device_, &kSemaphoreInfo, nullptr, &frame_sync.semaphore_swapchain_acquire));
+
+    SetDebugName(frame_sync.semaphore_render_finished, "VulkanDevice::frame_sync_[{0}].semaphore_render_finished",
+                 frame_idx);
+    SetDebugName(frame_sync.semaphore_render_finished, "VulkanDevice::frame_sync_[{0}].semaphore_render_finished",
+                 frame_idx);
+  }
+}
+
+void VulkanDevice::IncrementFrame() {
+  current_frame_idx_ = (current_frame_idx_ + 1) % frames_in_flight_;
+  ++current_absolute_frame_;
+}
+
+uint64_t VulkanDevice::CalculateRenderGraphSemaphoreValue(uint64_t render_graph_idx) const {
+  return CurrentAbsoluteFrame() * (kMaxRenderGraphsPerFrame + 1) + render_graph_idx + 1;
 }
 
 }  // namespace liger::rhi

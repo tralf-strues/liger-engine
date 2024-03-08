@@ -116,7 +116,7 @@ struct DepthStencilTestInfo {
 
   bool             depth_test_enable       {true};
   bool             depth_write_enable      {true};
-  CompareOperation depth_compare_operation {CompareOperation::kNever};
+  CompareOperation depth_compare_operation {CompareOperation::kLess};
 
   // TODO(tralf-strues): Stencil test
 };
@@ -190,11 +190,11 @@ struct ColorBlendInfo {
 
   bool      enable           {true};
 
-  Factor    src_color_factor {Factor::kZero};
-  Factor    dst_color_factor {Factor::kZero};
+  Factor    src_color_factor {Factor::kSrcAlpha};
+  Factor    dst_color_factor {Factor::kDstAlpha};
   Operation color_operation  {Operation::kAdd};
 
-  Factor    src_alpha_factor {Factor::kZero};
+  Factor    src_alpha_factor {Factor::kOne};
   Factor    dst_alpha_factor {Factor::kZero};
   Operation alpha_operation  {Operation::kAdd};
 };

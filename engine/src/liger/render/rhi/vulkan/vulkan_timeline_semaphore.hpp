@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file compute_pipeline.hpp
- * @date 2024-02-03
+ * @file vulkan_timeline_semaphore.hpp
+ * @date 2024-02-25
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,21 +27,26 @@
 
 #pragma once
 
-#include <liger/render/rhi/push_constant_info.hpp>
-
-#include <string>
+#include <liger/render/rhi/vulkan/vulkan_utils.hpp>
 
 namespace liger::rhi {
 
-class IComputePipeline {
+class VulkanTimelineSemaphore {
  public:
-  struct Info {
-    PushConstantInfo push_constant;
-    IShaderModule*   shader_module;
-    std::string      name;
-  };
+  VulkanTimelineSemaphore() = default;
+  ~VulkanTimelineSemaphore();
 
-  virtual ~IComputePipeline() = default;
+  void Init(VkDevice vk_device, uint64_t max_per_frame);
+  void Destroy();
+
+  VkSemaphore Get();
+
+  uint64_t TimePoint(uint64_t absolute_frame, uint64_t local_time_point) const;
+
+ private:
+  VkDevice    vk_device_     {VK_NULL_HANDLE};
+  VkSemaphore vk_semaphore_  {VK_NULL_HANDLE};
+  uint64_t    max_per_frame_ {0};
 };
 
 }  // namespace liger::rhi

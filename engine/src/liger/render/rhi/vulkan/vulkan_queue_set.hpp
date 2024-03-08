@@ -46,8 +46,11 @@ class VulkanQueueSet {
   std::vector<VkDeviceQueueCreateInfo> FillQueueCreateInfos(VkPhysicalDevice physical_device);
   void InitQueues(VkDevice device);
 
-  uint32_t GetQueueCount() const;
   const QueueFamilyIndices& GetQueueFamilyIndices() const;
+
+  uint32_t GetQueueCount() const;
+  VkQueue GetQueueByIdx(uint32_t queue_idx) const;
+  uint32_t GetQueueFamilyByIdx(uint32_t queue_idx) const;
 
   VkQueue GetMainQueue() const;
   std::optional<VkQueue> GetComputeQueue() const;
@@ -55,9 +58,8 @@ class VulkanQueueSet {
 
  private:
   QueueFamilyIndices queue_family_indices_;
-  VkQueue            main_queue_{VK_NULL_HANDLE};
-  VkQueue            compute_queue_{VK_NULL_HANDLE};
-  VkQueue            transfer_queue_{VK_NULL_HANDLE};
+  VkQueue            queues_[3];
+  uint32_t           queue_count_{0};
 };
 
 }  // namespace liger::rhi

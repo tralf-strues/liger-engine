@@ -37,9 +37,10 @@ class VulkanGraphicsPipeline : public IGraphicsPipeline {
   explicit VulkanGraphicsPipeline(VkDevice vk_device);
   ~VulkanGraphicsPipeline() override;
 
-  bool Init(const Info& info);
+  bool Init(const Info& info, VkDescriptorSetLayout ds_layout);
 
-  VkPipeline GetVulkanHandle();
+  VkPipeline       GetVulkanPipeline() const;
+  VkPipelineLayout GetVulkanLayout() const;
 
  private:
   VkDevice         vk_device_{VK_NULL_HANDLE};

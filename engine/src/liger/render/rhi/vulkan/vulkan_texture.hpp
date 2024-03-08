@@ -34,37 +34,41 @@
 
 namespace liger::rhi {
 
+class VulkanDevice;
+
 class VulkanTexture : public ITexture {
  public:
-  VulkanTexture(Info info, VkDevice vk_device, VmaAllocator vma_allocator, VulkanDescriptorManager& descriptor_manager);
-  VulkanTexture(Info info, VkDevice vk_device, VkImage vk_image, VulkanDescriptorManager& descriptor_manager);
+  VulkanTexture(Info info, VulkanDevice& device);
+  VulkanTexture(Info info, VulkanDevice& device, VkImage image);
   ~VulkanTexture() override;
 
   bool Init();
 
   uint32_t CreateView(const TextureViewInfo& info) override;
+  const TextureViewInfo& GetViewInfo(uint32_t view) const override;
+
   TextureDescriptorBinding GetSampledDescriptorBinding(uint32_t view) const override;
   TextureDescriptorBinding GetStorageDescriptorBinding(uint32_t view) const override;
   bool SetSampler(const SamplerInfo& sampler_info, uint32_t view = kTextureDefaultViewIdx) override;
 
+  VkImage GetVulkanImage() const;
   VkImageView GetVulkanView(uint32_t view) const;
 
  private:
   struct SampledView {
-    VkImageView                              vk_view           {VK_NULL_HANDLE};
-    VkSampler                                vk_custom_sampler {VK_NULL_HANDLE};
+    VkImageView                              view              {VK_NULL_HANDLE};
+    VkSampler                                custom_sampler    {VK_NULL_HANDLE};
     VulkanDescriptorManager::TextureBindings bindings          {};
+    TextureViewInfo                          info              {};
   };
 
   uint32_t GetLayerCount() const;
 
-  bool                     owning_{true};
-  VkDevice                 vk_device_{VK_NULL_HANDLE};
-  VmaAllocator             vma_allocator_{VK_NULL_HANDLE};
-  VkImage                  vk_image_{VK_NULL_HANDLE};
-  VmaAllocation            vma_allocation_{VK_NULL_HANDLE};
-  VulkanDescriptorManager& descriptor_manager_;
+  VulkanDevice&            device_;
   std::vector<SampledView> views_;
+  bool                     owning_     {true};
+  VkImage                  image_      {VK_NULL_HANDLE};
+  VmaAllocation            allocation_ {VK_NULL_HANDLE};
 };
 
 }  // namespace liger::rhi

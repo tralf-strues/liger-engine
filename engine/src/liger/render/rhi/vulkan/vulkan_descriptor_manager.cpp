@@ -191,6 +191,10 @@ void VulkanDescriptorManager::Destroy() {
   set_ = VK_NULL_HANDLE;
 }
 
+VkDescriptorSetLayout VulkanDescriptorManager::GetLayout() const {
+  return layout_;
+}
+
 VulkanDescriptorManager::BufferBindings VulkanDescriptorManager::AddBuffer(VkBuffer            buffer,
                                                                            DeviceResourceState buffer_usage) {
   BufferBindings bindings{};
@@ -215,8 +219,8 @@ VulkanDescriptorManager::BufferBindings VulkanDescriptorManager::AddBuffer(VkBuf
       .sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
       .pNext            = nullptr,
       .dstSet           = set_,
-      .dstBinding       = uniform_binding,
-      .dstArrayElement  = 0,
+      .dstBinding       = kBindingUniformBuffer,
+      .dstArrayElement  = uniform_binding,
       .descriptorCount  = 1,
       .descriptorType   = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
       .pImageInfo       = nullptr,
@@ -236,8 +240,8 @@ VulkanDescriptorManager::BufferBindings VulkanDescriptorManager::AddBuffer(VkBuf
       .sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
       .pNext            = nullptr,
       .dstSet           = set_,
-      .dstBinding       = storage_binding,
-      .dstArrayElement  = 0,
+      .dstBinding       = kBindingStorageBuffer,
+      .dstArrayElement  = storage_binding,
       .descriptorCount  = 1,
       .descriptorType   = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
       .pImageInfo       = nullptr,
@@ -290,8 +294,8 @@ VulkanDescriptorManager::TextureBindings VulkanDescriptorManager::AddImageView(V
       .sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
       .pNext            = nullptr,
       .dstSet           = set_,
-      .dstBinding       = sampled_binding,
-      .dstArrayElement  = 0,
+      .dstBinding       = kBindingSampledTexture,
+      .dstArrayElement  = sampled_binding,
       .descriptorCount  = 1,
       .descriptorType   = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
       .pImageInfo       = &image_info,
@@ -313,8 +317,8 @@ VulkanDescriptorManager::TextureBindings VulkanDescriptorManager::AddImageView(V
       .sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
       .pNext            = nullptr,
       .dstSet           = set_,
-      .dstBinding       = storage_binding,
-      .dstArrayElement  = 0,
+      .dstBinding       = kBindingStorageTexture,
+      .dstArrayElement  = storage_binding,
       .descriptorCount  = 1,
       .descriptorType   = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,
       .pImageInfo       = &image_info,

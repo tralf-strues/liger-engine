@@ -32,6 +32,7 @@
 #include <GLFW/glfw3.h>
 
 #include <liger/render/rhi/vulkan/vulkan_swapchain.hpp>
+#include <liger/render/rhi/vulkan/vulkan_device.hpp>
 
 namespace liger::rhi {
 
@@ -59,30 +60,25 @@ VkPresentModeKHR ChooseSwapchainPresentMode(std::span<const VkPresentModeKHR> pr
   return VK_PRESENT_MODE_FIFO_KHR;  // Guaranteed to be always available
 }
 
-VulkanSwapchain::VulkanSwapchain(Info info, VkInstance vk_instance, VkDevice vk_device,
-                                 VulkanDescriptorManager& descriptor_manager)
-    : ISwapchain(std::move(info)),
-      vk_instance_(vk_instance),
-      vk_device_(vk_device),
-      descriptor_manager_(descriptor_manager) {}
+VulkanSwapchain::VulkanSwapchain(Info info, VulkanDevice& device) : ISwapchain(std::move(info)), device_(device) {}
 
 VulkanSwapchain::~VulkanSwapchain() {
   textures_.clear();
 
-  if (vk_swapchain_ != VK_NULL_HANDLE) {
-    vkDestroySwapchainKHR(vk_device_, vk_swapchain_, nullptr);
-    vk_swapchain_ = VK_NULL_HANDLE;
+  if (swapchain_ != VK_NULL_HANDLE) {
+    vkDestroySwapchainKHR(device_.GetVulkanDevice(), swapchain_, nullptr);
+    swapchain_ = VK_NULL_HANDLE;
   }
 
-  if (vk_surface_ != VK_NULL_HANDLE) {
-    vkDestroySurfaceKHR(vk_instance_, vk_surface_, nullptr);
-    vk_surface_ = VK_NULL_HANDLE;
+  if (surface_ != VK_NULL_HANDLE) {
+    vkDestroySurfaceKHR(device_.GetInstance(), surface_, nullptr);
+    surface_ = VK_NULL_HANDLE;
   }
 }
 
-bool VulkanSwapchain::Init(VkPhysicalDevice vk_physical_device) {
-  VULKAN_CALL(glfwCreateWindowSurface(vk_instance_, GetInfo().window->GetGLFWwindow(), nullptr, &vk_surface_));
-  surface_info_ = QuerySurfaceInfo(vk_physical_device);
+bool VulkanSwapchain::Init() {
+  VULKAN_CALL(glfwCreateWindowSurface(device_.GetInstance(), GetInfo().window->GetGLFWwindow(), nullptr, &surface_));
+  surface_info_ = QuerySurfaceInfo();
 
   return CreateSwapchain();
 }
@@ -101,12 +97,31 @@ std::vector<ITexture*> VulkanSwapchain::GetTextures() {
 bool VulkanSwapchain::Recreate() {
   textures_.clear();
 
-  if (vk_swapchain_ != VK_NULL_HANDLE) {
-    vkDestroySwapchainKHR(vk_device_, vk_swapchain_, nullptr);
-    vk_swapchain_ = VK_NULL_HANDLE;
+  if (swapchain_ != VK_NULL_HANDLE) {
+    vkDestroySwapchainKHR(device_.GetVulkanDevice(), swapchain_, nullptr);
+    swapchain_ = VK_NULL_HANDLE;
   }
 
   return CreateSwapchain();
+}
+
+VkSwapchainKHR VulkanSwapchain::GetVulkanSwapchain() {
+  return swapchain_;
+}
+
+std::optional<uint32_t> VulkanSwapchain::AcquireNext(VkSemaphore signal_semaphore) {
+  uint32_t texture_idx = 0;
+
+  auto result = vkAcquireNextImageKHR(device_.GetVulkanDevice(), swapchain_, UINT64_MAX, signal_semaphore,
+                                      VK_NULL_HANDLE, &texture_idx);
+
+  if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+    return std::nullopt;
+  }
+
+  LIGER_ASSERT(result == VK_SUCCESS || result == VK_SUBOPTIMAL_KHR, kLogChannelRHI, "Invalid result {}!", result);
+
+  return texture_idx;
 }
 
 bool VulkanSwapchain::CreateSwapchain() {
@@ -121,7 +136,7 @@ bool VulkanSwapchain::CreateSwapchain() {
     .sType                 = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
     .pNext                 = nullptr,
     .flags                 = 0,
-    .surface               = vk_surface_,
+    .surface               = surface_,
     .minImageCount         = min_image_count,
     .imageFormat           = format.format,
     .imageColorSpace       = format.colorSpace,
@@ -138,20 +153,24 @@ bool VulkanSwapchain::CreateSwapchain() {
     .oldSwapchain          = VK_NULL_HANDLE
   };
 
-  VULKAN_CALL(vkCreateSwapchainKHR(vk_device_, &swapchain_info, nullptr, &vk_swapchain_));
+  VULKAN_CALL(vkCreateSwapchainKHR(device_.GetVulkanDevice(), &swapchain_info, nullptr, &swapchain_));
+
+  if (!GetInfo().name.empty()) {
+    device_.SetDebugName(swapchain_, GetInfo().name);
+  }
 
   /* Retrieve images */
   uint32_t image_count = 0;
   std::vector<VkImage> vk_images;
 
-  VULKAN_CALL(vkGetSwapchainImagesKHR(vk_device_, vk_swapchain_, &image_count, nullptr));
+  VULKAN_CALL(vkGetSwapchainImagesKHR(device_.GetVulkanDevice(), swapchain_, &image_count, nullptr));
   vk_images.resize(image_count);
-  VULKAN_CALL(vkGetSwapchainImagesKHR(vk_device_, vk_swapchain_, nullptr, vk_images.data()));
+  VULKAN_CALL(vkGetSwapchainImagesKHR(device_.GetVulkanDevice(), swapchain_, &image_count, vk_images.data()));
 
   /* Creating textures */
   textures_.reserve(image_count);
 
-  const ITexture::Info texture_info {
+  ITexture::Info texture_info {
     .format          = GetFormatFromVulkan(format.format),
     .type            = TextureType::kTexture2D,
     .usage           = GetInfo().usage,
@@ -162,8 +181,12 @@ bool VulkanSwapchain::CreateSwapchain() {
     .name            = ""
   };
 
-  for (auto vk_image : vk_images) {
-    auto texture = std::make_unique<VulkanTexture>(texture_info, vk_device_, vk_image, descriptor_manager_);
+  for (uint32_t texture_idx = 0; texture_idx < image_count; ++texture_idx) {
+    if (!GetInfo().name.empty()) {
+      texture_info.name = fmt::format("{}[{}]", GetInfo().name, texture_idx);
+    }
+
+    auto texture = std::make_unique<VulkanTexture>(texture_info, device_, vk_images[texture_idx]);
     if (!texture->Init()) {
       return false;
     }
@@ -174,29 +197,30 @@ bool VulkanSwapchain::CreateSwapchain() {
   return true;
 }
 
-VulkanSwapchain::SurfaceInfo VulkanSwapchain::QuerySurfaceInfo(VkPhysicalDevice vk_physical_device) const {
+VulkanSwapchain::SurfaceInfo VulkanSwapchain::QuerySurfaceInfo() const {
   SurfaceInfo info;
 
+  auto vk_physical_device = device_.GetPhysicalDevice();
+
   /* Surface capabilities */
-  VULKAN_CALL(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(vk_physical_device, vk_surface_, &info.capabilities));
+  VULKAN_CALL(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(vk_physical_device, surface_, &info.capabilities));
 
   /* Surface formats */
   uint32_t format_count = 0;
-  VULKAN_CALL(vkGetPhysicalDeviceSurfaceFormatsKHR(vk_physical_device, vk_surface_, &format_count, nullptr));
+  VULKAN_CALL(vkGetPhysicalDeviceSurfaceFormatsKHR(vk_physical_device, surface_, &format_count, nullptr));
 
   if (format_count != 0) {
     info.formats.resize(format_count);
-    VULKAN_CALL(
-        vkGetPhysicalDeviceSurfaceFormatsKHR(vk_physical_device, vk_surface_, &format_count, info.formats.data()));
+    VULKAN_CALL(vkGetPhysicalDeviceSurfaceFormatsKHR(vk_physical_device, surface_, &format_count, info.formats.data()));
   }
 
   /* Present modes */
   uint32_t present_mode_count;
-  VULKAN_CALL(vkGetPhysicalDeviceSurfacePresentModesKHR(vk_physical_device, vk_surface_, &present_mode_count, nullptr));
+  VULKAN_CALL(vkGetPhysicalDeviceSurfacePresentModesKHR(vk_physical_device, surface_, &present_mode_count, nullptr));
 
   if (present_mode_count != 0) {
       info.present_modes.resize(present_mode_count);
-      VULKAN_CALL(vkGetPhysicalDeviceSurfacePresentModesKHR(vk_physical_device, vk_surface_, &present_mode_count,
+      VULKAN_CALL(vkGetPhysicalDeviceSurfacePresentModesKHR(vk_physical_device, surface_, &present_mode_count,
                                                             info.present_modes.data()));
   }
 

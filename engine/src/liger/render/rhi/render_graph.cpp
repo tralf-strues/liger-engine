@@ -32,14 +32,14 @@
 namespace liger::rhi {
 
 RenderGraph::TextureResource RenderGraph::GetTexture(ResourceVersion version) {
-  return resource_version_registry_.GetResource<TextureResource>(version);
+  return resource_version_registry_.GetResourceByVersion<TextureResource>(version);
 }
 
 RenderGraph::BufferResource RenderGraph::GetBuffer(ResourceVersion version) {
-  return resource_version_registry_.GetResource<BufferResource>(version);
+  return resource_version_registry_.GetResourceByVersion<BufferResource>(version);
 }
 
-void RenderGraph::SetJob(const std::string_view node_name, std::unique_ptr<IJob> job) {
+void RenderGraph::SetJob(const std::string_view node_name, Job job) {
   for (auto& node : dag_) {
     if (node.name == node_name) {
       node.job = std::move(job);
@@ -57,24 +57,34 @@ DAG<RenderGraph::Node>::Depth RenderGraph::GetDependencyLevel(NodeHandle node_ha
 
 RenderGraphBuilder::RenderGraphBuilder(std::unique_ptr<RenderGraph> graph) : graph_(std::move(graph)) {}
 
-RenderGraphBuilder::ResourceVersion RenderGraphBuilder::DeclareTransientTexture(const ITexture::Info& info) {
+RenderGraphBuilder::ResourceVersion RenderGraphBuilder::DeclareTransientTexture(const DependentTextureInfo& info) {
   auto version = graph_->resource_version_registry_.DeclareResource();
-  graph_->transient_texture_infos_[version] = info;
+  graph_->transient_texture_infos_[graph_->resource_version_registry_.GetResourceId(version)] = info;
   return version;
 }
 
 RenderGraphBuilder::ResourceVersion RenderGraphBuilder::DeclareTransientBuffer(const IBuffer::Info& info) {
   auto version = graph_->resource_version_registry_.DeclareResource();
-  graph_->transient_buffer_infos_[version] = info;
+  graph_->transient_buffer_infos_[graph_->resource_version_registry_.GetResourceId(version)] = info;
   return version;
 }
 
-RenderGraphBuilder::ResourceVersion RenderGraphBuilder::ImportTexture(RenderGraph::TextureResource texture) {
-  return graph_->resource_version_registry_.AddResource(texture);
+RenderGraphBuilder::ResourceVersion RenderGraphBuilder::DeclareImportTexture(DeviceResourceState initial_state,
+                                                                             DeviceResourceState final_state) {
+  auto version = graph_->resource_version_registry_.DeclareResource();
+  graph_->imported_resource_usages_[graph_->resource_version_registry_.GetResourceId(version)] = {
+      .initial = initial_state, .final = final_state};
+
+  return version;
 }
 
-RenderGraphBuilder::ResourceVersion RenderGraphBuilder::ImportBuffer(RenderGraph::BufferResource buffer) {
-  return graph_->resource_version_registry_.AddResource(buffer);
+RenderGraphBuilder::ResourceVersion RenderGraphBuilder::DeclareImportBuffer(DeviceResourceState initial_state,
+                                                                            DeviceResourceState final_state) {
+  auto version = graph_->resource_version_registry_.DeclareResource();
+  graph_->imported_resource_usages_[graph_->resource_version_registry_.GetResourceId(version)] = {
+      .initial = initial_state, .final = final_state};
+
+  return version;
 }
 
 void RenderGraphBuilder::BeginRenderPass(std::string_view name, ICommandBuffer::Capability capabilities) {
@@ -101,12 +111,62 @@ void RenderGraphBuilder::EndTransfer() {
   EndNode(RenderGraph::Node::Type::kTransfer);
 }
 
-RenderGraphBuilder::ResourceVersion RenderGraphBuilder::AddColorTarget(ResourceVersion texture) {
-  return AddWrite(RenderGraph::Node::Type::kRenderPass, texture, DeviceResourceState::kColorTarget);
+RenderGraphBuilder::ResourceVersion RenderGraphBuilder::AddColorTarget(ResourceVersion texture, AttachmentLoad load,
+                                                                       AttachmentStore store) {
+  LIGER_ASSERT(current_node_.has_value(), kLogChannelRHI, "Adding resource access outside of begin/end scope!");
+
+  auto& node = graph_->dag_.GetNode(*current_node_);
+  LIGER_ASSERT(node.type == RenderGraph::Node::Type::kRenderPass, kLogChannelRHI,
+               "Incompatible resource access with the current node type!");
+
+  auto new_version = texture;
+
+  if (load == AttachmentLoad::kLoad) {
+    node.read.push_back(RenderGraph::ResourceRead {
+      .version = new_version,
+      .state   = DeviceResourceState::kColorTarget
+    });
+
+    new_version = graph_->resource_version_registry_.NextVersion(texture);
+  }
+
+  node.write.push_back(RenderGraph::ResourceWrite {
+    .version          = new_version,
+    .state            = DeviceResourceState::kColorTarget,
+    .attachment_load  = load,
+    .attachment_store = store
+  });
+
+  return new_version;
 }
 
-RenderGraphBuilder::ResourceVersion RenderGraphBuilder::SetDepthStencil(ResourceVersion texture) {
-  return AddWrite(RenderGraph::Node::Type::kRenderPass, texture, DeviceResourceState::kDepthStencilTarget);
+RenderGraphBuilder::ResourceVersion RenderGraphBuilder::SetDepthStencil(ResourceVersion texture, AttachmentLoad load,
+                                                                        AttachmentStore store) {
+  LIGER_ASSERT(current_node_.has_value(), kLogChannelRHI, "Adding resource access outside of begin/end scope!");
+
+  auto& node = graph_->dag_.GetNode(*current_node_);
+  LIGER_ASSERT(node.type == RenderGraph::Node::Type::kRenderPass, kLogChannelRHI,
+               "Incompatible resource access with the current node type!");
+
+  auto new_version = texture;
+
+  if (load == AttachmentLoad::kLoad) {
+    node.read.push_back(RenderGraph::ResourceRead {
+      .version = new_version,
+      .state   = DeviceResourceState::kDepthStencilTarget
+    });
+
+    new_version = graph_->resource_version_registry_.NextVersion(texture);
+  }
+
+  node.write.push_back(RenderGraph::ResourceWrite {
+    .version          = new_version,
+    .state            = DeviceResourceState::kDepthStencilTarget,
+    .attachment_load  = load,
+    .attachment_store = store
+  });
+
+  return new_version;
 }
 
 void RenderGraphBuilder::SampleTexture(ResourceVersion texture) {
@@ -122,11 +182,19 @@ void RenderGraphBuilder::ReadBuffer(ResourceVersion buffer, DeviceResourceState 
   LIGER_ASSERT(current_node_.has_value(), kLogChannelRHI, "Adding resource access outside of begin/end scope!");
 
   auto& node = graph_->dag_.GetNode(*current_node_);
-  node.read.push_back(RenderGraph::ResourceRead{buffer, usage});
+  node.read.push_back(RenderGraph::ResourceRead{.version = buffer, .state = usage});
 }
 
-std::unique_ptr<RenderGraph> RenderGraphBuilder::Build(IDevice& device) {
-  auto& dag = graph_->dag_;
+void RenderGraphBuilder::WriteBuffer(ResourceVersion buffer, DeviceResourceState usage) {
+  LIGER_ASSERT(current_node_.has_value(), kLogChannelRHI, "Adding resource access outside of begin/end scope!");
+
+  auto& node = graph_->dag_.GetNode(*current_node_);
+  node.write.push_back(RenderGraph::ResourceWrite{.version = buffer, .state = usage});
+}
+
+std::unique_ptr<RenderGraph> RenderGraphBuilder::Build(IDevice& device, std::string_view name) {
+  auto& dag     = graph_->dag_;
+  graph_->name_ = name;
 
   for (auto& from : dag) {
     for (auto& to : dag) {
@@ -141,6 +209,40 @@ std::unique_ptr<RenderGraph> RenderGraphBuilder::Build(IDevice& device) {
   }
 
   dag.TopologicalSort(graph_->sorted_nodes_, graph_->node_dependency_levels_, graph_->max_dependency_level_);
+
+  auto add_usage = [&](auto node_handle, auto resource_id, auto state) {
+    auto it           = graph_->resource_usage_span_.find(resource_id);
+    auto exists       = (it != graph_->resource_usage_span_.end());
+    auto exists_first = exists && it->second.first_node;
+    auto exists_last  = exists && it->second.last_node;
+
+    if (!exists) {
+      graph_->resource_usage_span_[resource_id] = {};
+    }
+
+    if (!exists_first || graph_->GetDependencyLevel(node_handle) < graph_->GetDependencyLevel(*it->second.first_node)) {
+      graph_->resource_usage_span_[resource_id].first_node  = node_handle;
+      graph_->resource_usage_span_[resource_id].first_state = state;
+    }
+
+    if (!exists_last || graph_->GetDependencyLevel(node_handle) > graph_->GetDependencyLevel(*it->second.last_node)) {
+      graph_->resource_usage_span_[resource_id].last_node  = node_handle;
+      graph_->resource_usage_span_[resource_id].last_state = state;
+    }
+  };
+
+  for (const auto& node : dag) {
+    auto handle = dag.GetNodeHandle(node);
+
+    for (auto read : node.read) {
+      add_usage(handle, graph_->resource_version_registry_.GetResourceId(read.version), read.state);
+    }
+
+    for (auto write : node.write) {
+      add_usage(handle, graph_->resource_version_registry_.GetResourceId(write.version), write.state);
+    }
+  }
+
   graph_->Compile(device);
 
   return std::move(graph_);
@@ -176,8 +278,10 @@ RenderGraphBuilder::ResourceVersion RenderGraphBuilder::AddWrite(RenderGraph::No
   auto& node = graph_->dag_.GetNode(*current_node_);
   LIGER_ASSERT(node.type == type, kLogChannelRHI, "Incompatible resource access with the current node type!");
 
+  node.read.push_back(RenderGraph::ResourceRead{resource, usage});
+
   auto new_version = graph_->resource_version_registry_.NextVersion(resource);
-  node.write.push_back(RenderGraph::ResourceWrite{new_version, usage});
+  node.write.push_back(RenderGraph::ResourceWrite{.version = new_version, .state = usage});
 
   return new_version;
 }

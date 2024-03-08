@@ -91,16 +91,23 @@ class IDevice {
   virtual uint32_t GetFramesInFlight() const = 0;
 
   /**
-   * @brief Begin a frame with the specified swapchain as the main target.
-   * @param swapchain
-   * @return Index of the swapchain texture for this frame.
+   * @brief Wait for any pending device work to finish.
    */
-  [[nodiscard]] virtual uint32_t BeginFrame(ISwapchain* swapchain) = 0;
+  virtual void WaitIdle() = 0;
+
+  /**
+   * @brief Begin a frame with the specified swapchain as the main target if it is valid.
+   * @param swapchain
+   * @return Index of the swapchain texture for this frame or std::nullopt if swapchain recreation is needed.
+   */
+  [[nodiscard]] virtual std::optional<uint32_t> BeginFrame(ISwapchain& swapchain) = 0;
 
   /**
    * @brief End the frame and present to screen (with the swapchain specified in @ref BeginFrame method).
+   *
+   * @return Whether successfully submitted the frame or false if swapchain recreation is needed.
    */
-  virtual void EndFrame() = 0;
+  [[nodiscard]] virtual bool EndFrame() = 0;
 
   /**
    * @brief Begin an offscreen frame, i.e. without rendering and presenting to screen.
@@ -120,14 +127,20 @@ class IDevice {
   [[nodiscard]] virtual uint32_t CurrentFrame() const = 0;
 
   /**
-   * @brief Execute the render graph.
+   * @brief Get the current absolute frame index.
+   * @warning Calling this method outside of begin and end frame scope (either default or offscreen) can cause UB!
+   * @return Current absolute frame index.
+   */
+  [[nodiscard]] virtual uint64_t CurrentAbsoluteFrame() const = 0;
+
+  /**
+   * @brief Execute the render graph and synchronize it with previous (if any) render graphs during current frame.
    *
    * @warning Calling this method outside of begin and end frame scope (either default or offscreen) can cause UB!
-   * @warning Consequent executions of render graphs during a single frame are not synchronized! // TODO:
    *
    * @param render_graph Render graph to execute, which must be created by this particular device.
    */
-  virtual void Execute(RenderGraph& render_graph) = 0;
+  virtual void ExecuteConsecutive(RenderGraph& render_graph) = 0;
 
   /**
    * @brief Create a render graph builder, the object for constructing a render graph.

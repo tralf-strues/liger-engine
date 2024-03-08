@@ -61,6 +61,8 @@ class VulkanDescriptorManager {
   bool Init(VkDevice device);
   void Destroy();
 
+  VkDescriptorSetLayout GetLayout() const;
+
   [[nodiscard]] BufferBindings AddBuffer(VkBuffer buffer, DeviceResourceState buffer_usage);
 
   void RemoveBuffer(BufferBindings bindings);

@@ -34,12 +34,20 @@ namespace liger::rhi {
 struct Extent2D {
   uint32_t x{0};
   uint32_t y{0};
+
+  bool operator==(const Extent2D& rhs) const {
+    return (x == rhs.x) && (y == rhs.y);
+  }
 };
 
 struct Extent3D {
   uint32_t x{0};
   uint32_t y{0};
   uint32_t z{0};
+
+  bool operator==(const Extent3D& rhs) const {
+    return (x == rhs.x) && (y == rhs.y) && (z == rhs.z);
+  }
 };
 
 }  // namespace liger::rhi

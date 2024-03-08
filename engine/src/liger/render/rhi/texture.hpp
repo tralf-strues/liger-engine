@@ -145,6 +145,8 @@ class ITexture {
    */
   virtual uint32_t CreateView(const TextureViewInfo& info) = 0;
 
+  virtual const TextureViewInfo& GetViewInfo(uint32_t view) const = 0;
+
   /**
    * @brief Get the sampled binding of the texture's view for accessing inside shaders.
    *

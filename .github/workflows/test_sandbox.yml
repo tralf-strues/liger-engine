@@ -2,9 +2,9 @@ name: Test Sandbox
 
 on:
   push:
-    branches: ["main", "dev"]
+    branches: "*"
   pull_request:
-    branches: ["main", "dev"]
+    branches: "*"
 
 jobs:
   build-unix:
