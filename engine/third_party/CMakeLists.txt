@@ -41,3 +41,5 @@ add_subdirectory(volk)
 
 set(YAML_BUILD_SHARED_LIBS off)
 add_subdirectory(yaml_cpp)
+
+set(LIGER_ADDITIONAL_INCLUDE_DIRS "${Vulkan_INCLUDE_DIRS}" PARENT_SCOPE)

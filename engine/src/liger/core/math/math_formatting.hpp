@@ -26,7 +26,11 @@
  */
 
 #include <fmt/core.h>
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-volatile"
 #include <glm/glm.hpp>
+#pragma GCC diagnostic pop
 
 template <>
 struct fmt::formatter<glm::vec2> {

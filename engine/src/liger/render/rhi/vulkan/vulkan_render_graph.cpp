@@ -32,6 +32,8 @@
 #include <liger/core/enum_reflection.hpp>
 #include <liger/render/rhi/vulkan/vulkan_buffer.hpp>
 #include <liger/render/rhi/vulkan/vulkan_texture.hpp>
+
+#include <fstream>
 #include <unordered_map>
 
 namespace liger::rhi {

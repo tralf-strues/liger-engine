@@ -27,7 +27,10 @@
 
 #pragma once
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-volatile"
 #include <glm/glm.hpp>
+#pragma GCC diagnostic pop
 
 #include <random>
 
@@ -45,7 +48,6 @@ class Random {
  private:
   Random();
 
- private:
   std::random_device device_;
   std::mt19937       generator_;
 
