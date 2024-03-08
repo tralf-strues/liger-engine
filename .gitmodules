@@ -19,3 +19,9 @@
 [submodule "engine/third_party/volk"]
 	path = engine/third_party/volk
 	url = https://github.com/zeux/volk.git
+[submodule "engine/third_party/vulkan-headers"]
+	path = engine/third_party/vulkan-headers
+	url = https://github.com/KhronosGroup/Vulkan-Headers.git
+[submodule "engine/third_party/vulkan-utility-libraries"]
+	path = engine/third_party/vulkan-utility-libraries
+	url = https://github.com/KhronosGroup/Vulkan-Utility-Libraries.git
