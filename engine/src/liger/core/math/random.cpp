@@ -26,11 +26,7 @@
  */
 
 #include <liger/core/math/random.hpp>
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-volatile"
 #include <glm/gtc/random.hpp>
-#pragma GCC diagnostic pop
 
 namespace liger {
 

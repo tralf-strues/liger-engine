@@ -27,11 +27,7 @@
 
 #pragma once
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-volatile"
 #include <glm/glm.hpp>
-#pragma GCC diagnostic pop
-
 #include <random>
 
 namespace liger {

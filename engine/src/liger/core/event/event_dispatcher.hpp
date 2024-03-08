@@ -30,6 +30,8 @@
 #include <liger/core/event/detail/event_type.hpp>
 #include <liger/core/event/event_sink.hpp>
 
+#include <unordered_map>
+
 namespace liger {
 
 /**
