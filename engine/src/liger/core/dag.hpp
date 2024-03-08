@@ -79,8 +79,8 @@ class DAG<void> {
 template <typename Node>
 class DAG : public DAG<void> {
  public:
-  using NodeIterator      = std::vector<Node>::iterator;
-  using ConstNodeIterator = std::vector<Node>::const_iterator;
+  using NodeIterator      = typename std::vector<Node>::iterator;
+  using ConstNodeIterator = typename std::vector<Node>::const_iterator;
   using DAG<void>::AddEdge;
   using DAG<void>::EdgeExists;
   using DAG<void>::GetAdjacencyList;
@@ -110,18 +110,18 @@ class DAG : public DAG<void> {
 };
 
 template <typename Node>
-DAG<Node>::NodeHandle DAG<Node>::AddNode(Node node) {
+typename DAG<Node>::NodeHandle DAG<Node>::AddNode(Node node) {
   return EmplaceNode(std::move(node));
 }
 
 template <typename Node>
 template <typename... Args>
-DAG<Node>::NodeHandle DAG<Node>::EmplaceNode(Args... args) {
+typename DAG<Node>::NodeHandle DAG<Node>::EmplaceNode(Args... args) {
   return EmplaceNode(Node{std::forward(args...)});
 }
 
 template <typename Node>
-DAG<Node>::NodeHandle DAG<Node>::EmplaceNode(Node&& node) {
+typename DAG<Node>::NodeHandle DAG<Node>::EmplaceNode(Node&& node) {
   nodes_.emplace_back(std::move(node));
   return DeclareNode();
 }
@@ -147,27 +147,27 @@ const Node& DAG<Node>::GetNode(NodeHandle handle) const {
 }
 
 template <typename Node>
-DAG<Node>::NodeHandle DAG<Node>::GetNodeHandle(const Node& node) const {
+typename DAG<Node>::NodeHandle DAG<Node>::GetNodeHandle(const Node& node) const {
   return static_cast<NodeHandle>(&node - nodes_.data());
 }
 
 template <typename Node>
-DAG<Node>::NodeIterator DAG<Node>::begin() {
+typename DAG<Node>::NodeIterator DAG<Node>::begin() {
   return nodes_.begin();
 }
 
 template <typename Node>
-DAG<Node>::NodeIterator DAG<Node>::end() {
+typename DAG<Node>::NodeIterator DAG<Node>::end() {
   return nodes_.end();
 }
 
 template <typename Node>
-DAG<Node>::ConstNodeIterator DAG<Node>::begin() const {
+typename DAG<Node>::ConstNodeIterator DAG<Node>::begin() const {
   return nodes_.cbegin();
 }
 
 template <typename Node>
-DAG<Node>::ConstNodeIterator DAG<Node>::end() const {
+typename DAG<Node>::ConstNodeIterator DAG<Node>::end() const {
   return nodes_.cend();
 }
 
