@@ -18,7 +18,7 @@ jobs:
 
         include:
           - os: ubuntu-latest
-            install: sudo apt-get install ninja-build xorg-dev doxygen vulkan-utility-libraries
+            install: sudo apt-get install ninja-build xorg-dev doxygen
           - os: macos-latest
             install: brew install ninja doxygen
 
