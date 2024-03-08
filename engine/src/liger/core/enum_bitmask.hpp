@@ -29,10 +29,16 @@
 
 #include <type_traits>
 
-#define ENABLE_ENUM_BITMASK(Enum)          \
-  template <>                              \
-  struct liger::EnumEnableBitmask<Enum> {  \
-    static constexpr bool kEnabled = true; \
+#include <magic_enum_flags.hpp>
+
+#define ENABLE_ENUM_BITMASK(Enum)                  \
+  template <>                                      \
+  struct liger::EnumEnableBitmask<Enum> {          \
+    static constexpr bool kEnabled = true;         \
+  };                                               \
+  template <>                                      \
+  struct magic_enum::customize::enum_range<Enum> { \
+    static constexpr bool is_flags = true;         \
   };
 
 namespace liger {
