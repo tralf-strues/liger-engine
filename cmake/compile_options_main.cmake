@@ -1,6 +1,6 @@
 set(CMAKE_CXX_STANDARD 20)
 
-set(LIGER_COMPILE_FLAGS "-std=c++20 -fno-ms-extensions")
+set(LIGER_COMPILE_FLAGS "-stdlib=libc++ -std=c++20 -fno-ms-extensions")
 
 # Debug/Release
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
