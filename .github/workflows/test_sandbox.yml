@@ -13,12 +13,12 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        cxx: [g++, clang++-15]
+        cxx: [g++, clang++]
         build_type: [Debug, Release]
 
         include:
           - os: ubuntu-latest
-            install: sudo apt-get install ninja-build clang-15 gcc libwayland-dev libxkbcommon-dev xorg-dev
+            install: sudo apt-get install ninja-build clang gcc libwayland-dev libxkbcommon-dev xorg-dev
           - os: macos-latest
             install: brew install ninja
 
