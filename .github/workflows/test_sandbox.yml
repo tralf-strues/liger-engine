@@ -31,11 +31,8 @@ jobs:
         shell: bash
         run: ${{matrix.install}}
 
-      - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v1
-        with:
-          version: "16.0"
-          env: true
+      - name: Install latest Clang
+        uses: MorganCaron/latest-clang-action@master
 
       - name: Prepare Vulkan SDK
         uses: humbletim/setup-vulkan-sdk@v1.2.0
