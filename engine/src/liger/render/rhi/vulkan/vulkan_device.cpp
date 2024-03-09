@@ -37,11 +37,8 @@
 
 #define VMA_IMPLEMENTATION
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wnullability-extension"
-#pragma GCC diagnostic ignored "-Wnullability-completeness"
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #pragma GCC diagnostic ignored "-Wunused-variable"
-#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #include <vk_mem_alloc.h>
 #pragma GCC diagnostic pop
 

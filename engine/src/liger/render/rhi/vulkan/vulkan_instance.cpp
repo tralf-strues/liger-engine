@@ -238,7 +238,7 @@ bool VulkanInstance::Init(ValidationLevel validation) {
 }
 
 std::span<const IDevice::Info> VulkanInstance::GetDeviceInfoList() const {
-  return device_info_list_;
+  return std::span<const IDevice::Info>(device_info_list_);
 }
 
 std::unique_ptr<IDevice> VulkanInstance::CreateDevice(uint32_t id, uint32_t frames_in_flight) {
@@ -267,7 +267,7 @@ std::unique_ptr<IDevice> VulkanInstance::CreateDevice(uint32_t id, uint32_t fram
     return nullptr;
   }
 
-  return std::move(device);
+  return device;
 }
 
 bool VulkanInstance::FillDeviceInfoList() {

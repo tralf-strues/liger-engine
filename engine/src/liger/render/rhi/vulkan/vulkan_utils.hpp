@@ -38,10 +38,7 @@
 
 #include <vulkan/vk_enum_string_helper.h>
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wnullability-extension"
 #include <vk_mem_alloc.h>
-#pragma GCC diagnostic pop
 
 #define VULKAN_CALL(Call)                                                              \
   {                                                                                    \

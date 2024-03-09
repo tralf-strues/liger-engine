@@ -127,8 +127,8 @@ std::optional<uint32_t> VulkanSwapchain::AcquireNext(VkSemaphore signal_semaphor
 bool VulkanSwapchain::CreateSwapchain() {
   Window& window = *GetInfo().window;
 
-  auto format          = ChooseSwapchainFormat(surface_info_.formats);
-  auto present_mode    = ChooseSwapchainPresentMode(surface_info_.present_modes, GetInfo().vsync);
+  auto format          = ChooseSwapchainFormat(std::span(surface_info_.formats));
+  auto present_mode    = ChooseSwapchainPresentMode(std::span(surface_info_.present_modes), GetInfo().vsync);
   auto extent          = VkExtent2D{window.GetFramebufferWidth(), window.GetFramebufferHeight()};
   auto min_image_count = std::max(static_cast<uint32_t>(GetInfo().min_size), surface_info_.capabilities.minImageCount);
 
