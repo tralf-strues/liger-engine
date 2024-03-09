@@ -18,9 +18,9 @@ jobs:
 
         include:
           - os: ubuntu-latest
-            install: sudo apt-get install ninja-build xorg-dev doxygen clang-15 gcc
+            install: sudo apt-get install ninja-build clang-15 gcc libwayland-dev libxkbcommon-dev xorg-dev
           - os: macos-latest
-            install: brew install ninja doxygen
+            install: brew install ninja
 
     steps:
       - uses: actions/checkout@v3
@@ -35,7 +35,7 @@ jobs:
         uses: humbletim/setup-vulkan-sdk@v1.2.0
         with:
           vulkan-query-version: latest
-          vulkan-components: Vulkan-Headers, Vulkan-Loader
+          vulkan-components: Vulkan-Loader
           vulkan-use-cache: true
 
       - name: Build
