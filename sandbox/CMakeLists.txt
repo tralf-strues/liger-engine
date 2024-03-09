@@ -5,7 +5,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/../")
 add_subdirectory(src)
 
 string(REPLACE " " ";" LIGER_COMPILE_OPTIONS "${LIGER_COMPILE_FLAGS}${LIGER_WARNING_FLAGS}")
-target_compile_options(liger PRIVATE ${LIGER_COMPILE_OPTIONS})
+target_compile_options(liger-sandbox PRIVATE ${LIGER_COMPILE_OPTIONS})
 
 target_link_libraries(liger-sandbox
   PUBLIC

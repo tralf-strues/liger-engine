@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        cxx: [g++, clang++]
+        cxx: [g++, clang++-15]
         build_type: [Debug, Release]
 
         include:
