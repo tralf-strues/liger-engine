@@ -1,25 +1,27 @@
 set(CMAKE_CXX_STANDARD 20)
 
+set(LIGER_COMPILE_FLAGS "-std=c++20 -fno-ms-extensions")
+
 # Debug/Release
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-  add_compile_options("-DLIGER_DEBUG_MODE")
+  set(LIGER_COMPILE_FLAGS "${LIGER_COMPILE_FLAGS} -DLIGER_DEBUG_MODE")
 
   if(WIN32)
-    add_compile_options("/Od")
+    set(LIGER_COMPILE_FLAGS "${LIGER_COMPILE_FLAGS} /Od")
   else()
-    add_compile_options("-g")
-    add_compile_options("-O0")
+    set(LIGER_COMPILE_FLAGS "${LIGER_COMPILE_FLAGS} -g")
+    set(LIGER_COMPILE_FLAGS "${LIGER_COMPILE_FLAGS} -O0")
   endif()
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
-  add_compile_options("-DLIGER_RELEASE_MODE")
+  set(LIGER_COMPILE_FLAGS "${LIGER_COMPILE_FLAGS} -DLIGER_RELEASE_MODE")
 
   string(REPLACE "/DNDEBUG" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
   string(REPLACE "/D_DEBUG" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 
   if(WIN32)
-    add_compile_options("/O2")
+    set(LIGER_COMPILE_FLAGS "${LIGER_COMPILE_FLAGS} /O2")
   else()
-    add_compile_options("-O2")
+    set(LIGER_COMPILE_FLAGS "${LIGER_COMPILE_FLAGS} -O2")
   endif()
 endif()
 
@@ -37,7 +39,7 @@ endif()
 
 if(LIGER_BUILD_WITH_ASAN)
   message("-- Address sanitizer enabled")
-  add_compile_options("-fsanitize=address")
+  set(LIGER_COMPILE_FLAGS "${LIGER_COMPILE_FLAGS} -fsanitize=address")
   add_link_options("-fsanitize=address")
 else()
   message("-- Address sanitizer disabled")
@@ -45,7 +47,7 @@ endif()
 
 if(LIGER_BUILD_WITH_TSAN)
   message("-- Thread sanitizer enabled")
-  add_compile_options("-fsanitize=thread")
+  set(LIGER_COMPILE_FLAGS "${LIGER_COMPILE_FLAGS} -fsanitize=thread")
   add_link_options("-fsanitize=thread")
 else()
   message("-- Thread sanitizer disabled")
