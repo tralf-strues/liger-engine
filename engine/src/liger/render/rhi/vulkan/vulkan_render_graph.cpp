@@ -845,8 +845,7 @@ void VulkanRenderGraph::CreateSemaphores() {
 }
 
 void VulkanRenderGraph::DumpGraphviz(std::string_view filename) {
-  std::ofstream os;
-  os.open(filename);
+  std::ofstream os(filename.data(), std::ios::out);
 
   fmt::print(os,
              "digraph {{\n"

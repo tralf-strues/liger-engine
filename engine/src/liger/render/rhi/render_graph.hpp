@@ -33,6 +33,7 @@
 #include <liger/render/rhi/dependent_texture_info.hpp>
 #include <liger/render/rhi/resource_version_registry.hpp>
 
+#include <memory>
 #include <optional>
 #include <string_view>
 #include <unordered_map>
