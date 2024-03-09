@@ -18,7 +18,7 @@ jobs:
 
         include:
           - os: ubuntu-latest
-            install: sudo apt-get install ninja-build clang gcc libwayland-dev libxkbcommon-dev xorg-dev
+            install: sudo apt-get install ninja-build libwayland-dev libxkbcommon-dev xorg-dev
           - os: macos-latest
             install: brew install ninja
 
@@ -30,6 +30,12 @@ jobs:
       - name: Install dependencies
         shell: bash
         run: ${{matrix.install}}
+
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "16.0"
+          env: true
 
       - name: Prepare Vulkan SDK
         uses: humbletim/setup-vulkan-sdk@v1.2.0
