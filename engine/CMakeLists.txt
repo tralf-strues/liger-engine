@@ -4,8 +4,10 @@ include("${CMAKE_HOME_DIRECTORY}/cmake/compile_options_warnings.cmake")
 add_subdirectory(third_party)
 add_subdirectory(src)
 
-string(REPLACE " " ";" LIGER_COMPILE_OPTIONS "${LIGER_COMPILE_FLAGS} ${LIGER_WARNING_FLAGS}")
+string(REPLACE " " ";" LIGER_COMPILE_OPTIONS "${LIGER_COMPILE_FLAGS}${LIGER_WARNING_FLAGS}")
 target_compile_options(liger PRIVATE ${LIGER_COMPILE_OPTIONS})
+
+message("LIGER_COMPILE_OPTIONS: ${LIGER_COMPILE_OPTIONS}")
 
 target_include_directories(liger PUBLIC "third_party/taskflow")
 

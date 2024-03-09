@@ -1,6 +1,12 @@
 set(CMAKE_CXX_STANDARD 20)
 
+message("Compiler ID C++: ${CMAKE_CXX_COMPILER_ID}")
+
 set(LIGER_COMPILE_FLAGS "-std=c++20 -fno-ms-extensions")
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  set(LIGER_COMPILE_FLAGS "${LIGER_COMPILE_FLAGS} -stdlib=libc++")
+endif()
 
 # Debug/Release
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
