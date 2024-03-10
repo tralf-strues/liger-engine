@@ -32,6 +32,7 @@ jobs:
         run: ${{matrix.install}}
 
       - name: Install latest Clang
+        if: ${{ matrix.os }} == macos-latest
         uses: MorganCaron/latest-clang-action@master
 
       - name: Prepare Vulkan SDK
