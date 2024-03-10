@@ -31,9 +31,9 @@ jobs:
         shell: bash
         run: ${{matrix.install}}
 
-      - name: Install latest Clang
-        if: ${{ matrix.os }} == macos-latest
-        uses: MorganCaron/latest-clang-action@master
+      # - name: Install latest Clang
+      #   if: ${{ matrix.os }} == macos-latest
+      #   uses: MorganCaron/latest-clang-action@master
 
       - name: Prepare Vulkan SDK
         uses: humbletim/setup-vulkan-sdk@v1.2.0
