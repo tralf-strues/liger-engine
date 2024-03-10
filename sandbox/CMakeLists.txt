@@ -14,5 +14,10 @@ target_link_libraries(liger-sandbox
     fmt
     glfw
     glm
+    magic_enum
+    VulkanMemoryAllocator
+    vulkan-headers
+    vulkan-utility-libraries
+    volk
     yaml-cpp
   )

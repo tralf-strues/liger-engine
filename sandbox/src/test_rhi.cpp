@@ -26,6 +26,7 @@
  */
 
 #include <fstream>
+#include <iostream>
 #include <liger/core/enum_reflection.hpp>
 #include <liger/core/log/default_log.hpp>
 #include <liger/core/platform/platform_layer.hpp>
