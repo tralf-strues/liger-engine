@@ -18,7 +18,7 @@ jobs:
 
         include:
           - os: ubuntu-latest
-            install: sudo apt-get install ninja-build libwayland-dev libxkbcommon-dev xorg-dev
+            install: sudo apt-get install ninja-build gcc clang libwayland-dev libxkbcommon-dev xorg-dev
           - os: macos-latest
             install: brew install ninja
 
