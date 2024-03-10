@@ -30,8 +30,8 @@
 #include <liger/core/enum_reflection.hpp>
 #include <liger/core/log/default_log.hpp>
 #include <liger/core/platform/platform_layer.hpp>
-#include <liger/render/rhi/instance.hpp>
-#include <liger/render/rhi/shader_alignment.hpp>
+#include <liger/rhi/instance.hpp>
+#include <liger/rhi/shader_alignment.hpp>
 
 struct ParticleSystem {
   /* Emission */
