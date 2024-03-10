@@ -25,9 +25,9 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "liger/core/log/log.hpp"
+#include <liger/core/log/log.hpp>
 
-using namespace liger;
+namespace liger {
 
 void Log::AddWriter(std::unique_ptr<ILogWriter> writer) { writers_.emplace_back(std::move(writer)); }
 
@@ -39,3 +39,5 @@ void Log::OnMessageAdded() {
     writer->OnMessageAdded(messages_.back());
   }
 }
+
+}  // namespace liger

@@ -29,14 +29,12 @@
 
 #include <GLFW/glfw3.h>
 
-#include "liger/core/types.hpp"
-
 namespace liger {
 
-enum class Key : uint16;
-enum class PressAction : uint8;
-enum class KeyModifier : uint8;
-using KeyMods = EnumBitMask<KeyModifier, uint8>;
+enum class Key : uint16_t;
+enum class PressAction : uint8_t;
+enum class KeyModifier : uint8_t;
+using KeyMods = KeyModifier;
 
 struct KeyEvent {
   Key         key;
@@ -44,13 +42,13 @@ struct KeyEvent {
   KeyMods     mods;
 };
 
-enum class PressAction : uint8 {
+enum class PressAction : uint8_t {
   kRelease = GLFW_RELEASE,
   kPress   = GLFW_PRESS,
   kHold    = GLFW_REPEAT
 };
 
-enum class KeyModifier : uint8 {
+enum class KeyModifier : uint8_t {
   kShift    = GLFW_MOD_SHIFT,
   kControl  = GLFW_MOD_CONTROL,
   kAlt      = GLFW_MOD_ALT,
@@ -59,9 +57,9 @@ enum class KeyModifier : uint8 {
   kNumLock  = GLFW_MOD_NUM_LOCK,
 };
 
-using KeyMods = EnumBitMask<KeyModifier, uint8>;
+using KeyMods = KeyModifier;
 
-enum class Key : uint16 {
+enum class Key : uint16_t {
   kA = GLFW_KEY_A,
   kB = GLFW_KEY_B,
   kC = GLFW_KEY_C,

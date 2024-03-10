@@ -1,0 +1,16 @@
+set(LIGER_WARNING_FLAGS "")
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+  set(LIGER_WARNING_FLAGS "${LIGER_WARNING_FLAGS} /Wall")
+else()
+  set(LIGER_WARNING_FLAGS "${LIGER_WARNING_FLAGS} -Wall")
+  set(LIGER_WARNING_FLAGS "${LIGER_WARNING_FLAGS} -Wextra")
+  set(LIGER_WARNING_FLAGS "${LIGER_WARNING_FLAGS} -Wpedantic")
+  set(LIGER_WARNING_FLAGS "${LIGER_WARNING_FLAGS} -Wno-missing-field-initializers")
+  set(LIGER_WARNING_FLAGS "${LIGER_WARNING_FLAGS} -Wno-nullability-extension")
+  set(LIGER_WARNING_FLAGS "${LIGER_WARNING_FLAGS} -Wno-nullability-completeness")
+endif()
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  set(LIGER_COMPILE_FLAGS "${LIGER_COMPILE_FLAGS} -Wno-changes-meaning")
+endif()

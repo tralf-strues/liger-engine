@@ -27,9 +27,19 @@
 
 #pragma once
 
-#include <initializer_list>
+#include <type_traits>
 
-#include "liger/core/types.hpp"
+#include <magic_enum_flags.hpp>
+
+#define ENABLE_ENUM_BITMASK(Enum)                  \
+  template <>                                      \
+  struct liger::EnumEnableBitmask<Enum> {          \
+    static constexpr bool kEnabled = true;         \
+  };                                               \
+  template <>                                      \
+  struct magic_enum::customize::enum_range<Enum> { \
+    static constexpr bool is_flags = true;         \
+  };
 
 namespace liger {
 
@@ -40,91 +50,54 @@ namespace liger {
  * @param  bit Index of the bit to be set
  * @return 1 << bit
  */
-template <typename T>
-constexpr T Bit(uint32 bit);
+template <typename T = std::uint32_t>
+inline constexpr T Bit(std::uint32_t bit) { return 1 << bit; }
 
-/**
- * @brief Convenience struct for storing a bit mask of the specified enum class values.
- * 
- * @code{.cpp}
- * enum class Fruit : uint8 {
- *   kApple     = 0x01,
- *   kPineapple = 0x02,
- *   kPeach     = 0x04,
- * };
- * using FruitsMask = EnumBitMask<Fruit, uint8>
- * 
- * // ...
- * 
- * FruitsMask mask{Fruit::kApple, Fruit::kPeach};  // mask = 0b0000'0101
- * mask &= Fruit::kPeach;                          // mask = 0b0000'0100
- * mask |= Fruit::kPineapple;                      // mask = 0b0000'0110
- * @endcode
- * 
- * @tparam EnumT 
- * @tparam UnderlyingT 
- */
-template <typename EnumT, typename UnderlyingT = uint32>
-struct EnumBitMask {
-  UnderlyingT mask{0};
-
-  EnumBitMask() = default;
-  explicit EnumBitMask(UnderlyingT mask);
-  EnumBitMask(std::initializer_list<EnumT> enum_values);
-
-  EnumBitMask& operator|=(EnumT enum_value);
-  EnumBitMask& operator&=(EnumT enum_value);
-
-  EnumBitMask& operator|=(EnumBitMask other);
-  EnumBitMask& operator&=(EnumBitMask other);
+template <typename Enum>
+struct EnumEnableBitmask {
+  static constexpr bool kEnabled = false;
 };
 
-template <typename EnumT, typename UnderlyingT>
-EnumBitMask<EnumT, UnderlyingT>::EnumBitMask(UnderlyingT mask) : mask(mask) {}
-
-template <typename EnumT, typename UnderlyingT>
-EnumBitMask<EnumT, UnderlyingT>::EnumBitMask(std::initializer_list<EnumT> enum_values) {
-  for (const auto enum_value : enum_values) {
-    mask |= static_cast<UnderlyingT>(enum_value);
-  }
-}
-
-template <typename EnumT, typename UnderlyingT>
-EnumBitMask<EnumT, UnderlyingT>& EnumBitMask<EnumT, UnderlyingT>::operator|=(EnumT enum_value) {
-  mask |= static_cast<UnderlyingT>(enum_value);
-  return *this;
-}
-
-template <typename EnumT, typename UnderlyingT>
-EnumBitMask<EnumT, UnderlyingT>& EnumBitMask<EnumT, UnderlyingT>::operator&=(EnumT enum_value) {
-  mask &= static_cast<UnderlyingT>(enum_value);
-  return *this;
-}
-
-template <typename EnumT, typename UnderlyingT>
-EnumBitMask<EnumT, UnderlyingT>& EnumBitMask<EnumT, UnderlyingT>::operator|=(EnumBitMask<EnumT, UnderlyingT> other) {
-  mask |= other.mask;
-  return *this;
-}
-
-template <typename EnumT, typename UnderlyingT>
-EnumBitMask<EnumT, UnderlyingT>& EnumBitMask<EnumT, UnderlyingT>::operator&=(EnumBitMask<EnumT, UnderlyingT> other) {
-  mask &= other.mask;
-  return *this;
-}
-
-template <typename EnumT, typename UnderlyingT>
-EnumBitMask<EnumT, UnderlyingT> operator|(EnumBitMask<EnumT, UnderlyingT> lhs, EnumBitMask<EnumT, UnderlyingT> rhs) {
-  EnumBitMask<EnumT, UnderlyingT> result = lhs;
-  result |= rhs;
-  return result;
-}
-
-template <typename EnumT, typename UnderlyingT>
-EnumBitMask<EnumT, UnderlyingT> operator&(EnumBitMask<EnumT, UnderlyingT> lhs, EnumBitMask<EnumT, UnderlyingT> rhs) {
-  EnumBitMask<EnumT, UnderlyingT> result = lhs;
-  result &= rhs;
-  return result;
-}
-
 }  // namespace liger
+
+template <typename Enum>
+requires liger::EnumEnableBitmask<Enum>::kEnabled
+inline constexpr Enum operator|(Enum lhs, Enum rhs) {
+  using UnderlyingType = typename std::underlying_type<Enum>::type;
+  return static_cast<Enum>(static_cast<UnderlyingType>(lhs) | static_cast<UnderlyingType>(rhs));
+}
+
+template <typename Enum>
+requires liger::EnumEnableBitmask<Enum>::kEnabled
+inline constexpr Enum operator&(Enum lhs, Enum rhs) {
+  using UnderlyingType = typename std::underlying_type<Enum>::type;
+  return static_cast<Enum>(static_cast<UnderlyingType>(lhs) & static_cast<UnderlyingType>(rhs));
+}
+
+template <typename Enum>
+requires liger::EnumEnableBitmask<Enum>::kEnabled
+inline constexpr Enum operator^(Enum lhs, Enum rhs) {
+  using UnderlyingType = typename std::underlying_type<Enum>::type;
+  return static_cast<Enum>(static_cast<UnderlyingType>(lhs) ^ static_cast<UnderlyingType>(rhs));
+}
+
+template <typename Enum>
+requires liger::EnumEnableBitmask<Enum>::kEnabled
+inline constexpr Enum operator~(Enum lhs) {
+  using UnderlyingType = typename std::underlying_type<Enum>::type;
+  return static_cast<Enum>(~static_cast<UnderlyingType>(lhs));
+}
+
+template <typename Enum>
+requires liger::EnumEnableBitmask<Enum>::kEnabled
+inline constexpr Enum operator|=(Enum& lhs, Enum rhs) {
+  using UnderlyingType = typename std::underlying_type<Enum>::type;
+  lhs = static_cast<Enum>(static_cast<UnderlyingType>(lhs) | static_cast<UnderlyingType>(rhs));
+  return lhs;
+}
+
+template <typename Enum>
+requires liger::EnumEnableBitmask<Enum>::kEnabled
+inline constexpr bool EnumBitmaskContains(Enum lhs, Enum rhs) {
+  return static_cast<uint64_t>(lhs & rhs) == static_cast<uint64_t>(rhs);
+}

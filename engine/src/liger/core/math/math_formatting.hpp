@@ -26,8 +26,7 @@
  */
 
 #include <fmt/core.h>
-
-#include "liger/core/types.hpp"
+#include <glm/glm.hpp>
 
 template <>
 struct fmt::formatter<glm::vec2> {

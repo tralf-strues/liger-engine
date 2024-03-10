@@ -27,11 +27,12 @@
 
 #pragma once
 
-#include "liger/core/platform/keyboard.hpp"
+#include <liger/core/math/math.hpp>
+#include <liger/core/platform/keyboard.hpp>
 
 namespace liger {
 
-enum class MouseButton : uint8 {
+enum class MouseButton : uint8_t {
   kLeft,
   kRight,
   kMiddle,
@@ -43,15 +44,25 @@ struct MouseScrollEvent {
 };
 
 struct MouseMoveEvent {
-  glm::vec2 new_position;  ///< New cursor position relative to the top-left corner of the window
-  glm::vec2 delta;         ///< Delta cursor position
+  /** @brief New cursor position relative to the top-left corner of the window */
+  glm::vec2 new_position;
+
+  /** @brief Delta cursor position */
+  glm::vec2 delta;
 };
 
 struct MouseButtonEvent {
-  MouseButton button;             ///< Mouse button type
-  uint8       custom_button_num;  ///< Custom mouse button number in case button = MouseButton::kCustom
-  PressAction action;             ///< Type of mouse button action
-  KeyMods     mods;               ///< Keyboard key modifiers
+  /** @brief Mouse button type */
+  MouseButton button;
+
+  /** @brief Custom mouse button number in case button = MouseButton::kCustom */
+  uint8_t custom_button_num;
+
+  /** @brief Type of mouse button action */
+  PressAction action;
+
+  /** @brief Keyboard key modifiers */
+  KeyMods mods;
 };
 
 }  // namespace liger

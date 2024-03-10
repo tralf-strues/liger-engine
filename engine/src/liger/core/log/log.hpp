@@ -29,8 +29,10 @@
 
 #include <fmt/core.h>
 
-#include "liger/core/log/log_message.hpp"
-#include "liger/core/log/log_writer.hpp"
+#include <liger/core/log/log_message.hpp>
+#include <liger/core/log/log_writer.hpp>
+
+#include <vector>
 
 namespace liger {
 
@@ -41,11 +43,11 @@ class Log {
  public:
   using MessageIterator = std::vector<LogMessage>::const_iterator;
 
- public:
   void AddWriter(std::unique_ptr<ILogWriter> writer);
 
   template <typename... Args>
-  void Message(LogLevel level, uint64 channel, Args&&... args);
+  void Message(LogLevel level, std::string_view source, std::string_view channel, std::string_view format,
+               Args&&... args);
 
   MessageIterator begin() const;
   MessageIterator end() const;
@@ -53,14 +55,14 @@ class Log {
  private:
   void OnMessageAdded();
 
- private:
-  std::vector<LogMessage> messages_;
+  std::vector<LogMessage>                  messages_;
   std::vector<std::unique_ptr<ILogWriter>> writers_;
 };
 
 template <typename... Args>
-void Log::Message(LogLevel level, uint64 channel, Args&&... args) {
-  messages_.emplace_back(level, channel, std::move(fmt::format(args...)));
+void Log::Message(LogLevel level, std::string_view source, std::string_view channel, std::string_view format,
+                  Args&&... args) {
+  messages_.emplace_back(level, source, channel, std::move(fmt::format(fmt::runtime(format), args...)));
   OnMessageAdded();
 }
 

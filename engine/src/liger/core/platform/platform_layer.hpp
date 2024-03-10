@@ -27,9 +27,10 @@
 
 #pragma once
 
-#include "liger/core/platform/keyboard.hpp"
-#include "liger/core/platform/mouse.hpp"
-#include "liger/core/platform/window.hpp"
+#include <liger/core/event/event_dispatcher.hpp>
+#include <liger/core/platform/keyboard.hpp>
+#include <liger/core/platform/mouse.hpp>
+#include <liger/core/platform/window.hpp>
 
 namespace liger {
 
@@ -48,7 +49,7 @@ class PlatformLayer {
   /************************************************************************************************
    * Window
    ************************************************************************************************/
-  Window* CreateWindow(uint32 width, uint32 height, cstring title);
+  std::unique_ptr<Window> CreateWindow(uint32_t width, uint32_t height, std::string_view title);
 
   /************************************************************************************************
    * Input
@@ -63,15 +64,14 @@ class PlatformLayer {
 
   static void WindowCloseCallback(GLFWwindow* window);
 
-  static void KeyCallback(GLFWwindow* window, int32 key, int32 scancode, int32 action, int32 mods);
+  static void KeyCallback(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action, int32_t mods);
   static void ScrollCallback(GLFWwindow* window, double dx, double dy);
   static void MouseMoveCallback(GLFWwindow* window, double x, double y);
-  static void MouseButtonCallback(GLFWwindow* window, int32 button, int32 action, int32 mods);
+  static void MouseButtonCallback(GLFWwindow* window, int32_t button, int32_t action, int32_t mods);
 
- private:
-  EventDispatcher& dispatcher_;
+  EventDispatcher&                           dispatcher_;
   std::unordered_map<GLFWwindow*, glm::vec2> prev_mouse_pos_;
-  std::unordered_map<GLFWwindow*, Window*> window_wrapper_;
+  std::unordered_map<GLFWwindow*, Window*>   window_wrapper_;
 };
 
 }  // namespace liger

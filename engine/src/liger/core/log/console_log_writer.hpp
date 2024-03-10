@@ -27,11 +27,12 @@
 
 #pragma once
 
+#include <liger/core/log/log_writer.hpp>
+
 #include <fmt/color.h>
 #include <fmt/core.h>
 #include <fmt/ostream.h>
-
-#include "liger/core/log/log_writer.hpp"
+#include <map>
 
 namespace liger {
 
@@ -42,6 +43,9 @@ class ConsoleLogWriter : public ILogWriter {
  public:
   struct Style {
     fmt::text_style default_style{};
+    fmt::text_style source_style{};
+
+    bool write_source{true};
 
     bool write_level{true};
     bool use_level_style_for_entire_message{true};
@@ -49,11 +53,9 @@ class ConsoleLogWriter : public ILogWriter {
     std::map<LogLevel, std::string> level_names;
 
     bool write_channel{true};
-    std::map<uint64, std::string> channel_names;
   };
 
- public:
-  explicit ConsoleLogWriter(const Style& style);
+  explicit ConsoleLogWriter(Style style);
   ~ConsoleLogWriter() override = default;
 
   void SetStyle(const Style& style);
@@ -65,14 +67,9 @@ class ConsoleLogWriter : public ILogWriter {
   const fmt::text_style& GetTextStyle(LogLevel level) const;
 
   const fmt::text_style& GetLevelStyle(LogLevel level) const;
-  cstring GetLevelName(LogLevel level) const;
+  const char* GetLevelName(LogLevel level) const;
 
-  cstring GetChannelName(uint64 channel) const;
-
- private:
   Style style_;
 };
-
-extern const ConsoleLogWriter::Style kDefaultConsoleLogStyle;
 
 }  // namespace liger

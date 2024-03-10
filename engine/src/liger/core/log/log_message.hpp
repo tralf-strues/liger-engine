@@ -27,20 +27,31 @@
 
 #pragma once
 
-#include "liger/core/log/log_level.hpp"
-#include "liger/core/types.hpp"
+#include <cstdint>
+#include <string>
+#include <string_view>
 
 namespace liger {
 
+enum class LogLevel : uint32_t { kInfo, kTrace, kWarning, kError, kFatal };
+
 struct LogMessage {
-  LogLevel    level   {LogLevel::kInfo};  ///< Describes the importance of the message
-  uint64      channel {0};                ///< Allows user-driven channels support (used e.g. for filtering messages)
-  std::string message {"-"};              ///< Message string itself
+  /** @brief Source of the message (e.g. source file/line, etc.) */
+  std::string source;
+
+  /** @brief Describes the importance of the message */
+  LogLevel level{LogLevel::kInfo};
+
+  /** @brief Allows user-driven channels support (used e.g. for filtering messages) */
+  std::string channel;
+
+  /** @brief Message string itself */
+  std::string message;
 
   LogMessage() = default;
 
-  explicit LogMessage(LogLevel level, uint64 channel, const std::string_view message);
-  explicit LogMessage(LogLevel level, uint64 channel, std::string&& message);
+  explicit LogMessage(LogLevel level, std::string_view source, std::string_view channel, std::string_view message);
+  explicit LogMessage(LogLevel level, std::string&& source, std::string&& channel, std::string&& message);
 };
 
 }  // namespace liger

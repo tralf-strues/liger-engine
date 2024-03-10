@@ -27,7 +27,8 @@
 
 #pragma once
 
-#include "liger/core/types.hpp"
+#include <chrono>
+#include <string>
 
 namespace liger {
 
@@ -69,9 +70,9 @@ class ScopedTimer {
  public:
   /**
    * @param channel Log channel for the timer.
-   * @param name    Message to log upon destruction.
+   * @param message Message to log upon destruction.
    */
-  explicit ScopedTimer(uint64 channel, const std::string& name);
+  explicit ScopedTimer(std::string_view channel, std::string_view message);
 
   /**
    * @brief Logs the lifetime of the object with specified log channel and name.
@@ -79,8 +80,8 @@ class ScopedTimer {
   ~ScopedTimer();
 
  private:
-  uint64      channel_;
-  std::string name_;
+  std::string channel_;
+  std::string message_;
   Timer       timer_;
 };
 

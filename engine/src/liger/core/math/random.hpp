@@ -27,7 +27,8 @@
 
 #pragma once
 
-#include "liger/core/types.hpp"
+#include <glm/glm.hpp>
+#include <random>
 
 namespace liger {
 
@@ -43,7 +44,6 @@ class Random {
  private:
   Random();
 
- private:
   std::random_device device_;
   std::mt19937       generator_;
 

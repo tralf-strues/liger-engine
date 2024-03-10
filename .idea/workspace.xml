@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="CMakePresetLoader"><![CDATA[{
+  "useNewFormat": true
+}]]></component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a9c49a74-8ab6-45d5-8ca3-035837be8156" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.clang-format" beforeDir="false" afterPath="$PROJECT_DIR$/.clang-format" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitmodules" beforeDir="false" afterPath="$PROJECT_DIR$/.gitmodules" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/compile_options_main.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake/compile_options_main.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/annotated.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/annotated.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/annotated_dup.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/annotated_dup.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/callback_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/callback_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/callback_8hpp.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/callback_8hpp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/callback_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/callback_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/callback_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/callback_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/callback_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/callback_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/callback_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/callback_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/callback_8hpp__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/callback_8hpp__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/callback_8hpp__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/callback_8hpp__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/callback_8hpp__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/callback_8hpp__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/callback_8hpp__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/callback_8hpp__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/callback_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/callback_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/classes.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/classes.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/classliger_1_1_platform_layer.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/classliger_1_1_platform_layer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/classliger_1_1_random.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/classliger_1_1_random.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/classliger_1_1_scoped_timer.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/classliger_1_1_scoped_timer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/classliger_1_1_timer.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/classliger_1_1_timer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/classliger_1_1_window.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/classliger_1_1_window.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/console__log__writer_8cpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/console__log__writer_8cpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/console__log__writer_8cpp__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/console__log__writer_8cpp__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/console__log__writer_8cpp__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/console__log__writer_8cpp__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/console__log__writer_8cpp__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/console__log__writer_8cpp__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/console__log__writer_8cpp__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/console__log__writer_8cpp__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/console__log__writer_8cpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/console__log__writer_8cpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/console__log__writer_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/core_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/core_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/core_8hpp__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/core_8hpp__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/core_8hpp__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/core_8hpp__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/core_8hpp__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/core_8hpp__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/core_8hpp__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/core_8hpp__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/core_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/core_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/default__log_8cpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/default__log_8cpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/default__log_8cpp__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/default__log_8cpp__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/default__log_8cpp__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/default__log_8cpp__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/default__log_8cpp__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/default__log_8cpp__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/default__log_8cpp__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/default__log_8cpp__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/default__log_8cpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/default__log_8cpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/default__log_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/default__log_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/default__log_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/default__log_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/default__log_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/default__log_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/default__log_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/default__log_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/default__log_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/default__log_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/default__log_8hpp__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/default__log_8hpp__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/default__log_8hpp__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/default__log_8hpp__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/default__log_8hpp__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/default__log_8hpp__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/default__log_8hpp__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/default__log_8hpp__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/default__log_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/default__log_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_000000_000007.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_000000_000007.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_000000_000008.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_000000_000008.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_6dd9f77f40155350fa52c5e6a31bebf7.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_6dd9f77f40155350fa52c5e6a31bebf7.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_6dd9f77f40155350fa52c5e6a31bebf7_dep.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_6dd9f77f40155350fa52c5e6a31bebf7_dep.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_6dd9f77f40155350fa52c5e6a31bebf7_dep.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_6dd9f77f40155350fa52c5e6a31bebf7_dep.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_6dd9f77f40155350fa52c5e6a31bebf7_dep.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_6dd9f77f40155350fa52c5e6a31bebf7_dep.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_6dd9f77f40155350fa52c5e6a31bebf7_dep_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_6dd9f77f40155350fa52c5e6a31bebf7_dep_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_b79d3eb1e553caba3795359e61b8e138.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_b79d3eb1e553caba3795359e61b8e138.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_b79d3eb1e553caba3795359e61b8e138_dep.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_b79d3eb1e553caba3795359e61b8e138_dep.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_b79d3eb1e553caba3795359e61b8e138_dep.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_b79d3eb1e553caba3795359e61b8e138_dep.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_b79d3eb1e553caba3795359e61b8e138_dep.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_b79d3eb1e553caba3795359e61b8e138_dep.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_b79d3eb1e553caba3795359e61b8e138_dep_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_b79d3eb1e553caba3795359e61b8e138_dep_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_bf657e2376c4e6f050f9c84fca518581.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_bf657e2376c4e6f050f9c84fca518581.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_bf657e2376c4e6f050f9c84fca518581.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_bf657e2376c4e6f050f9c84fca518581.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_bf657e2376c4e6f050f9c84fca518581_dep.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_bf657e2376c4e6f050f9c84fca518581_dep.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_bf657e2376c4e6f050f9c84fca518581_dep.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_bf657e2376c4e6f050f9c84fca518581_dep.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_bf657e2376c4e6f050f9c84fca518581_dep.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_bf657e2376c4e6f050f9c84fca518581_dep.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_bf657e2376c4e6f050f9c84fca518581_dep_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_bf657e2376c4e6f050f9c84fca518581_dep_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_f2fdbd745c0d6e6eb4e34e31c74fc19e.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_f2fdbd745c0d6e6eb4e34e31c74fc19e.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_f2fdbd745c0d6e6eb4e34e31c74fc19e_dep.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_f2fdbd745c0d6e6eb4e34e31c74fc19e_dep.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_f2fdbd745c0d6e6eb4e34e31c74fc19e_dep.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_f2fdbd745c0d6e6eb4e34e31c74fc19e_dep.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_f2fdbd745c0d6e6eb4e34e31c74fc19e_dep.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_f2fdbd745c0d6e6eb4e34e31c74fc19e_dep.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/dir_f2fdbd745c0d6e6eb4e34e31c74fc19e_dep_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/dir_f2fdbd745c0d6e6eb4e34e31c74fc19e_dep_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/enum__bitmask_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/enum__class_8cpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/enum__class_8cpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/enum__class_8cpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/enum__class_8cpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/enum__class_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/enum__class_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/enum__class_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/enum__class_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/enum__class_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/enum__class_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/enum__class_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/enum__class_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/enum__class_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/enum__class_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/enum__class_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/enum__class_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__dispatcher_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__sink_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__sink_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__sink_8hpp.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__sink_8hpp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__sink_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__sink_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__sink_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__sink_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__sink_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__sink_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__sink_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__sink_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__sink_8hpp__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__sink_8hpp__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__sink_8hpp__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__sink_8hpp__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__sink_8hpp__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__sink_8hpp__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__sink_8hpp__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__sink_8hpp__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__sink_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__sink_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__type_8cpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__type_8cpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__type_8cpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__type_8cpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__type_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__type_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__type_8hpp.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__type_8hpp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__type_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__type_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__type_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__type_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__type_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__type_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__type_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__type_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/event__type_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/event__type_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/files.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/files.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/functions.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/functions.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/functions_func.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/functions_func.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/functions_vars.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/functions_vars.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/hierarchy.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/hierarchy.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/hierarchy.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/hierarchy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_10.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_10.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_10.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_10.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_10.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_10.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_11.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_11.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_11.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_11.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_11.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_11.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_12.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_12.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_12.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_12.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_12.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_12.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_13.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_13.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_13.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_13.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_13.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_13.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_14.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_14.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_14.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_14.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_14.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_14.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_15.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_15.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_15.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_15.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_15.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_15.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_16.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_16.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_16.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_16.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_16.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_16.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_17.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_17.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_17.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_17.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_17.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_17.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_18.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_18.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_18.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_18.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_18.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_18.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_19.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_19.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_19.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_19.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_19.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_19.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_2.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_2.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_2.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_2.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_2.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_2.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_20.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_20.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_20.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_20.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_20.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_20.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_21.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_21.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_21.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_21.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_21.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_21.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_22.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_22.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_22.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_22.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_22.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_22.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_23.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_23.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_23.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_23.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_23.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_23.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_24.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_24.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_24.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_24.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_24.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_24.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_3.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_3.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_3.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_3.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_3.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_3.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_4.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_4.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_4.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_4.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_4.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_4.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_5.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_5.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_5.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_5.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_5.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_5.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_6.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_6.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_6.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_6.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_6.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_6.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_7.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_7.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_7.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_7.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_7.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_7.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_8.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_8.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_8.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_8.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_8.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_8.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_9.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_9.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_9.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_9.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherit_graph_9.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherit_graph_9.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/inherits.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/inherits.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/keyboard_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/keyboard_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/keyboard_8hpp.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/keyboard_8hpp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/keyboard_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/keyboard_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/keyboard_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/keyboard_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/keyboard_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/keyboard_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/keyboard_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/keyboard_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/keyboard_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/keyboard_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log_8cpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log_8cpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log_8cpp__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log_8cpp__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log_8cpp__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log_8cpp__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log_8cpp__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log_8cpp__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log_8cpp__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log_8cpp__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log_8cpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log_8cpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log_8hpp.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log_8hpp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log_8hpp__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log_8hpp__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log_8hpp__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log_8hpp__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log_8hpp__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log_8hpp__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log_8hpp__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log_8hpp__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__channels_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__channels_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__level_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__level_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__level_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__level_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__level_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__level_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__level_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__level_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__level_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__level_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__level_8hpp__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__level_8hpp__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__level_8hpp__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__level_8hpp__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__level_8hpp__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__level_8hpp__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__level_8hpp__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__level_8hpp__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__level_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__level_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__message_8cpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__message_8cpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__message_8cpp__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__message_8cpp__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__message_8cpp__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__message_8cpp__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__message_8cpp__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__message_8cpp__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__message_8cpp__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__message_8cpp__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__message_8cpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__message_8cpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__message_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__message_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__message_8hpp.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__message_8hpp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__message_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__message_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__message_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__message_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__message_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__message_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__message_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__message_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__message_8hpp__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__message_8hpp__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__message_8hpp__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__message_8hpp__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__message_8hpp__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__message_8hpp__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__message_8hpp__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__message_8hpp__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__message_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__message_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__writer_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__writer_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__writer_8hpp.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__writer_8hpp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__writer_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__writer_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__writer_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__writer_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__writer_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__writer_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__writer_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__writer_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__writer_8hpp__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__writer_8hpp__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__writer_8hpp__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__writer_8hpp__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__writer_8hpp__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__writer_8hpp__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__writer_8hpp__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__writer_8hpp__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/log__writer_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/log__writer_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/math__formatting_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/math__formatting_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/math__formatting_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/math__formatting_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/math__formatting_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/math__formatting_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/math__formatting_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/math__formatting_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/math__formatting_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/math__formatting_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/math__formatting_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/math__formatting_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/menudata.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/menudata.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/mouse_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/mouse_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/mouse_8hpp.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/mouse_8hpp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/mouse_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/mouse_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/mouse_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/mouse_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/mouse_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/mouse_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/mouse_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/mouse_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/mouse_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/mouse_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/navtreedata.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/navtreedata.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/navtreeindex0.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/navtreeindex0.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/platform__layer_8cpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/platform__layer_8cpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/platform__layer_8cpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/platform__layer_8cpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/platform__layer_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/platform__layer_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/platform__layer_8hpp.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/platform__layer_8hpp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/platform__layer_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/platform__layer_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/platform__layer_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/platform__layer_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/platform__layer_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/platform__layer_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/platform__layer_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/platform__layer_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/platform__layer_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/platform__layer_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/random_8cpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/random_8cpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/random_8cpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/random_8cpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/random_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/random_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/random_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/random_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/random_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/random_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/random_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/random_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/random_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/random_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/random_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/random_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/all_0.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/all_0.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/all_1.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/all_1.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/all_10.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/all_10.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/all_11.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/all_11.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/all_12.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/all_12.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/all_2.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/all_2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/all_3.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/all_3.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/all_4.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/all_4.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/all_5.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/all_5.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/all_6.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/all_6.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/all_7.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/all_7.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/all_8.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/all_8.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/all_9.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/all_9.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/all_a.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/all_a.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/all_b.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/all_b.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/all_c.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/all_c.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/all_d.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/all_d.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/all_e.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/all_e.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/all_f.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/all_f.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/classes_0.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/classes_0.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/classes_1.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/classes_1.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/classes_2.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/classes_2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/classes_3.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/classes_3.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/classes_4.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/classes_4.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/classes_5.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/classes_5.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/classes_6.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/classes_6.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/classes_7.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/classes_7.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/classes_8.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/classes_8.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/classes_9.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/classes_9.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/classes_a.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/classes_a.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/classes_b.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/classes_b.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/files_0.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/files_0.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/files_1.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/files_1.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/files_2.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/files_2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/files_3.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/files_3.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/files_4.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/files_4.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/files_5.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/files_5.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/files_6.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/files_6.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/files_7.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/files_7.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/files_8.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/files_8.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/files_9.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/files_9.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/files_a.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/files_a.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/functions_0.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/functions_0.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/functions_1.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/functions_1.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/functions_2.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/functions_2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/functions_3.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/functions_3.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/functions_4.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/functions_4.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/functions_5.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/functions_5.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/functions_6.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/functions_6.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/functions_7.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/functions_7.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/functions_8.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/functions_8.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/searchdata.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/searchdata.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/typedefs_0.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/typedefs_0.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/variables_0.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/variables_0.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/variables_1.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/variables_1.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/variables_2.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/variables_2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/variables_3.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/variables_3.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/variables_4.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/variables_4.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/variables_5.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/variables_5.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/search/variables_6.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/search/variables_6.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/structliger_1_1_key_event.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/structliger_1_1_key_event.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/structliger_1_1_mouse_button_event.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/structliger_1_1_mouse_button_event.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/structliger_1_1detail_1_1_event_type_id_generator.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/structliger_1_1detail_1_1_event_type_id_generator.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/structliger_1_1detail_1_1_event_type_id_holder.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/structliger_1_1detail_1_1_event_type_id_holder.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/time_8cpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/time_8cpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/time_8cpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/time_8cpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/time_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/time_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/time_8hpp.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/time_8hpp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/time_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/time_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/time_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/time_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/time_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/time_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/time_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/time_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/time_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/time_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/types_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/types_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/types_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/types_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/types_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/types_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/types_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/types_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/types_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/types_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/types_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/types_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/uuid_8cpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/uuid_8cpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/uuid_8cpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/uuid_8cpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/uuid_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/uuid_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/uuid_8hpp.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/uuid_8hpp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/uuid_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/uuid_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/uuid_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/uuid_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/uuid_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/uuid_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/uuid_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/uuid_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/uuid_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/uuid_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/window_8cpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/window_8cpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/window_8cpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/window_8cpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/window_8hpp.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/window_8hpp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/window_8hpp.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/window_8hpp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/window_8hpp__dep__incl.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/window_8hpp__dep__incl.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/window_8hpp__dep__incl.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/window_8hpp__dep__incl.md5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/window_8hpp__dep__incl.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/window_8hpp__dep__incl.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/window_8hpp__dep__incl_org.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/window_8hpp__dep__incl_org.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs/window_8hpp_source.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs/window_8hpp_source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/core.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/core.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/enum_bitmask.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/enum_bitmask.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/enum_class.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/enum_class.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/enum_class.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/enum_class.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/event/detail/callback.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/event/detail/callback.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/event/detail/event_type.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/event/detail/event_type.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/event/detail/event_type.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/event/detail/event_type.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/event/event_dispatcher.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/event/event_dispatcher.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/event/event_sink.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/event/event_sink.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/log/console_log_writer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/log/console_log_writer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/log/console_log_writer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/log/console_log_writer.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/log/default_log.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/log/default_log.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/log/default_log.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/log/default_log.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/log/log.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/log/log.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/log/log.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/log/log.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/log/log_channels.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/log/log_channels.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/log/log_level.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/log/log_level.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/log/log_message.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/log/log_message.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/log/log_message.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/log/log_message.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/log/log_writer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/log/log_writer.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/math/math_formatting.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/math/math_formatting.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/math/random.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/math/random.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/math/random.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/math/random.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/platform/keyboard.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/platform/keyboard.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/platform/mouse.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/platform/mouse.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/platform/platform_layer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/platform/platform_layer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/platform/platform_layer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/platform/platform_layer.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/platform/window.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/platform/window.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/platform/window.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/platform/window.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/time.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/time.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/time.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/time.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/types.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/types.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/uuid.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/uuid.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/src/liger/core/uuid.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/engine/src/liger/core/uuid.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/third_party/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/third_party/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/third_party/fmt" beforeDir="false" afterPath="$PROJECT_DIR$/engine/third_party/fmt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sandbox/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/sandbox/src/main.cpp" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectApplicationVersion">
+    <option name="ide" value="CLion" />
+    <option name="majorVersion" value="2023" />
+    <option name="minorVersion" value="2.1" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 6
+}]]></component>
+  <component name="ProjectId" id="2YPT0wyPbW0O22pNLKVI95aH561" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "WebServerToolWindowFactoryState": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "render__device",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a9c49a74-8ab6-45d5-8ca3-035837be8156" name="Changes" comment="" />
+      <created>1700425997515</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1700425997515</updated>
+      <workItem from="1700425999498" duration="94000" />
+    </task>
+    <servers />
+  </component>
+</project>

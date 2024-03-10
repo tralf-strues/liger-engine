@@ -4,12 +4,24 @@
 [submodule "engine/third_party/glfw"]
 	path = engine/third_party/glfw
 	url = https://github.com/glfw/glfw
-[submodule "engine/third_party/fmt"]
-	path = engine/third_party/fmt
-	url = https://github.com/fmtlib/fmt
 [submodule "engine/third_party/yaml_cpp"]
 	path = engine/third_party/yaml_cpp
 	url = https://github.com/jbeder/yaml-cpp.git
-[submodule "docs/doxygen-awesome-css"]
-	path = docs/doxygen-awesome-css
-	url = https://github.com/jothepro/doxygen-awesome-css.git
+[submodule "engine/third_party/fmt"]
+	path = engine/third_party/fmt
+	url = https://github.com/fmtlib/fmt
+[submodule "engine/third_party/magic_enum"]
+	path = engine/third_party/magic_enum
+	url = https://github.com/Neargye/magic_enum.git
+[submodule "engine/third_party/vma"]
+	path = engine/third_party/vma
+	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
+[submodule "engine/third_party/volk"]
+	path = engine/third_party/volk
+	url = https://github.com/zeux/volk.git
+[submodule "engine/third_party/vulkan-headers"]
+	path = engine/third_party/vulkan-headers
+	url = https://github.com/KhronosGroup/Vulkan-Headers.git
+[submodule "engine/third_party/vulkan-utility-libraries"]
+	path = engine/third_party/vulkan-utility-libraries
+	url = https://github.com/KhronosGroup/Vulkan-Utility-Libraries.git

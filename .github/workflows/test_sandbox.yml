@@ -2,9 +2,9 @@ name: Test Sandbox
 
 on:
   push:
-    branches: ["main", "dev"]
+    branches: "*"
   pull_request:
-    branches: ["main", "dev"]
+    branches: "*"
 
 jobs:
   build-unix:
@@ -13,14 +13,14 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        cxx: [g++, clang++]
+        cxx: [g++]
         build_type: [Debug, Release]
 
         include:
           - os: ubuntu-latest
-            install: sudo apt-get install ninja-build xorg-dev doxygen
+            install: sudo apt-get install ninja-build gcc clang libwayland-dev libxkbcommon-dev xorg-dev
           - os: macos-latest
-            install: brew install ninja doxygen
+            install: brew install ninja
 
     steps:
       - uses: actions/checkout@v3
@@ -30,6 +30,17 @@ jobs:
       - name: Install dependencies
         shell: bash
         run: ${{matrix.install}}
+
+      # - name: Install latest Clang
+      #   if: ${{ matrix.os }} == macos-latest
+      #   uses: MorganCaron/latest-clang-action@master
+
+      - name: Prepare Vulkan SDK
+        uses: humbletim/setup-vulkan-sdk@v1.2.0
+        with:
+          vulkan-query-version: latest
+          vulkan-components: Vulkan-Loader
+          vulkan-use-cache: true
 
       - name: Build
         shell: bash

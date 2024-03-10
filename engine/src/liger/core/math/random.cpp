@@ -25,11 +25,10 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "liger/core/math/random.hpp"
-
+#include <liger/core/math/random.hpp>
 #include <glm/gtc/random.hpp>
 
-using namespace liger;
+namespace liger {
 
 Random Random::instance_;
 
@@ -49,3 +48,5 @@ glm::vec3 Random::InRange(const glm::vec3& start, const glm::vec3& end) {
 glm::vec3 Random::InUnitSphere(const glm::vec3& center) {
   return center + glm::sphericalRand(1.0f);
 }
+
+}  // namespace liger

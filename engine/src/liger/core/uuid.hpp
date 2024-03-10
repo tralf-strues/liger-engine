@@ -27,11 +27,11 @@
 
 #pragma once
 
-#include "liger/core/types.hpp"
+#include <cstdint>
 
 namespace liger {
 
-using UUID64 = uint64;
+using UUID64 = uint64_t;
 
 /**
  * @note For now, UUIDs are 64-bit values, might change that in the future. TODO: (tralf-strues)

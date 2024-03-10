@@ -25,13 +25,45 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "liger/core/log/default_log.hpp"
+#include <liger/core/log/console_log_writer.hpp>
+#include <liger/core/log/default_log.hpp>
 
-liger::Log liger::default_log::g_Log = CreateDefaultLog();
+namespace liger::default_log {
 
-liger::Log liger::default_log::CreateDefaultLog() {
+const ConsoleLogWriter::Style kDefaultConsoleLogStyle {
+    .default_style = {},
+
+    .write_source = true,
+
+    .write_level = true,
+    .use_level_style_for_entire_message = true,
+
+    .level_styles = {
+      {LogLevel::kInfo,    {}},
+      {LogLevel::kTrace,   fg(fmt::color::olive_drab)},
+      {LogLevel::kWarning, fg(fmt::color::medium_orchid)},
+      {LogLevel::kError,   fg(fmt::color::red)},
+      {LogLevel::kFatal,   fmt::emphasis::bold | fg(fmt::color::red)}
+    },
+
+    .level_names = {
+      {LogLevel::kInfo,    "I"},
+      {LogLevel::kTrace,   "T"},
+      {LogLevel::kWarning, "W"},
+      {LogLevel::kError,   "E"},
+      {LogLevel::kFatal,   "F"}
+    },
+
+    .write_channel = true
+};
+
+Log CreateDefaultLog() {
   Log log;
   log.AddWriter(std::make_unique<ConsoleLogWriter>(kDefaultConsoleLogStyle));
 
   return log;
 }
+
+Log g_Log = CreateDefaultLog();
+
+}  // namespace liger::default_log

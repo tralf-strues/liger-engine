@@ -27,8 +27,10 @@
 
 #pragma once
 
-#include "liger/core/event/detail/event_type.hpp"
-#include "liger/core/event/event_sink.hpp"
+#include <liger/core/event/detail/event_type.hpp>
+#include <liger/core/event/event_sink.hpp>
+
+#include <unordered_map>
 
 namespace liger {
 
@@ -64,8 +66,6 @@ class EventDispatcher {
 
 template <typename EventT>
 EventSink<EventT>& EventDispatcher::GetSink() {
-  EventSink<EventT>* sink = nullptr;
-
   detail::EventTypeId type_id = detail::EventTypeIdHolder<EventT>::Value();
 
   auto it = sinks_.find(type_id);
