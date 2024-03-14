@@ -27,17 +27,68 @@
 
 #pragma once
 
+#include <concepts>
 #include <cstdint>
+#include <random>
 
 namespace liger {
 
-using UUID64 = uint64_t;
+template <std::unsigned_integral IntegerType = uint64_t>
+class BasicUUID {
+ public:
+  static constexpr IntegerType kInvalidValue = 0;
 
-/**
- * @note For now, UUIDs are 64-bit values, might change that in the future. TODO: (tralf-strues)
- */
-using UUID = UUID64;
+  constexpr BasicUUID() = default;
+  constexpr explicit BasicUUID(IntegerType value);
 
-[[nodiscard]] UUID GenerateUUID();
+  constexpr bool Valid() const;
+
+  constexpr IntegerType Value() const;
+  constexpr IntegerType operator*() const;
+
+  static BasicUUID<IntegerType> Generate();
+
+ private:
+  IntegerType value_{kInvalidValue};
+};
+
+template <std::unsigned_integral IntegerType>
+constexpr BasicUUID<IntegerType>::BasicUUID(IntegerType value) : value_(value) {}
+
+template <std::unsigned_integral IntegerType>
+constexpr bool BasicUUID<IntegerType>::Valid() const {
+  return value_ == kInvalidValue;
+}
+
+template <std::unsigned_integral IntegerType>
+constexpr IntegerType BasicUUID<IntegerType>::Value() const {
+  return value_;
+}
+
+template <std::unsigned_integral IntegerType>
+constexpr IntegerType BasicUUID<IntegerType>::operator*() const {
+  return value_;
+}
+
+template <std::unsigned_integral IntegerType>
+constexpr bool operator==(BasicUUID<IntegerType> lhs, BasicUUID<IntegerType> rhs) {
+  return lhs.Value() == rhs.Value();
+}
+
+template <std::unsigned_integral IntegerType>
+constexpr bool operator!=(BasicUUID<IntegerType> lhs, BasicUUID<IntegerType> rhs) {
+  return lhs.Value() != rhs.Value();
+}
+
+template <std::unsigned_integral IntegerType>
+BasicUUID<IntegerType> BasicUUID<IntegerType>::Generate() {
+  static std::random_device                         random_device;
+  static std::mt19937_64                            random_engine{random_device()};
+  static std::uniform_int_distribution<IntegerType> uniform_distribution;
+
+  return uniform_distribution(random_engine);
+}
+
+using UUID = BasicUUID<uint64_t>;
 
 }  // namespace liger

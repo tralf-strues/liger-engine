@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file uuid.cpp
- * @date 2023-09-12
+ * @file asset_log_channel.hpp
+ * @date 2024-03-10
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -25,17 +25,10 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <liger/core/uuid.hpp>
-#include <random>
+#pragma once
 
-namespace liger {
+namespace liger::asset {
 
-UUID GenerateUUID() {
-  static std::random_device random_device;
-  static std::mt19937_64 random_engine{random_device()};
-  static std::uniform_int_distribution<uint64_t> uniform_distribution;
+constexpr const char* kLogChannelAsset = "AssetManagement";
 
-  return uniform_distribution(random_engine);
-}
-
-}  // namespace liger
+}  // namespace liger::asset

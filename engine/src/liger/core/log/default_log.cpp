@@ -64,6 +64,6 @@ Log CreateDefaultLog() {
   return log;
 }
 
-Log g_Log = CreateDefaultLog();
+Log g_log = CreateDefaultLog();
 
 }  // namespace liger::default_log

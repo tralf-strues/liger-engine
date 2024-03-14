@@ -25,13 +25,13 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <fmt/ostream.h>
-
 #include <liger/rhi/vulkan/vulkan_render_graph.hpp>
 
 #include <liger/core/enum_reflection.hpp>
 #include <liger/rhi/vulkan/vulkan_buffer.hpp>
 #include <liger/rhi/vulkan/vulkan_texture.hpp>
+
+#include <fmt/ostream.h>
 
 #include <fstream>
 #include <unordered_map>
