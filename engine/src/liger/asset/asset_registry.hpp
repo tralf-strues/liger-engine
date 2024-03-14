@@ -30,6 +30,7 @@
 #include <liger/core/uuid.hpp>
 
 #include <filesystem>
+#include <unordered_map>
 #include <unordered_set>
 
 namespace liger::asset {
