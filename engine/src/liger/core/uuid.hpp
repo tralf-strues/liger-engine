@@ -29,6 +29,7 @@
 
 #include <concepts>
 #include <cstdint>
+#include <memory>
 #include <random>
 
 namespace liger {
@@ -86,9 +87,20 @@ BasicUUID<IntegerType> BasicUUID<IntegerType>::Generate() {
   static std::mt19937_64                            random_engine{random_device()};
   static std::uniform_int_distribution<IntegerType> uniform_distribution;
 
-  return uniform_distribution(random_engine);
+  return BasicUUID(uniform_distribution(random_engine));
 }
 
 using UUID = BasicUUID<uint64_t>;
 
 }  // namespace liger
+
+namespace std {
+
+template <std::unsigned_integral IntegerType>
+struct hash<liger::BasicUUID<IntegerType>> {
+  size_t operator()(const liger::BasicUUID<IntegerType>& uuid) const {
+    return std::hash<IntegerType>{}(uuid.Value());
+  }
+};
+
+}  // namespace std
