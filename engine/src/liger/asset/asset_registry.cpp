@@ -113,7 +113,7 @@ std::filesystem::path AssetRegistry::GetAbsoluteFile(AssetId id) const {
   return asset_folder_ / it->second;
 }
 
-AssetRegistry::AssetId AssetRegistry::Register(std::filesystem::path file) {
+AssetId AssetRegistry::Register(std::filesystem::path file) {
   auto new_id = AssetId::Generate();
   files_[new_id] = std::move(file);
 
@@ -152,7 +152,7 @@ void AssetRegistry::RemoveAssetDependency(AssetId id, AssetId dependency_id) {
   it->second.erase(dependency_id);
 }
 
-const std::unordered_set<AssetRegistry::AssetId>& AssetRegistry::GetAssetDependencies(AssetId id) const {
+const std::unordered_set<AssetId>& AssetRegistry::GetAssetDependencies(AssetId id) const {
   auto it = dependencies_.find(id);
   LIGER_ASSERT(it != dependencies_.end(), kLogChannelAsset, "Trying to access invalid asset (id = {0})", id.Value());
 

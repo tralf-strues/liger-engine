@@ -35,6 +35,9 @@
 
 namespace liger::asset {
 
+using AssetId = UUID;
+static constexpr AssetId kInvalidAssetId{UUID::kInvalidValue};
+
 /**
  * @brief Registry of assets contained in an asset folder.
  *
@@ -90,10 +93,6 @@ namespace liger::asset {
  */
 class AssetRegistry {
  public:
-  using AssetId = UUID;
-
-  static constexpr AssetId kInvalidAssetId{UUID::kInvalidValue};
-
   /** @brief Open and load the registry. */
   explicit AssetRegistry(std::filesystem::path registry_file);
 
