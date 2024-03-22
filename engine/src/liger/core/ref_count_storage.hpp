@@ -82,6 +82,8 @@ class RefCountStorage {
   template <typename... Args>
   [[nodiscard]] Reference Emplace(Key key, Args... args);
 
+  [[nodiscard]] Reference Emplace(Key key, Value&& value);
+
   [[nodiscard]] bool Contains(Key key) const;
 
   [[nodiscard]] Reference Get(Key key);
@@ -111,14 +113,14 @@ RefCountStorage<Key, Value>::~RefCountStorage() {
 template <typename Key, typename Value>
 template <typename... Args>
 RefCountStorage<Key, Value>::Reference RefCountStorage<Key, Value>::Emplace(Key key, Args... args) {
+  return Emplace(key, Value(std::forward<Args>(args)...));
+}
+
+template <typename Key, typename Value>
+RefCountStorage<Key, Value>::Reference RefCountStorage<Key, Value>::Emplace(Key key, Value&& value) {
   LIGER_ASSERT(map_.find(key) == map_.end(), kLogChannelCore, "Trying to emplace by key already present in the map");
 
-  auto* block = new ControlBlock {
-    .ref_count = 0,
-    .storage   = *this,
-    .key       = key,
-    .value     = Value(std::forward<Args>(args)...)
-  };
+  auto* block = new ControlBlock{.ref_count = 0, .storage = *this, .key = key, .value{std::move(value)}};
 
   map_.emplace(key, block);
   return Reference(block);

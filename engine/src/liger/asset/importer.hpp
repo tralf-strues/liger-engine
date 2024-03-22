@@ -1,6 +1,6 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file asset_importer.hpp
+ * @file importer.hpp
  * @date 2024-03-14
  *
  * The MIT License (MIT)
@@ -74,7 +74,7 @@ class IImporter {
   /**
    * @brief File extension of files which this importer can import, e.g. ('.fbx').
    */
-  virtual std::filesystem::path FileExtension() const = 0;
+  virtual const std::filesystem::path& FileExtension() const = 0;
 
   /**
    * @brief Try to import `src` file and save generated files to `dst_folder`.
