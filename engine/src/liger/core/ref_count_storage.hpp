@@ -30,6 +30,7 @@
 #include <liger/core/core_log_channel.hpp>
 #include <liger/core/log/default_log.hpp>
 
+#include <atomic>
 #include <unordered_map>
 #include <vector>
 

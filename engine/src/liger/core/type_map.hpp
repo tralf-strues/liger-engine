@@ -65,7 +65,7 @@ class TypeMap {
       it = result.first;
     }
 
-    return it->second.value;
+    return static_cast<detail::TypeMapHolder<Value<Type>>*>(it->second.get())->value;
   }
 
  private:
