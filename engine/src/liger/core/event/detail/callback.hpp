@@ -27,6 +27,7 @@
 
 #pragma once
 
+#include <liger/core/core_log_channel.hpp>
 #include <liger/core/log/default_log.hpp>
 
 namespace liger {
@@ -57,7 +58,7 @@ class Callback<ReturnT(ArgsT...)> {
   }
 
   ReturnT operator()(ArgsT... args) {
-    LIGER_ASSERT(callable_, "Core", "Trying to call nullptr function!");
+    LIGER_ASSERT(callable_, kLogChannelCore, "Trying to call nullptr function!");
     return callable_(instance_, args...);
   }
 

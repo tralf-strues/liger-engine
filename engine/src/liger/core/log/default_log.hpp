@@ -39,15 +39,15 @@
 #endif
 
 #define LIGER_LOG_INFO(channel, ...) \
-  ::liger::default_log::g_Log.Message(::liger::LogLevel::kInfo, LIGER_FILE_NAME ":" LIGER_LINE_TO_STR(__LINE__), channel, __VA_ARGS__);
+  ::liger::default_log::g_log.Message(::liger::LogLevel::kInfo, LIGER_FILE_NAME ":" LIGER_LINE_TO_STR(__LINE__), channel, __VA_ARGS__);
 #define LIGER_LOG_TRACE(channel, ...) \
-  ::liger::default_log::g_Log.Message(::liger::LogLevel::kTrace, LIGER_FILE_NAME ":" LIGER_LINE_TO_STR(__LINE__), channel, __VA_ARGS__);
+  ::liger::default_log::g_log.Message(::liger::LogLevel::kTrace, LIGER_FILE_NAME ":" LIGER_LINE_TO_STR(__LINE__), channel, __VA_ARGS__);
 #define LIGER_LOG_WARN(channel, ...) \
-  ::liger::default_log::g_Log.Message(::liger::LogLevel::kWarning, LIGER_FILE_NAME ":" LIGER_LINE_TO_STR(__LINE__), channel, __VA_ARGS__);
+  ::liger::default_log::g_log.Message(::liger::LogLevel::kWarning, LIGER_FILE_NAME ":" LIGER_LINE_TO_STR(__LINE__), channel, __VA_ARGS__);
 #define LIGER_LOG_ERROR(channel, ...) \
-  ::liger::default_log::g_Log.Message(::liger::LogLevel::kError, LIGER_FILE_NAME ":" LIGER_LINE_TO_STR(__LINE__), channel, __VA_ARGS__);
+  ::liger::default_log::g_log.Message(::liger::LogLevel::kError, LIGER_FILE_NAME ":" LIGER_LINE_TO_STR(__LINE__), channel, __VA_ARGS__);
 #define LIGER_LOG_FATAL(channel, ...) \
-  ::liger::default_log::g_Log.Message(::liger::LogLevel::kFatal, LIGER_FILE_NAME ":" LIGER_LINE_TO_STR(__LINE__), channel, __VA_ARGS__);
+  ::liger::default_log::g_log.Message(::liger::LogLevel::kFatal, LIGER_FILE_NAME ":" LIGER_LINE_TO_STR(__LINE__), channel, __VA_ARGS__);
 
 #define LIGER_ASSERT(condition, channel, ...) \
   if (!(condition)) {                         \
@@ -57,6 +57,6 @@
 
 namespace liger::default_log {
 
-extern Log g_Log;
+extern Log g_log;
 
 }  // namespace liger::default_log
