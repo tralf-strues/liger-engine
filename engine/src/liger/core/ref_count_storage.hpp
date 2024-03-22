@@ -113,12 +113,12 @@ RefCountStorage<Key, Value>::~RefCountStorage() {
 
 template <typename Key, typename Value>
 template <typename... Args>
-RefCountStorage<Key, Value>::Reference RefCountStorage<Key, Value>::Emplace(Key key, Args... args) {
+typename RefCountStorage<Key, Value>::Reference RefCountStorage<Key, Value>::Emplace(Key key, Args... args) {
   return Emplace(key, Value(std::forward<Args>(args)...));
 }
 
 template <typename Key, typename Value>
-RefCountStorage<Key, Value>::Reference RefCountStorage<Key, Value>::Emplace(Key key, Value&& value) {
+typename RefCountStorage<Key, Value>::Reference RefCountStorage<Key, Value>::Emplace(Key key, Value&& value) {
   LIGER_ASSERT(map_.find(key) == map_.end(), kLogChannelCore, "Trying to emplace by key already present in the map");
 
   auto* block = new ControlBlock{.ref_count = 0, .storage = *this, .key = key, .value{std::move(value)}};
@@ -133,7 +133,7 @@ bool RefCountStorage<Key, Value>::Contains(Key key) const {
 }
 
 template <typename Key, typename Value>
-RefCountStorage<Key, Value>::Reference RefCountStorage<Key, Value>::Get(Key key) {
+typename RefCountStorage<Key, Value>::Reference RefCountStorage<Key, Value>::Get(Key key) {
   auto it = map_.find(key);
   if (it == map_.end()) {
     return Reference(nullptr);
@@ -189,7 +189,8 @@ RefCountStorage<Key, Value>::Reference::Reference(const Reference& other) : bloc
 }
 
 template <typename Key, typename Value>
-RefCountStorage<Key, Value>::Reference& RefCountStorage<Key, Value>::Reference::operator=(const Reference& other) {
+typename RefCountStorage<Key, Value>::Reference& RefCountStorage<Key, Value>::Reference::operator=(
+    const Reference& other) {
   if (this == &other) {
     return *this;
   }
@@ -213,7 +214,8 @@ RefCountStorage<Key, Value>::Reference::Reference(Reference&& other) noexcept : 
 }
 
 template <typename Key, typename Value>
-RefCountStorage<Key, Value>::Reference& RefCountStorage<Key, Value>::Reference::operator=(Reference&& other) noexcept {
+typename RefCountStorage<Key, Value>::Reference& RefCountStorage<Key, Value>::Reference::operator=(
+    Reference&& other) noexcept {
   if (this == &other) {
     return *this;
   }

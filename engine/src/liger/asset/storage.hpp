@@ -69,9 +69,9 @@ class Handle {
   void UpdateState(State new_state);
 
  private:
-  explicit Handle(detail::TemplateAssetStorage<Asset>::Reference&& reference);
+  explicit Handle(typename detail::TemplateAssetStorage<Asset>::Reference&& reference);
 
-  detail::TemplateAssetStorage<Asset>::Reference reference_{nullptr};
+  typename detail::TemplateAssetStorage<Asset>::Reference reference_{nullptr};
 
   friend class Storage;
 };
