@@ -26,5 +26,5 @@
 	path = Engine/ThirdParty/vulkan-utility-libraries
 	url = https://github.com/KhronosGroup/Vulkan-Utility-Libraries.git
 [submodule "engine/third_party/taskflow"]
-	path = engine/third_party/taskflow
+	path = Engine/ThirdParty/taskflow
 	url = https://github.com/taskflow/taskflow.git

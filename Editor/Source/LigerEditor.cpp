@@ -1,6 +1,6 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file main.cpp
+ * @file LigerEditor.cpp
  * @date 2023-09-03
  *
  * The MIT License (MIT)
