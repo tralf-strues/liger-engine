@@ -30,16 +30,10 @@
 #include <Liger-Engine/Core/EnumReflection.hpp>
 #include "VulkanUtils.hpp"
 
-#define VOLK_IMPLEMENTATION
-#include <volk.h>
-
 #include <GLFW/glfw3.h>
 
 #include <array>
 #include <utility>
-
-// XLib has macro None...
-#undef None
 
 namespace liger::rhi {
 

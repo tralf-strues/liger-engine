@@ -31,9 +31,6 @@
 #include "VulkanDevice.hpp"
 #include "VulkanTimelineSemaphore.hpp"
 
-#define VK_NO_PROTOTYPES
-#include <volk.h>
-
 #include <vector>
 
 // XLib has macro None...

@@ -27,14 +27,10 @@
 
 #pragma once
 
-#define VK_NO_PROTOTYPES
-#include <volk.h>
+#include "VulkanUtils.hpp"
 
 #include <optional>
 #include <vector>
-
-// XLib has macro None...
-#undef None
 
 namespace liger::rhi {
 

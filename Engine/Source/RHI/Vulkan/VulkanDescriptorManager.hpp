@@ -30,13 +30,9 @@
 #include <Liger-Engine/RHI/DescriptorBinding.hpp>
 #include <Liger-Engine/RHI/DeviceResourceState.hpp>
 
-#define VK_NO_PROTOTYPES
-#include <volk.h>
+#include "VulkanUtils.hpp"
 
 #include <unordered_set>
-
-// XLib has macro None...
-#undef None
 
 namespace liger::rhi {
 

@@ -39,7 +39,9 @@
 
 #include <vk_mem_alloc.h>
 
-// XLib has macro None...
+// X11 has too many common name macros...
+#undef Always
+#undef Status
 #undef None
 
 #define VULKAN_CALL(Call)                                                              \
