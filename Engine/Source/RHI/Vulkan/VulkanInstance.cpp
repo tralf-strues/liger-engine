@@ -38,6 +38,9 @@
 #include <array>
 #include <utility>
 
+// XLib has macro None...
+#undef None
+
 namespace liger::rhi {
 
 VKAPI_ATTR VkBool32 VKAPI_CALL DebugMessengerCallback(VkDebugUtilsMessageSeverityFlagBitsEXT      message_severity,

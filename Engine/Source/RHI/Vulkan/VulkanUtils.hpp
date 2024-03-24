@@ -39,6 +39,9 @@
 
 #include <vk_mem_alloc.h>
 
+// XLib has macro None...
+#undef None
+
 #define VULKAN_CALL(Call)                                                              \
   {                                                                                    \
     VkResult result = Call;                                                            \

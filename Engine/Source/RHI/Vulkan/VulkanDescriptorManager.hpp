@@ -35,6 +35,9 @@
 
 #include <unordered_set>
 
+// XLib has macro None...
+#undef None
+
 namespace liger::rhi {
 
 class VulkanDescriptorManager {

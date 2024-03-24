@@ -33,6 +33,9 @@
 #include <optional>
 #include <vector>
 
+// XLib has macro None...
+#undef None
+
 namespace liger::rhi {
 
 class VulkanQueueSet {

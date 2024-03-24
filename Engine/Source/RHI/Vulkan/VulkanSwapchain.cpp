@@ -35,6 +35,9 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
+// XLib has macro None...
+#undef None
+
 namespace liger::rhi {
 
 VkSurfaceFormatKHR ChooseSwapchainFormat(std::span<const VkSurfaceFormatKHR> formats) {
