@@ -14,7 +14,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
         cxx: [g++]
-        build_type: [Debug, Release]
+        build_type: [debug, release]
 
         include:
           - os: ubuntu-latest
@@ -44,4 +44,4 @@ jobs:
 
       - name: Build
         shell: bash
-        run: ./build_unix.sh ${{matrix.build_type}} -DCMAKE_CXX_COMPILER=${{matrix.cxx}}
+        run: sudo ./build_unix.sh ${{matrix.build_type}} -DCMAKE_CXX_COMPILER=${{matrix.cxx}}
