@@ -42,6 +42,7 @@ namespace liger::asset {
  * All this information is also gets saved to the corresponding registry file.
  *
  * Example structure of an asset folder:
+ * @code{.unparsed}
  *     assets/
  *         .lregistry
  *         textures/
@@ -57,27 +58,25 @@ namespace liger::asset {
  *         sounds/
  *             player_hello.mp3
  *             player_goodbye.mp3
+ * @endcode
  *
  * Example contents of the corresponding `.liger-registry` file:
+ * @code{.unparsed}
  *     - file: textures/player/player_albedo.png
  *       id: 0x7449545984958451
  *     - file: textures/player/player_normal.png
  *       id: 0x2435204985724523
- *     ...
  *     - file: materials/player.lmat
  *       id: 0x9208347234895237
- *     ...
  *     - file: meshes/player.lmesh
  *       id: 0x9045734534058964
- *     ...
  *     - file: scenes/scene0.lscene
  *       id: 0x1894576549867059
- *     ...
  *     - file: sounds/player_hello.mp3
  *       id: 0x5924984576345097
  *     - file: sounds/player_goodbye.mp3
  *       id: 0x2489524375902435
- *     ...
+ * @endcode
  */
 class Registry {
  public:

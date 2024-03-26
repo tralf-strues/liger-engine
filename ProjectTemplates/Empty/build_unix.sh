@@ -19,8 +19,6 @@ build_dir_name="build_${1}"
 
 mkdir -p ${build_dir_name}
 cd ${build_dir_name}
-cmake .. -G "Ninja" -DCMAKE_BUILD_TYPE=${build_mode} ${2}
+cmake .. -G "Ninja" -DCMAKE_BUILD_TYPE=${build_mode} -DLIGER_ENGINE_PATH="" -DLiger-Engine_DIR=""
 ninja
 cd ..
-
-cmake --install ${build_dir_name} --config "${build_mode}" --prefix "/Users/tralf/Dev/liger-engine/${build_dir_name}"
