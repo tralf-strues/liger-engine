@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['log_95',['Log',['../classliger_1_1_log.html',1,'liger']]],
-  ['logmessage_96',['LogMessage',['../structliger_1_1_log_message.html',1,'liger']]]
+  ['formatter_3c_20glm_3a_3avec2_20_3e_298',['formatter&lt; glm::vec2 &gt;',['../structfmt_1_1formatter_3_01glm_1_1vec2_01_4.html',1,'fmt']]],
+  ['formatter_3c_20glm_3a_3avec3_20_3e_299',['formatter&lt; glm::vec3 &gt;',['../structfmt_1_1formatter_3_01glm_1_1vec3_01_4.html',1,'fmt']]]
 ];

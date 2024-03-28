@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structliger_1_1_window_close_event.html" title=" " alt="" coords="5,5,189,32"/>
+<area shape="rect" id="node1" href="$classliger_1_1_i_log_writer.html" title="Manages a particular way of writing log messages (e.g. ConsoleLogWriter)." alt="" coords="5,5,132,32"/>
+<area shape="rect" id="node2" href="$classliger_1_1_console_log_writer.html" title="Writes log messages to console and allows custom styles." alt="" coords="180,5,355,32"/>
 </map>

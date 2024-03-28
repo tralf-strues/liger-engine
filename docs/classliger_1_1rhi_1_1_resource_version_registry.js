@@ -1,0 +1,26 @@
+var classliger_1_1rhi_1_1_resource_version_registry =
+[
+    [ "const_iterator", "classliger_1_1rhi_1_1_resource_version_registry.html#a332651d537a6aae6d1df5d0dbff996db", null ],
+    [ "iterator", "classliger_1_1rhi_1_1_resource_version_registry.html#a47bc9f2cd9e17bd1d9029eaf28bc46f8", null ],
+    [ "NullResource", "classliger_1_1rhi_1_1_resource_version_registry.html#aec0655f08b3344d05c9b63c726e5db5f", null ],
+    [ "Resource", "classliger_1_1rhi_1_1_resource_version_registry.html#a6ebd13fec57961cfc5b00a999d13d465", null ],
+    [ "ResourceId", "classliger_1_1rhi_1_1_resource_version_registry.html#abb0a7c96f442e394a6104b8db19feff7", null ],
+    [ "ResourceVersion", "classliger_1_1rhi_1_1_resource_version_registry.html#a14aa3eef273095c40b01b9c0eb203463", null ],
+    [ "AddResource", "classliger_1_1rhi_1_1_resource_version_registry.html#a4201a8e221899a469ed56511a4dd386d", null ],
+    [ "begin", "classliger_1_1rhi_1_1_resource_version_registry.html#a3f921bea0270759299748ac9eeb24e21", null ],
+    [ "begin", "classliger_1_1rhi_1_1_resource_version_registry.html#a036229b28dc862cbf30ff1b4d69bccb7", null ],
+    [ "DeclareResource", "classliger_1_1rhi_1_1_resource_version_registry.html#ab85987bbe363e5d9db8fdef04bade3c3", null ],
+    [ "end", "classliger_1_1rhi_1_1_resource_version_registry.html#a7f4688cb9e131dcf1e591abdc9bc4079", null ],
+    [ "end", "classliger_1_1rhi_1_1_resource_version_registry.html#af7828669bddb670f6567fcd60e2e0422", null ],
+    [ "GetResourceById", "classliger_1_1rhi_1_1_resource_version_registry.html#ace9584cdb7242745e65b940a3152a741", null ],
+    [ "GetResourceByVersion", "classliger_1_1rhi_1_1_resource_version_registry.html#ac64ce5b00dc051ca5c4463f3cded774c", null ],
+    [ "GetResourceCount", "classliger_1_1rhi_1_1_resource_version_registry.html#ae979cc0c392e47e111b01d76d9a46ecd", null ],
+    [ "GetResourceId", "classliger_1_1rhi_1_1_resource_version_registry.html#af5af3eebeea045257fdb52b92df77e8c", null ],
+    [ "GetVersionsCount", "classliger_1_1rhi_1_1_resource_version_registry.html#ac0a8eca2af75a257f9338bdfd78cdc20", null ],
+    [ "NextVersion", "classliger_1_1rhi_1_1_resource_version_registry.html#a981072642d9abe9899bfef8cc962cedd", null ],
+    [ "TryGetResourceById", "classliger_1_1rhi_1_1_resource_version_registry.html#a13b79e2513698e1dda6d214dc8a7964d", null ],
+    [ "TryGetResourceById", "classliger_1_1rhi_1_1_resource_version_registry.html#a3d49bd3ecb19c8d8d842fe48ff774197", null ],
+    [ "TryGetResourceByVersion", "classliger_1_1rhi_1_1_resource_version_registry.html#a80172b09134b27f552841bf9aad0aef9", null ],
+    [ "TryGetResourceByVersion", "classliger_1_1rhi_1_1_resource_version_registry.html#ab7107311d74971bacca55c5de074a735", null ],
+    [ "UpdateResource", "classliger_1_1rhi_1_1_resource_version_registry.html#a3d9a8d18c266dc326d71fc785286294f", null ]
+];

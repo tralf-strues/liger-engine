@@ -94,34 +94,37 @@ $(document).ready(function(){initNavTree('structliger_1_1_log_message.html','');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a92b22d13881babfb34d92e73c6afb88e"><td class="memItemLeft" align="right" valign="top"><a id="a92b22d13881babfb34d92e73c6afb88e"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>LogMessage</b> (LogLevel <a class="el" href="structliger_1_1_log_message.html#aa1c4ad507a7af0b9ed0614db727005d7">level</a>, uint64 <a class="el" href="structliger_1_1_log_message.html#a9f959d4eb95b19bdd822afeb34d4955f">channel</a>, const std::string_view <a class="el" href="structliger_1_1_log_message.html#ad1801b28ff7fc83cc9f59fb60a0b6e06">message</a>)</td></tr>
-<tr class="separator:a92b22d13881babfb34d92e73c6afb88e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62ba2ecd4db2b4b319aa606554eb3a8d"><td class="memItemLeft" align="right" valign="top"><a id="a62ba2ecd4db2b4b319aa606554eb3a8d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>LogMessage</b> (LogLevel <a class="el" href="structliger_1_1_log_message.html#aa1c4ad507a7af0b9ed0614db727005d7">level</a>, uint64 <a class="el" href="structliger_1_1_log_message.html#a9f959d4eb95b19bdd822afeb34d4955f">channel</a>, std::string &amp;&amp;<a class="el" href="structliger_1_1_log_message.html#ad1801b28ff7fc83cc9f59fb60a0b6e06">message</a>)</td></tr>
-<tr class="separator:a62ba2ecd4db2b4b319aa606554eb3a8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31b4fa46e2a5d90f8abef233812169fb"><td class="memItemLeft" align="right" valign="top"><a id="a31b4fa46e2a5d90f8abef233812169fb"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>LogMessage</b> (LogLevel <a class="el" href="structliger_1_1_log_message.html#aa1c4ad507a7af0b9ed0614db727005d7">level</a>, std::string_view <a class="el" href="structliger_1_1_log_message.html#a6be62725c01407a80463c5c9abfad567">source</a>, std::string_view <a class="el" href="structliger_1_1_log_message.html#ad43af041ed068b42a3e936238311f264">channel</a>, std::string_view <a class="el" href="structliger_1_1_log_message.html#ad1801b28ff7fc83cc9f59fb60a0b6e06">message</a>)</td></tr>
+<tr class="separator:a31b4fa46e2a5d90f8abef233812169fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1867d6d19f33ce925d56bf0737b5f1b"><td class="memItemLeft" align="right" valign="top"><a id="ae1867d6d19f33ce925d56bf0737b5f1b"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>LogMessage</b> (LogLevel <a class="el" href="structliger_1_1_log_message.html#aa1c4ad507a7af0b9ed0614db727005d7">level</a>, std::string &amp;&amp;<a class="el" href="structliger_1_1_log_message.html#a6be62725c01407a80463c5c9abfad567">source</a>, std::string &amp;&amp;<a class="el" href="structliger_1_1_log_message.html#ad43af041ed068b42a3e936238311f264">channel</a>, std::string &amp;&amp;<a class="el" href="structliger_1_1_log_message.html#ad1801b28ff7fc83cc9f59fb60a0b6e06">message</a>)</td></tr>
+<tr class="separator:ae1867d6d19f33ce925d56bf0737b5f1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:a6be62725c01407a80463c5c9abfad567"><td class="memItemLeft" align="right" valign="top"><a id="a6be62725c01407a80463c5c9abfad567"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1_log_message.html#a6be62725c01407a80463c5c9abfad567">source</a></td></tr>
+<tr class="memdesc:a6be62725c01407a80463c5c9abfad567"><td class="mdescLeft">&#160;</td><td class="mdescRight">Source of the message (e.g. source file/line, etc.). <br /></td></tr>
+<tr class="separator:a6be62725c01407a80463c5c9abfad567"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa1c4ad507a7af0b9ed0614db727005d7"><td class="memItemLeft" align="right" valign="top"><a id="aa1c4ad507a7af0b9ed0614db727005d7"></a>
-LogLevel&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1_log_message.html#aa1c4ad507a7af0b9ed0614db727005d7">level</a> {LogLevel::kInfo}</td></tr>
+LogLevel&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1_log_message.html#aa1c4ad507a7af0b9ed0614db727005d7">level</a> {LogLevel::Info}</td></tr>
 <tr class="memdesc:aa1c4ad507a7af0b9ed0614db727005d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Describes the importance of the message. <br /></td></tr>
 <tr class="separator:aa1c4ad507a7af0b9ed0614db727005d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f959d4eb95b19bdd822afeb34d4955f"><td class="memItemLeft" align="right" valign="top"><a id="a9f959d4eb95b19bdd822afeb34d4955f"></a>
-uint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1_log_message.html#a9f959d4eb95b19bdd822afeb34d4955f">channel</a> {0}</td></tr>
-<tr class="memdesc:a9f959d4eb95b19bdd822afeb34d4955f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows user-driven channels support (used e.g. for filtering messages) <br /></td></tr>
-<tr class="separator:a9f959d4eb95b19bdd822afeb34d4955f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad43af041ed068b42a3e936238311f264"><td class="memItemLeft" align="right" valign="top"><a id="ad43af041ed068b42a3e936238311f264"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1_log_message.html#ad43af041ed068b42a3e936238311f264">channel</a></td></tr>
+<tr class="memdesc:ad43af041ed068b42a3e936238311f264"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows user-driven channels support (used e.g. for filtering messages). <br /></td></tr>
+<tr class="separator:ad43af041ed068b42a3e936238311f264"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad1801b28ff7fc83cc9f59fb60a0b6e06"><td class="memItemLeft" align="right" valign="top"><a id="ad1801b28ff7fc83cc9f59fb60a0b6e06"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1_log_message.html#ad1801b28ff7fc83cc9f59fb60a0b6e06">message</a> {&quot;-&quot;}</td></tr>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1_log_message.html#ad1801b28ff7fc83cc9f59fb60a0b6e06">message</a></td></tr>
 <tr class="memdesc:ad1801b28ff7fc83cc9f59fb60a0b6e06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Message string itself. <br /></td></tr>
 <tr class="separator:ad1801b28ff7fc83cc9f59fb60a0b6e06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="log__message_8hpp_source.html#l00035">35</a> of file <a class="el" href="log__message_8hpp_source.html">log_message.hpp</a>.</p>
-</div><hr/>The documentation for this struct was generated from the following files:<ul>
-<li><a class="el" href="log__message_8hpp_source.html">log_message.hpp</a></li>
-<li><a class="el" href="log__message_8cpp_source.html">log_message.cpp</a></li>
+<p class="definition">Definition at line <a class="el" href="_message_8hpp_source.html#l00044">44</a> of file <a class="el" href="_message_8hpp_source.html">Message.hpp</a>.</p>
+</div><hr/>The documentation for this struct was generated from the following file:<ul>
+<li><a class="el" href="_message_8hpp_source.html">Message.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

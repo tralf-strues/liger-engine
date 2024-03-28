@@ -1,7 +1,7 @@
 var classliger_1_1_timer =
 [
-    [ "Timer", "classliger_1_1_timer.html#a5f16e8da27d2a5a5242dead46de05d97", null ],
-    [ "Elapsed", "classliger_1_1_timer.html#a248d47492d7bca22d136c728fc8b9c26", null ],
-    [ "ElapsedMs", "classliger_1_1_timer.html#aca6b1fd36a1c2c2f7fdbc82de2e64ca6", null ],
-    [ "Reset", "classliger_1_1_timer.html#ae7c0c1e7d12de4b8a6e7c64e451cdd2a", null ]
+    [ "Timer", "classliger_1_1_timer.html#a65a3313587779aed3c4e33fd3e088ee6", null ],
+    [ "Elapsed", "classliger_1_1_timer.html#af006ac3fa035a8b8cd19f37fd302faf4", null ],
+    [ "ElapsedMs", "classliger_1_1_timer.html#af6e426b720e33c2e3c4baf669c6a33da", null ],
+    [ "Reset", "classliger_1_1_timer.html#af0ea4823251d29c162a46c6333cd91da", null ]
 ];

@@ -1,11 +1,11 @@
 var classliger_1_1_platform_layer =
 [
-    [ "PlatformLayer", "classliger_1_1_platform_layer.html#a24a4e2ee55334d1a03f92ef454a49c36", null ],
-    [ "~PlatformLayer", "classliger_1_1_platform_layer.html#a61312b4153b97c0faf95000ceed1649b", null ],
-    [ "CreateWindow", "classliger_1_1_platform_layer.html#ac600be7ff9cb9f06f8ec7bce781b172d", null ],
-    [ "GetCursorPosition", "classliger_1_1_platform_layer.html#a997ff1f8d9c6495a7a71f44f88b4111f", null ],
+    [ "PlatformLayer", "classliger_1_1_platform_layer.html#a47c7ad7fefdc0f7530b19cde213b58a5", null ],
+    [ "~PlatformLayer", "classliger_1_1_platform_layer.html#aa12e7e0128194ba04195533239577b2d", null ],
+    [ "CreateWindow", "classliger_1_1_platform_layer.html#a5ab5e2cb068559037eb7150f2fbe6084", null ],
+    [ "GetCursorPosition", "classliger_1_1_platform_layer.html#a5203c0c9b1b6609fadde6a9f6241ef0d", null ],
     [ "GetSink", "classliger_1_1_platform_layer.html#a5e68bc0ffa6e5c6e52b605b70d268ffd", null ],
-    [ "KeyPressed", "classliger_1_1_platform_layer.html#a39a670198997e0ce8e12cbc7a1925126", null ],
-    [ "PollEvents", "classliger_1_1_platform_layer.html#afc8eba0267d833578676c7920b9a1059", null ],
-    [ "SetCursorEnabled", "classliger_1_1_platform_layer.html#a1cebea4c59ce79cfe70d47b3d8cb227c", null ]
+    [ "KeyPressed", "classliger_1_1_platform_layer.html#a952ca3a60cd4ae89a107a9498e6c998c", null ],
+    [ "PollEvents", "classliger_1_1_platform_layer.html#a991d72307d400b8308968af54bfcc679", null ],
+    [ "SetCursorEnabled", "classliger_1_1_platform_layer.html#a2a45fac0ae946cb1ac75911ceeffaebd", null ]
 ];

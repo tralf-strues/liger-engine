@@ -25,7 +25,12 @@
 var NAVTREE =
 [
   [ "Liger Engine", "index.html", [
-    [ "Wiki", "index.html#autotoc_md1", null ],
+    [ "Build", "index.html#autotoc_md1", [
+      [ "Installing the engine", "index.html#autotoc_md2", null ],
+      [ "Create game project", "index.html#autotoc_md3", null ],
+      [ "Dependencies", "index.html#autotoc_md4", null ]
+    ] ],
+    [ "Wiki", "index.html#autotoc_md5", null ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
@@ -33,23 +38,22 @@ var NAVTREE =
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", null ],
         [ "Functions", "functions_func.html", null ],
-        [ "Variables", "functions_vars.html", null ]
+        [ "Variables", "functions_vars.html", null ],
+        [ "Enumerations", "functions_enum.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [
-      [ "File List", "files.html", "files_dup" ],
-      [ "File Members", "globals.html", [
-        [ "All", "globals.html", null ],
-        [ "Macros", "globals_defs.html", null ]
-      ] ]
+      [ "File List", "files.html", "files_dup" ]
     ] ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
-"annotated.html",
-"structliger_1_1_mouse_button_event.html"
+"_asset_2_log_channel_8hpp.html",
+"_storage_8hpp.html#a549738fbc1a2cf4528f7675d95a98344a7381d487d18845b379422325c0a768d6",
+"classliger_1_1rhi_1_1_i_command_buffer.html#adffdb50e63b09aed2c64e934c1d1f7d3",
+"structliger_1_1rhi_1_1_color_blend_info.html#a4bd724261901efc26f224c0747ec2c66"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

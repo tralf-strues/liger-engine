@@ -87,8 +87,45 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="title">Liger Engine </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a><img src="https://github.com/tralf-strues/liger-engine/actions/workflows/test_sandbox.yml/badge.svg?branch=main" alt="" style="pointer-events: none;" class="inline"/></p>
+<div class="textblock"><p><a class="anchor" id="md_README"></a><img src="https://github.com/tralf-strues/liger-engine/actions/workflows/build.yml/badge.svg?branch=main" alt="Linux/MacOS build status" style="pointer-events: none;" class="inline"/></p>
+<p>Liger engine is a personal learning game engine, currently in the early stages development.</p>
 <h1><a class="anchor" id="autotoc_md1"></a>
+Build</h1>
+<p>Currently the engine works on Linux and MacOS.</p>
+<h2><a class="anchor" id="autotoc_md2"></a>
+Installing the engine</h2>
+<div class="fragment"><div class="line">git clone --recursive https://github.com/tralf-strues/liger-engine</div>
+<div class="line">./build_unix.sh {debug|release}</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md3"></a>
+Create game project</h2>
+<div class="fragment"><div class="line">python new_project.py --name &quot;&lt;PROJECT_NAME&gt;&quot; --path &quot;&lt;PROJECT_PATH&gt;&quot; --liger_path &quot;&lt;ENGINE_PATH&gt;&quot;</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md4"></a>
+Dependencies</h2>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Name   </th><th class="markdownTableHeadNone">Notes    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a href="https://github.com/fmtlib/fmt">fmt</a>   </td><td class="markdownTableBodyNone">Submodule    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a href="https://github.com/glfw/glfw">glfw</a>   </td><td class="markdownTableBodyNone">Submodule    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a href="https://github.com/g-truc/glm">glm</a>   </td><td class="markdownTableBodyNone">Submodule    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a href="https://github.com/Neargye/magic_enum">magic_enum</a>   </td><td class="markdownTableBodyNone">Submodule    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a href="https://github.com/taskflow/taskflow">taskflow</a>   </td><td class="markdownTableBodyNone">Submodule    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a href="https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator">VMA</a>   </td><td class="markdownTableBodyNone">Submodule    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a href="https://github.com/zeux/volk">volk</a>   </td><td class="markdownTableBodyNone">Submodule    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a href="https://github.com/KhronosGroup/Vulkan-Headers">vulkan-headers</a>   </td><td class="markdownTableBodyNone">Submodule    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a href="https://github.com/KhronosGroup/Vulkan-Utility-Libraries">vulkan-utility-libraries</a>   </td><td class="markdownTableBodyNone">Submodule    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a href="https://github.com/jbeder/yaml-cpp">yaml-cpp</a>   </td><td class="markdownTableBodyNone">Submodule   </td></tr>
+</table>
+<h1><a class="anchor" id="autotoc_md5"></a>
 Wiki</h1>
 <p><a href="https://github.com/tralf-strues/liger-engine/wiki">Here</a> I'm going to write short pages on the design decisions I'm making during development of the engine. </p>
 </div></div><!-- PageDoc -->

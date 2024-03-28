@@ -1,7 +1,28 @@
 var searchData=
 [
-  ['time_2ecpp_69',['time.cpp',['../time_8cpp.html',1,'']]],
-  ['time_2ehpp_70',['time.hpp',['../time_8hpp.html',1,'']]],
-  ['timer_71',['Timer',['../classliger_1_1_timer.html',1,'liger::Timer'],['../classliger_1_1_timer.html#a5f16e8da27d2a5a5242dead46de05d97',1,'liger::Timer::Timer()']]],
-  ['types_2ehpp_72',['types.hpp',['../types_8hpp.html',1,'']]]
+  ['logchannel_2ehpp_183',['LogChannel.hpp',['../_r_h_i_2_log_channel_8hpp.html',1,'']]],
+  ['random_184',['Random',['../classliger_1_1_random.html',1,'liger']]],
+  ['random_2ehpp_185',['Random.hpp',['../_random_8hpp.html',1,'']]],
+  ['rasterizationinfo_186',['RasterizationInfo',['../structliger_1_1rhi_1_1_rasterization_info.html',1,'liger::rhi']]],
+  ['recreate_187',['Recreate',['../classliger_1_1rhi_1_1_i_swapchain.html#a3b2dc88c135bf7c7413ec01819bf82ef',1,'liger::rhi::ISwapchain']]],
+  ['refcountstorage_188',['RefCountStorage',['../classliger_1_1_ref_count_storage.html',1,'liger']]],
+  ['refcountstorage_2ehpp_189',['RefCountStorage.hpp',['../_ref_count_storage_8hpp.html',1,'']]],
+  ['refcountstorage_3c_20asset_20_3e_190',['RefCountStorage&lt; Asset &gt;',['../classliger_1_1_ref_count_storage.html',1,'liger']]],
+  ['reference_191',['Reference',['../classliger_1_1_ref_count_storage_1_1_reference.html',1,'liger::RefCountStorage']]],
+  ['register_192',['Register',['../classliger_1_1asset_1_1_registry.html#aaae96a13c9fbf6daac3f0f312ff59111',1,'liger::asset::Registry']]],
+  ['registry_193',['Registry',['../classliger_1_1asset_1_1_registry.html',1,'liger::asset::Registry'],['../classliger_1_1asset_1_1_registry.html#aab44826f9a74d48e4075412643bbed5d',1,'liger::asset::Registry::Registry()']]],
+  ['registry_2ehpp_194',['Registry.hpp',['../_registry_8hpp.html',1,'']]],
+  ['remove_195',['Remove',['../classliger_1_1_event_sink.html#ad0e6b6ac0671f4bc14791272efdcfa53',1,'liger::EventSink::Remove(ClassT &amp;instance)'],['../classliger_1_1_event_sink.html#a98976085cf46c91c50c90a93c43ebec7',1,'liger::EventSink::Remove()']]],
+  ['renderarea_196',['RenderArea',['../structliger_1_1rhi_1_1_render_area.html',1,'liger::rhi']]],
+  ['rendergraph_197',['RenderGraph',['../classliger_1_1rhi_1_1_render_graph.html',1,'liger::rhi']]],
+  ['rendergraph_2ehpp_198',['RenderGraph.hpp',['../_render_graph_8hpp.html',1,'']]],
+  ['rendergraphbuilder_199',['RenderGraphBuilder',['../classliger_1_1rhi_1_1_render_graph_builder.html',1,'liger::rhi']]],
+  ['reset_200',['Reset',['../classliger_1_1_timer.html#af0ea4823251d29c162a46c6333cd91da',1,'liger::Timer']]],
+  ['resourceread_201',['ResourceRead',['../structliger_1_1rhi_1_1_render_graph_1_1_resource_read.html',1,'liger::rhi::RenderGraph']]],
+  ['resourceusagespan_202',['ResourceUsageSpan',['../structliger_1_1rhi_1_1_render_graph_1_1_resource_usage_span.html',1,'liger::rhi::RenderGraph']]],
+  ['resourceversionregistry_203',['ResourceVersionRegistry',['../classliger_1_1rhi_1_1_resource_version_registry.html',1,'liger::rhi']]],
+  ['resourceversionregistry_2ehpp_204',['ResourceVersionRegistry.hpp',['../_resource_version_registry_8hpp.html',1,'']]],
+  ['resourceversionregistry_3c_20textureresource_2c_20bufferresource_20_3e_205',['ResourceVersionRegistry&lt; TextureResource, BufferResource &gt;',['../classliger_1_1rhi_1_1_resource_version_registry.html',1,'liger::rhi']]],
+  ['resourcewrite_206',['ResourceWrite',['../structliger_1_1rhi_1_1_render_graph_1_1_resource_write.html',1,'liger::rhi::RenderGraph']]],
+  ['result_207',['Result',['../structliger_1_1asset_1_1_i_importer_1_1_result.html',1,'liger::asset::IImporter']]]
 ];

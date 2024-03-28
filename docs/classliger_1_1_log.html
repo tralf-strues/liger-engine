@@ -86,16 +86,17 @@ $(document).ready(function(){initNavTree('classliger_1_1_log.html',''); initResi
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classliger_1_1_log-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">liger::Log Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Container of messages, that can have several <a class="el" href="classliger_1_1_i_log_writer.html">ILogWriter</a> writers.  
+<p>Container of messages, that can have several IWriter writers.  
  <a href="classliger_1_1_log.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="log_8hpp_source.html">log.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="_log_8hpp_source.html">Log.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -105,27 +106,32 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>MessageIterator</b> 
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5a645fb514034429b0f9c1b81f2b1c83"><td class="memItemLeft" align="right" valign="top"><a id="a5a645fb514034429b0f9c1b81f2b1c83"></a>
+<tr class="memitem:a2cb03d8ddfe17a8f7a972f8fdb408c32"><td class="memItemLeft" align="right" valign="top"><a id="a2cb03d8ddfe17a8f7a972f8fdb408c32"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>AddWriter</b> (std::unique_ptr&lt; <a class="el" href="classliger_1_1_i_log_writer.html">ILogWriter</a> &gt; writer)</td></tr>
-<tr class="separator:a5a645fb514034429b0f9c1b81f2b1c83"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5ee791a61279d81e2f7cc1c335009ec"><td class="memTemplParams" colspan="2"><a id="af5ee791a61279d81e2f7cc1c335009ec"></a>
+<tr class="separator:a2cb03d8ddfe17a8f7a972f8fdb408c32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5243a627eaf6b5610eeddc389e01443c"><td class="memTemplParams" colspan="2"><a id="a5243a627eaf6b5610eeddc389e01443c"></a>
 template&lt;typename... Args&gt; </td></tr>
-<tr class="memitem:af5ee791a61279d81e2f7cc1c335009ec"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Message</b> (LogLevel level, uint64 channel, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:af5ee791a61279d81e2f7cc1c335009ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62a0b003db955197f4e95c7e11cdb13e"><td class="memItemLeft" align="right" valign="top"><a id="a62a0b003db955197f4e95c7e11cdb13e"></a>
+<tr class="memitem:a5243a627eaf6b5610eeddc389e01443c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Add</b> (LogLevel level, std::string_view source, std::string_view channel, std::string_view format, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a5243a627eaf6b5610eeddc389e01443c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a732a295d3e4d9dbccfd553f9b9cc4982"><td class="memItemLeft" align="right" valign="top"><a id="a732a295d3e4d9dbccfd553f9b9cc4982"></a>
 MessageIterator&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> () const</td></tr>
-<tr class="separator:a62a0b003db955197f4e95c7e11cdb13e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88bde453070f174d256bb68823a9eb73"><td class="memItemLeft" align="right" valign="top"><a id="a88bde453070f174d256bb68823a9eb73"></a>
+<tr class="separator:a732a295d3e4d9dbccfd553f9b9cc4982"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a375627ca97923e5382d64685c5616a62"><td class="memItemLeft" align="right" valign="top"><a id="a375627ca97923e5382d64685c5616a62"></a>
 MessageIterator&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> () const</td></tr>
-<tr class="separator:a88bde453070f174d256bb68823a9eb73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a375627ca97923e5382d64685c5616a62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ab775a1b3a8e477dfd52f2bfe31cb9bc4"><td class="memItemLeft" align="right" valign="top"><a id="ab775a1b3a8e477dfd52f2bfe31cb9bc4"></a>
+static <a class="el" href="classliger_1_1_log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>Instance</b> ()</td></tr>
+<tr class="separator:ab775a1b3a8e477dfd52f2bfe31cb9bc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Container of messages, that can have several <a class="el" href="classliger_1_1_i_log_writer.html">ILogWriter</a> writers. </p>
+<div class="textblock"><p>Container of messages, that can have several IWriter writers. </p>
 
-<p class="definition">Definition at line <a class="el" href="log_8hpp_source.html#l00040">40</a> of file <a class="el" href="log_8hpp_source.html">log.hpp</a>.</p>
-</div><hr/>The documentation for this class was generated from the following files:<ul>
-<li><a class="el" href="log_8hpp_source.html">log.hpp</a></li>
-<li><a class="el" href="log_8cpp_source.html">log.cpp</a></li>
+<p class="definition">Definition at line <a class="el" href="_log_8hpp_source.html#l00042">42</a> of file <a class="el" href="_log_8hpp_source.html">Log.hpp</a>.</p>
+</div><hr/>The documentation for this class was generated from the following file:<ul>
+<li><a class="el" href="_log_8hpp_source.html">Log.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
