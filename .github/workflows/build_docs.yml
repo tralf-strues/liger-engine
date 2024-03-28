@@ -16,7 +16,7 @@ jobs:
         submodules: recursive
 
     - name: Install tools
-      run: sudo apt-get install python doxygen graphviz
+      run: sudo apt-get install doxygen graphviz
 
     - name: Generate docs
       run: python build_docs.py
