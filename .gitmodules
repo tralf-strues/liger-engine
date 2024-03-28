@@ -1,30 +1,30 @@
 [submodule "engine/third_party/glm"]
-	path = engine/third_party/glm
+	path = Engine/ThirdParty/glm
 	url = https://github.com/g-truc/glm
 [submodule "engine/third_party/glfw"]
-	path = engine/third_party/glfw
+	path = Engine/ThirdParty/glfw
 	url = https://github.com/glfw/glfw
 [submodule "engine/third_party/yaml_cpp"]
-	path = engine/third_party/yaml_cpp
+	path = Engine/ThirdParty/yaml_cpp
 	url = https://github.com/jbeder/yaml-cpp.git
 [submodule "engine/third_party/fmt"]
-	path = engine/third_party/fmt
+	path = Engine/ThirdParty/fmt
 	url = https://github.com/fmtlib/fmt
 [submodule "engine/third_party/magic_enum"]
-	path = engine/third_party/magic_enum
+	path = Engine/ThirdParty/magic_enum
 	url = https://github.com/Neargye/magic_enum.git
 [submodule "engine/third_party/vma"]
-	path = engine/third_party/vma
+	path = Engine/ThirdParty/vma
 	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
 [submodule "engine/third_party/volk"]
-	path = engine/third_party/volk
+	path = Engine/ThirdParty/volk
 	url = https://github.com/zeux/volk.git
 [submodule "engine/third_party/vulkan-headers"]
-	path = engine/third_party/vulkan-headers
+	path = Engine/ThirdParty/vulkan-headers
 	url = https://github.com/KhronosGroup/Vulkan-Headers.git
 [submodule "engine/third_party/vulkan-utility-libraries"]
-	path = engine/third_party/vulkan-utility-libraries
+	path = Engine/ThirdParty/vulkan-utility-libraries
 	url = https://github.com/KhronosGroup/Vulkan-Utility-Libraries.git
-[submodule "engine/third_party/taskflow"]
-	path = engine/third_party/taskflow
+[submodule "Engine/ThirdParty/taskflow"]
+	path = Engine/ThirdParty/taskflow
 	url = https://github.com/taskflow/taskflow.git

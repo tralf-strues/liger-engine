@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(liger-engine)
+project(Liger-Engine)
 
-add_subdirectory(engine)
-add_subdirectory(editor)
-add_subdirectory(sandbox)
+add_subdirectory(Engine)
+add_subdirectory(Editor)
