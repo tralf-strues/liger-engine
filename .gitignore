@@ -45,8 +45,7 @@
 
 #=== Visual Studio Code ===#
 /.vs/
-
-#=== Visual Studio Code ===#
+/.idea/
 /.vscode/
 /.cache/
 
