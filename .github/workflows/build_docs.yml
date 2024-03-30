@@ -19,7 +19,7 @@ jobs:
       run: sudo apt-get install doxygen graphviz
 
     - name: Generate docs
-      run: ./build_docs.sh
+      run: python build_docs.py
 
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@v4
