@@ -46,6 +46,7 @@ target_link_libraries(liger-engine
     magic_enum
 
   PRIVATE
+    glslang glslang-default-resource-limits SPIRV
     VulkanMemoryAllocator
     vulkan-headers
     vulkan-utility-libraries
@@ -53,7 +54,20 @@ target_link_libraries(liger-engine
     yaml-cpp
 )
 
-install(TARGETS liger-engine fmt glfw glm magic_enum VulkanMemoryAllocator vulkan-headers vulkan-utility-libraries volk yaml-cpp
+install(
+  TARGETS
+    liger-engine
+    fmt
+    glfw
+    glm
+    glslang OSDependent MachineIndependent GenericCodeGen glslang-default-resource-limits SPIRV
+    magic_enum
+    VulkanMemoryAllocator
+    vulkan-headers
+    vulkan-utility-libraries
+    volk
+    yaml-cpp
+
   EXPORT liger-engine-targets
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib

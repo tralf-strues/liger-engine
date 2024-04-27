@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file VulkanComputePipeline.hpp
- * @date 2024-02-10
+ * @file DeclarationStack.hpp
+ * @date 2024-04-15
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,28 +27,21 @@
 
 #pragma once
 
-#include <Liger-Engine/RHI/ComputePipeline.hpp>
+#include <Liger-Engine/ShaderSystem/Declaration.hpp>
 
-#include "VulkanUtils.hpp"
+namespace liger::shader {
 
-namespace liger::rhi {
-
-class VulkanDevice;
-
-class VulkanComputePipeline : public IComputePipeline {
+class DeclarationStack {
  public:
-  explicit VulkanComputePipeline(VulkanDevice& device);
-  ~VulkanComputePipeline() override;
+  void Push(Declaration declaration);
+  void Pop();
 
-  bool Init(const Info& info);
+  [[nodiscard]] Declaration& Top();
 
-  VkPipeline       GetVulkanPipeline() const;
-  VkPipelineLayout GetVulkanLayout() const;
+  [[nodiscard]] std::optional<Declaration> Merged() const;
 
  private:
-  VulkanDevice&    device_;
-  VkPipelineLayout layout_{VK_NULL_HANDLE};
-  VkPipeline       pipeline_{VK_NULL_HANDLE};
+  std::vector<Declaration> stack_;
 };
 
-}  // namespace liger::rhi
+}  // namespace liger::shader

@@ -3,6 +3,12 @@ set -e
 
 mkdir -p .liger_log
 
+if [ ! -d "Engine/ThirdParty/glslang/External/spirv-tools" ]; then
+  cd Engine/ThirdParty/glslang
+  ./update_glslang_sources.py
+  cd ../../..
+fi
+
 if [ $# -eq 0 ]; then
   echo "Please, specify the build mode (i.e. Debug or Release)"
   exit 1
@@ -19,7 +25,7 @@ build_dir_name="build_${1}"
 
 mkdir -p ${build_dir_name}
 cd ${build_dir_name}
-cmake .. -G "Ninja" -DCMAKE_BUILD_TYPE=${build_mode} ${2}
+cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS=true -DCMAKE_BUILD_TYPE=${build_mode} ${2}
 ninja
 cd ..
 

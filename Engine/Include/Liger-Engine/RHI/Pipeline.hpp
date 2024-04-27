@@ -1,6 +1,6 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file GraphicsPipeline.hpp
+ * @file Pipeline.hpp
  * @date 2024-02-03
  *
  * The MIT License (MIT)
@@ -97,7 +97,7 @@ struct RasterizationInfo {
     Line
   };
 
-  CullMode    cull_mode    {CullMode::None};
+  CullMode    cull_mode    {CullMode::BackOnly};
   FrontFace   front_face   {FrontFace::CounterClockwise};
   PolygonMode polygon_mode {PolygonMode::Fill};
 };
@@ -124,11 +124,11 @@ struct DepthStencilTestInfo {
 struct ColorBlendInfo {
   /**
    * @brief Specifies blending factor.
-   * 
+   *
    * Let
    * 1. R_src, G_src, B_src, A_src - source color components
    * 2. R_dst, G_dst, B_dst, A_dst - destination color components
-   * 
+   *
    * Then factors are defined as follows:
    *
    * Factor            | RGB blend factors                 | Alpha blend factor             |
@@ -163,15 +163,15 @@ struct ColorBlendInfo {
 
   /**
    * @brief Specifies blending operation.
-   * 
+   *
    * Let
    * 1. R_src, G_src, B_src, A_src - source color components
    * 2. R_dst, G_dst, B_dst, A_dst - destination color components
    * 3. SF_r, SF_g, SF_b, SF_a - source blend factor components
    * 4. DF_r, DF_g, DF_b, DF_a - destination blend factor components
-   * 
+   *
    * Then operations are defined as follows:
-   * 
+   *
    * Operation        | Final R/G/B                    | Final A                        |
    * ----------------:|:------------------------------:|:------------------------------:|
    * kAdd             | R_src * SF_r + R_dst * DF_r    | A_src * SF_a + A_dst * DF_a    |
@@ -207,9 +207,9 @@ struct AttachmentInfo {
 
 class IShaderModule;
 
-class IGraphicsPipeline {
+class IPipeline {
  public:
-  struct Info {
+  struct GraphicsInfo {
     InputAssemblyInfo               input_assembly;
     RasterizationInfo               rasterization;
     DepthStencilTestInfo            depth_stencil_test;
@@ -217,9 +217,16 @@ class IGraphicsPipeline {
     PushConstantInfo                push_constant;
     AttachmentInfo                  attachments;
     std::span<const IShaderModule*> shader_modules;
+    std::string                     name;
   };
 
-  virtual ~IGraphicsPipeline() = default;
+  struct ComputeInfo {
+    PushConstantInfo push_constant;
+    IShaderModule*   shader_module;
+    std::string      name;
+  };
+
+  virtual ~IPipeline() = default;
 };
 
 }  // namespace liger::rhi

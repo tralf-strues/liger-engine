@@ -47,11 +47,9 @@ class VulkanCommandBuffer : public ICommandBuffer {
 
   void GenerateMipLevels(ITexture* texture, Filter filter) override;
 
-  void SetPushConstant(const IComputePipeline* compute_pipeline, std::span<const char> data) override;
-  void SetPushConstant(const IGraphicsPipeline* graphics_pipeline, std::span<const char> data) override;
+  void SetPushConstant(const IPipeline* pipeline, std::span<const char> data) override;
 
-  void BindPipeline(const IComputePipeline* compute_pipeline) override;
-  void BindPipeline(const IGraphicsPipeline* graphics_pipeline) override;
+  void BindPipeline(const IPipeline* pipeline) override;
 
   void Dispatch(uint32_t group_count_x, uint32_t group_count_y, uint32_t group_count_z) override;
 

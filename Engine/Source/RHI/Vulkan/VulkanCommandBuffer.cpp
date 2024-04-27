@@ -28,8 +28,7 @@
 #include "VulkanCommandBuffer.hpp"
 
 #include "VulkanBuffer.hpp"
-#include "VulkanComputePipeline.hpp"
-#include "VulkanGraphicsPipeline.hpp"
+#include "VulkanPipeline.hpp"
 #include "VulkanTexture.hpp"
 
 namespace liger::rhi {
@@ -59,28 +58,33 @@ void VulkanCommandBuffer::GenerateMipLevels(ITexture* /*texture*/, Filter /*filt
   LIGER_ASSERT(false, kLogChannelRHI, "Not implemented!");
 }
 
-void VulkanCommandBuffer::SetPushConstant(const IComputePipeline* compute_pipeline, std::span<const char> data) {
-  const auto& vulkan_pipeline = static_cast<const VulkanComputePipeline&>(*compute_pipeline);
+void VulkanCommandBuffer::SetPushConstant(const IPipeline* pipeline, std::span<const char> data) {
+  const auto& vulkan_pipeline = static_cast<const VulkanPipeline&>(*pipeline);
+  const auto bind_point = vulkan_pipeline.GetVulkanBindPoint();
 
-  vkCmdPushConstants(vk_cmds_, vulkan_pipeline.GetVulkanLayout(), VK_SHADER_STAGE_COMPUTE_BIT, 0, data.size(),
-                     data.data());
+  VkShaderStageFlags shader_stages = 0U;
+  switch (bind_point) {
+    case VK_PIPELINE_BIND_POINT_GRAPHICS: {
+      shader_stages = GetVulkanAllGraphicsPipelineShaderStages();
+      break;
+    }
+
+    case VK_PIPELINE_BIND_POINT_COMPUTE: {
+      shader_stages = GetVulkanAllComputePipelineShaderStages();
+      break;
+    }
+
+    default: {
+      LIGER_ASSERT(false, kLogChannelRHI, "Unsupported vulkan bind point {}", string_VkPipelineBindPoint(bind_point));
+    }
+  }
+
+  vkCmdPushConstants(vk_cmds_, vulkan_pipeline.GetVulkanLayout(), shader_stages, 0, data.size(), data.data());
 }
 
-void VulkanCommandBuffer::SetPushConstant(const IGraphicsPipeline* graphics_pipeline, std::span<const char> data) {
-  const auto& vulkan_pipeline = static_cast<const VulkanGraphicsPipeline&>(*graphics_pipeline);
-
-  vkCmdPushConstants(vk_cmds_, vulkan_pipeline.GetVulkanLayout(),
-                     VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, data.size(), data.data());
-}
-
-void VulkanCommandBuffer::BindPipeline(const IComputePipeline* compute_pipeline) {
-  const auto& vulkan_pipeline = static_cast<const VulkanComputePipeline&>(*compute_pipeline);
-  vkCmdBindPipeline(vk_cmds_, VK_PIPELINE_BIND_POINT_COMPUTE, vulkan_pipeline.GetVulkanPipeline());
-}
-
-void VulkanCommandBuffer::BindPipeline(const IGraphicsPipeline* graphics_pipeline) {
-  const auto& vulkan_pipeline = static_cast<const VulkanGraphicsPipeline&>(*graphics_pipeline);
-  vkCmdBindPipeline(vk_cmds_, VK_PIPELINE_BIND_POINT_GRAPHICS, vulkan_pipeline.GetVulkanPipeline());
+void VulkanCommandBuffer::BindPipeline(const IPipeline* pipeline) {
+  const auto& vulkan_pipeline = static_cast<const VulkanPipeline&>(*pipeline);
+  vkCmdBindPipeline(vk_cmds_, vulkan_pipeline.GetVulkanBindPoint(), vulkan_pipeline.GetVulkanPipeline());
 }
 
 void VulkanCommandBuffer::Dispatch(uint32_t group_count_x, uint32_t group_count_y, uint32_t group_count_z) {

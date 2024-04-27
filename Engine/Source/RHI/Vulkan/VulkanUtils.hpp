@@ -385,6 +385,14 @@ inline constexpr VkAttachmentStoreOp GetVulkanAttachmentStoreOp(AttachmentStore 
   return static_cast<VkAttachmentStoreOp>(store);
 }
 
+inline constexpr VkShaderStageFlags GetVulkanAllComputePipelineShaderStages() {
+  return VK_SHADER_STAGE_COMPUTE_BIT;
+}
+
+inline constexpr VkShaderStageFlags GetVulkanAllGraphicsPipelineShaderStages() {
+  return VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;  // TODO (tralf-strues): add the rest stages
+}
+
 template <typename VulkanHandleT>
 inline constexpr VkObjectType GetVulkanObjectType();
 

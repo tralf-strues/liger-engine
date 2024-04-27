@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file ComputePipeline.hpp
- * @date 2024-02-03
+ * @file VulkanPipeline.hpp
+ * @date 2024-02-11
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,21 +27,31 @@
 
 #pragma once
 
-#include <Liger-Engine/RHI/PushConstantInfo.hpp>
+#include <Liger-Engine/RHI/Pipeline.hpp>
 
-#include <string>
+#include "VulkanUtils.hpp"
 
 namespace liger::rhi {
 
-class IComputePipeline {
- public:
-  struct Info {
-    PushConstantInfo push_constant;
-    IShaderModule*   shader_module;
-    std::string      name;
-  };
+class VulkanDevice;
 
-  virtual ~IComputePipeline() = default;
+class VulkanPipeline : public IPipeline {
+ public:
+  explicit VulkanPipeline(VulkanDevice& device);
+  ~VulkanPipeline() override;
+
+  bool Init(const GraphicsInfo& info);
+  bool Init(const ComputeInfo& info);
+
+  VkPipeline          GetVulkanPipeline() const;
+  VkPipelineLayout    GetVulkanLayout() const;
+  VkPipelineBindPoint GetVulkanBindPoint() const;
+
+ private:
+  VulkanDevice&       device_;
+  VkPipelineLayout    layout_{VK_NULL_HANDLE};
+  VkPipeline          pipeline_{VK_NULL_HANDLE};
+  VkPipelineBindPoint bind_point_ = VK_PIPELINE_BIND_POINT_GRAPHICS;
 };
 
 }  // namespace liger::rhi

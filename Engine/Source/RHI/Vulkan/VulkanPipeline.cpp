@@ -1,6 +1,6 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file VulkanGraphicsPipeline.cpp
+ * @file VulkanPipeline.cpp
  * @date 2024-02-11
  *
  * The MIT License (MIT)
@@ -25,27 +25,28 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "VulkanGraphicsPipeline.hpp"
+#include "VulkanPipeline.hpp"
 
+#include "VulkanDevice.hpp"
 #include "VulkanShaderModule.hpp"
 
 namespace liger::rhi {
 
-VulkanGraphicsPipeline::VulkanGraphicsPipeline(VkDevice vk_device) : vk_device_(vk_device) {}
+VulkanPipeline::VulkanPipeline(VulkanDevice& device) : device_(device) {}
 
-VulkanGraphicsPipeline::~VulkanGraphicsPipeline() {
-  if (vk_pipeline_ != VK_NULL_HANDLE) {
-    vkDestroyPipeline(vk_device_, vk_pipeline_, nullptr);
-    vk_pipeline_ = VK_NULL_HANDLE;
+VulkanPipeline::~VulkanPipeline() {
+  if (pipeline_ != VK_NULL_HANDLE) {
+    vkDestroyPipeline(device_.GetVulkanDevice(), pipeline_, nullptr);
+    pipeline_ = VK_NULL_HANDLE;
   }
 
-  if (vk_layout_ != VK_NULL_HANDLE) {
-    vkDestroyPipelineLayout(vk_device_, vk_layout_, nullptr);
-    vk_layout_ = VK_NULL_HANDLE;
+  if (layout_ != VK_NULL_HANDLE) {
+    vkDestroyPipelineLayout(device_.GetVulkanDevice(), layout_, nullptr);
+    layout_ = VK_NULL_HANDLE;
   }
 }
 
-bool VulkanGraphicsPipeline::Init(const Info& info, VkDescriptorSetLayout ds_layout) {
+bool VulkanPipeline::Init(const GraphicsInfo& info) {
   /* Pipeline layout */
   const bool push_constant_present = info.push_constant.size > 0;
 
@@ -54,6 +55,8 @@ bool VulkanGraphicsPipeline::Init(const Info& info, VkDescriptorSetLayout ds_lay
     .offset     = 0,
     .size       = info.push_constant.size
   };
+
+  const auto ds_layout = device_.GetDescriptorManager().GetLayout();
 
   const VkPipelineLayoutCreateInfo layout_info {
     .sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
@@ -65,7 +68,7 @@ bool VulkanGraphicsPipeline::Init(const Info& info, VkDescriptorSetLayout ds_lay
     .pPushConstantRanges    = push_constant_present ? &push_constant_range : nullptr
   };
 
-  VULKAN_CALL(vkCreatePipelineLayout(vk_device_, &layout_info, nullptr, &vk_layout_));
+  VULKAN_CALL(vkCreatePipelineLayout(device_.GetVulkanDevice(), &layout_info, nullptr, &layout_));
 
   /* Shader stages */
   std::vector<VkPipelineShaderStageCreateInfo> vk_stages_info{info.shader_modules.size()};
@@ -248,7 +251,7 @@ bool VulkanGraphicsPipeline::Init(const Info& info, VkDescriptorSetLayout ds_lay
     .stencilAttachmentFormat = stencil_used ? GetVulkanFormat(depth_stencil_format) : VK_FORMAT_UNDEFINED
   };
 
-  /* Graphics pipeline */
+  /*  pipeline */
   VkGraphicsPipelineCreateInfo vk_pipeline_info{};
   vk_pipeline_info.sType               = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
   vk_pipeline_info.pNext               = &vk_pipeline_rendering;
@@ -265,7 +268,7 @@ bool VulkanGraphicsPipeline::Init(const Info& info, VkDescriptorSetLayout ds_lay
   vk_pipeline_info.pColorBlendState    = &vk_color_blend_info;
   vk_pipeline_info.pDynamicState       = &vk_dynamic_state_info;
 
-  vk_pipeline_info.layout              = vk_layout_;
+  vk_pipeline_info.layout              = layout_;
 
   vk_pipeline_info.renderPass          = VK_NULL_HANDLE;
   vk_pipeline_info.subpass             = 0;
@@ -275,17 +278,80 @@ bool VulkanGraphicsPipeline::Init(const Info& info, VkDescriptorSetLayout ds_lay
   vk_pipeline_info.basePipelineIndex   = -1;
 
   // TODO(tralf-strues): Add pipeline cache!
-  VULKAN_CALL(vkCreateGraphicsPipelines(vk_device_, VK_NULL_HANDLE, 1, &vk_pipeline_info, nullptr, &vk_pipeline_));
+  VULKAN_CALL(
+      vkCreateGraphicsPipelines(device_.GetVulkanDevice(), VK_NULL_HANDLE, 1, &vk_pipeline_info, nullptr, &pipeline_));
+
+  if (!info.name.empty()) {
+    device_.SetDebugName(pipeline_, info.name);
+    device_.SetDebugName(layout_, "{} <layout>", info.name);
+  }
 
   return true;
 }
 
-VkPipeline VulkanGraphicsPipeline::GetVulkanPipeline() const {
-  return vk_pipeline_;
+bool VulkanPipeline::Init(const ComputeInfo& info) {
+  /* Pipeline layout */
+  const bool push_constant_present = info.push_constant.size > 0;
+
+  const VkPushConstantRange push_constant_range {
+    .stageFlags = GetVulkanShaderStageFlags(info.push_constant.shader_types),
+    .offset     = 0,
+    .size       = info.push_constant.size
+  };
+
+  const auto ds_layout = device_.GetDescriptorManager().GetLayout();
+
+  const VkPipelineLayoutCreateInfo layout_info {
+    .sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+    .pNext                  = nullptr,
+    .flags                  = 0,
+    .setLayoutCount         = 1,
+    .pSetLayouts            = &ds_layout,
+    .pushConstantRangeCount = push_constant_present ? 1U : 0U,
+    .pPushConstantRanges    = push_constant_present ? &push_constant_range : nullptr
+  };
+
+  VULKAN_CALL(vkCreatePipelineLayout(device_.GetVulkanDevice(), &layout_info, nullptr, &layout_));
+
+  /* Pipeline */
+  const VkPipelineShaderStageCreateInfo stage_create_info {
+    .sType               = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+    .pNext               = nullptr,
+    .flags               = 0,
+    .stage               = VK_SHADER_STAGE_COMPUTE_BIT,
+    .module              = dynamic_cast<VulkanShaderModule*>(info.shader_module)->GetVulkanHandle(),
+    .pName               = "main",
+    .pSpecializationInfo = nullptr  // TODO(tralf-strues): Add specialization constants to Vulkan RHI
+  };
+
+  const VkComputePipelineCreateInfo pipeline_info {
+    .sType              = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO,
+    .pNext              = nullptr,
+    .flags              = 0,
+    .stage              = stage_create_info,
+    .layout             = layout_,
+    .basePipelineHandle = VK_NULL_HANDLE,
+    .basePipelineIndex  = 0
+  };
+
+  // TODO(tralf-strues): Add pipeline cache!
+  VULKAN_CALL(vkCreateComputePipelines(device_.GetVulkanDevice(),
+                                       VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &pipeline_));
+
+  if (!info.name.empty()) {
+    device_.SetDebugName(pipeline_, info.name);
+    device_.SetDebugName(layout_, "{} <layout>", info.name);
+  }
+
+  return true;
 }
 
-VkPipelineLayout VulkanGraphicsPipeline::GetVulkanLayout() const {
-  return vk_layout_;
+VkPipeline VulkanPipeline::GetVulkanPipeline() const {
+  return pipeline_;
+}
+
+VkPipelineLayout VulkanPipeline::GetVulkanLayout() const {
+  return layout_;
 }
 
 }  // namespace liger::rhi

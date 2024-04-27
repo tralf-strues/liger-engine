@@ -28,3 +28,6 @@
 [submodule "Engine/ThirdParty/taskflow"]
 	path = Engine/ThirdParty/taskflow
 	url = https://github.com/taskflow/taskflow.git
+[submodule "Engine/ThirdParty/glslang"]
+	path = Engine/ThirdParty/glslang
+	url = https://github.com/KhronosGroup/glslang

@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file ConsoleWriter.hpp
- * @date 2023-09-06
+ * @file LogChannel.hpp
+ * @date 2024-04-17
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,51 +27,10 @@
 
 #pragma once
 
-#include <Liger-Engine/Core/Log/Writer.hpp>
-
-#include <fmt/color.h>
-#include <fmt/core.h>
-#include <fmt/ostream.h>
-
-#include <map>
+#include <Liger-Engine/Core/Log/Log.hpp>
 
 namespace liger {
 
-/**
- * @brief Writes log messages to console and allows custom styles.
- */
-class ConsoleLogWriter : public ILogWriter {
- public:
-  struct Style {
-    fmt::text_style default_style{};
-    fmt::text_style source_style{};
-
-    bool write_source{true};
-
-    bool write_level{true};
-    bool use_level_style_for_entire_message{true};
-    std::map<LogLevel, fmt::text_style> level_styles;
-    std::map<LogLevel, std::string> level_names;
-
-    bool write_channel{true};
-  };
-
-  ConsoleLogWriter();
-  explicit ConsoleLogWriter(Style style);
-  ~ConsoleLogWriter() override = default;
-
-  void SetStyle(const Style& style);
-  const Style& GetStyle() const;
-
-  void OnMessageAdded(const LogMessage& message) override;
-
- private:
-  const fmt::text_style& GetTextStyle(LogLevel level) const;
-
-  const fmt::text_style& GetLevelStyle(LogLevel level) const;
-  const char* GetLevelName(LogLevel level) const;
-
-  Style style_;
-};
+constexpr const char* kLogChannelShader = "Shader";
 
 }  // namespace liger

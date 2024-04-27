@@ -52,8 +52,7 @@ struct RenderArea {
 };
 
 class IBuffer;
-class IComputePipeline;
-class IGraphicsPipeline;
+class IPipeline;
 class ITexture;
 
 class ICommandBuffer {
@@ -78,42 +77,25 @@ class ICommandBuffer {
   virtual void GenerateMipLevels(ITexture* texture, Filter filter = Filter::Linear) = 0;
 
   /**
-   * @brief Set the push constant for the compute pipeline.
+   * @brief Set the push constant for the pipeline.
    *
-   * @note Command capabilities must contain @ref Capability::Compute!
+   * @note If compute pipeline, then command capabilities must contain @ref Capability::Compute!
+   * @note If graphics pipeline, then command capabilities must contain @ref Capability::Graphics!
    *
-   * @param compute_pipeline
+   * @param pipeline
    * @param data
    */
-  virtual void SetPushConstant(const IComputePipeline* compute_pipeline, std::span<const char> data) = 0;
+  virtual void SetPushConstant(const IPipeline* pipeline, std::span<const char> data) = 0;
 
   /**
-   * @brief Set the push constant for the graphics pipeline.
+   * @brief Bind pipeline.
    *
-   * @note Command capabilities must contain @ref Capability::Graphics!
+   * @note If compute pipeline, then command capabilities must contain @ref Capability::Compute!
+   * @note If graphics pipeline, then command capabilities must contain @ref Capability::Graphics!
    *
-   * @param graphics_pipeline
-   * @param data
+   * @param pipeline
    */
-  virtual void SetPushConstant(const IGraphicsPipeline* graphics_pipeline, std::span<const char> data) = 0;
-
-  /**
-   * @brief Bind compute pipeline.
-   *
-   * @note Command capabilities must contain @ref Capability::Compute!
-   *
-   * @param compute_pipeline
-   */
-  virtual void BindPipeline(const IComputePipeline* compute_pipeline) = 0;
-
-  /**
-   * @brief Bind graphics pipeline.
-   *
-   * @note Command capabilities must contain @ref Capability::Graphics!
-   *
-   * @param graphics_pipeline
-   */
-  virtual void BindPipeline(const IGraphicsPipeline* graphics_pipeline) = 0;
+  virtual void BindPipeline(const IPipeline* pipeline) = 0;
 
   /**
    * @brief Compute dispatch call.

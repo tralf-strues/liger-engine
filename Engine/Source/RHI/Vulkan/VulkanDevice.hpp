@@ -89,8 +89,8 @@ class VulkanDevice : public IDevice {
   [[nodiscard]] std::unique_ptr<ITexture> CreateTexture(const ITexture::Info& info) override;
   [[nodiscard]] std::unique_ptr<IBuffer> CreateBuffer(const IBuffer::Info& info) override;
   [[nodiscard]] std::unique_ptr<IShaderModule> CreateShaderModule(const IShaderModule::Source& source) override;
-  [[nodiscard]] std::unique_ptr<IComputePipeline> CreatePipeline(const IComputePipeline::Info& info) override;
-  [[nodiscard]] std::unique_ptr<IGraphicsPipeline> CreatePipeline(const IGraphicsPipeline::Info& info) override;
+  [[nodiscard]] std::unique_ptr<IPipeline> CreatePipeline(const IPipeline::ComputeInfo& info) override;
+  [[nodiscard]] std::unique_ptr<IPipeline> CreatePipeline(const IPipeline::GraphicsInfo& info) override;
 
  private:
   struct FrameSynchronization {

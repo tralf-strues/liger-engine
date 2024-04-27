@@ -14,6 +14,10 @@ add_subdirectory(glfw)
 # glm
 add_subdirectory(glm)
 
+# glslang
+set(GLSLANG_ENABLE_INSTALL ON)
+add_subdirectory(glslang)
+
 # magic-enum
 add_subdirectory(magic_enum)
 

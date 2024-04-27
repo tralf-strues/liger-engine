@@ -29,6 +29,35 @@
 
 namespace liger {
 
+const ConsoleLogWriter::Style kDefaultConsoleLogStyle {
+    .default_style = {},
+
+    .write_source = true,
+
+    .write_level = true,
+    .use_level_style_for_entire_message = true,
+
+    .level_styles = {
+      {LogLevel::Info,    {}},
+      {LogLevel::Trace,   fg(fmt::color::olive_drab)},
+      {LogLevel::Warning, fg(fmt::color::medium_orchid)},
+      {LogLevel::Error,   fg(fmt::color::red)},
+      {LogLevel::Fatal,   fmt::emphasis::bold | fg(fmt::color::red)}
+    },
+
+    .level_names = {
+      {LogLevel::Info,    "I"},
+      {LogLevel::Trace,   "T"},
+      {LogLevel::Warning, "W"},
+      {LogLevel::Error,   "E"},
+      {LogLevel::Fatal,   "F"}
+    },
+
+    .write_channel = true
+};
+
+ConsoleLogWriter::ConsoleLogWriter() : ConsoleLogWriter(kDefaultConsoleLogStyle) {}
+
 ConsoleLogWriter::ConsoleLogWriter(Style style) : style_(std::move(style)) {}
 
 void ConsoleLogWriter::SetStyle(const ConsoleLogWriter::Style& style) { style_ = style; }

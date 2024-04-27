@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file VulkanGraphicsPipeline.hpp
- * @date 2024-02-11
+ * @file shader.hpp
+ * @date 2024-04-15
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,26 +27,39 @@
 
 #pragma once
 
-#include <Liger-Engine/RHI/GraphicsPipeline.hpp>
+#include <Liger-Engine/RHI/Device.hpp>
 
-#include "VulkanUtils.hpp"
+namespace liger::shader {
 
-namespace liger::rhi {
+struct Declaration;
 
-class VulkanGraphicsPipeline : public IGraphicsPipeline {
+class Shader {
  public:
-  explicit VulkanGraphicsPipeline(VkDevice vk_device);
-  ~VulkanGraphicsPipeline() override;
+  void SetTextureSampler(std::string_view name, rhi::TextureDescriptorBinding binding);
+  void SetBuffer(std::string_view name, rhi::BufferDescriptorBinding binding);
 
-  bool Init(const Info& info, VkDescriptorSetLayout ds_layout);
+  template <typename T>
+  void SetProperty(std::string_view name, T value);
 
-  VkPipeline       GetVulkanPipeline() const;
-  VkPipelineLayout GetVulkanLayout() const;
+  template <typename T>
+  void SetPushConstant(std::string_view name, T value);
+
+  void Bind(rhi::ICommandBuffer& cmd) const;
 
  private:
-  VkDevice         vk_device_{VK_NULL_HANDLE};
-  VkPipelineLayout vk_layout_{VK_NULL_HANDLE};
-  VkPipeline       vk_pipeline_{VK_NULL_HANDLE};
+  Shader();
+
+  std::unique_ptr<rhi::IPipeline>           pipeline_{nullptr};
+
+  char*                                     push_constant_data_{nullptr};
+  uint32_t                                  push_constant_size_{0};
+  std::unordered_map<std::string, uint32_t> push_constant_offsets_;
+
+  char*                                     property_buffer_data_{nullptr};
+  std::unique_ptr<rhi::IBuffer>             property_buffer_{nullptr};
+  std::unordered_map<std::string, uint32_t> property_offsets_;
+
+  friend class Compiler;
 };
 
-}  // namespace liger::rhi
+}  // namespace liger::shader

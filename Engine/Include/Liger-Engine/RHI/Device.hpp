@@ -28,8 +28,7 @@
 #pragma once
 
 #include <Liger-Engine/RHI/Buffer.hpp>
-#include <Liger-Engine/RHI/ComputePipeline.hpp>
-#include <Liger-Engine/RHI/GraphicsPipeline.hpp>
+#include <Liger-Engine/RHI/Pipeline.hpp>
 #include <Liger-Engine/RHI/RenderGraph.hpp>
 #include <Liger-Engine/RHI/ShaderModule.hpp>
 #include <Liger-Engine/RHI/Swapchain.hpp>
@@ -152,8 +151,8 @@ class IDevice {
   [[nodiscard]] virtual std::unique_ptr<ITexture> CreateTexture(const ITexture::Info& info) = 0;
   [[nodiscard]] virtual std::unique_ptr<IBuffer> CreateBuffer(const IBuffer::Info& info) = 0;
   [[nodiscard]] virtual std::unique_ptr<IShaderModule> CreateShaderModule(const IShaderModule::Source& source) = 0;
-  [[nodiscard]] virtual std::unique_ptr<IComputePipeline> CreatePipeline(const IComputePipeline::Info& info) = 0;
-  [[nodiscard]] virtual std::unique_ptr<IGraphicsPipeline> CreatePipeline(const IGraphicsPipeline::Info& info) = 0;
+  [[nodiscard]] virtual std::unique_ptr<IPipeline> CreatePipeline(const IPipeline::ComputeInfo& info) = 0;
+  [[nodiscard]] virtual std::unique_ptr<IPipeline> CreatePipeline(const IPipeline::GraphicsInfo& info) = 0;
 };
 
 }  // namespace liger::rhi

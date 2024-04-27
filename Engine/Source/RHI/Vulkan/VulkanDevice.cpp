@@ -28,8 +28,7 @@
 #include "VulkanDevice.hpp"
 
 #include "VulkanBuffer.hpp"
-#include "VulkanComputePipeline.hpp"
-#include "VulkanGraphicsPipeline.hpp"
+#include "VulkanPipeline.hpp"
 #include "VulkanRenderGraph.hpp"
 #include "VulkanShaderModule.hpp"
 #include "VulkanTexture.hpp"
@@ -339,24 +338,24 @@ std::unique_ptr<IShaderModule> VulkanDevice::CreateShaderModule(const IShaderMod
   return shader_module;
 }
 
-std::unique_ptr<IComputePipeline> VulkanDevice::CreatePipeline(const IComputePipeline::Info& info) {
-  auto compute_pipeline = std::make_unique<VulkanComputePipeline>(*this);
+std::unique_ptr<IPipeline> VulkanDevice::CreatePipeline(const IPipeline::GraphicsInfo& info) {
+  auto pipeline = std::make_unique<VulkanPipeline>(*this);
 
-  if (!compute_pipeline->Init(info)) {
+  if (!pipeline->Init(info)) {
     return nullptr;
   }
 
-  return compute_pipeline;
+  return pipeline;
 }
 
-std::unique_ptr<IGraphicsPipeline> VulkanDevice::CreatePipeline(const IGraphicsPipeline::Info& info) {
-  auto graphics_pipeline = std::make_unique<VulkanGraphicsPipeline>(device_);
+std::unique_ptr<IPipeline> VulkanDevice::CreatePipeline(const IPipeline::ComputeInfo& info) {
+  auto pipeline = std::make_unique<VulkanPipeline>(*this);
 
-  if (!graphics_pipeline->Init(info, descriptor_manager_.GetLayout())) {
+  if (!pipeline->Init(info)) {
     return nullptr;
   }
 
-  return graphics_pipeline;
+  return pipeline;
 }
 
 void VulkanDevice::CreateFrameSync() {
