@@ -16,8 +16,8 @@ Data: | #glsl
     f32vec3     radiance;
   };
 
-CodeSnippet:
-  Insert: auto-global
-  Code: | #glsl
-    f32vec3 PBR_RadianceSample(PBR_SurfacePoint surface_point, PBR_LightSample light_sample);
-    // TODO (tralf-strues): Implement
+CodeSnippets:
+  - Insert: auto-global
+    Code: | #glsl
+      f32vec3 PBR_RadianceSample(PBR_SurfacePoint surface_point, PBR_LightSample light_sample);
+      // TODO (tralf-strues): Implement

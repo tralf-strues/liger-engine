@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file EnumReflection.hpp
- * @date 2024-02-06
+ * @file DeclarationParser.hpp
+ * @date 2024-04-27
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,25 +27,24 @@
 
 #pragma once
 
-#include <magic_enum.hpp>
-#include <magic_enum_flags.hpp>
+#include <Liger-Engine/ShaderSystem/Declaration.hpp>
 
-namespace liger {
+#include <yaml-cpp/yaml.h>
 
-template <typename Enum>
-[[nodiscard]] constexpr auto EnumToString(Enum value) noexcept {
-  return magic_enum::enum_name(value);
-}
+#include <filesystem>
 
-template <typename Enum>
-[[nodiscard]] constexpr std::optional<Enum> StringToEnum(std::string_view str) noexcept {
-  auto value = magic_enum::enum_cast<Enum>(str);
-  return value.has_value() ? std::optional(value.value()) : std::nullopt;
-}
+namespace liger::shader {
 
-template <typename Enum>
-[[nodiscard]] constexpr auto EnumMaskToString(Enum mask, char separator = '|') noexcept {
-  return magic_enum::enum_flags_name<Enum>(mask, separator);
-}
+class DeclarationParser {
+ public:
+  explicit DeclarationParser(const std::filesystem::path& filepath);
 
-}  // namespace liger
+  constexpr bool Valid() const;
+
+  [[nodiscard]] std::optional<Declaration> Parse();
+
+ private:
+  YAML::Node root_node_;
+};
+
+}  // namespace liger::shader

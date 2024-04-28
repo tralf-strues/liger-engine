@@ -13,9 +13,9 @@ Input:
     Contents: | #glsl
       Camera camera;
 
-CodeSnippet:
-  Insert: auto-global
-  Code: | #glsl
-    Camera GetCamera(LigerInput liger_in) {
-      return GetUniformBuffer(CameraData, liger_in.binding_camera_data).camera;
-    }
+CodeSnippets:
+  - Insert: auto-global
+    Code: | #glsl
+      Camera GetCamera(LigerInput liger_in) {
+        return GetUniformBuffer(CameraData, liger_in.binding_camera_data).camera;
+      }

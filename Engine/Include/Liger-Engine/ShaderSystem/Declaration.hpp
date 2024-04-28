@@ -108,6 +108,10 @@ struct Declaration {
   std::vector<Member>                               output;
   std::vector<CodeSnippet>                          code_snippets;
   std::string                                       code;
+
+  std::vector<std::string>                          includes;
+  std::vector<std::string>                          interfaces;
+
   std::vector<Declaration>                          declarations;
 
   std::optional<rhi::InputAssemblyInfo::Topology>   vertex_topology;

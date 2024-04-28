@@ -23,7 +23,7 @@ FragmentShader:
   Use:
     - Include: BuiltIn.PBR
     - Include: BuiltIn.LightSources
-    - Socket: GetParametersPBR
+    - Interface: GetParametersPBR
       Desc: "Implementation must define function 'PBR_SurfacePoint GetParametersPBR(LigerInput liger_in)'"
 
   Input:

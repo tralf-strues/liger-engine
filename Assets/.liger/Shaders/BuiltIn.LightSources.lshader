@@ -31,21 +31,21 @@ Input:
       uint32_t    count;
       PointLight  point_lights[];
 
-CodeSnippet:
-  Insert: auto-global
-  Code: | #glsl
-    bool DirectionalLightValid(LigerInput liger_in) {
-      return GetUniformBuffer(DirectionalLightData, liger_in.binding_directional_light_data).valid;
-    };
+CodeSnippets:
+  - Insert: auto-global
+    Code: | #glsl
+      bool DirectionalLightValid(LigerInput liger_in) {
+        return GetUniformBuffer(DirectionalLightData, liger_in.binding_directional_light_data).valid;
+      };
 
-    DirectionalLight GetDirectionalLight(LigerInput liger_in) {
-      return GetUniformBuffer(DirectionalLightData, liger_in.binding_directional_light_data).directional_light;
-    };
+      DirectionalLight GetDirectionalLight(LigerInput liger_in) {
+        return GetUniformBuffer(DirectionalLightData, liger_in.binding_directional_light_data).directional_light;
+      };
 
-    uint32_t GetPointLightCount(LigerInput liger_in) {
-      return GetStorageBuffer(PointLightData, liger_in.binding_point_light_data).count;
-    }
+      uint32_t GetPointLightCount(LigerInput liger_in) {
+        return GetStorageBuffer(PointLightData, liger_in.binding_point_light_data).count;
+      }
 
-    PointLight GetPointLight(LigerInput liger_in, uint32_t idx) {
-      return GetStorageBuffer(PointLightData, liger_in.binding_point_light_data).point_lights[idx];
-    }
+      PointLight GetPointLight(LigerInput liger_in, uint32_t idx) {
+        return GetStorageBuffer(PointLightData, liger_in.binding_point_light_data).point_lights[idx];
+      }
