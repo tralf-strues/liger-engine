@@ -426,7 +426,7 @@ DeclarationParser::DeclarationParser(const std::filesystem::path& filepath) {
   root_node_ = YAML::LoadFile(filepath.c_str());
 }
 
-constexpr bool DeclarationParser::Valid() const { return root_node_.IsDefined(); }
+bool DeclarationParser::Valid() const { return root_node_.IsDefined(); }
 
 std::optional<Declaration> DeclarationParser::Parse() {
   if (!Valid()) {

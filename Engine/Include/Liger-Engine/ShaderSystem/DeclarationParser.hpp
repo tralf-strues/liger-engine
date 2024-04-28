@@ -39,7 +39,7 @@ class DeclarationParser {
  public:
   explicit DeclarationParser(const std::filesystem::path& filepath);
 
-  constexpr bool Valid() const;
+  bool Valid() const;
 
   [[nodiscard]] std::optional<Declaration> Parse();
 
