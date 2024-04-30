@@ -78,9 +78,9 @@ static const std::unordered_map<std::string, Declaration::CodeSnippet::InsertPol
 };
 
 static const std::unordered_map<std::string, Declaration::Scope> kStringToScope {
-  {"VertexShader",     Declaration::Scope::VertexShader},
-  {"FragmentShader",   Declaration::Scope::FragmentShader},
-  {"ComputeShader",    Declaration::Scope::ComputeShader}
+  {"VertexShader",     Declaration::Scope::Vertex},
+  {"FragmentShader",   Declaration::Scope::Fragment},
+  {"ComputeShader",    Declaration::Scope::Compute}
 };
 
 bool IsTextureType(Declaration::Member::Type type) {
@@ -125,7 +125,7 @@ bool ParseIOMember(Declaration::Member& member, YAML::Node& member_node, bool is
       return false;
     }
   } else {
-    LIGER_LOG_ERROR(kLogChannelShader, "Member node does not contain 'Type' property");
+    LIGER_LOG_ERROR(kLogChannelShader, "Member '{0}' does not contain 'Type' property", member.name);
     return false;
   }
 
@@ -138,9 +138,10 @@ bool ParseIOMember(Declaration::Member& member, YAML::Node& member_node, bool is
       LIGER_LOG_ERROR(kLogChannelShader, "Property 'Layout' contains unknown token '{0}'", layout_str);
       return false;
     }
-  } else if (IsBufferType(member.type)) {
+  } else if (member.type == Declaration::Member::Type::StorageBuffer) {
     LIGER_LOG_ERROR(kLogChannelShader,
-                    "Member node does not contain 'Access' property, which is required for buffer members");
+                    "Member '{0}' does not contain 'Access' property, which is required for storage buffer members",
+                    member.name);
     return false;
   }
 
@@ -153,9 +154,10 @@ bool ParseIOMember(Declaration::Member& member, YAML::Node& member_node, bool is
       LIGER_LOG_ERROR(kLogChannelShader, "Property 'Access' contains unknown token '{0}'", access_str);
       return false;
     }
-  } else if (IsBufferType(member.type)) {
+  } else if (member.type == Declaration::Member::Type::StorageBuffer) {
     LIGER_LOG_ERROR(kLogChannelShader,
-                    "Member node does not contain 'Access' property, which is required for buffer members");
+                    "Member '{0}' does not contain 'Access' property, which is required for storage buffer members",
+                    member.name);
     return false;
   }
 
@@ -163,7 +165,8 @@ bool ParseIOMember(Declaration::Member& member, YAML::Node& member_node, bool is
     member.buffer_contents = contents_node.as<std::string>();
   } else if (IsBufferType(member.type)) {
     LIGER_LOG_ERROR(kLogChannelShader,
-                    "Member node does not contain 'Contents' property, which is required for buffer members");
+                    "Member '{0}' does not contain 'Contents' property, which is required for buffer members",
+                    member.name);
     return false;
   }
 
@@ -186,7 +189,7 @@ bool ParseIOMember(Declaration::Member& member, YAML::Node& member_node, bool is
 }
 
 bool ParseIO(Declaration& declaration, YAML::Node& root) {
-  bool is_shader_scope = declaration.scope != Declaration::Scope::Common;
+  bool is_shader_scope = declaration.scope != Declaration::Scope::None;
 
   if (auto input_node = root["Input"]) {
     declaration.input.resize(input_node.size());
@@ -252,7 +255,7 @@ bool ParseCodeSnippets(Declaration& declaration, YAML::Node& root) {
 }
 
 bool ParseCode(Declaration& declaration, YAML::Node& root) {
-  bool is_shader_scope = declaration.scope != Declaration::Scope::Common;
+  bool is_shader_scope = declaration.scope != Declaration::Scope::None;
 
   if (auto code_node = root["Code"]) {
     if (!is_shader_scope) {
@@ -371,6 +374,32 @@ bool ParseGraphicsPipelineInfo(Declaration& declaration, YAML::Node& root) {
     }
   }
 
+  if (auto attachments_node = root["AttachmentInfo"]) {
+    declaration.attachments = rhi::AttachmentInfo{};
+
+    if (auto render_targets_node = attachments_node["RenderTargets"]) {
+      declaration.attachments->render_target_formats.reserve(render_targets_node.size());
+
+      for (auto target_node : render_targets_node) {
+        auto value_str = target_node.as<std::string>();
+        if (auto value = StringToEnum<rhi::Format>(value_str)) {
+          declaration.attachments->render_target_formats.push_back(*value);
+        } else {
+          LIGER_LOG_ERROR(kLogChannelShader, "Property '{0}' contains unknown token '{1}'", "RenderTargets", value_str);
+          return false;
+        }
+      }
+    }
+
+    if (!parse_enum(attachments_node, "DepthStencilTarget", declaration.attachments->depth_stencil_format)) {
+      return false;
+    }
+
+    if (auto samples_node = attachments_node["Samples"]) {
+      declaration.attachments->samples = samples_node.as<uint32_t>();
+    }
+  }
+
   return true;
 }
 
@@ -434,7 +463,7 @@ std::optional<Declaration> DeclarationParser::Parse() {
   }
 
   Declaration declaration;
-  declaration.scope = Declaration::Scope::Common;
+  declaration.scope = Declaration::Scope::None;
   if (!ParseDeclaration(declaration, root_node_)) {
     return std::nullopt;
   }

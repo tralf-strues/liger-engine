@@ -319,7 +319,7 @@ bool VulkanPipeline::Init(const ComputeInfo& info) {
     .pNext               = nullptr,
     .flags               = 0,
     .stage               = VK_SHADER_STAGE_COMPUTE_BIT,
-    .module              = dynamic_cast<VulkanShaderModule*>(info.shader_module)->GetVulkanHandle(),
+    .module              = dynamic_cast<const VulkanShaderModule*>(info.shader_module)->GetVulkanHandle(),
     .pName               = "main",
     .pSpecializationInfo = nullptr  // TODO(tralf-strues): Add specialization constants to Vulkan RHI
   };
@@ -352,6 +352,10 @@ VkPipeline VulkanPipeline::GetVulkanPipeline() const {
 
 VkPipelineLayout VulkanPipeline::GetVulkanLayout() const {
   return layout_;
+}
+
+VkPipelineBindPoint VulkanPipeline::GetVulkanBindPoint() const {
+  return bind_point_;
 }
 
 }  // namespace liger::rhi

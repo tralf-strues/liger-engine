@@ -70,7 +70,7 @@ namespace liger::shader {
       return dst_snippet.name == src_snippet.name;
     });
 
-    if (existing_snippet == dst.end()) {
+    if (src_snippet.name.empty() || existing_snippet == dst.end()) {
       dst.emplace_back(src_snippet);
       continue;
     }
@@ -111,12 +111,12 @@ namespace liger::shader {
 // }
 
 [[nodiscard]] bool MergeCode(Declaration& dst, const Declaration& src) {
-  if (src.scope == Declaration::Scope::Common && (!src.code.empty() || !dst.code.empty())) {
+  if (src.scope == Declaration::Scope::None && (!src.code.empty() || !dst.code.empty())) {
     LIGER_LOG_ERROR(kLogChannelShader, "Merge code error, Common scope cannot contain code blocks!");
     return false;
   }
 
-  if (src.scope == Declaration::Scope::Common) {
+  if (src.scope == Declaration::Scope::None) {
     return true;
   }
 
@@ -220,7 +220,7 @@ Declaration& DeclarationStack::Top() {
 
 std::optional<Declaration> DeclarationStack::Merged() const {
   Declaration merged;
-  merged.scope = Declaration::Scope::Common;
+  merged.scope = Declaration::Scope::None;
 
   for (const auto& src_declaration : stack_) {
     if (!Merge(merged, src_declaration)) {

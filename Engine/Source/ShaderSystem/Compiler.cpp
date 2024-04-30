@@ -31,11 +31,13 @@
 #include <Liger-Engine/ShaderSystem/LogChannel.hpp>
 
 #include <fmt/ostream.h>
+#include <glslang/Public/ResourceLimits.h>
 #include <glslang/Public/ShaderLang.h>
+#include <glslang/SPIRV/GlslangToSpv.h>
 
+#include <set>
 #include <sstream>
 #include <unordered_set>
-#include "glslang/Public/ResourceLimits.h"
 
 namespace liger::shader {
 
@@ -120,13 +122,30 @@ inline const char* ToString(Declaration::Member::Type type) {
 // }
 [[nodiscard]] inline EShLanguage ToGLSLangShaderStage(Declaration::Scope scope) {
   switch (scope) {
-    case Declaration::Scope::VertexShader:   { return EShLangVertex;   }
-    case Declaration::Scope::FragmentShader: { return EShLangFragment; }
+    case Declaration::Scope::Vertex:   { return EShLangVertex;   }
+    case Declaration::Scope::Fragment: { return EShLangFragment; }
+    case Declaration::Scope::Compute:  { return EShLangCompute;  }
 
     default: {
       LIGER_LOG_FATAL(kLogChannelShader, "Unsupported scope {0}", EnumToString(scope));
       return EShLangCount;
     }
+  }
+}
+
+[[nodiscard]] inline uint32_t TypeSize(Declaration::Member::Type type) {
+  switch (type) {
+    case Declaration::Member::Type::Bool:    { return         sizeof(uint32_t); }
+    case Declaration::Member::Type::Int32:   { return         sizeof(int32_t);  }
+    case Declaration::Member::Type::UInt32:  { return         sizeof(uint32_t); }
+    case Declaration::Member::Type::Float32: { return         sizeof(float);    }
+    case Declaration::Member::Type::F32Vec2: { return     2 * sizeof(float);    }
+    case Declaration::Member::Type::F32Vec3: { return     3 * sizeof(float);    }
+    case Declaration::Member::Type::F32Vec4: { return     4 * sizeof(float);    }
+    case Declaration::Member::Type::F32Mat3: { return 3 * 3 * sizeof(float);    }
+    case Declaration::Member::Type::F32Mat4: { return 4 * 4 * sizeof(float);    }
+
+    default: { return 0; }
   }
 }
 
@@ -146,22 +165,16 @@ struct StageLinking {
 };
 
 [[nodiscard]] PipelineType DeterminePipelineType(const Declaration& declaration) {
-  std::unordered_set<Declaration::Scope> module_present;
+  Declaration::Scope scopes;
 
   for (const auto& module_declaration : declaration.declarations) {
-    if (module_declaration.scope != Declaration::Scope::Common) {
-      module_present.insert(module_declaration.scope);
+    if (module_declaration.scope != Declaration::Scope::None) {
+      scopes |= module_declaration.scope;
     }
   }
 
-  bool graphics = module_present.contains(Declaration::Scope::VertexShader) &&
-                  module_present.contains(Declaration::Scope::FragmentShader);
-  bool compute = module_present.contains(Declaration::Scope::ComputeShader);
-
-  if (compute && (module_present.size() > 1)) {
-    LIGER_LOG_ERROR(kLogChannelShader, "Declaration contains both graphics and compute shaders");
-    return PipelineType::Invalid;
-  }
+  bool graphics = EnumBitmaskContains(scopes, Declaration::Scope::Vertex | Declaration::Scope::Fragment);
+  bool compute  = EnumBitmaskContains(scopes, Declaration::Scope::Compute);
 
   if (graphics) {
     return PipelineType::Graphics;
@@ -171,14 +184,7 @@ struct StageLinking {
     return PipelineType::Compute;
   }
 
-  std::stringstream available_shaders_list;
-  for (auto scope : module_present) {
-    fmt::print(available_shaders_list, "  - {0}\n", EnumToString(scope));
-  }
-
-  LIGER_LOG_ERROR(kLogChannelShader,
-      "Declaration contains neither complete graphics nor compute pipeline shaders. The list of shaders is:\n{0}",
-      available_shaders_list.str());
+  LIGER_LOG_ERROR(kLogChannelShader, "Declaration contains neither complete graphics nor compute pipeline shaders.");
   return PipelineType::Invalid;
 }
 
@@ -189,11 +195,11 @@ struct StageLinking {
   const Declaration* frag{nullptr};
 
   for (const auto& stage_declaration : declaration.declarations) {
-    if (stage_declaration.scope == Declaration::Scope::VertexShader) {
+    if (stage_declaration.scope == Declaration::Scope::Vertex) {
       vert = &stage_declaration;
     }
 
-    if (stage_declaration.scope == Declaration::Scope::FragmentShader) {
+    if (stage_declaration.scope == Declaration::Scope::Fragment) {
       frag = &stage_declaration;
     }
   }
@@ -235,6 +241,62 @@ struct StageLinking {
 }
 
 /************************************************************************************************
+ * Common data gather
+ ************************************************************************************************/
+struct PushConstantMember {
+  std::string               name;
+  Declaration::Member::Type type;
+
+  bool operator<(const PushConstantMember& rhs) const {
+    return name < rhs.name;
+  }
+};
+
+struct PushConstantMembers {
+  Declaration::Scope           scopes_mask;
+  std::set<PushConstantMember> members;
+};
+
+PushConstantMembers GatherPushConstants(const Declaration& declaration) {
+  PushConstantMembers push_constants;
+
+  bool globals_found = true;
+  auto add = [&push_constants, &globals_found](const Declaration& declaration, const Declaration::Member& member) {
+    if (IsResourceType(member.type)) {
+      push_constants.members.insert(PushConstantMember {
+        .name = "binding_" + ToSnakeCase(member.name),
+        .type = Declaration::Member::Type::UInt32
+      });
+
+      push_constants.scopes_mask |= declaration.scope;
+      globals_found = globals_found || (declaration.scope == rhi::IShaderModule::Type::None);
+    } else if (member.modifier == Declaration::Member::Modifier::PushConstant) {
+      push_constants.members.insert(PushConstantMember {
+        .name = member.name,
+        .type = member.type
+      });
+
+      push_constants.scopes_mask |= declaration.scope;
+      globals_found = globals_found || (declaration.scope == rhi::IShaderModule::Type::None);
+    }
+  };
+
+  for (const auto& member : declaration.input)  { add(declaration, member); }
+  for (const auto& member : declaration.output) { add(declaration, member); }
+
+  for (const auto& sub_declaration : declaration.declarations) {
+    if (globals_found) {
+      push_constants.scopes_mask |= sub_declaration.scope;
+    }
+
+    for (const auto& member : sub_declaration.input)  { add(sub_declaration, member); }
+    for (const auto& member : sub_declaration.output) { add(sub_declaration, member); }
+  }
+
+  return push_constants;
+}
+
+/************************************************************************************************
  * Source generation
  ************************************************************************************************/
 void RegisterBuffer(std::stringstream& source, const Declaration::Member& member) {
@@ -261,37 +323,11 @@ void RegisterBuffer(std::stringstream& source, const Declaration::Member& member
   }
 }
 
-void DeclarePushConstant(std::stringstream& source, const Declaration& common, const Declaration& shader) {
+void DeclarePushConstant(std::stringstream& source, const PushConstantMembers& push_constants) {
   fmt::print(source, "layout(push_constant) uniform PushConstant {{\n");
 
-  /* Resource Bindings */
-  auto add_binding = [&source](const Declaration::Member& member) {
-    if (IsResourceType(member.type)) {
-      fmt::print(source, "  uint32_t binding_{0};\n", ToSnakeCase(member.name));
-    }
-  };
-
-  for (const auto& member : common.input) {
-    add_binding(member);
-  }
-
-  for (const auto& member : shader.input) {
-    add_binding(member);
-  }
-
-  /* Other push constants */
-  auto add_push_constant = [&source](const Declaration::Member& member) {
-    if (member.modifier == Declaration::Member::Modifier::PushConstant) {
-      fmt::print(source, "  {0} {1};\n", ToString(member.type), member.name);
-    }
-  };
-
-  for (const auto& member : common.input) {
-    add_push_constant(member);
-  }
-
-  for (const auto& member : shader.input) {
-    add_push_constant(member);
+  for (const auto& member : push_constants.members) {
+    fmt::print(source, "  {0} {1};\n", ToString(member.type), member.name);
   }
 
   fmt::print(source, "}} push_constant;\n");
@@ -312,13 +348,9 @@ void DeclareStageOutput(std::stringstream& source, StageLinking::MemberList& mem
     return;
   }
 
-  fmt::print(source, "layout(location = 0) out _StageOutput_ {{\n");
-
-  for (const auto& member : members) {
-    fmt::print(source, "  {0} {1};\n", ToString(member.type), member.name);
+  for (uint32_t i = 0; i < members.size(); ++i) {
+    fmt::print(source, "layout(location = {0}) out {1} {2};\n", i, ToString(members[i].type), members[i].name);
   }
-
-  fmt::print(source, "}} output;\n");
 }
 
 void DeclareInputStruct(std::stringstream& source, const Declaration& common, const Declaration& shader) {
@@ -373,7 +405,7 @@ void DeclareInputFill(std::stringstream& source, const Declaration& common, cons
     } else if (member.modifier == Declaration::Member::Modifier::PushConstant) {
       fmt::print(source, "liger_in.{0} = push_constant.{0};\n", member.name);
     } else if (member.modifier == Declaration::Member::Modifier::StageIO &&
-               shader.scope == Declaration::Scope::FragmentShader) {
+               shader.scope == Declaration::Scope::Fragment) {
       fmt::print(source, "liger_in.{0} = fragment_input.{0};\n", member.name);
     }
   };
@@ -406,7 +438,7 @@ void DeclareLocalCode(std::stringstream& source, const Declaration& common, cons
 }
 
 bool DeclareMainFunction(std::stringstream& source, const Declaration& common, const Declaration& shader) {
-  if (shader.scope == Declaration::Scope::ComputeShader) {
+  if (shader.scope == Declaration::Scope::Compute) {
     if (!shader.thread_group_size) {
       LIGER_LOG_ERROR(kLogChannelShader, "Thread group size is not specified for compute shaders");
       return false;
@@ -429,7 +461,8 @@ bool DeclareMainFunction(std::stringstream& source, const Declaration& common, c
 }
 
 [[nodiscard]] std::optional<std::string> GenerateSource(const Declaration& common, const Declaration& shader,
-                                                        std::optional<StageLinking>& stage_linking) {
+                                                        std::optional<StageLinking>& stage_linking,
+                                                        const PushConstantMembers& push_constants) {
   std::stringstream source;
   source << kSourceHeader;
 
@@ -450,13 +483,15 @@ bool DeclareMainFunction(std::stringstream& source, const Declaration& common, c
     blank_line();
   }
 
-  DeclarePushConstant(source, common, shader);
-  blank_line();
+  if (EnumBitmaskContains(push_constants.scopes_mask, shader.scope)) {
+    DeclarePushConstant(source, push_constants);
+    blank_line();
+  }
 
-  if (shader.scope == Declaration::Scope::VertexShader) {
+  if (shader.scope == Declaration::Scope::Vertex) {
     DeclareStageOutput(source, stage_linking->vertex_to_fragment);
     blank_line();
-  } else if (shader.scope == Declaration::Scope::FragmentShader) {
+  } else if (shader.scope == Declaration::Scope::Fragment) {
     DeclareFragmentShaderInput(source, stage_linking->vertex_to_fragment);
     DeclareStageOutput(source, stage_linking->fragment_out);
     blank_line();
@@ -477,9 +512,10 @@ bool DeclareMainFunction(std::stringstream& source, const Declaration& common, c
 
 std::vector<uint32_t> CompileToBinary(Declaration::Scope scope, const char* source) {
   glslang::InitializeProcess();
+  auto sh_language = ToGLSLangShaderStage(scope);
 
-  glslang::TShader shader(ToGLSLangShaderStage(scope));
-  shader.setEnvInput(glslang::EShSourceGlsl, ToGLSLangShaderStage(scope), glslang::EShClientVulkan, 100);
+  glslang::TShader shader(sh_language);
+  shader.setEnvInput(glslang::EShSourceGlsl, sh_language, glslang::EShClientVulkan, 100);
   shader.setEnvClient(glslang::EShClientVulkan, glslang::EShTargetVulkan_1_3);
   shader.setEnvTarget(glslang::EShTargetSpv, glslang::EShTargetSpv_1_3);
   shader.setStrings(&source, 1U);
@@ -493,7 +529,7 @@ std::vector<uint32_t> CompileToBinary(Declaration::Scope scope, const char* sour
     return {};
   }
 
-  LIGER_LOG_INFO(kLogChannelShader, "Preprocessed source (stage = {0}):\n{1}", EnumToString(scope), preprocessed_source);
+  // LIGER_LOG_INFO(kLogChannelShader, "Preprocessed source (stage = {0}):\n{1}", EnumToString(scope), preprocessed_source);
 
   if (!shader.parse(GetDefaultResources(), 450, false, EShMsgDefault)) {
     LIGER_LOG_ERROR(kLogChannelShader, "Parsing failed:\n{0}\n{1}", shader.getInfoLog(), shader.getInfoDebugLog());
@@ -502,100 +538,113 @@ std::vector<uint32_t> CompileToBinary(Declaration::Scope scope, const char* sour
 
   glslang::TProgram program;
   program.addShader(&shader);
-  // if (!program.link(static_cast<EShMessages>(EShMsgSpvRules | EShMsgVulkanRules))) {}
+  if (!program.link(static_cast<EShMessages>(EShMsgSpvRules | EShMsgVulkanRules))) {
+    LIGER_LOG_ERROR(kLogChannelShader, "Linking failed:\n{0}\n{1}", shader.getInfoLog(), shader.getInfoDebugLog());
+    return {};
+  }
+
+  // Convert the intermediate generated by glslang to SPIR-V
+  glslang::TIntermediate& intermediate = *(program.getIntermediate(sh_language));
+  std::vector<uint32_t> spirv;
+
+  glslang::SpvOptions options{};
+  options.validate = true;
+
+  glslang::GlslangToSpv(intermediate, spirv, &options);
 
   glslang::FinalizeProcess();
 
-  return {};
-
-  // const auto stage = ToGLSLangShaderStage(scope);
-
-  // const glslang_input_t glslang_input {
-  //   .language = GLSLANG_SOURCE_GLSL,
-  //   .stage = stage,
-  //   .client = GLSLANG_CLIENT_VULKAN,
-  //   .client_version = GLSLANG_TARGET_VULKAN_1_3,
-  //   .target_language = GLSLANG_TARGET_SPV,
-  //   .target_language_version = GLSLANG_TARGET_SPV_1_3,
-  //   .code = source,
-  //   .default_version = 450,
-  //   .default_profile = GLSLANG_NO_PROFILE,
-  //   .force_default_version_and_profile = 0,
-  //   .forward_compatible = 0,
-  //   .messages = GLSLANG_MSG_DEFAULT_BIT,
-  //   .resource = glslang_default_resource(),
-  //   .callbacks = {},
-  //   .callbacks_ctx = nullptr,
-  // };
-
-  // glslang_shader_t* shader = glslang_shader_create(&glslang_input);
-
-  // // if (!glslang_shader_preprocess(shader, &glslang_input)) {
-  // //   LIGER_LOG_ERROR(kLogChannelShader, "Preprocessing failed:\n{0}\n{1}\nCode:\n{2}",
-  // //                   glslang_shader_get_info_log(shader), glslang_shader_get_info_debug_log(shader), glslang_input.code);
-  // //   return {};
-  // // }
-
-  // if (!glslang_shader_parse(shader, &glslang_input)) {
-  //   LIGER_LOG_ERROR(kLogChannelShader, "Parsing failed:\n{0}\n{1}\nCode:\n{2}", glslang_shader_get_info_log(shader),
-  //                   glslang_shader_get_info_debug_log(shader), glslang_shader_get_preprocessed_code(shader));
-  //   return {};
-  // }
-
-  // glslang_program_t* program = glslang_program_create();
-  // glslang_program_add_shader(program, shader);
-
-  // if (!glslang_program_link(program, GLSLANG_MSG_SPV_RULES_BIT | GLSLANG_MSG_VULKAN_RULES_BIT)) {
-  //   LIGER_LOG_ERROR(kLogChannelShader, "Linking failed:\n{0}\n{1}", glslang_shader_get_info_log(shader),
-  //                   glslang_shader_get_info_debug_log(shader));
-  //   return {};
-  // }
-
-  // glslang_program_SPIRV_generate(program, stage);
-
-  // std::vector<uint32_t> binary;
-  // binary.resize(glslang_program_SPIRV_get_size(program));
-
-  // glslang_program_SPIRV_get(program, binary.data());
-
-  // glslang_program_delete(program);
-  // glslang_shader_delete(shader);
-
-  // return binary;
+  return spirv;
 }
 
-std::optional<Shader> Compiler::Compile(const Declaration& declaration) {
-  if (declaration.scope != Declaration::Scope::Common) {
+Compiler::Compiler(rhi::IDevice& device) : device_(device) {}
+
+std::unique_ptr<Shader> Compiler::Compile(const Declaration& declaration) {
+  if (declaration.scope != Declaration::Scope::None) {
     LIGER_LOG_ERROR(kLogChannelShader, "Declaration's scope must be Common, instead it is {}",
                     EnumToString(declaration.scope));
-    return std::nullopt;
+    return nullptr;
   }
 
   auto pipeline_type = DeterminePipelineType(declaration);
-  // if (pipeline_type == PipelineType::Invalid) {
-  //   return std::nullopt;
-  // }
-
-  auto stage_linking = LinkGraphicsStages(declaration);
-
-  std::unordered_map<Declaration::Scope, std::string> sources;
-  for (const auto& shader : declaration.declarations) {
-    auto source = GenerateSource(declaration, shader, stage_linking);
-    if (!source) {
-      return std::nullopt;
-    }
-
-    sources[shader.scope] = source.value();
+  if (pipeline_type == PipelineType::Invalid) {
+    return nullptr;
   }
 
+  auto stage_linking  = LinkGraphicsStages(declaration);
+  auto push_constants = GatherPushConstants(declaration);
+
+  std::unordered_map<Declaration::Scope, std::string> sources;
+  for (const auto& shader_declaration : declaration.declarations) {
+    auto source = GenerateSource(declaration, shader_declaration, stage_linking, push_constants);
+    if (!source) {
+      return nullptr;
+    }
+
+    sources[shader_declaration.scope] = source.value();
+  }
+
+  std::vector<std::unique_ptr<rhi::IShaderModule>> shader_modules;
   for (const auto& [scope, source] : sources) {
     LIGER_LOG_INFO(kLogChannelShader, "Generated shader source (stage = {0}):\n{1}", EnumToString(scope), source);
 
     auto binary = CompileToBinary(scope, source.c_str());
-    // LIGER_LOG_INFO(kLogChannelShader, "Generated SPIR-V (stage = {0}):\n{1}", EnumToString(scope), binary);
+    if (binary.empty()) {
+      return nullptr;
+    }
+
+    auto shader_module = device_.CreateShaderModule({.type = scope, .source_binary = binary});
+    if (!shader_module) {
+      return nullptr;
+    }
+
+    shader_modules.emplace_back(std::move(shader_module));
   }
 
-  return std::nullopt;
+  auto shader = std::unique_ptr<Shader>(new Shader{});
+
+  for (const auto& member : push_constants.members) {
+    shader->push_constant_offsets_[member.name] = shader->push_constant_size_;
+    shader->push_constant_size_ += TypeSize(member.type);
+  }
+
+  shader->push_constant_data_ = new char[shader->push_constant_size_];
+
+  if (pipeline_type == PipelineType::Graphics) {
+    std::vector<const rhi::IShaderModule*> shader_module_refs;
+    shader_module_refs.reserve(shader_modules.size());
+
+    for (const auto& shader_module : shader_modules) {
+      shader_module_refs.push_back(shader_module.get());
+    }
+
+    rhi::IPipeline::GraphicsInfo pipeline_info {
+      .input_assembly     = {.topology = declaration.vertex_topology.value()},
+      .rasterization      = declaration.rasterization.value(),
+      .depth_stencil_test = declaration.depth_stencil_test.value(),
+      .blend              = declaration.color_blend.value(),
+      .attachments        = declaration.attachments.value(),
+      .push_constant      = {.size = shader->push_constant_size_, .shader_types = push_constants.scopes_mask},
+      .shader_modules     = shader_module_refs
+    };
+
+    shader->pipeline_ = device_.CreatePipeline(pipeline_info);
+    if (!shader->pipeline_) {
+      return nullptr;
+    }
+  } else if (pipeline_type == PipelineType::Compute) {
+    rhi::IPipeline::ComputeInfo pipeline_info {
+      .push_constant = {.size = shader->push_constant_size_, .shader_types = push_constants.scopes_mask},
+      .shader_module = shader_modules[0].get()
+    };
+
+    shader->pipeline_ = device_.CreatePipeline(pipeline_info);
+    if (!shader->pipeline_) {
+      return nullptr;
+    }
+  }
+
+  return shader;
 }
 
 }  // namespace liger::shader

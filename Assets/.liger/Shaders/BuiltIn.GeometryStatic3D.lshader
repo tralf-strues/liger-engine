@@ -53,7 +53,7 @@ VertexShader:
     f32vec3  tangent       = normalize(normal_matrix * ms_vertex.tangent);
     f32vec3  bitangent     = normalize(cross(normal, tangent));
 
-    output.ws_position     = (transform * f32vec4(ms_vertex.position, 1.0)).xyz;
-    output.tex_coords      = ms_vertex.tex_coords;
-    output.tbn             = f32mat3(tangent, bitangent, normal);
-    gl_Position            = camera.proj * camera.view * f32vec4(output.ws_position, 1.0);
+    ws_position            = (transform * f32vec4(ms_vertex.position, 1.0)).xyz;
+    tex_coords             = ms_vertex.tex_coords;
+    tbn                    = f32mat3(tangent, bitangent, normal);
+    gl_Position            = camera.proj * camera.view * f32vec4(ws_position, 1.0);

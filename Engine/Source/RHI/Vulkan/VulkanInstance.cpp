@@ -346,6 +346,8 @@ bool VulkanInstance::FillDeviceInfoList() {
                           static_cast<bool>(features2.features.samplerAnisotropy) &&
                           static_cast<bool>(features12.descriptorBindingPartiallyBound) &&
                           static_cast<bool>(features12.runtimeDescriptorArray) &&
+                          static_cast<bool>(features12.shaderUniformBufferArrayNonUniformIndexing) &&
+                          static_cast<bool>(features12.shaderStorageBufferArrayNonUniformIndexing) &&
                           static_cast<bool>(features12.timelineSemaphore) &&
                           static_cast<bool>(sync2_feature.synchronization2),
 

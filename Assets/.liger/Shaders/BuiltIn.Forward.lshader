@@ -19,6 +19,11 @@ ColorBlendInfo:
   DstAlphaFactor: Zero
   AlphaOperation: Add
 
+AttachmentInfo:
+  RenderTargets: [B8G8R8A8_SRGB]
+  DepthStencilTarget: D32_SFLOAT
+  Samples: 1
+
 FragmentShader:
   Use:
     - Include: BuiltIn.PBR
@@ -35,7 +40,7 @@ FragmentShader:
       Type: f32mat3
 
   Output:
-    - Name: color
+    - Name: out_color
       Type: f32vec4
 
   Code: | #glsl
@@ -74,4 +79,4 @@ FragmentShader:
       L += PBR_RadianceSample(surface_point, light_sample);
     }
 
-    output.color = f32vec4(L, 1.0);
+    out_color = f32vec4(L, 1.0);

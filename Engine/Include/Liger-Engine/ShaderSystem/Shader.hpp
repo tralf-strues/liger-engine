@@ -35,6 +35,8 @@ struct Declaration;
 
 class Shader {
  public:
+  ~Shader();
+
   void SetTextureSampler(std::string_view name, rhi::TextureDescriptorBinding binding);
   void SetBuffer(std::string_view name, rhi::BufferDescriptorBinding binding);
 
@@ -47,7 +49,7 @@ class Shader {
   void Bind(rhi::ICommandBuffer& cmd) const;
 
  private:
-  Shader();
+  Shader() = default;
 
   std::unique_ptr<rhi::IPipeline>           pipeline_{nullptr};
 

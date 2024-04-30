@@ -32,12 +32,7 @@
 namespace liger::shader {
 
 struct Declaration {
-  enum class Scope : uint16_t {
-    Common,
-    VertexShader,
-    FragmentShader,
-    ComputeShader
-  };
+  using Scope = rhi::IShaderModule::Type;
 
   struct Member {
     enum class Type : uint16_t {
@@ -102,7 +97,7 @@ struct Declaration {
     InsertPolicy insert{InsertPolicy::Global};
   };
 
-  Scope                                             scope{Scope::Common};
+  Scope                                             scope{Scope::None};
   std::string                                       data_block;
   std::vector<Member>                               input;
   std::vector<Member>                               output;
@@ -118,6 +113,7 @@ struct Declaration {
   std::optional<rhi::RasterizationInfo>             rasterization;
   std::optional<rhi::DepthStencilTestInfo>          depth_stencil_test;
   std::optional<rhi::ColorBlendInfo>                color_blend;
+  std::optional<rhi::AttachmentInfo>                attachments;
 
   std::optional<std::array<uint32_t, 3U>>           thread_group_size;
 };

@@ -31,8 +31,9 @@
 
 namespace liger::shader {
 
-void Check() {
-
+Shader::~Shader() {
+  delete[] push_constant_data_;
+  delete[] property_buffer_data_;
 }
 
 }  // namespace liger::shader

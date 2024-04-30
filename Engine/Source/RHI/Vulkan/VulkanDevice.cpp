@@ -99,6 +99,8 @@ bool VulkanDevice::Init(bool debug_enable) {
   device_features12.descriptorBindingStorageBufferUpdateAfterBind = VK_TRUE;
   device_features12.descriptorBindingStorageImageUpdateAfterBind  = VK_TRUE;
   device_features12.descriptorBindingSampledImageUpdateAfterBind  = VK_TRUE;
+  device_features12.shaderUniformBufferArrayNonUniformIndexing    = VK_TRUE;
+  device_features12.shaderStorageBufferArrayNonUniformIndexing    = VK_TRUE;
 
   std::vector<const char*> extensions{std::begin(kRequiredDeviceExtensions), std::end(kRequiredDeviceExtensions)};
 

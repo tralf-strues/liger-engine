@@ -34,9 +34,12 @@ namespace liger::shader {
 
 class Compiler {
  public:
-  [[nodiscard]] std::optional<Shader> Compile(const Declaration& declaration);
+  explicit Compiler(rhi::IDevice& device);
+
+  [[nodiscard]] std::unique_ptr<Shader> Compile(const Declaration& declaration);
 
  private:
+  rhi::IDevice& device_;
 };
 
 }  // namespace liger::shader

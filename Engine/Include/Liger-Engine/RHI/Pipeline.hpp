@@ -200,9 +200,9 @@ struct ColorBlendInfo {
 };
 
 struct AttachmentInfo {
-  std::span<const Format> render_target_formats;
-  Format                  depth_stencil_format{Format::Invalid};
-  uint8_t                 samples{1};
+  std::vector<Format> render_target_formats;
+  Format              depth_stencil_format{Format::Invalid};
+  uint8_t             samples{1};
 };
 
 class IShaderModule;
@@ -210,20 +210,20 @@ class IShaderModule;
 class IPipeline {
  public:
   struct GraphicsInfo {
-    InputAssemblyInfo               input_assembly;
-    RasterizationInfo               rasterization;
-    DepthStencilTestInfo            depth_stencil_test;
-    ColorBlendInfo                  blend;
-    PushConstantInfo                push_constant;
-    AttachmentInfo                  attachments;
-    std::span<const IShaderModule*> shader_modules;
-    std::string                     name;
+    InputAssemblyInfo                 input_assembly;
+    RasterizationInfo                 rasterization;
+    DepthStencilTestInfo              depth_stencil_test;
+    ColorBlendInfo                    blend;
+    PushConstantInfo                  push_constant;
+    AttachmentInfo                    attachments;
+    std::vector<const IShaderModule*> shader_modules;
+    std::string                       name;
   };
 
   struct ComputeInfo {
-    PushConstantInfo push_constant;
-    IShaderModule*   shader_module;
-    std::string      name;
+    PushConstantInfo     push_constant;
+    const IShaderModule* shader_module;
+    std::string          name;
   };
 
   virtual ~IPipeline() = default;
