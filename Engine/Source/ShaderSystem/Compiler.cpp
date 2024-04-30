@@ -59,6 +59,8 @@ inline const char* ToString(Declaration::Member::BufferLayout layout) {
     case Declaration::Member::BufferLayout::Std140: { return "std140"; }
     case Declaration::Member::BufferLayout::Std430: { return "std430"; }
   }
+
+  return nullptr;
 }
 
 inline const char* ToString(Declaration::Member::BufferAccess access) {
@@ -67,6 +69,8 @@ inline const char* ToString(Declaration::Member::BufferAccess access) {
     case Declaration::Member::BufferAccess::WriteOnly: { return "writeonly"; }
     case Declaration::Member::BufferAccess::ReadWrite: { return "";          }
   }
+
+  return nullptr;
 }
 
 inline bool IsResourceType(Declaration::Member::Type type) {
@@ -109,17 +113,6 @@ inline const char* ToString(Declaration::Member::Type type) {
   return ss.str();
 }
 
-// [[nodiscard]] inline glslang_stage_t ToGLSLangShaderStage(Declaration::Scope scope) {
-//   switch (scope) {
-//     case Declaration::Scope::VertexShader:   { return GLSLANG_STAGE_VERTEX;   }
-//     case Declaration::Scope::FragmentShader: { return GLSLANG_STAGE_FRAGMENT; }
-
-//     default: {
-//       LIGER_LOG_FATAL(kLogChannelShader, "Unsupported scope {0}", EnumToString(scope));
-//       return GLSLANG_STAGE_COUNT;
-//     }
-//   }
-// }
 [[nodiscard]] inline EShLanguage ToGLSLangShaderStage(Declaration::Scope scope) {
   switch (scope) {
     case Declaration::Scope::Vertex:   { return EShLangVertex;   }
@@ -623,8 +616,8 @@ std::unique_ptr<Shader> Compiler::Compile(const Declaration& declaration) {
       .rasterization      = declaration.rasterization.value(),
       .depth_stencil_test = declaration.depth_stencil_test.value(),
       .blend              = declaration.color_blend.value(),
-      .attachments        = declaration.attachments.value(),
       .push_constant      = {.size = shader->push_constant_size_, .shader_types = push_constants.scopes_mask},
+      .attachments        = declaration.attachments.value(),
       .shader_modules     = shader_module_refs
     };
 
