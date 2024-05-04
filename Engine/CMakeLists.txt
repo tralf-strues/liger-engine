@@ -27,8 +27,6 @@ target_include_directories(liger-engine
   PUBLIC
     $<INSTALL_INTERFACE:Include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Include>
-  PRIVATE
-    ThirdParty/taskflow
 )
 
 target_sources(liger-engine
@@ -40,10 +38,12 @@ target_sources(liger-engine
 
 target_link_libraries(liger-engine
   PUBLIC
+    EnTT::EnTT
     fmt
     glfw
     glm
     magic_enum
+    Taskflow
 
   PRIVATE
     glslang glslang-default-resource-limits SPIRV
@@ -57,11 +57,14 @@ target_link_libraries(liger-engine
 install(
   TARGETS
     liger-engine
+
+    EnTT
     fmt
     glfw
     glm
     glslang OSDependent MachineIndependent GenericCodeGen glslang-default-resource-limits SPIRV
     magic_enum
+    Taskflow
     VulkanMemoryAllocator
     vulkan-headers
     vulkan-utility-libraries

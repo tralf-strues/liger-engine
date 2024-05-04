@@ -1,5 +1,8 @@
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
+# entt
+add_subdirectory(entt)
+
 # fmt
 add_subdirectory(fmt)
 

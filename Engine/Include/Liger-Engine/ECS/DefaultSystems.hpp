@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file Math.hpp
- * @date 2024-03-23
+ * @file DefaultSystems.hpp
+ * @date 2024-05-01
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,6 +27,11 @@
 
 #pragma once
 
-#include <Liger-Engine/Core/Math/Formatting.hpp>
-#include <Liger-Engine/Core/Math/Random.hpp>
-#include <Liger-Engine/Core/Math/Transform3D.hpp>
+#include <Liger-Engine/ECS/DefaultComponents.hpp>
+#include <Liger-Engine/ECS/System.hpp>
+
+namespace liger::ecs {
+
+
+
+}  // namespace liger::ecs

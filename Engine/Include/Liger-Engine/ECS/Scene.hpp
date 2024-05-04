@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file Math.hpp
- * @date 2024-03-23
+ * @file Scene.hpp
+ * @date 2024-04-30
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,6 +27,22 @@
 
 #pragma once
 
-#include <Liger-Engine/Core/Math/Formatting.hpp>
-#include <Liger-Engine/Core/Math/Random.hpp>
-#include <Liger-Engine/Core/Math/Transform3D.hpp>
+#include <Liger-Engine/ECS/Entity.hpp>
+
+#include <entt/entity/organizer.hpp>
+#include <entt/entity/registry.hpp>
+#include <taskflow/taskflow.hpp>
+
+namespace liger::ecs {
+
+class Scene {
+ public:
+  Entity CreateEntity(std::string_view name = "");
+
+  entt::registry& GetRegistry();
+
+ private:
+  entt::registry registry_;
+};
+
+}  // namespace liger::ecs

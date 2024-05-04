@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file Math.hpp
- * @date 2024-03-23
+ * @file Entity.hpp
+ * @date 2024-04-30
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,6 +27,10 @@
 
 #pragma once
 
-#include <Liger-Engine/Core/Math/Formatting.hpp>
-#include <Liger-Engine/Core/Math/Random.hpp>
-#include <Liger-Engine/Core/Math/Transform3D.hpp>
+#include <entt/entity/entity.hpp>
+
+namespace liger::ecs {
+
+using Entity = entt::entity;
+
+}  // namespace liger::ecs

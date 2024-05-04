@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file Math.hpp
- * @date 2024-03-23
+ * @file SystemGraph.hpp
+ * @date 2024-05-01
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,6 +27,25 @@
 
 #pragma once
 
-#include <Liger-Engine/Core/Math/Formatting.hpp>
-#include <Liger-Engine/Core/Math/Random.hpp>
-#include <Liger-Engine/Core/Math/Transform3D.hpp>
+#include <Liger-Engine/ECS/System.hpp>
+
+#include <unordered_set>
+
+namespace liger::ecs {
+
+class SystemGraph {
+ public:
+  void Insert(std::unique_ptr<ISystem> system);
+  tf::Taskflow Build(Scene& scene);
+
+ private:
+  using SystemStorage = std::vector<std::unique_ptr<ISystem>>;
+  using Graph         = std::vector<entt::organizer::vertex>;
+
+  SystemStorage   systems_;
+
+  entt::organizer organizer_;
+  Graph           graph_;
+};
+
+}  // namespace liger::ecs
