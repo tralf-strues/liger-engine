@@ -201,11 +201,11 @@ inline constexpr VkBufferUsageFlags GetVulkanBufferUsage(DeviceResourceState sta
   }
 
   if ((states & DeviceResourceState::UniformBuffer) != DeviceResourceState::Undefined) {
-    vk_usage |= VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+    vk_usage |= VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT;
   }
 
   if ((states & DeviceResourceState::StorageBuffer) != DeviceResourceState::Undefined) {
-    vk_usage |= VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+    vk_usage |= VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT;
   }
 
   return vk_usage;

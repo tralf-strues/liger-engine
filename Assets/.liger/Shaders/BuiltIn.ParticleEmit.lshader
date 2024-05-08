@@ -49,17 +49,15 @@ ComputeShader:
       return;
     }
 
-    int32_t free_list_idx = atomicAdd(GetStorageBuffer(FreeList, liger_in.binding_free_list).count, -1) - 1;
+    int32_t free_list_idx = atomicAdd(liger_in.free_list.count, -1) - 1;
     if (free_list_idx < 0) {
       // undo decrement, 'cause free list is empty
-      atomicAdd(GetStorageBuffer(FreeList, liger_in.binding_free_list).count, 1);
+      atomicAdd(liger_in.free_list.count, 1);
       return;
     }
 
-    int32_t        particle_idx = GetStorageBuffer(FreeList, liger_in.binding_free_list).indices[free_list_idx];
+    int32_t        particle_idx = liger_in.free_list.indices[free_list_idx];
     float32_t      random_seed  = (float32_t(particle_idx) + float32_t(free_list_idx)) * liger_in.time;
-    ParticleSystem emitter      = GetUniformBuffer(EmitterData, liger_in.binding_emitter_data).emitter;
+    ParticleSystem emitter      = liger_in.emitter_data.emitter;
 
-    EmitParticle(GetStorageBuffer(Particles, liger_in.binding_particles).particles[particle_idx],
-                 random_seed,
-                 emitter);
+    EmitParticle(liger_in.particles.particles[particle_idx], random_seed, emitter);

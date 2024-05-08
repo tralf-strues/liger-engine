@@ -55,8 +55,8 @@ VertexShader:
 
   Code: | #glsl
     Camera   camera    = GetCamera(liger_in);
-    Particle particle  = GetStorageBuffer(Particles, liger_in.binding_particles).particles[liger_in.instance_idx];
-    f32mat4  transform = GetStorageBuffer(TransformData, liger_in.binding_transform_data).transforms[liger_in.transform_idx];
+    Particle particle  = liger_in.particles.particles[liger_in.instance_idx];
+    f32mat4  transform = liger_in.transform_data.transforms[liger_in.transform_idx];
 
     uint32_t b               = 1U << liger_in.vertex_idx;
     f32vec2  uv              = f32vec2((0x3 & b) != 0U, (0x9 & b) != 0U);

@@ -36,20 +36,20 @@ bool VulkanDescriptorManager::Init(VkDevice device) {
 
   /* Descriptor set layout */
   const VkDescriptorSetLayoutBinding bindings[]{
-    {
-      .binding            = kBindingUniformBuffer,
-      .descriptorType     = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-      .descriptorCount    = kMaxBindlessResourcesPerType,
-      .stageFlags         = VK_SHADER_STAGE_ALL,
-      .pImmutableSamplers = nullptr
-    },
-    {
-      .binding            = kBindingStorageBuffer,
-      .descriptorType     = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
-      .descriptorCount    = kMaxBindlessResourcesPerType,
-      .stageFlags         = VK_SHADER_STAGE_ALL,
-      .pImmutableSamplers = nullptr
-    },
+    // {
+    //   .binding            = kBindingUniformBuffer,
+    //   .descriptorType     = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+    //   .descriptorCount    = kMaxBindlessResourcesPerType,
+    //   .stageFlags         = VK_SHADER_STAGE_ALL,
+    //   .pImmutableSamplers = nullptr
+    // },
+    // {
+    //   .binding            = kBindingStorageBuffer,
+    //   .descriptorType     = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+    //   .descriptorCount    = kMaxBindlessResourcesPerType,
+    //   .stageFlags         = VK_SHADER_STAGE_ALL,
+    //   .pImmutableSamplers = nullptr
+    // },
     {
       .binding            = kBindingSampledTexture,
       .descriptorType     = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
@@ -92,14 +92,14 @@ bool VulkanDescriptorManager::Init(VkDevice device) {
 
   /* Descriptor pool */
   const VkDescriptorPoolSize pool_sizes[kBindingsCount] {
-    {
-      .type            = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-      .descriptorCount = kMaxBindlessResourcesPerType
-    },
-    {
-      .type            = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
-      .descriptorCount = kMaxBindlessResourcesPerType
-    },
+    // {
+    //   .type            = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+    //   .descriptorCount = kMaxBindlessResourcesPerType
+    // },
+    // {
+    //   .type            = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+    //   .descriptorCount = kMaxBindlessResourcesPerType
+    // },
     {
       .type            = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
       .descriptorCount = kMaxBindlessResourcesPerType
@@ -140,8 +140,8 @@ bool VulkanDescriptorManager::Init(VkDevice device) {
     }
   };
 
-  initialize_set(free_bindings_uniform_buffer_);
-  initialize_set(free_bindings_storage_buffer_);
+  // initialize_set(free_bindings_uniform_buffer_);
+  // initialize_set(free_bindings_storage_buffer_);
   initialize_set(free_bindings_sampled_texture_);
   initialize_set(free_bindings_storage_texture_);
 
@@ -195,77 +195,77 @@ VkDescriptorSetLayout VulkanDescriptorManager::GetLayout() const {
   return layout_;
 }
 
-VulkanDescriptorManager::BufferBindings VulkanDescriptorManager::AddBuffer(VkBuffer            buffer,
-                                                                           DeviceResourceState buffer_usage) {
-  BufferBindings bindings{};
+// VulkanDescriptorManager::BufferBindings VulkanDescriptorManager::AddBuffer(VkBuffer            buffer,
+//                                                                            DeviceResourceState buffer_usage) {
+//   BufferBindings bindings{};
 
-  const VkDescriptorBufferInfo buffer_info {
-    .buffer = buffer,
-    .offset = 0,
-    .range  = VK_WHOLE_SIZE
-  };
+//   const VkDescriptorBufferInfo buffer_info {
+//     .buffer = buffer,
+//     .offset = 0,
+//     .range  = VK_WHOLE_SIZE
+//   };
 
-  VkWriteDescriptorSet writes[2U];
+//   VkWriteDescriptorSet writes[2U];
 
-  uint32_t writes_count = 0;
-  if (EnumBitmaskContains(buffer_usage, DeviceResourceState::UniformBuffer)) {
-    LIGER_ASSERT(!free_bindings_uniform_buffer_.empty(), kLogChannelRHI, "Max bindless uniform buffers limit reached!");
+//   uint32_t writes_count = 0;
+//   if (EnumBitmaskContains(buffer_usage, DeviceResourceState::UniformBuffer)) {
+//     LIGER_ASSERT(!free_bindings_uniform_buffer_.empty(), kLogChannelRHI, "Max bindless uniform buffers limit reached!");
 
-    uint32_t uniform_binding = *free_bindings_uniform_buffer_.begin();
-    free_bindings_uniform_buffer_.extract(free_bindings_uniform_buffer_.begin());
-    bindings.uniform = static_cast<BufferDescriptorBinding>(uniform_binding);
+//     uint32_t uniform_binding = *free_bindings_uniform_buffer_.begin();
+//     free_bindings_uniform_buffer_.extract(free_bindings_uniform_buffer_.begin());
+//     bindings.uniform = static_cast<BufferDescriptorBinding>(uniform_binding);
 
-    writes[writes_count++] = {
-      .sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-      .pNext            = nullptr,
-      .dstSet           = set_,
-      .dstBinding       = kBindingUniformBuffer,
-      .dstArrayElement  = uniform_binding,
-      .descriptorCount  = 1,
-      .descriptorType   = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-      .pImageInfo       = nullptr,
-      .pBufferInfo      = &buffer_info,
-      .pTexelBufferView = nullptr
-    };
-  }
+//     writes[writes_count++] = {
+//       .sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+//       .pNext            = nullptr,
+//       .dstSet           = set_,
+//       .dstBinding       = kBindingUniformBuffer,
+//       .dstArrayElement  = uniform_binding,
+//       .descriptorCount  = 1,
+//       .descriptorType   = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+//       .pImageInfo       = nullptr,
+//       .pBufferInfo      = &buffer_info,
+//       .pTexelBufferView = nullptr
+//     };
+//   }
 
-  if (EnumBitmaskContains(buffer_usage, DeviceResourceState::StorageBuffer)) {
-    LIGER_ASSERT(!free_bindings_storage_buffer_.empty(), kLogChannelRHI, "Max bindless storage buffers limit reached!");
+//   if (EnumBitmaskContains(buffer_usage, DeviceResourceState::StorageBuffer)) {
+//     LIGER_ASSERT(!free_bindings_storage_buffer_.empty(), kLogChannelRHI, "Max bindless storage buffers limit reached!");
 
-    uint32_t storage_binding = *free_bindings_storage_buffer_.begin();
-    free_bindings_storage_buffer_.extract(free_bindings_storage_buffer_.begin());
-    bindings.storage = static_cast<BufferDescriptorBinding>(storage_binding);
+//     uint32_t storage_binding = *free_bindings_storage_buffer_.begin();
+//     free_bindings_storage_buffer_.extract(free_bindings_storage_buffer_.begin());
+//     bindings.storage = static_cast<BufferDescriptorBinding>(storage_binding);
 
-    writes[writes_count++] = {
-      .sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-      .pNext            = nullptr,
-      .dstSet           = set_,
-      .dstBinding       = kBindingStorageBuffer,
-      .dstArrayElement  = storage_binding,
-      .descriptorCount  = 1,
-      .descriptorType   = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
-      .pImageInfo       = nullptr,
-      .pBufferInfo      = &buffer_info,
-      .pTexelBufferView = nullptr
-    };
-  }
+//     writes[writes_count++] = {
+//       .sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+//       .pNext            = nullptr,
+//       .dstSet           = set_,
+//       .dstBinding       = kBindingStorageBuffer,
+//       .dstArrayElement  = storage_binding,
+//       .descriptorCount  = 1,
+//       .descriptorType   = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+//       .pImageInfo       = nullptr,
+//       .pBufferInfo      = &buffer_info,
+//       .pTexelBufferView = nullptr
+//     };
+//   }
 
-  if (writes_count > 0) {
-    vkUpdateDescriptorSets(device_, writes_count, writes, 0, nullptr);
-  }
+//   if (writes_count > 0) {
+//     vkUpdateDescriptorSets(device_, writes_count, writes, 0, nullptr);
+//   }
 
-  return bindings;
-}
+//   return bindings;
+// }
 
-void VulkanDescriptorManager::RemoveBuffer(BufferBindings bindings) {
-  if (bindings.uniform != BufferDescriptorBinding::Invalid) {
-    free_bindings_uniform_buffer_.insert(static_cast<uint32_t>(bindings.uniform));
-  }
+// void VulkanDescriptorManager::RemoveBuffer(BufferBindings bindings) {
+//   if (bindings.uniform != BufferDescriptorBinding::Invalid) {
+//     free_bindings_uniform_buffer_.insert(static_cast<uint32_t>(bindings.uniform));
+//   }
 
-  if (bindings.storage != BufferDescriptorBinding::Invalid) {
-    free_bindings_storage_buffer_.insert(static_cast<uint32_t>(bindings.storage));
-  }
-}
+//   if (bindings.storage != BufferDescriptorBinding::Invalid) {
+//     free_bindings_storage_buffer_.insert(static_cast<uint32_t>(bindings.storage));
+//   }
+// }
 
 VulkanDescriptorManager::TextureBindings VulkanDescriptorManager::AddImageView(VkImageView         view,
                                                                                DeviceResourceState texture_usage,

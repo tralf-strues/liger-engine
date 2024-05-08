@@ -47,6 +47,7 @@ struct Declaration {
       Bool,
       Int32,
       UInt32,
+      UInt64,
       Float32,
       F32Vec2,
       F32Vec3,

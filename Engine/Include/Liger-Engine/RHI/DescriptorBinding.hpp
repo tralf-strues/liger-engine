@@ -32,6 +32,6 @@
 namespace liger::rhi {
 
 enum class TextureDescriptorBinding : uint32_t { Invalid = 0 };
-enum class BufferDescriptorBinding : uint32_t { Invalid = 0 };
+enum class BufferDescriptorBinding : uint64_t { Invalid = 0 };
 
 }  // namespace liger::rhi
