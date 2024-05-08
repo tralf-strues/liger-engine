@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file Compiler.hpp
- * @date 2024-04-15
+ * @file Feature.hpp
+ * @date 2024-05-04
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,19 +27,32 @@
 
 #pragma once
 
-#include <Liger-Engine/ShaderSystem/Declaration.hpp>
-#include <Liger-Engine/ShaderSystem/Shader.hpp>
+#include <Liger-Engine/ECS/SystemGraph.hpp>
+#include <Liger-Engine/RHI/Device.hpp>
+#include <Liger-Engine/RHI/RenderGraph.hpp>
+#include <Liger-Engine/Render/Layer.hpp>
+#include <Liger-Engine/ShaderSystem/DeclarationStack.hpp>
 
-namespace liger::shader {
+namespace liger::render {
 
-class Compiler {
+class IFeature {
  public:
-  explicit Compiler(rhi::IDevice& device);
+  virtual ~IFeature() = default;
 
-  [[nodiscard]] bool Compile(Shader& shader, const Declaration& declaration);
+  virtual std::string_view Name() const = 0;
 
- private:
-  rhi::IDevice& device_;
+  virtual std::span<const std::string_view> DependencyFeatures() const { return {}; }
+  virtual std::span<Layer> Layers() { return {}; }
+  // virtual std::optional<shader::Declaration> GetShaderDeclaration() const { return std::nullopt; }
+
+  virtual void SetupRenderGraph(rhi::RenderGraphBuilder&) {}
+  virtual void LinkRenderJobs(rhi::RenderGraph&) {}
+  virtual void SetupLayerJobs(LayerMap&) {}
+
+  virtual void SetupEntitySystems(ecs::SystemGraph&) {}
+
+  virtual void PreRender(rhi::IDevice&) {}
+  virtual void PostRender(rhi::IDevice&) {}
 };
 
-}  // namespace liger::shader
+}  // namespace liger::render

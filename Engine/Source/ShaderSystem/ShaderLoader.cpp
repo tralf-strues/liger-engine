@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file Compiler.hpp
- * @date 2024-04-15
+ * @file ShaderLoader.cpp
+ * @date 2024-05-07
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -25,21 +25,35 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#pragma once
+#include <Liger-Engine/ShaderSystem/ShaderLoader.hpp>
 
-#include <Liger-Engine/ShaderSystem/Declaration.hpp>
+#include <Liger-Engine/Asset/Manager.hpp>
+#include <Liger-Engine/ShaderSystem/DeclarationParser.hpp>
 #include <Liger-Engine/ShaderSystem/Shader.hpp>
 
 namespace liger::shader {
 
-class Compiler {
- public:
-  explicit Compiler(rhi::IDevice& device);
+ShaderLoader::ShaderLoader(rhi::IDevice& device) : compiler_(device) {}
 
-  [[nodiscard]] bool Compile(Shader& shader, const Declaration& declaration);
+const std::filesystem::path& ShaderLoader::FileExtension() const {
+  static std::filesystem::path extension{".lshader"};
+  return extension;
+}
 
- private:
-  rhi::IDevice& device_;
-};
+bool ShaderLoader::Load(asset::Manager& manager, asset::Id asset_id, const std::filesystem::path& filepath) {
+  auto shader = manager.GetAsset<Shader>(asset_id);
+
+  shader::DeclarationParser parser(filepath);
+  if (!parser.Valid()) {
+    return false;
+  }
+
+  auto declaration = parser.Parse();
+  if (!declaration) {
+    return false;
+  }
+
+  return compiler_.Compile(*shader, declaration.value());
+}
 
 }  // namespace liger::shader

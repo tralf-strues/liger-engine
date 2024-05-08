@@ -29,6 +29,7 @@
 
 #include <Liger-Engine/Asset/LogChannel.hpp>
 
+#include <fmt/ostream.h>
 #include <yaml-cpp/yaml.h>
 
 #include <filesystem>
@@ -38,13 +39,18 @@ namespace liger::asset {
 
 namespace fs = std::filesystem;
 
-Registry::Registry(fs::path registry_file) : registry_file_(std::move(registry_file)) {
+Registry::Registry(fs::path registry_file)
+    : registry_file_(std::move(registry_file)), asset_folder_(registry_file_.parent_path()) {
   if (!ReadRegistryFile()) {
     valid_ = false;
     return;
   }
 
-  asset_folder_ = registry_file_.parent_path();
+  for (const auto& [filepath, id] : ids_) {
+    LIGER_LOG_INFO(kLogChannelAsset, "AssetEntry [file='{0}', id=0x{1:X}]", filepath.c_str(), id.Value());
+  }
+
+  valid_ = true;
 }
 
 Registry::~Registry() {
@@ -68,20 +74,10 @@ bool Registry::Save() const {
     return false;
   }
 
-  YAML::Emitter out;
-
-  out << YAML::BeginSeq;
-
   for (const auto& [id, file_path] : files_) {
-    out << YAML::BeginMap;
-    out << YAML::Key << "file" << YAML::Value << file_path.lexically_relative(asset_folder_);
-    out << YAML::Key << "id" << YAML::Value << YAML::Hex << id.Value();
-    out << YAML::EndMap;
+    fmt::println(out_file, "- file: {0}", file_path.c_str());
+    fmt::println(out_file, "  id: 0x{0:X}", id.Value());
   }
-
-  out << YAML::EndSeq;
-
-  out_file << out.c_str();
 
   return true;
 }
@@ -90,42 +86,59 @@ bool Registry::Contains(Id id) const {
   return files_.contains(id);
 }
 
+bool Registry::Contains(const std::filesystem::path& file) const {
+  return ids_.contains(file);
+}
+
 const fs::path& Registry::GetRelativeFile(Id id) const {
   auto it = files_.find(id);
-  LIGER_ASSERT(it != files_.end(), kLogChannelAsset, "Trying to access invalid asset (id = {0})", id.Value());
+  LIGER_ASSERT(it != files_.end(), kLogChannelAsset, "Trying to access invalid asset (id = 0x{0:X})", id.Value());
 
   return it->second;
 }
 
 fs::path Registry::GetAbsoluteFile(Id id) const {
   auto it = files_.find(id);
-  LIGER_ASSERT(it != files_.end(), kLogChannelAsset, "Trying to access invalid asset (id = {0})", id.Value());
+  LIGER_ASSERT(it != files_.end(), kLogChannelAsset, "Trying to access invalid asset (id = 0x{0:X})", id.Value());
 
   return asset_folder_ / it->second;
 }
 
+Id Registry::GetId(const std::filesystem::path& file) const {
+  auto it = ids_.find(file);
+  LIGER_ASSERT(it != ids_.end(), kLogChannelAsset, "Trying to access invalid asset (file = '{0}')", file.c_str());
+
+  return it->second;
+}
+
 Id Registry::Register(fs::path file) {
   auto new_id = Id::Generate();
+  ids_[file] = new_id;
   files_[new_id] = std::move(file);
 
   return new_id;
 }
 
 void Registry::UpdateFile(Id id, fs::path new_file) {
-  auto it = files_.find(id);
-  LIGER_ASSERT(it != files_.end(), kLogChannelAsset, "Trying to access invalid asset (id = {0})", id.Value());
+  auto file_it = files_.find(id);
+  LIGER_ASSERT(file_it != files_.end(), kLogChannelAsset, "Trying to access invalid asset (id = 0x{0:X})", id.Value());
 
-  it->second = std::move(new_file);
+  ids_.erase(file_it->second);
+
+  ids_[new_file] = id;
+  file_it->second = std::move(new_file);
 }
 
 void Registry::Unregister(Id id) {
-  auto it = files_.find(id);
-  if (it == files_.end()) {
-    LIGER_LOG_ERROR(kLogChannelAsset, "Trying to unregister a non-registered asset (id = {0})", id.Value());
+  auto file_it = files_.find(id);
+  if (file_it == files_.end()) {
+    LIGER_LOG_ERROR(kLogChannelAsset, "Trying to unregister a non-registered asset (id = 0x{0:X})", id.Value());
     return;
   }
 
-  files_.erase(it);
+  auto id_it = ids_.find(file_it->second);
+  ids_.erase(id_it);
+  files_.erase(file_it);
 }
 
 bool Registry::ReadRegistryFile() {
@@ -155,7 +168,7 @@ bool Registry::ReadRegistryFile() {
       return false;
     }
 
-    auto file = asset_folder_ / std::filesystem::path(file_rel);
+    auto file = std::filesystem::path(file_rel);
 
     // Parse asset id
     auto id = kInvalidId.Value();
@@ -167,10 +180,11 @@ bool Registry::ReadRegistryFile() {
 
     // Add asset
     if (files_.contains(asset_id)) {
-      LIGER_LOG_ERROR(kLogChannelAsset, "Duplicate asset id found (id = {0})", asset_id.Value());
+      LIGER_LOG_ERROR(kLogChannelAsset, "Duplicate asset id found (id = 0x{0:X})", asset_id.Value());
       return false;
     }
 
+    ids_.emplace(file, asset_id);
     files_.emplace(asset_id, std::move(file));
   }
 

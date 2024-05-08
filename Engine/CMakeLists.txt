@@ -46,7 +46,8 @@ target_link_libraries(liger-engine
     Taskflow
 
   PRIVATE
-    glslang glslang-default-resource-limits SPIRV
+    shaderc
+    # shaderc glslang glslang-default-resource-limits SPIRV
     VulkanMemoryAllocator
     vulkan-headers
     vulkan-utility-libraries
@@ -62,8 +63,9 @@ install(
     fmt
     glfw
     glm
-    glslang OSDependent MachineIndependent GenericCodeGen glslang-default-resource-limits SPIRV
     magic_enum
+    # shaderc shaderc_util glslang OSDependent MachineIndependent GenericCodeGen glslang-default-resource-limits SPIRV
+    shaderc shaderc_util glslang OSDependent MachineIndependent GenericCodeGen SPIRV
     Taskflow
     VulkanMemoryAllocator
     vulkan-headers

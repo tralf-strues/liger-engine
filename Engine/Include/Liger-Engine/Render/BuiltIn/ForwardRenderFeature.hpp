@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file Compiler.hpp
- * @date 2024-04-15
+ * @file ForwardRenderFeature.hpp
+ * @date 2024-05-06
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,19 +27,35 @@
 
 #pragma once
 
-#include <Liger-Engine/ShaderSystem/Declaration.hpp>
+#include <Liger-Engine/ECS/DefaultComponents.hpp>
+#include <Liger-Engine/RHI/ShaderAlignment.hpp>
+#include <Liger-Engine/Render/Feature.hpp>
 #include <Liger-Engine/ShaderSystem/Shader.hpp>
 
-namespace liger::shader {
+namespace liger::render {
 
-class Compiler {
+class ForwardRenderFeature : public IFeature {
  public:
-  explicit Compiler(rhi::IDevice& device);
+  enum class LayerType : uint32_t {
+    Opaque,
+    Transparent
+  };
 
-  [[nodiscard]] bool Compile(Shader& shader, const Declaration& declaration);
+  explicit ForwardRenderFeature(rhi::RenderGraph::ResourceVersion rg_color);
+  ~ForwardRenderFeature() override = default;
+
+  std::string_view Name() const override { return "ForwardRenderFeature"; }
+  std::span<Layer> Layers() override { return std::span<Layer>(layers_); }
+
+  rhi::RenderGraph::ResourceVersion GetDepth();
+
+  void SetupRenderGraph(rhi::RenderGraphBuilder& builder) override;
+  void LinkRenderJobs(rhi::RenderGraph& graph) override;
 
  private:
-  rhi::IDevice& device_;
+  std::vector<Layer>                layers_;
+  rhi::RenderGraph::ResourceVersion rg_color_;
+  rhi::RenderGraph::ResourceVersion rg_depth_;
 };
 
-}  // namespace liger::shader
+}  // namespace liger::render

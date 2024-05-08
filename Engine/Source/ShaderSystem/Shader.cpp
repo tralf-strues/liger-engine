@@ -36,4 +36,20 @@ Shader::~Shader() {
   delete[] property_buffer_data_;
 }
 
+void Shader::SetTextureSampler(std::string_view name, rhi::TextureDescriptorBinding binding) {
+  SetPushConstant(name, binding);
+}
+
+void Shader::SetBuffer(std::string_view name, rhi::BufferDescriptorBinding binding) {
+  SetPushConstant(name, binding);
+}
+
+void Shader::BindPipeline(rhi::ICommandBuffer& cmds) const {
+  cmds.BindPipeline(pipeline_.get());
+}
+
+void Shader::BindPushConstants(rhi::ICommandBuffer& cmds) const {
+  cmds.SetPushConstant(pipeline_.get(), std::span<const char>(push_constant_data_, push_constant_size_));
+}
+
 }  // namespace liger::shader

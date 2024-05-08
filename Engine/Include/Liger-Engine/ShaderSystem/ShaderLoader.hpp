@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file Compiler.hpp
- * @date 2024-04-15
+ * @file ShaderLoader.hpp
+ * @date 2024-05-07
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,19 +27,22 @@
 
 #pragma once
 
-#include <Liger-Engine/ShaderSystem/Declaration.hpp>
-#include <Liger-Engine/ShaderSystem/Shader.hpp>
+#include <Liger-Engine/Asset/Loader.hpp>
+#include <Liger-Engine/ShaderSystem/Compiler.hpp>
 
 namespace liger::shader {
 
-class Compiler {
+class ShaderLoader : public asset::ILoader {
  public:
-  explicit Compiler(rhi::IDevice& device);
+  explicit ShaderLoader(rhi::IDevice& device);
+  ~ShaderLoader() override = default;
 
-  [[nodiscard]] bool Compile(Shader& shader, const Declaration& declaration);
+  const std::filesystem::path& FileExtension() const override;
+
+  bool Load(asset::Manager& manager, asset::Id asset_id, const std::filesystem::path& filepath) override;
 
  private:
-  rhi::IDevice& device_;
+  Compiler compiler_;
 };
 
 }  // namespace liger::shader

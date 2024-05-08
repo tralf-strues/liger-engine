@@ -35,17 +35,20 @@ namespace liger::ecs {
 
 class SystemGraph {
  public:
-  void Insert(std::unique_ptr<ISystem> system);
+  void Emplace(std::unique_ptr<ISystem> system);
+  void Insert(ISystem* system);
+
   tf::Taskflow Build(Scene& scene);
 
  private:
-  using SystemStorage = std::vector<std::unique_ptr<ISystem>>;
-  using Graph         = std::vector<entt::organizer::vertex>;
+  using OwnedSystemStorage = std::vector<std::unique_ptr<ISystem>>;
+  using SystemList         = std::vector<ISystem*>;
+  using Graph              = std::vector<entt::organizer::vertex>;
 
-  SystemStorage   systems_;
-
-  entt::organizer organizer_;
-  Graph           graph_;
+  OwnedSystemStorage owned_systems_;
+  SystemList         systems_;
+  entt::organizer    organizer_;
+  Graph              graph_;
 };
 
 }  // namespace liger::ecs

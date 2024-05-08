@@ -44,6 +44,11 @@ namespace detail {
 
 template <typename Asset>
 struct Holder {
+  Holder() = default;
+
+  template <typename... Args>
+  explicit Holder(Args... args) : asset(std::forward(args)...) {}
+
   Asset              asset;
   std::atomic<State> state{State::Unloaded};
 };
@@ -54,7 +59,7 @@ using TemplateAssetStorage = RefCountStorage<Id, Holder<Asset>>;
 }  // namespace detail
 
 /**
- * @brief 
+ * @brief Ref-counted asset handle with state info.
  */
 template <typename Asset>
 class Handle {
@@ -77,6 +82,9 @@ class Handle {
 };
 
 template <typename Asset>
+Handle<Asset>::Handle(typename detail::TemplateAssetStorage<Asset>::Reference&& reference) : reference_(reference) {}
+
+template <typename Asset>
 Asset& Handle<Asset>::operator*() {
   return reference_->asset;
 }
@@ -88,7 +96,7 @@ Asset* Handle<Asset>::operator->() {
 
 template <typename Asset>
 Handle<Asset>::operator bool() const {
-  return reference_;
+  return bool(reference_);
 }
 
 template <typename Asset>
@@ -102,15 +110,15 @@ void Handle<Asset>::UpdateState(State new_state) {
 }
 
 /**
- * @brief
+ * @brief Multi-type asset storage with ref-counting mechanism.
  */
 class Storage {
  public:
   template <typename Asset>
   [[nodiscard]] Handle<Asset> Get(Id asset_id);
 
-  template <typename Asset>
-  [[nodiscard]] Handle<Asset> Emplace(Id asset_id, Asset&& asset);
+  template <typename Asset, typename... Args>
+  [[nodiscard]] Handle<Asset> Emplace(Id asset_id, Args... args);
 
  private:
   TypeMap<detail::TemplateAssetStorage> storage_map_;
@@ -121,9 +129,9 @@ Handle<Asset> Storage::Get(Id asset_id) {
   return Handle<Asset>(storage_map_.Get<Asset>().Get(asset_id));
 }
 
-template <typename Asset>
-Handle<Asset> Storage::Emplace(Id asset_id, Asset&& asset) {
-  return Handle<Asset>(storage_map_.Get<Asset>().Emplace(asset_id, asset));
+template <typename Asset, typename... Args>
+Handle<Asset> Storage::Emplace(Id asset_id, Args... args) {
+  return Handle<Asset>(storage_map_.Get<Asset>().Emplace(asset_id, std::forward(args)...));
 }
 
 }  // namespace liger::asset

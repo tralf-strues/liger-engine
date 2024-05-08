@@ -181,6 +181,10 @@ namespace liger::shader {
     return false;
   }
 
+  if (!MergePipelineDescription(dst, src)) {
+    return false;
+  }
+
   for (const auto& src_declaration : src.declarations) {
     Declaration* dst_declaration = nullptr;
 

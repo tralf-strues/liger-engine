@@ -31,10 +31,9 @@
 #include <Liger-Engine/ShaderSystem/LogChannel.hpp>
 
 #include <fmt/ostream.h>
-#include <glslang/Public/ResourceLimits.h>
-#include <glslang/Public/ShaderLang.h>
-#include <SPIRV/GlslangToSpv.h>
+#include <shaderc/shaderc.hpp>
 
+#include <memory>
 #include <set>
 #include <sstream>
 #include <unordered_set>
@@ -113,15 +112,15 @@ inline const char* ToString(Declaration::Member::Type type) {
   return ss.str();
 }
 
-[[nodiscard]] inline EShLanguage ToGLSLangShaderStage(Declaration::Scope scope) {
+[[nodiscard]] inline shaderc_shader_kind ToShadercKind(Declaration::Scope scope) {
   switch (scope) {
-    case Declaration::Scope::Vertex:   { return EShLangVertex;   }
-    case Declaration::Scope::Fragment: { return EShLangFragment; }
-    case Declaration::Scope::Compute:  { return EShLangCompute;  }
+    case Declaration::Scope::Vertex:   { return shaderc_glsl_vertex_shader;   }
+    case Declaration::Scope::Fragment: { return shaderc_glsl_fragment_shader; }
+    case Declaration::Scope::Compute:  { return shaderc_glsl_compute_shader;  }
 
     default: {
       LIGER_LOG_FATAL(kLogChannelShader, "Unsupported scope {0}", EnumToString(scope));
-      return EShLangCount;
+      return shaderc_glsl_compute_shader;
     }
   }
 }
@@ -284,6 +283,19 @@ PushConstantMembers GatherPushConstants(const Declaration& declaration) {
 
     for (const auto& member : sub_declaration.input)  { add(sub_declaration, member); }
     for (const auto& member : sub_declaration.output) { add(sub_declaration, member); }
+  }
+
+  uint32_t total_size = 0U;
+  for (const auto& member : push_constants.members) {
+    total_size += TypeSize(member.type);
+  }
+
+  uint32_t pad_bytes = (16U - (total_size % 16)) % 16;
+  for (uint32_t i = 0; i < pad_bytes / 4U; ++i) {
+    push_constants.members.insert(PushConstantMember {
+      .name = fmt::format("pad_{0}", i),
+      .type = Declaration::Member::Type::UInt32
+    });
   }
 
   return push_constants;
@@ -504,64 +516,48 @@ bool DeclareMainFunction(std::stringstream& source, const Declaration& common, c
 }
 
 std::vector<uint32_t> CompileToBinary(Declaration::Scope scope, const char* source) {
-  glslang::InitializeProcess();
-  auto sh_language = ToGLSLangShaderStage(scope);
+  shaderc::Compiler compiler;
+  shaderc::CompileOptions options;
 
-  glslang::TShader shader(sh_language);
-  shader.setEnvInput(glslang::EShSourceGlsl, sh_language, glslang::EShClientVulkan, 100);
-  shader.setEnvClient(glslang::EShClientVulkan, glslang::EShTargetVulkan_1_3);
-  shader.setEnvTarget(glslang::EShTargetSpv, glslang::EShTargetSpv_1_3);
-  shader.setStrings(&source, 1U);
-
-  std::string preprocessed_source;
-
-  glslang::TShader::ForbidIncluder includer{};
-  if (!shader.preprocess(GetDefaultResources(), 450, ENoProfile, false, false, EShMsgDefault, &preprocessed_source, includer)) {
-    LIGER_LOG_ERROR(kLogChannelShader, "Preprocessing failed:\n{0}\n{1}\nCode:\n{2}", shader.getInfoLog(),
-                    shader.getInfoDebugLog(), preprocessed_source);
+  auto preprocessor_result = compiler.PreprocessGlsl(source, ToShadercKind(scope), "main", options);
+  if (preprocessor_result.GetCompilationStatus() != shaderc_compilation_status_success) {
+    LIGER_LOG_ERROR(kLogChannelShader, "Preprocessing failed:\n{0}", preprocessor_result.GetErrorMessage());
     return {};
   }
 
-  // LIGER_LOG_INFO(kLogChannelShader, "Preprocessed source (stage = {0}):\n{1}", EnumToString(scope), preprocessed_source);
+  std::string preprocessed_source = {preprocessor_result.cbegin(), preprocessor_result.cend()};
 
-  if (!shader.parse(GetDefaultResources(), 450, false, EShMsgDefault)) {
-    LIGER_LOG_ERROR(kLogChannelShader, "Parsing failed:\n{0}\n{1}", shader.getInfoLog(), shader.getInfoDebugLog());
+  // LIGER_LOG_INFO(kLogChannelShader, "Preprocessed shader source (stage = {0}):\n{1}", EnumToString(scope),
+  //                preprocessed_source);
+
+  // options.AddMacroDefinition("MY_DEFINE", "1"); // TODO (tralf-strues): Add macro substitutions support
+  // options.SetOptimizationLevel(shaderc_optimization_level_performance);
+  options.SetGenerateDebugInfo();
+  options.SetVulkanRulesRelaxed(true);
+  options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2);
+  options.SetTargetSpirv(shaderc_spirv_version_1_5);
+
+  auto compiler_result = compiler.CompileGlslToSpv(preprocessed_source, ToShadercKind(scope), "main", options);
+  if (compiler_result.GetCompilationStatus() != shaderc_compilation_status_success) {
+    LIGER_LOG_ERROR(kLogChannelShader, "Compiling failed:\n{0}", compiler_result.GetErrorMessage());
     return {};
   }
 
-  glslang::TProgram program;
-  program.addShader(&shader);
-  if (!program.link(static_cast<EShMessages>(EShMsgSpvRules | EShMsgVulkanRules))) {
-    LIGER_LOG_ERROR(kLogChannelShader, "Linking failed:\n{0}\n{1}", shader.getInfoLog(), shader.getInfoDebugLog());
-    return {};
-  }
-
-  // Convert the intermediate generated by glslang to SPIR-V
-  glslang::TIntermediate& intermediate = *(program.getIntermediate(sh_language));
-  std::vector<uint32_t> spirv;
-
-  glslang::SpvOptions options{};
-  options.validate = true;
-
-  glslang::GlslangToSpv(intermediate, spirv, &options);
-
-  glslang::FinalizeProcess();
-
-  return spirv;
+  return {compiler_result.cbegin(), compiler_result.cend()};
 }
 
 Compiler::Compiler(rhi::IDevice& device) : device_(device) {}
 
-std::unique_ptr<Shader> Compiler::Compile(const Declaration& declaration) {
+bool Compiler::Compile(Shader& shader, const Declaration& declaration) {
   if (declaration.scope != Declaration::Scope::None) {
     LIGER_LOG_ERROR(kLogChannelShader, "Declaration's scope must be Common, instead it is {}",
                     EnumToString(declaration.scope));
-    return nullptr;
+    return false;
   }
 
   auto pipeline_type = DeterminePipelineType(declaration);
   if (pipeline_type == PipelineType::Invalid) {
-    return nullptr;
+    return false;
   }
 
   auto stage_linking  = LinkGraphicsStages(declaration);
@@ -571,7 +567,7 @@ std::unique_ptr<Shader> Compiler::Compile(const Declaration& declaration) {
   for (const auto& shader_declaration : declaration.declarations) {
     auto source = GenerateSource(declaration, shader_declaration, stage_linking, push_constants);
     if (!source) {
-      return nullptr;
+      return false;
     }
 
     sources[shader_declaration.scope] = source.value();
@@ -579,29 +575,27 @@ std::unique_ptr<Shader> Compiler::Compile(const Declaration& declaration) {
 
   std::vector<std::unique_ptr<rhi::IShaderModule>> shader_modules;
   for (const auto& [scope, source] : sources) {
-    LIGER_LOG_INFO(kLogChannelShader, "Generated shader source (stage = {0}):\n{1}", EnumToString(scope), source);
+    // LIGER_LOG_INFO(kLogChannelShader, "Generated shader source (stage = {0}):\n{1}", EnumToString(scope), source);
 
     auto binary = CompileToBinary(scope, source.c_str());
     if (binary.empty()) {
-      return nullptr;
+      return false;
     }
 
     auto shader_module = device_.CreateShaderModule({.type = scope, .source_binary = binary});
     if (!shader_module) {
-      return nullptr;
+      return false;
     }
 
     shader_modules.emplace_back(std::move(shader_module));
   }
 
-  auto shader = std::unique_ptr<Shader>(new Shader{});
-
   for (const auto& member : push_constants.members) {
-    shader->push_constant_offsets_[member.name] = shader->push_constant_size_;
-    shader->push_constant_size_ += TypeSize(member.type);
+    shader.push_constant_offsets_[member.name] = shader.push_constant_size_;
+    shader.push_constant_size_ += TypeSize(member.type);
   }
 
-  shader->push_constant_data_ = new char[shader->push_constant_size_];
+  shader.push_constant_data_ = new char[shader.push_constant_size_];
 
   if (pipeline_type == PipelineType::Graphics) {
     std::vector<const rhi::IShaderModule*> shader_module_refs;
@@ -616,28 +610,28 @@ std::unique_ptr<Shader> Compiler::Compile(const Declaration& declaration) {
       .rasterization      = declaration.rasterization.value(),
       .depth_stencil_test = declaration.depth_stencil_test.value(),
       .blend              = declaration.color_blend.value(),
-      .push_constant      = {.size = shader->push_constant_size_, .shader_types = push_constants.scopes_mask},
+      .push_constant      = {.size = shader.push_constant_size_, .shader_types = push_constants.scopes_mask},
       .attachments        = declaration.attachments.value(),
       .shader_modules     = shader_module_refs
     };
 
-    shader->pipeline_ = device_.CreatePipeline(pipeline_info);
-    if (!shader->pipeline_) {
-      return nullptr;
+    shader.pipeline_ = device_.CreatePipeline(pipeline_info);
+    if (!shader.pipeline_) {
+      return false;
     }
   } else if (pipeline_type == PipelineType::Compute) {
     rhi::IPipeline::ComputeInfo pipeline_info {
-      .push_constant = {.size = shader->push_constant_size_, .shader_types = push_constants.scopes_mask},
+      .push_constant = {.size = shader.push_constant_size_, .shader_types = push_constants.scopes_mask},
       .shader_module = shader_modules[0].get()
     };
 
-    shader->pipeline_ = device_.CreatePipeline(pipeline_info);
-    if (!shader->pipeline_) {
-      return nullptr;
+    shader.pipeline_ = device_.CreatePipeline(pipeline_info);
+    if (!shader.pipeline_) {
+      return false;
     }
   }
 
-  return shader;
+  return true;
 }
 
 }  // namespace liger::shader

@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file Compiler.hpp
- * @date 2024-04-15
+ * @file View.hpp
+ * @date 2024-05-05
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,19 +27,13 @@
 
 #pragma once
 
-#include <Liger-Engine/ShaderSystem/Declaration.hpp>
-#include <Liger-Engine/ShaderSystem/Shader.hpp>
+namespace liger::render {
 
-namespace liger::shader {
-
-class Compiler {
+class View {
  public:
-  explicit Compiler(rhi::IDevice& device);
-
-  [[nodiscard]] bool Compile(Shader& shader, const Declaration& declaration);
 
  private:
-  rhi::IDevice& device_;
+  
 };
 
-}  // namespace liger::shader
+}

@@ -39,34 +39,34 @@ struct Transform3D {
   constexpr static glm::vec3 kUp      {0, 1, 0};
   constexpr static glm::vec3 kRight   {1, 0, 0};
 
-  Transform3D() = default;
+  constexpr inline Transform3D() = default;
 
   /**
    * @brief Reconstruct transform from matrix.
    * @warning Prone to precision errors! Should be avoided when possible.
    * @param matrix
    */
-  explicit Transform3D(const glm::mat4& matrix);
+  constexpr inline explicit Transform3D(const glm::mat4& matrix);
 
-  glm::mat4 TranslationMatrix() const;
-  glm::mat4 RotationMatrix() const;
-  glm::mat4 ScaleMatrix() const;
+  constexpr inline glm::mat4 TranslationMatrix() const;
+  constexpr inline glm::mat4 RotationMatrix() const;
+  constexpr inline glm::mat4 ScaleMatrix() const;
 
-  glm::mat4 Matrix() const;
-  glm::mat4 InverseMatrix() const;
+  constexpr inline glm::mat4 Matrix() const;
+  constexpr inline glm::mat4 InverseMatrix() const;
 
-  glm::vec3 Forward() const;
-  glm::vec3 Up() const;
-  glm::vec3 Right() const;
+  constexpr inline glm::vec3 Forward() const;
+  constexpr inline glm::vec3 Up() const;
+  constexpr inline glm::vec3 Right() const;
 
-  void Rotate(float angle, const glm::vec3& axis);
+  constexpr inline void Rotate(float angle, const glm::vec3& axis);
 
   glm::vec3 position;
   glm::quat rotation;
   glm::vec3 scale;
 };
 
-Transform3D::Transform3D(const glm::mat4& matrix) {
+constexpr inline Transform3D::Transform3D(const glm::mat4& matrix) {
   glm::vec3 decomposed_scale;
   glm::quat decomposed_rotation;
   glm::vec3 decomposed_position;
@@ -80,10 +80,21 @@ Transform3D::Transform3D(const glm::mat4& matrix) {
   scale    = decomposed_scale;
 }
 
-glm::mat4 Transform3D::TranslationMatrix() const { return glm::translate(glm::identity<glm::mat4>(), position); }
-glm::mat4 Transform3D::RotationMatrix()    const { return glm::mat4_cast(rotation); }
-glm::mat4 Transform3D::ScaleMatrix()       const { return glm::scale(glm::identity<glm::mat4>(), scale); }
-glm::mat4 Transform3D::Matrix()            const { return TranslationMatrix() * RotationMatrix() * ScaleMatrix(); }
+constexpr inline glm::mat4 Transform3D::TranslationMatrix() const {
+  return glm::translate(glm::identity<glm::mat4>(), position);
+}
+
+constexpr inline glm::mat4 Transform3D::RotationMatrix() const {
+  return glm::mat4_cast(rotation);
+}
+
+constexpr inline glm::mat4 Transform3D::ScaleMatrix() const {
+  return glm::scale(glm::identity<glm::mat4>(), scale);
+}
+
+constexpr inline glm::mat4 Transform3D::Matrix() const {
+  return TranslationMatrix() * RotationMatrix() * ScaleMatrix();
+}
 
 /**
  * Calculates the inverse of a transformation matrix:
@@ -98,16 +109,16 @@ glm::mat4 Transform3D::Matrix()            const { return TranslationMatrix() * 
  * Inverse of a translation matrix is simply a translation matrix composed
  * of negative values of the given translation.
  */
-glm::mat4 Transform3D::InverseMatrix() const {
+constexpr inline glm::mat4 Transform3D::InverseMatrix() const {
   const auto identity = glm::identity<glm::mat4>();
   return glm::scale(identity, 1.0f / scale) * glm::transpose(RotationMatrix()) * glm::translate(identity, -position);
 }
 
-glm::vec3 Transform3D::Forward() const { return rotation * glm::vec4(kForward, 1.0f); }
-glm::vec3 Transform3D::Up()      const { return rotation * glm::vec4(kUp,      1.0f); }
-glm::vec3 Transform3D::Right()   const { return rotation * glm::vec4(kRight,   1.0f); }
+constexpr inline glm::vec3 Transform3D::Forward() const { return rotation * glm::vec4(kForward, 1.0f); }
+constexpr inline glm::vec3 Transform3D::Up()      const { return rotation * glm::vec4(kUp,      1.0f); }
+constexpr inline glm::vec3 Transform3D::Right()   const { return rotation * glm::vec4(kRight,   1.0f); }
 
-void Transform3D::Rotate(float angle, const glm::vec3& axis) {
+constexpr inline void Transform3D::Rotate(float angle, const glm::vec3& axis) {
   rotation = glm::angleAxis(angle, axis) * rotation;
 }
 

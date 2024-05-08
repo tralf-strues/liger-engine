@@ -28,9 +28,9 @@
 [submodule "Engine/ThirdParty/taskflow"]
 	path = Engine/ThirdParty/taskflow
 	url = https://github.com/taskflow/taskflow.git
-[submodule "Engine/ThirdParty/glslang"]
-	path = Engine/ThirdParty/glslang
-	url = https://github.com/KhronosGroup/glslang
 [submodule "Engine/ThirdParty/entt"]
 	path = Engine/ThirdParty/entt
 	url = https://github.com/skypjack/entt.git
+[submodule "Engine/ThirdParty/shaderc"]
+	path = Engine/ThirdParty/shaderc
+	url = https://github.com/google/shaderc

@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file Compiler.hpp
- * @date 2024-04-15
+ * @file Renderer.hpp
+ * @date 2024-05-05
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,19 +27,37 @@
 
 #pragma once
 
-#include <Liger-Engine/ShaderSystem/Declaration.hpp>
-#include <Liger-Engine/ShaderSystem/Shader.hpp>
+#include <Liger-Engine/Render/Feature.hpp>
 
-namespace liger::shader {
+namespace liger::render {
 
-class Compiler {
+class Renderer {
  public:
-  explicit Compiler(rhi::IDevice& device);
+  using FeatureList        = std::vector<std::unique_ptr<IFeature>>;
+  using DeclarationLibrary = std::unordered_map<std::string_view, shader::Declaration>;
 
-  [[nodiscard]] bool Compile(Shader& shader, const Declaration& declaration);
+  explicit Renderer(rhi::IDevice& device);
+
+  void EmplaceFeature(std::unique_ptr<IFeature> feature);
+  rhi::RenderGraphBuilder& GetRenderGraphBuilder();
+
+  void Setup();
+
+  tf::Taskflow& GetSystemTaskflow();
+  rhi::RenderGraph& GetRenderGraph();
+
+  void Render();
 
  private:
-  rhi::IDevice& device_;
+  rhi::IDevice&                     device_;
+
+  FeatureList                       features_;
+  DeclarationLibrary                declarations_;
+  ecs::SystemGraph                  system_graph_;
+  tf::Taskflow                      system_taskflow_;
+
+  rhi::RenderGraphBuilder           rg_builder_;
+  std::unique_ptr<rhi::RenderGraph> render_graph_;
 };
 
-}  // namespace liger::shader
+}  // namespace liger::render

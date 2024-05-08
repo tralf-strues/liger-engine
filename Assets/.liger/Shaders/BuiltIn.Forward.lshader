@@ -26,8 +26,8 @@ AttachmentInfo:
 
 FragmentShader:
   Use:
-    - Include: BuiltIn.PBR
-    - Include: BuiltIn.LightSources
+    - Include: BuiltIn.PBR.lsdecl
+    - Include: BuiltIn.LightSources.lsdecl
     - Interface: GetParametersPBR
       Desc: "Implementation must define function 'PBR_SurfacePoint GetParametersPBR(LigerInput liger_in)'"
 

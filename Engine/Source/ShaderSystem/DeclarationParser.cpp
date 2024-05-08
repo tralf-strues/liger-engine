@@ -28,6 +28,7 @@
 #include <Liger-Engine/ShaderSystem/DeclarationParser.hpp>
 
 #include <Liger-Engine/Core/EnumReflection.hpp>
+#include <Liger-Engine/ShaderSystem/DeclarationStack.hpp>
 #include <Liger-Engine/ShaderSystem/LogChannel.hpp>
 
 #include <unordered_map>
@@ -451,8 +452,8 @@ bool ParseDeclaration(Declaration& declaration, YAML::Node& root) {
   return true;
 }
 
-DeclarationParser::DeclarationParser(const std::filesystem::path& filepath) {
-  root_node_ = YAML::LoadFile(filepath.c_str());
+DeclarationParser::DeclarationParser(std::filesystem::path filepath) : filepath_(std::move(filepath)) {
+  root_node_ = YAML::LoadFile(filepath_.c_str());
 }
 
 bool DeclarationParser::Valid() const { return root_node_.IsDefined(); }
@@ -477,7 +478,44 @@ std::optional<Declaration> DeclarationParser::Parse() {
     }
   }
 
-  return declaration;
+  DeclarationStack stack;
+  auto dir = filepath_.parent_path();
+
+  auto add_include = [&dir, &stack](std::string_view include_name) -> bool {
+    auto include_filepath = dir / std::filesystem::path(include_name);
+
+    DeclarationParser include_parser(include_filepath);
+    if (!include_parser.Valid()) {
+      return false;
+    }
+
+    auto include_decl = include_parser.Parse();
+    if (include_decl) {
+      stack.Push(std::move(include_decl.value()));
+    }
+
+    return include_decl.has_value();
+  };
+
+  for (const auto& include_name : declaration.includes) {
+    if (!add_include(include_name)) {
+      LIGER_LOG_ERROR(kLogChannelShader, "Failed to include '{0}'", include_name);
+      return std::nullopt;
+    }
+  }
+
+  for (const auto& sub_declaration : declaration.declarations) {
+    for (const auto& include_name : sub_declaration.includes) {
+      if (!add_include(include_name)) {
+        LIGER_LOG_ERROR(kLogChannelShader, "Failed to include '{0}'", include_name);
+        return std::nullopt;
+      }
+    }
+  }
+
+  stack.Push(std::move(declaration));
+
+  return stack.Merged();
 }
 
 }  // namespace liger::shader

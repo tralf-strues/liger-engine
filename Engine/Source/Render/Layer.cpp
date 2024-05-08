@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file Compiler.hpp
- * @date 2024-04-15
+ * @file Layer.cpp
+ * @date 2024-05-06
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -25,21 +25,22 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#pragma once
+#include <Liger-Engine/Render/Layer.hpp>
 
-#include <Liger-Engine/ShaderSystem/Declaration.hpp>
-#include <Liger-Engine/ShaderSystem/Shader.hpp>
+namespace liger::render {
 
-namespace liger::shader {
+Layer::Layer(std::string_view name) : name_(name) {}
 
-class Compiler {
- public:
-  explicit Compiler(rhi::IDevice& device);
+std::string_view Layer::Name() const { return name_; }
 
-  [[nodiscard]] bool Compile(Shader& shader, const Declaration& declaration);
+void Layer::Emplace(Job job) {
+  jobs_.emplace_back(std::move(job));
+}
 
- private:
-  rhi::IDevice& device_;
-};
+void Layer::Execute(rhi::ICommandBuffer& cmds) {
+  for (auto& job : jobs_) {
+    job(cmds);
+  }
+}
 
-}  // namespace liger::shader
+}  // namespace liger::render

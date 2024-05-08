@@ -1,0 +1,25 @@
+Data: | #glsl
+  struct ParticleSystem {
+    uint32_t  max_particles;
+    float32_t spawn_rate;
+    float32_t lifetime;
+
+    f32vec3   velocity_min;
+    f32vec3   velocity_max;
+
+    f32vec4   color_start;
+    f32vec4   color_end;
+
+    float32_t size_start;
+    float32_t size_end;
+
+    // float32_t pad0;
+  };
+
+  struct Particle {
+    f32vec3   position;
+    f32vec3   velocity;
+    f32vec4   color;
+    float32_t size;
+    float32_t lifetime;
+  };

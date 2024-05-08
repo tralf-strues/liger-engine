@@ -3,11 +3,9 @@ set -e
 
 mkdir -p .liger_log
 
-if [ ! -d "Engine/ThirdParty/glslang/External/spirv-tools" ]; then
-  cd Engine/ThirdParty/glslang
-  ./update_glslang_sources.py
-  cd ../../..
-fi
+cd Engine/ThirdParty/shaderc
+./utils/git-sync-deps
+cd ../../..
 
 if [ $# -eq 0 ]; then
   echo "Please, specify the build mode (i.e. Debug or Release)"

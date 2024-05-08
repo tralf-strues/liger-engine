@@ -37,14 +37,15 @@ namespace liger::shader {
 
 class DeclarationParser {
  public:
-  explicit DeclarationParser(const std::filesystem::path& filepath);
+  explicit DeclarationParser(std::filesystem::path filepath);
 
   bool Valid() const;
 
   [[nodiscard]] std::optional<Declaration> Parse();
 
  private:
-  YAML::Node root_node_;
+  YAML::Node            root_node_;
+  std::filesystem::path filepath_;
 };
 
 }  // namespace liger::shader

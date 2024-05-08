@@ -66,7 +66,7 @@ void ComponentSystem<Components...>::Setup(entt::organizer& organizer) {
 template <typename... Components>
 requires (!std::is_empty_v<Components> && ...)
 void ComponentSystem<Components...>::Prepare(entt::registry& registry) {
-  registry.view<Components...>();
+  [[maybe_unused]] auto view = registry.view<Components...>();
 }
 
 template <typename... Components>

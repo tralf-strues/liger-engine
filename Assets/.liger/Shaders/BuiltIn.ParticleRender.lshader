@@ -1,0 +1,82 @@
+Use:
+  - Include: BuiltIn.ParticleData.lsdecl
+
+InputAssemblyInfo:
+  Topology: TriangleFan
+
+RasterizationInfo:
+  CullMode: None
+  FrontFace: CounterClockwise
+  PolygonMode: Fill
+
+DepthStencilTestInfo:
+  DepthTestEnable: true
+  DepthWriteEnable: false
+  DepthCompareOperation: Less
+
+ColorBlendInfo:
+  Enable: true
+
+  SrcColorFactor: One
+  DstColorFactor: One
+  ColorOperation: Add
+
+  SrcAlphaFactor: SrcAlpha
+  DstAlphaFactor: DstAlpha
+  AlphaOperation: Add
+
+VertexShader:
+  Use:
+    - Include: BuiltIn.Camera.lsdecl
+
+  Input:
+    - Name: vertex_idx
+      Type: vertex-index
+
+    - Name: instance_idx
+      Type: instance-index
+
+    - Name: TransformData
+      Type: storage-buffer
+      Layout: std430
+      Access: readonly
+      Contents: | #glsl
+        f32mat4 transforms[];
+
+    - Name: transform_idx
+      Type: uint32_t
+      Modifier: push-constant
+
+  Output:
+    - Name: ws_position
+      Type: f32vec3
+    - Name: color
+      Type: f32vec4
+
+  Code: | #glsl
+    Camera   camera    = GetCamera(liger_in);
+    Particle particle  = GetStorageBuffer(Particles, liger_in.binding_particles).particles[liger_in.instance_idx];
+    f32mat4  transform = GetStorageBuffer(TransformData, liger_in.binding_transform_data).transforms[liger_in.transform_idx];
+
+    uint32_t b               = 1U << liger_in.vertex_idx;
+    f32vec2  uv              = f32vec2((0x3 & b) != 0U, (0x9 & b) != 0U);
+    f32vec2  quad_vertex_pos = uv - f32vec2(0.5f);
+    f32vec3  ws_center_pos   = (transform * f32vec4(particle.position, 1.0f)).xyz;
+
+    ws_position = ws_center_pos + CameraRightWS(camera) * quad_vertex_pos.x * particle.size
+                                + CameraUpWS(camera)    * quad_vertex_pos.y * particle.size;
+    gl_Position = camera.proj * camera.view * f32vec4(ws_position, 1.0f);
+
+FragmentShader:
+  Input:
+    - Name: ws_position
+      Type: f32vec3
+    - Name: color
+      Type: f32vec4
+
+  Output:
+    - Name: out_color
+      Type: f32vec4
+
+  Code: | #glsl
+    out_color = liger_in.color;

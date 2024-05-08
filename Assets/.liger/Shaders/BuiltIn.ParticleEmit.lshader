@@ -1,0 +1,65 @@
+ComputeShader:
+  ThreadGroupSize: [64, 1, 1]
+
+  Use:
+    - Include: BuiltIn.Random.lsdecl
+    - Include: BuiltIn.ParticleData.lsdecl
+
+  Input:
+    - Name: EmitterData
+      Type: uniform-buffer
+      Contents: | #glsl
+        ParticleSystem emitter;
+
+    - Name: Particles
+      Type: storage-buffer
+      Layout: std430
+      Access: writeonly
+      Contents: | #glsl
+        Particle particles[];
+
+    - Name: FreeList
+      Type: storage-buffer
+      Layout: std430
+      Access: readwrite
+      Contents: | #glsl
+        int32_t count;
+        int32_t indices[];
+
+    - Name: particles_to_spawn
+      Type: uint32_t
+      Modifier: push-constant
+
+    - Name: time
+      Type: float32_t
+      Modifier: push-constant
+
+  CodeSnippets:
+    - Insert: auto-global
+      Code: | #glsl
+        void EmitParticle(out Particle particle, float32_t random_seed, ParticleSystem emitter) {
+          particle.position = f32vec3(0.0f);
+          particle.velocity = mix(emitter.velocity_min, emitter.velocity_max, RandomVec3(random_seed));
+          particle.lifetime = emitter.lifetime;
+        }
+
+  Code: | #glsl
+    uint32_t idx = gl_GlobalInvocationID.x;
+    if (idx >= liger_in.particles_to_spawn) {
+      return;
+    }
+
+    int32_t free_list_idx = atomicAdd(GetStorageBuffer(FreeList, liger_in.binding_free_list).count, -1) - 1;
+    if (free_list_idx < 0) {
+      // undo decrement, 'cause free list is empty
+      atomicAdd(GetStorageBuffer(FreeList, liger_in.binding_free_list).count, 1);
+      return;
+    }
+
+    int32_t        particle_idx = GetStorageBuffer(FreeList, liger_in.binding_free_list).indices[free_list_idx];
+    float32_t      random_seed  = (float32_t(particle_idx) + float32_t(free_list_idx)) * liger_in.time;
+    ParticleSystem emitter      = GetUniformBuffer(EmitterData, liger_in.binding_emitter_data).emitter;
+
+    EmitParticle(GetStorageBuffer(Particles, liger_in.binding_particles).particles[particle_idx],
+                 random_seed,
+                 emitter);

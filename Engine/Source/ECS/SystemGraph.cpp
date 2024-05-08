@@ -33,9 +33,15 @@
 
 namespace liger::ecs {
 
-void SystemGraph::Insert(std::unique_ptr<ISystem> system) {
+void SystemGraph::Emplace(std::unique_ptr<ISystem> system) {
   system->Setup(organizer_);
-  systems_.emplace_back(std::move(system));
+
+  Insert(system.get());
+  owned_systems_.emplace_back(std::move(system));
+}
+
+void SystemGraph::Insert(ISystem* system) {
+  systems_.push_back(system);
 }
 
 tf::Taskflow SystemGraph::Build(Scene& scene) {
@@ -62,7 +68,7 @@ tf::Taskflow SystemGraph::Build(Scene& scene) {
     }
   }
 
-  for (auto& system : systems_) {
+  for (auto* system : systems_) {
     system->Prepare(scene.GetRegistry());
   }
 

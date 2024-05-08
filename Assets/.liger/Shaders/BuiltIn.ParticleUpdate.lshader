@@ -1,0 +1,64 @@
+ComputeShader:
+  ThreadGroupSize: [64, 1, 1]
+
+  Use:
+    - Include: BuiltIn.ParticleData.lsdecl
+
+  Input:
+    - Name: EmitterData
+      Type: uniform-buffer
+      Contents: | #glsl
+        ParticleSystem emitter;
+
+    - Name: Particles
+      Type: storage-buffer
+      Layout: std430
+      Access: writeonly
+      Contents: | #glsl
+        Particle particles[];
+
+    - Name: FreeList
+      Type: storage-buffer
+      Layout: std430
+      Access: readwrite
+      Contents: | #glsl
+        int32_t count;
+        int32_t indices[];
+
+    - Name: delta_time
+      Type: float32_t
+      Modifier: push-constant
+
+  CodeSnippets:
+    - Insert: auto-global
+      Code: | #glsl
+        void UpdateParticle(inout Particle particle, int32_t idx, const LigerInput liger_in) {
+          if (particle.lifetime <= 0.0f) {
+            return;
+          }
+
+          const ParticleSystem emitter = GetUniformBuffer(EmitterData, liger_in.binding_emitter_data).emitter;
+
+          float32_t t = 1.0f - particle.lifetime / emitter.lifetime;
+
+          particle.position += particle.velocity * liger_in.delta_time;
+          particle.color     = mix(emitter.color_start, emitter.color_end, t);
+          particle.size      = mix(emitter.size_start, emitter.size_end, t);
+          particle.lifetime -= liger_in.delta_time;
+
+          if (particle.lifetime <= 0.0f) {
+            particle.color.a = 0.0f;
+
+            int32_t free_list_idx = atomicAdd(GetStorageBuffer(FreeList, liger_in.binding_free_list).count, 1);
+            GetStorageBuffer(FreeList, liger_in.binding_free_list).indices[free_list_idx] = idx;
+          }
+        }
+
+  Code: | #glsl
+    uint32_t idx = gl_GlobalInvocationID.x;
+
+    if (idx >= GetStorageBuffer(Particles, liger_in.binding_particles).particles.length()) {
+      return;
+    }
+
+    UpdateParticle(GetStorageBuffer(Particles, liger_in.binding_particles).particles[idx], int32_t(idx), liger_in);

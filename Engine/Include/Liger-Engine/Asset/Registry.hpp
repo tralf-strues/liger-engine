@@ -114,6 +114,11 @@ class Registry {
   bool Contains(Id id) const;
 
   /**
+   * @brief Whether the registry contains an asset with this filepath.
+   */
+  bool Contains(const std::filesystem::path& file) const;
+
+  /**
    * @brief Get the relative filepath of the asset not including the asset folder.
    */
   const std::filesystem::path& GetRelativeFile(Id id) const;
@@ -122,6 +127,11 @@ class Registry {
    * @brief Get the relative filepath of the asset including the asset folder.
    */
   std::filesystem::path GetAbsoluteFile(Id id) const;
+
+  /**
+   * @brief Get the id of the asset by filepath.
+   */
+  Id GetId(const std::filesystem::path& file) const;
 
   /**
    * @brief Register a new asset with the specified file.
@@ -146,9 +156,10 @@ class Registry {
   bool ReadRegistryFile();
 
   bool                                          valid_{false};
-  std::filesystem::path                         asset_folder_;
   std::filesystem::path                         registry_file_;
+  std::filesystem::path                         asset_folder_;
   std::unordered_map<Id, std::filesystem::path> files_;
+  std::unordered_map<std::filesystem::path, Id> ids_;
 };
 
 }  // namespace liger::asset

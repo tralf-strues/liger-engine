@@ -40,6 +40,10 @@ template <typename Key, typename Value>
 class RefCountStorage {
  private:
   struct ControlBlock {
+    template <typename... Args>
+    ControlBlock(RefCountStorage& storage, Key key, Args... args)
+        : storage(storage), key(key), value(std::forward(args)...) {}
+
     std::atomic<uint32_t> ref_count{0};
     RefCountStorage&      storage;
     Key                   key;
@@ -55,11 +59,16 @@ class RefCountStorage {
     Reference(const Reference& other);
     Reference& operator=(const Reference& other);
 
-    Reference(Reference&& other) noexcept;
-    Reference& operator=(Reference&& other) noexcept;
+    // NOLINTBEGIN
+    Reference(Reference&& other);
+    Reference& operator=(Reference&& other);
+    // NOLINTEND
 
     Value& operator*();
     Value* operator->();
+
+    const Value& operator*() const;
+    const Value* operator->() const;
 
     explicit operator bool() const;
 
@@ -83,7 +92,7 @@ class RefCountStorage {
   template <typename... Args>
   [[nodiscard]] Reference Emplace(Key key, Args... args);
 
-  [[nodiscard]] Reference Emplace(Key key, Value&& value);
+  // [[nodiscard]] Reference Emplace(Key key, Value&& value);
 
   [[nodiscard]] bool Contains(Key key) const;
 
@@ -114,14 +123,9 @@ RefCountStorage<Key, Value>::~RefCountStorage() {
 template <typename Key, typename Value>
 template <typename... Args>
 typename RefCountStorage<Key, Value>::Reference RefCountStorage<Key, Value>::Emplace(Key key, Args... args) {
-  return Emplace(key, Value(std::forward<Args>(args)...));
-}
-
-template <typename Key, typename Value>
-typename RefCountStorage<Key, Value>::Reference RefCountStorage<Key, Value>::Emplace(Key key, Value&& value) {
   LIGER_ASSERT(map_.find(key) == map_.end(), kLogChannelCore, "Trying to emplace by key already present in the map");
 
-  auto* block = new ControlBlock{.ref_count = 0, .storage = *this, .key = key, .value{std::move(value)}};
+  auto* block = new ControlBlock(*this, key, std::forward(args)...);
 
   map_.emplace(key, block);
   return Reference(block);
@@ -209,13 +213,15 @@ typename RefCountStorage<Key, Value>::Reference& RefCountStorage<Key, Value>::Re
 }
 
 template <typename Key, typename Value>
-RefCountStorage<Key, Value>::Reference::Reference(Reference&& other) noexcept : block_(other.block_) {
+// NOLINTNEXTLINE
+RefCountStorage<Key, Value>::Reference::Reference(Reference&& other) : block_(other.block_) {
   other.block_ = nullptr;
 }
 
 template <typename Key, typename Value>
+// NOLINTNEXTLINE
 typename RefCountStorage<Key, Value>::Reference& RefCountStorage<Key, Value>::Reference::operator=(
-    Reference&& other) noexcept {
+    Reference&& other) {
   if (this == &other) {
     return *this;
   }
@@ -237,6 +243,16 @@ Value& RefCountStorage<Key, Value>::Reference::operator*() {
 
 template <typename Key, typename Value>
 Value* RefCountStorage<Key, Value>::Reference::operator->() {
+  return &block_->value;
+}
+
+template <typename Key, typename Value>
+const Value& RefCountStorage<Key, Value>::Reference::operator*() const {
+  return block_->value;
+}
+
+template <typename Key, typename Value>
+const Value* RefCountStorage<Key, Value>::Reference::operator->() const {
   return &block_->value;
 }
 
