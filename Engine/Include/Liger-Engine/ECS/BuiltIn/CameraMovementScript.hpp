@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file DefaultSystems.cpp
- * @date 2024-05-01
+ * @file CameraMovementScript.hpp
+ * @date 2024-05-11
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -25,28 +25,35 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <Liger-Engine/ECS/DefaultSystems.hpp>
-#include <Liger-Engine/ECS/LogChannel.hpp>
+#pragma once
+
+#include <Liger-Engine/Core/Platform/PlatformLayer.hpp>
+#include <Liger-Engine/ECS/Script.hpp>
 
 namespace liger::ecs {
 
-ScriptSystem::ScriptSystem(const FrameTimer& frame_timer) : frame_timer_(frame_timer) {}
+class CameraMovementScript : public IScript {
+ public:
+  constexpr static float kSpeed = 2.5f;
 
-void ScriptSystem::Setup(entt::registry& registry) {
-  registry.on_construct<ScriptComponent>().connect<&ScriptSystem::OnAttach>(this);
-}
+  explicit CameraMovementScript(Window* window);
 
-void ScriptSystem::Run(entt::registry& registry, entt::entity entity, const ScriptComponent& script) {
-  if (!script.script) {
-    LIGER_LOG_ERROR(kLogChannelECS, "Nullptr script");
-    return;
-  }
+  void OnAttach(Entity entity) override;
+  void OnUpdate(entt::registry& registry, Entity entity, float dt) override;
 
-  script.script->OnUpdate(registry, entity, frame_timer_.DeltaTime());
-}
+ private:
+  bool OnMouseMove(const MouseMoveEvent& mouse_move);
+  bool OnMouseButton(const MouseButtonEvent& mouse_button);
 
-void ScriptSystem::OnAttach(entt::registry& registry, entt::entity entity) {
-  registry.get<ScriptComponent>(entity).script->OnAttach(entity);
-}
+ private:
+  Window* window_{nullptr};  // FIXME (tralf-strues):
+
+  float rotation_y_{0};  // Yaw
+  float rotation_z_{0};  // Pitch
+  bool  rotation_mode_{false};
+
+  float mouse_prev_x_{0};
+  float mouse_prev_y_{0};
+};
 
 }  // namespace liger::ecs

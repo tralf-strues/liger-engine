@@ -35,8 +35,10 @@ class ISystem {
  public:
   virtual ~ISystem() = default;
 
-  virtual void Setup(entt::organizer& organizer) = 0;
-  virtual void Prepare(entt::registry& registry) = 0;
+  virtual void Setup(entt::registry& registry) {}
+
+  virtual void SetupExecution(entt::organizer& organizer) = 0;
+  virtual void PrepareRegistry(entt::registry& registry) = 0;
 
   virtual void RunForEach(entt::registry& registry) = 0;
 
@@ -49,32 +51,46 @@ class ComponentSystem : public ISystem {
  public:
   ~ComponentSystem() override = default;
 
-  void Setup(entt::organizer& organizer) final;
-  void Prepare(entt::registry& registry) final;
-  void RunForEach(entt::registry& registry) final;
-
   virtual void Run(Components&... components) = 0;
+
+  void SetupExecution(entt::organizer& organizer) final {
+    using SystemT = ComponentSystem<Components...>;
+    organizer.emplace<&SystemT::Run>(*this, Name().data());
+  }
+
+  void PrepareRegistry(entt::registry& registry) final {
+    [[maybe_unused]] auto view = registry.view<Components...>();
+  }
+
+  void RunForEach(entt::registry& registry) final {
+    registry.view<Components...>().each([this](Components&... components) {
+      Run(components...);
+    });
+  }
 };
 
 template <typename... Components>
 requires (!std::is_empty_v<Components> && ...)
-void ComponentSystem<Components...>::Setup(entt::organizer& organizer) {
-  using SystemT = ComponentSystem<Components...>;
-  organizer.emplace<&SystemT::Run>(*this, Name().data());
-}
+class ExclusiveComponentSystem : public ISystem {
+ public:
+  ~ExclusiveComponentSystem() override = default;
 
-template <typename... Components>
-requires (!std::is_empty_v<Components> && ...)
-void ComponentSystem<Components...>::Prepare(entt::registry& registry) {
-  [[maybe_unused]] auto view = registry.view<Components...>();
-}
+  virtual void Run(entt::registry& registry, entt::entity entity, Components&... components) = 0;
 
-template <typename... Components>
-requires (!std::is_empty_v<Components> && ...)
-void ComponentSystem<Components...>::RunForEach(entt::registry& registry) {
-  registry.view<Components...>().each([this](Components&... components) {
-    Run(components...);
-  });
-}
+  void SetupExecution(entt::organizer& organizer) final {
+    using SystemT = ExclusiveComponentSystem<Components...>;
+    organizer.emplace<&SystemT::Run>(*this, Name().data());
+  }
+
+  void PrepareRegistry(entt::registry& registry) final {
+    [[maybe_unused]] auto view = registry.view<Components...>();
+  }
+
+  void RunForEach(entt::registry& registry) final {
+    registry.view<Components...>().each([this, &registry](entt::entity entity, Components&... components) {
+      Run(registry, entity, components...);
+    });
+  }
+};
 
 }  // namespace liger::ecs

@@ -38,7 +38,7 @@ VulkanBuffer::~VulkanBuffer() {
     vmaDestroyBuffer(device_.GetAllocator(), buffer_, allocation_);
   }
 
-  // device_.GetDescriptorManager().RemoveBuffer(bindings_);
+  device_.GetDescriptorManager().RemoveBuffer(bindings_);
 }
 
 bool VulkanBuffer::Init() {
@@ -59,18 +59,7 @@ bool VulkanBuffer::Init() {
 
   VULKAN_CALL(vmaCreateBuffer(device_.GetAllocator(), &create_info, &alloc_info, &buffer_, &allocation_, nullptr));
 
-  // bindings_ = device_.GetDescriptorManager().AddBuffer(buffer_, GetInfo().usage);
-
-  const VkBufferDeviceAddressInfo address_info {
-    .sType  = VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
-    .pNext  = nullptr,
-    .buffer = buffer_,
-  };
-  auto binding =
-      static_cast<BufferDescriptorBinding>(vkGetBufferDeviceAddress(device_.GetVulkanDevice(), &address_info));
-
-  bindings_.storage = binding;
-  bindings_.uniform = binding;
+  bindings_ = device_.GetDescriptorManager().AddBuffer(buffer_, GetInfo().usage);
 
   if (!GetInfo().name.empty()) {
     device_.SetDebugName(buffer_, GetInfo().name);
@@ -87,6 +76,10 @@ void* VulkanBuffer::MapMemory(uint64_t offset, uint64_t /*size*/) {
   VULKAN_CALL(vmaMapMemory(device_.GetAllocator(), allocation_, &map_data));
 
   return static_cast<void*>(static_cast<uint8_t*>(map_data) + offset);
+}
+
+void* VulkanBuffer::MapMemory() {
+  return MapMemory(0U, 0U);
 }
 
 void VulkanBuffer::UnmapMemory() { vmaUnmapMemory(device_.GetAllocator(), allocation_); }

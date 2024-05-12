@@ -17,7 +17,7 @@ CodeSnippets:
   - Insert: auto-global
     Code: | #glsl
       Camera GetCamera(LigerInput liger_in) {
-        return liger_in.camera_data.camera;
+        return GetUniformBuffer(CameraData, liger_in.binding_camera_data).camera;
       }
 
       f32vec3 CameraRightWS(Camera camera) {

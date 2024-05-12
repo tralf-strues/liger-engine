@@ -28,10 +28,9 @@
 #pragma once
 
 #include <Liger-Engine/Core/EnumBitmask.hpp>
+#include <Liger-Engine/RHI/DeviceResourceState.hpp>
 #include <Liger-Engine/RHI/Extent.hpp>
 #include <Liger-Engine/RHI/Filter.hpp>
-
-#include <span>
 
 namespace liger::rhi {
 
@@ -75,6 +74,17 @@ class ICommandBuffer {
    * @param filter
    */
   virtual void GenerateMipLevels(ITexture* texture, Filter filter = Filter::Linear) = 0;
+
+  /**
+   * @brief Set buffer barrier to transition it from src state to dst state.
+   *
+   * @note Must only be used to transition buffer's state within this command buffer stream, i.e. within a single render graph node.
+   *
+   * @param buffer
+   * @param src_state
+   * @param dst_state
+   */
+  virtual void BufferBarrier(const IBuffer* buffer, DeviceResourceState src_state, DeviceResourceState dst_state) = 0;
 
   /**
    * @brief Set the push constant for the pipeline.

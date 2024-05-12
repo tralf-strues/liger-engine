@@ -48,4 +48,32 @@ ScopedTimer::~ScopedTimer() {
   LIGER_LOG_TRACE(channel_, "{} - {:.{}f}ms", message_, timer_.ElapsedMs(), 3);
 }
 
+float FrameTimer::AbsoluteTime()   const { return absolute_time_; }
+float FrameTimer::AbsoluteTimeMs() const { return absolute_time_ * 1e3f; }
+
+float FrameTimer::DeltaTime()   const { return delta_time_; }
+float FrameTimer::DeltaTimeMs() const { return delta_time_ * 1e3f; }
+
+float FrameTimer::FPS() const { return 1.0f / delta_time_; }
+
+uint64_t FrameTimer::FrameNumber() const { return frame_number_; }
+
+bool FrameTimer::FirstFrame() const { return FrameNumber() == 0U; }
+
+void FrameTimer::BeginFrame() {
+  if (frame_number_ == kUndefinedFrameNumber) {
+    frame_number_  = 0U;
+    absolute_time_ = 0.0f;
+    delta_time_    = 0.0f;
+    timer_.Reset();
+    return;
+  }
+
+  auto new_time  = timer_.Elapsed();
+  delta_time_    = new_time - absolute_time_;
+  absolute_time_ = new_time;
+
+  ++frame_number_;
+}
+
 }  // namespace liger

@@ -35,8 +35,9 @@ VulkanCommandPool::~VulkanCommandPool() {
   Destroy();
 }
 
-void VulkanCommandPool::Init(VkDevice device, uint32_t frames_in_flight, const VulkanQueueSet& queue_set) {
+void VulkanCommandPool::Init(VkDevice device, uint32_t frames_in_flight, VkDescriptorSet ds, const VulkanQueueSet& queue_set) {
   device_           = device;
+  ds_               = ds;
   frames_in_flight_ = frames_in_flight;
   queue_count_      = queue_set.GetQueueCount();
 
@@ -79,7 +80,7 @@ VulkanCommandBuffer VulkanCommandPool::AllocateCommandBuffer(uint32_t frame_idx,
   VkCommandBuffer vk_cmds = VK_NULL_HANDLE;
   VULKAN_CALL(vkAllocateCommandBuffers(device_, &allocate_info, &vk_cmds));
 
-  return VulkanCommandBuffer(vk_cmds);
+  return VulkanCommandBuffer(vk_cmds, ds_);
 }
 
 void VulkanCommandPool::Reset(uint32_t frame_idx) {

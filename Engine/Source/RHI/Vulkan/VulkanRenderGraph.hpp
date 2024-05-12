@@ -52,6 +52,9 @@ class VulkanRenderGraph : public RenderGraph {
 
   void DumpGraphviz(std::string_view filename) override;
 
+  static VkPipelineStageFlags2 GetVulkanPipelineSrcStage(Node::Type node_type, DeviceResourceState resource_state);
+  static VkPipelineStageFlags2 GetVulkanPipelineDstStage(Node::Type node_type, DeviceResourceState resource_state);
+
  private:
   struct VulkanNode {
     VkRenderingInfoKHR* rendering_info   = nullptr;
@@ -97,8 +100,6 @@ class VulkanRenderGraph : public RenderGraph {
   NodeHandle GetNodeHandle(const VulkanNode& vulkan_node);
 
   uint64_t GetSemaphoreValue(uint32_t queue_idx, uint64_t base_value) const;
-  static VkPipelineStageFlags2 GetVulkanPipelineSrcStage(Node::Type node_type, DeviceResourceState resource_state);
-  static VkPipelineStageFlags2 GetVulkanPipelineDstStage(Node::Type node_type, DeviceResourceState resource_state);
 
   VulkanDevice* device_{nullptr};
   bool          dirty_{false};

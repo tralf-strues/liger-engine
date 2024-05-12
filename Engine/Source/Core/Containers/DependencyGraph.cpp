@@ -27,6 +27,8 @@
 
 #include <Liger-Engine/Core/Containers/DependencyGraph.hpp>
 
+#include <algorithm>
+
 namespace liger {
 
 DAG<void>::DAG(size_t size) : adj_lists_(size) {}

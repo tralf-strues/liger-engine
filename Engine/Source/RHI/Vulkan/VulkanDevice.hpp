@@ -46,9 +46,9 @@ class VulkanDevice : public IDevice {
  public:
   static constexpr const char* kValidationLayerName = "VK_LAYER_KHRONOS_validation";
 
-  static constexpr const char* kRequiredDeviceExtensions[] = {VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME,
-                                                              VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-                                                              VK_KHR_SYNCHRONIZATION_2_EXTENSION_NAME};
+  static constexpr const char* kRequiredDeviceExtensions[] = {
+    VK_KHR_SWAPCHAIN_EXTENSION_NAME
+  };
 
   static constexpr uint64_t kMaxRenderGraphsPerFrame = 1024;
 

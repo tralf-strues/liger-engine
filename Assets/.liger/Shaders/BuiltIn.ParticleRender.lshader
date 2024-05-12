@@ -25,6 +25,26 @@ ColorBlendInfo:
   DstAlphaFactor: DstAlpha
   AlphaOperation: Add
 
+AttachmentInfo:
+  RenderTargets: [B8G8R8A8_SRGB]
+  DepthStencilTarget: D32_SFLOAT
+  Samples: 1
+
+Input:
+  - Name: Particles
+    Type: storage-buffer
+    Layout: std430
+    Access: readonly
+    Contents: | #glsl
+      Particle particles[];
+
+  - Name: TransformData
+    Type: storage-buffer
+    Layout: std430
+    Access: readonly
+    Contents: | #glsl
+      f32mat4 transforms[];
+
 VertexShader:
   Use:
     - Include: BuiltIn.Camera.lsdecl
@@ -35,13 +55,6 @@ VertexShader:
 
     - Name: instance_idx
       Type: instance-index
-
-    - Name: TransformData
-      Type: storage-buffer
-      Layout: std430
-      Access: readonly
-      Contents: | #glsl
-        f32mat4 transforms[];
 
     - Name: transform_idx
       Type: uint32_t
@@ -55,14 +68,15 @@ VertexShader:
 
   Code: | #glsl
     Camera   camera    = GetCamera(liger_in);
-    Particle particle  = liger_in.particles.particles[liger_in.instance_idx];
-    f32mat4  transform = liger_in.transform_data.transforms[liger_in.transform_idx];
+    Particle particle  = GetStorageBuffer(Particles, liger_in.binding_particles).particles[liger_in.instance_idx];
+    f32mat4  transform = GetStorageBuffer(TransformData, liger_in.binding_transform_data).transforms[liger_in.transform_idx];
 
     uint32_t b               = 1U << liger_in.vertex_idx;
     f32vec2  uv              = f32vec2((0x3 & b) != 0U, (0x9 & b) != 0U);
     f32vec2  quad_vertex_pos = uv - f32vec2(0.5f);
     f32vec3  ws_center_pos   = (transform * f32vec4(particle.position, 1.0f)).xyz;
 
+    color       = particle.color;
     ws_position = ws_center_pos + CameraRightWS(camera) * quad_vertex_pos.x * particle.size
                                 + CameraUpWS(camera)    * quad_vertex_pos.y * particle.size;
     gl_Position = camera.proj * camera.view * f32vec4(ws_position, 1.0f);

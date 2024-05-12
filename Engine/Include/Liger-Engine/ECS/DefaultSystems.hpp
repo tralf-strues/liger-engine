@@ -27,11 +27,26 @@
 
 #pragma once
 
+#include <Liger-Engine/Core/Time.hpp>
 #include <Liger-Engine/ECS/DefaultComponents.hpp>
 #include <Liger-Engine/ECS/System.hpp>
 
 namespace liger::ecs {
 
+class ScriptSystem : public ExclusiveComponentSystem<const ScriptComponent> {
+ public:
+  explicit ScriptSystem(const FrameTimer& frame_timer);
+  ~ScriptSystem() override = default;
 
+  void Setup(entt::registry& registry) override;
+  void Run(entt::registry& registry, entt::entity entity, const ScriptComponent& script) override;
+
+  void OnAttach(entt::registry& registry, entt::entity entity);
+
+  std::string_view Name() const override { return "ScriptSystem<const ScriptComponent>"; }
+
+ private:
+  const FrameTimer& frame_timer_;
+};
 
 }  // namespace liger::ecs

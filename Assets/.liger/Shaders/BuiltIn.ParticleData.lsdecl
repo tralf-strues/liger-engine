@@ -12,8 +12,6 @@ Data: | #glsl
 
     float32_t size_start;
     float32_t size_end;
-
-    // float32_t pad0;
   };
 
   struct Particle {

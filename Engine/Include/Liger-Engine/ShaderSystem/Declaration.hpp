@@ -119,4 +119,16 @@ struct Declaration {
   std::optional<std::array<uint32_t, 3U>>           thread_group_size;
 };
 
+inline constexpr bool IsTextureType(Declaration::Member::Type type) {
+  return type == Declaration::Member::Type::Sampler2D || type == Declaration::Member::Type::Sampler2DArray;
+}
+
+inline constexpr bool IsBufferType(Declaration::Member::Type type) {
+  return type == Declaration::Member::Type::UniformBuffer || type == Declaration::Member::Type::StorageBuffer;
+}
+
+inline constexpr bool IsResourceType(Declaration::Member::Type type) {
+  return IsTextureType(type) || IsBufferType(type);
+}
+
 }  // namespace liger::shader

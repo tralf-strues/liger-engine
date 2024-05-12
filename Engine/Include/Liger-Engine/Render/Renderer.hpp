@@ -43,7 +43,7 @@ class Renderer {
 
   void Setup();
 
-  tf::Taskflow& GetSystemTaskflow();
+  tf::Taskflow GetSystemTaskflow(ecs::Scene& scene);
   rhi::RenderGraph& GetRenderGraph();
 
   void Render();
@@ -54,7 +54,6 @@ class Renderer {
   FeatureList                       features_;
   DeclarationLibrary                declarations_;
   ecs::SystemGraph                  system_graph_;
-  tf::Taskflow                      system_taskflow_;
 
   rhi::RenderGraphBuilder           rg_builder_;
   std::unique_ptr<rhi::RenderGraph> render_graph_;

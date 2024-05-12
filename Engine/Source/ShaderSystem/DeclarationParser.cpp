@@ -84,18 +84,6 @@ static const std::unordered_map<std::string, Declaration::Scope> kStringToScope 
   {"ComputeShader",    Declaration::Scope::Compute}
 };
 
-bool IsTextureType(Declaration::Member::Type type) {
-  return type == Declaration::Member::Type::Sampler2D || type == Declaration::Member::Type::Sampler2DArray;
-}
-
-bool IsBufferType(Declaration::Member::Type type) {
-  return type == Declaration::Member::Type::UniformBuffer || type == Declaration::Member::Type::StorageBuffer;
-}
-
-bool IsResourceType(Declaration::Member::Type type) {
-  return IsTextureType(type) || IsBufferType(type);
-}
-
 bool IsBuiltInStageVariableType(Declaration::Member::Type type) {
   return type == Declaration::Member::Type::VertexIndex || type == Declaration::Member::Type::InstanceIndex;
 }
@@ -453,7 +441,7 @@ bool ParseDeclaration(Declaration& declaration, YAML::Node& root) {
 }
 
 DeclarationParser::DeclarationParser(std::filesystem::path filepath) : filepath_(std::move(filepath)) {
-  root_node_ = YAML::LoadFile(filepath_.c_str());
+  root_node_ = YAML::LoadFile(filepath_.string());
 }
 
 bool DeclarationParser::Valid() const { return root_node_.IsDefined(); }

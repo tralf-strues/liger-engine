@@ -60,8 +60,10 @@ void Renderer::Setup() {
 }
 
 rhi::RenderGraphBuilder& Renderer::GetRenderGraphBuilder() { return rg_builder_; }
-tf::Taskflow&            Renderer::GetSystemTaskflow()     { return system_taskflow_; }
-rhi::RenderGraph&        Renderer::GetRenderGraph()        { return *render_graph_; }
+
+tf::Taskflow Renderer::GetSystemTaskflow(ecs::Scene& scene) { return system_graph_.Build(scene); }
+
+rhi::RenderGraph& Renderer::GetRenderGraph() { return *render_graph_; }
 
 void Renderer::Render() {
   for (auto& feature : features_) {

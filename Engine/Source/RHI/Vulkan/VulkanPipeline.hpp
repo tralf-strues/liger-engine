@@ -46,12 +46,14 @@ class VulkanPipeline : public IPipeline {
   VkPipeline          GetVulkanPipeline() const;
   VkPipelineLayout    GetVulkanLayout() const;
   VkPipelineBindPoint GetVulkanBindPoint() const;
+  VkShaderStageFlags  GetVulkanPushConstantStages() const;
 
  private:
   VulkanDevice&       device_;
   VkPipelineLayout    layout_{VK_NULL_HANDLE};
   VkPipeline          pipeline_{VK_NULL_HANDLE};
-  VkPipelineBindPoint bind_point_ = VK_PIPELINE_BIND_POINT_GRAPHICS;
+  VkPipelineBindPoint bind_point_{VK_PIPELINE_BIND_POINT_GRAPHICS};
+  VkShaderStageFlags  push_constant_stages_{0U};
 };
 
 }  // namespace liger::rhi

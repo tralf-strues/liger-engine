@@ -28,8 +28,11 @@
 #pragma once
 
 #include <Liger-Engine/Asset/Manager.hpp>
+#include <Liger-Engine/Core/Time.hpp>
 #include <Liger-Engine/ECS/DefaultComponents.hpp>
+#include <Liger-Engine/RHI/MappedBuffer.hpp>
 #include <Liger-Engine/RHI/ShaderAlignment.hpp>
+#include <Liger-Engine/Render/BuiltIn/CameraDataCollector.hpp>
 #include <Liger-Engine/Render/Feature.hpp>
 #include <Liger-Engine/ShaderSystem/Shader.hpp>
 
@@ -37,17 +40,17 @@ namespace liger::render {
 
 struct ParticleSystemComponent {
   SHADER_STRUCT_MEMBER(uint32_t)  max_particles {2048};
-  SHADER_STRUCT_MEMBER(float)     spawn_rate    {8.0f};
-  SHADER_STRUCT_MEMBER(float)     lifetime      {1.0f};
+  SHADER_STRUCT_MEMBER(float)     spawn_rate    {16.0f};
+  SHADER_STRUCT_MEMBER(float)     lifetime      {2.0f};
 
-  SHADER_STRUCT_MEMBER(glm::vec3) velocity_min  {0.0f};
-  SHADER_STRUCT_MEMBER(glm::vec3) velocity_max  {0.5f, 1.0f, 0.5f};
+  SHADER_STRUCT_MEMBER(glm::vec3) velocity_min  {-0.4f, 0.01f, -0.4f};
+  SHADER_STRUCT_MEMBER(glm::vec3) velocity_max  { 0.4f, 1.5f,   0.4f};
 
-  SHADER_STRUCT_MEMBER(glm::vec4) color_start   {1.0f};
-  SHADER_STRUCT_MEMBER(glm::vec4) color_end     {1.0f, 1.0f, 1.0f, 0.0f};
+  SHADER_STRUCT_MEMBER(glm::vec4) color_start   {1.0f,  0.9f, 0.2f, 1.0f};
+  SHADER_STRUCT_MEMBER(glm::vec4) color_end     {1.0f,  0.7f, 0.6f, 0.7f};
 
-  SHADER_STRUCT_MEMBER(float)     size_start    {1.0f};
-  SHADER_STRUCT_MEMBER(float)     size_end      {0.5f};
+  SHADER_STRUCT_MEMBER(float)     size_start    {0.07f};
+  SHADER_STRUCT_MEMBER(float)     size_end      {0.01f};
 };
 
 struct Particle {
@@ -59,16 +62,23 @@ struct Particle {
 };
 
 struct RuntimeParticleSystemData {
-  uint32_t                      particles;
-  std::shared_ptr<rhi::IBuffer> ubo_particle_system;
-  std::shared_ptr<rhi::IBuffer> sbo_particles;
-  std::shared_ptr<rhi::IBuffer> sbo_free_list;
+  bool                                             initialized{false};
+  uint32_t                                         particles{0};
+  float                                            spawn_rate{0.0f};
+  float                                            to_spawn{0.0f};
+  glm::mat4                                        transform;
+  rhi::SharedMappedBuffer<ParticleSystemComponent> ubo_particle_system;
+  std::shared_ptr<rhi::IBuffer>                    sbo_particles;
+  std::shared_ptr<rhi::IBuffer>                    sbo_free_list;
 };
 
-class ParticleSystemFeature : public IFeature,
-                              public ecs::ComponentSystem<const ParticleSystemComponent, RuntimeParticleSystemData> {
+class ParticleSystemFeature
+    : public IFeature,
+      public ecs::ComponentSystem<const ecs::WorldTransform, const ParticleSystemComponent, RuntimeParticleSystemData> {
  public:
-  explicit ParticleSystemFeature(rhi::IDevice& device, asset::Manager& asset_manager);
+  static constexpr uint32_t kMaxParticleSystems = 1024U;
+
+  explicit ParticleSystemFeature(rhi::IDevice& device, asset::Manager& asset_manager, CameraDataCollector& camera_collector);
   ~ParticleSystemFeature() override = default;
 
   std::string_view Name() const override { return "ParticleSystemFeature"; }
@@ -79,13 +89,26 @@ class ParticleSystemFeature : public IFeature,
 
   void SetupEntitySystems(ecs::SystemGraph& systems) override;
 
-  void Run(const ParticleSystemComponent& emitter, RuntimeParticleSystemData& runtime_data) override;
+  void Run(const ecs::WorldTransform& transform, const ParticleSystemComponent& emitter,
+           RuntimeParticleSystemData& runtime_data) override;
+
+  void PreRender(rhi::IDevice&) override;
 
  private:
+  Timer                                  timer_;
+  float                                  time_{0.0f};
+  float                                  dt_{0.0f};
+
   rhi::IDevice&                          device_;
   asset::Handle<shader::Shader>          emit_shader_;
   asset::Handle<shader::Shader>          update_shader_;
   asset::Handle<shader::Shader>          render_shader_;
+
+  CameraDataCollector&                   camera_collector_;
+
+  rhi::UniqueMappedBuffer<int32_t>       sbo_init_free_list_;
+  rhi::UniqueMappedBuffer<glm::mat4>     ubo_transform_;
+
   std::vector<RuntimeParticleSystemData> particle_systems_;
 };
 

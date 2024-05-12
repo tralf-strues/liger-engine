@@ -37,7 +37,7 @@ class VulkanCommandBuffer : public ICommandBuffer {
  public:
   static constexpr uint32_t kMaxBindVertexBuffers = 8;
 
-  explicit VulkanCommandBuffer(VkCommandBuffer vk_cmds);
+  explicit VulkanCommandBuffer(VkCommandBuffer vk_cmds, VkDescriptorSet ds);
   ~VulkanCommandBuffer() override = default;
 
   VkCommandBuffer Get();
@@ -46,6 +46,8 @@ class VulkanCommandBuffer : public ICommandBuffer {
   void End();
 
   void GenerateMipLevels(ITexture* texture, Filter filter) override;
+
+  void BufferBarrier(const IBuffer* buffer, DeviceResourceState src_state, DeviceResourceState dst_state) override;
 
   void SetPushConstant(const IPipeline* pipeline, std::span<const char> data) override;
 
@@ -71,6 +73,8 @@ class VulkanCommandBuffer : public ICommandBuffer {
 
  private:
   VkCommandBuffer vk_cmds_{VK_NULL_HANDLE};
+  VkDescriptorSet ds_{VK_NULL_HANDLE};
+  bool            ds_bound_{false};
 };
 
 }  // namespace liger::rhi

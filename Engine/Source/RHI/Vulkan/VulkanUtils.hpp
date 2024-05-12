@@ -39,6 +39,9 @@
 
 #include <vk_mem_alloc.h>
 
+// MSVC macros
+#undef UpdateResource
+
 // X11 has too many common name macros...
 #undef Always
 #undef Status
@@ -201,11 +204,11 @@ inline constexpr VkBufferUsageFlags GetVulkanBufferUsage(DeviceResourceState sta
   }
 
   if ((states & DeviceResourceState::UniformBuffer) != DeviceResourceState::Undefined) {
-    vk_usage |= VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT;
+    vk_usage |= VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
   }
 
   if ((states & DeviceResourceState::StorageBuffer) != DeviceResourceState::Undefined) {
-    vk_usage |= VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT;
+    vk_usage |= VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
   }
 
   return vk_usage;

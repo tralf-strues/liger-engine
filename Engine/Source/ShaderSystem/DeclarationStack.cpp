@@ -149,6 +149,10 @@ namespace liger::shader {
     dst.color_blend = src.color_blend;
   }
 
+  if (src.attachments) {
+    dst.attachments= src.attachments;
+  }
+
   if (src.thread_group_size) {
     dst.thread_group_size = src.thread_group_size;
   }

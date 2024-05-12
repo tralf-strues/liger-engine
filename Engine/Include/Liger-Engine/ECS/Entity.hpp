@@ -27,10 +27,54 @@
 
 #pragma once
 
-#include <entt/entity/entity.hpp>
+#include <entt/entity/registry.hpp>
 
 namespace liger::ecs {
 
+class Scene;
+
 using Entity = entt::entity;
+
+//class Entity {
+// public:
+//  template <typename Component>
+//  Component& Get();
+//
+//  template <typename Component>
+//  const Component& Get() const;
+//
+//  template <typename Component>
+//  Component* TryGet();
+//
+//  template <typename Component>
+//  const Component* TryGet() const;
+//
+// private:
+//  explicit Entity(entt::registry* registry = nullptr) : registry_(registry) {}
+//
+//  entt::registry* registry_{nullptr};
+//  entt::entity    handle_;
+//
+//  friend class Scene;
+//};
+//
+//template <typename Component>
+//Component& Entity::Get() {
+//
+//}
+//
+//template <typename Component>
+//const Component& Entity::Get() const {
+//
+//}
+//
+//template <typename Component>
+//Component* Entity::TryGet() {
+//}
+//
+//template <typename Component>
+//const Component* TryGet() const {
+//
+//}
 
 }  // namespace liger::ecs

@@ -49,9 +49,10 @@ VulkanPipeline::~VulkanPipeline() {
 bool VulkanPipeline::Init(const GraphicsInfo& info) {
   /* Pipeline layout */
   const bool push_constant_present = info.push_constant.size > 0;
+  push_constant_stages_ = GetVulkanShaderStageFlags(info.push_constant.shader_types);
 
   const VkPushConstantRange push_constant_range {
-    .stageFlags = GetVulkanShaderStageFlags(info.push_constant.shader_types),
+    .stageFlags = push_constant_stages_,
     .offset     = 0,
     .size       = info.push_constant.size
   };
@@ -286,15 +287,18 @@ bool VulkanPipeline::Init(const GraphicsInfo& info) {
     device_.SetDebugName(layout_, "{} <layout>", info.name);
   }
 
+  bind_point_ = VK_PIPELINE_BIND_POINT_GRAPHICS;
+
   return true;
 }
 
 bool VulkanPipeline::Init(const ComputeInfo& info) {
   /* Pipeline layout */
   const bool push_constant_present = info.push_constant.size > 0;
+  push_constant_stages_ = GetVulkanShaderStageFlags(info.push_constant.shader_types);
 
   const VkPushConstantRange push_constant_range {
-    .stageFlags = GetVulkanShaderStageFlags(info.push_constant.shader_types),
+    .stageFlags = push_constant_stages_,
     .offset     = 0,
     .size       = info.push_constant.size
   };
@@ -343,6 +347,8 @@ bool VulkanPipeline::Init(const ComputeInfo& info) {
     device_.SetDebugName(layout_, "{} <layout>", info.name);
   }
 
+  bind_point_ = VK_PIPELINE_BIND_POINT_COMPUTE;
+
   return true;
 }
 
@@ -356,6 +362,10 @@ VkPipelineLayout VulkanPipeline::GetVulkanLayout() const {
 
 VkPipelineBindPoint VulkanPipeline::GetVulkanBindPoint() const {
   return bind_point_;
+}
+
+VkShaderStageFlags  VulkanPipeline::GetVulkanPushConstantStages() const {
+  return push_constant_stages_;
 }
 
 }  // namespace liger::rhi

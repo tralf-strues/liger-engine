@@ -145,7 +145,7 @@ void VulkanRenderGraph::Execute(VkSemaphore wait, uint64_t wait_value, VkSemapho
       .pSignalSemaphoreInfos    = signal_semaphores.data()
     };
 
-    VULKAN_CALL(vkQueueSubmit2KHR(vk_queues_[queue_idx], 1, &submit_info, VK_NULL_HANDLE));
+    VULKAN_CALL(vkQueueSubmit2(vk_queues_[queue_idx], 1, &submit_info, VK_NULL_HANDLE));
 
     ++submit_it;
   };
@@ -178,19 +178,19 @@ void VulkanRenderGraph::Execute(VkSemaphore wait, uint64_t wait_value, VkSemapho
           .pImageMemoryBarriers     = &vk_image_barriers_[node->in_image_barrier_begin_idx]
         };
 
-        vkCmdPipelineBarrier2KHR(cmds->Get(), &dependency_info);
+        vkCmdPipelineBarrier2(cmds->Get(), &dependency_info);
       }
 
       const auto* rendering_info = node->rendering_info;
 
       if (rendering_info) {
-        vkCmdBeginRenderingKHR(cmds->Get(), rendering_info);
+        vkCmdBeginRendering(cmds->Get(), rendering_info);
 
         const VkViewport viewport {
-          .x        = static_cast<float>(rendering_info->renderArea.offset.x),
-          .y        = static_cast<float>(rendering_info->renderArea.offset.y),
+          .x        = 0.0f,
+          .y        = static_cast<float>(rendering_info->renderArea.extent.height),
           .width    = static_cast<float>(rendering_info->renderArea.extent.width),
-          .height   = static_cast<float>(rendering_info->renderArea.extent.height),
+          .height   = -static_cast<float>(rendering_info->renderArea.extent.height),
           .minDepth = 0.0f,
           .maxDepth = 1.0f,
         };
@@ -211,7 +211,7 @@ void VulkanRenderGraph::Execute(VkSemaphore wait, uint64_t wait_value, VkSemapho
       }
 
       if (node->rendering_info) {
-        vkCmdEndRenderingKHR(cmds->Get());
+        vkCmdEndRendering(cmds->Get());
       }
 
       if (node->out_image_barrier_count > 0) {
@@ -227,7 +227,7 @@ void VulkanRenderGraph::Execute(VkSemaphore wait, uint64_t wait_value, VkSemapho
           .pImageMemoryBarriers     = &vk_image_barriers_[node->out_image_barrier_begin_idx]
         };
 
-        vkCmdPipelineBarrier2KHR(cmds->Get(), &dependency_info);
+        vkCmdPipelineBarrier2(cmds->Get(), &dependency_info);
       }
     }
 
@@ -247,7 +247,8 @@ void VulkanRenderGraph::Compile(IDevice& device) {
   SetupBarriers();
   CreateSemaphores();
 
-  command_pool_.Init(device_->GetVulkanDevice(), device_->GetFramesInFlight(), device_->GetQueues());
+  command_pool_.Init(device_->GetVulkanDevice(), device_->GetFramesInFlight(), device_->GetDescriptorManager().GetSet(),
+                     device_->GetQueues());
 }
 
 bool VulkanRenderGraph::UpdateDependentResourceValues() {
@@ -318,12 +319,20 @@ void VulkanRenderGraph::RecreateTransientResources() {
 }
 
 void VulkanRenderGraph::SetupAttachments() {
+  constexpr size_t kInvalidIdx = std::numeric_limits<size_t>::max();
+
   size_t render_pass_count      = 0;
   size_t total_attachment_count = 0;
   CalculateRenderPassCount(render_pass_count, total_attachment_count);
 
-  vk_rendering_infos_.reserve(render_pass_count);
-  vk_attachments_.reserve(total_attachment_count);
+  vk_rendering_infos_.clear();
+  vk_attachments_.clear();
+
+  vk_rendering_infos_.resize(render_pass_count);
+  vk_attachments_.resize(total_attachment_count);
+
+  size_t cur_rendering_idx  = 0U;
+  size_t cur_attachment_idx = 0U;
 
   for (const auto& node : dag_) {
     if (node.type != RenderGraph::Node::Type::RenderPass) {
@@ -333,7 +342,7 @@ void VulkanRenderGraph::SetupAttachments() {
     Extent2D render_area;
 
     /* First get all color attachments */
-    VkRenderingAttachmentInfo* first_color_attachment = nullptr;
+    size_t first_color_attachment_idx = kInvalidIdx;
     uint32_t color_attachment_count = 0;
 
     for (const auto& write : node.write) {
@@ -349,7 +358,7 @@ void VulkanRenderGraph::SetupAttachments() {
       render_area.y = extent.y;
 
       if (write.state == DeviceResourceState::ColorTarget) {
-        auto& attachment = vk_attachments_.emplace_back(VkRenderingAttachmentInfo {
+        vk_attachments_[cur_attachment_idx] = VkRenderingAttachmentInfo {
           .sType              = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO,
           .pNext              = nullptr,
           .imageView          = texture->GetVulkanView(resource->view),
@@ -360,16 +369,19 @@ void VulkanRenderGraph::SetupAttachments() {
           .loadOp             = GetVulkanAttachmentLoadOp(write.attachment_load),
           .storeOp            = GetVulkanAttachmentStoreOp(write.attachment_store),
           .clearValue         = {.color = {.float32 = {0.0f, 0.0f, 0.0f, 0.0f}}}
-        });
+        };
 
-        if (first_color_attachment == nullptr) { first_color_attachment = &attachment; }
+        if (first_color_attachment_idx == kInvalidIdx) {
+          first_color_attachment_idx = cur_attachment_idx;
+        }
 
+        ++cur_attachment_idx;
         ++color_attachment_count;
       }
     }
 
     /* Get depth stencil attachment */
-    VkRenderingAttachmentInfo* depth_stencil_attachment = nullptr;
+    size_t depth_stencil_attachment_idx = kInvalidIdx;
 
     for (const auto& write : node.write) {
       auto resource = resource_version_registry_.TryGetResourceByVersion<TextureResource>(write.version);
@@ -380,7 +392,7 @@ void VulkanRenderGraph::SetupAttachments() {
       auto* texture = static_cast<VulkanTexture*>(resource->texture);
 
       if (write.state == DeviceResourceState::DepthStencilTarget) {
-        auto& attachment = vk_attachments_.emplace_back(VkRenderingAttachmentInfo {
+        vk_attachments_[cur_attachment_idx] = VkRenderingAttachmentInfo {
           .sType              = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO,
           .pNext              = nullptr,
           .imageView          = texture->GetVulkanView(resource->view),
@@ -391,10 +403,10 @@ void VulkanRenderGraph::SetupAttachments() {
           .loadOp             = GetVulkanAttachmentLoadOp(write.attachment_load),
           .storeOp            = GetVulkanAttachmentStoreOp(write.attachment_store),
           .clearValue         = {.depthStencil = {.depth = 1.0f, .stencil = 0}}
-        });
+        };
 
-        if (depth_stencil_attachment == nullptr) {
-          depth_stencil_attachment = &attachment;
+        if (depth_stencil_attachment_idx == kInvalidIdx) {
+          depth_stencil_attachment_idx = cur_attachment_idx++;
         } else {
           LIGER_LOG_ERROR(kLogChannelRHI, "There cannot be two depth stencil attachments!");
           break;
@@ -403,7 +415,7 @@ void VulkanRenderGraph::SetupAttachments() {
     }
 
     /* Add rendering info */
-    GetVulkanNode(node).rendering_info = &vk_rendering_infos_.emplace_back(VkRenderingInfo {
+    vk_rendering_infos_[cur_rendering_idx] = VkRenderingInfo {
       .sType                = VK_STRUCTURE_TYPE_RENDERING_INFO,
       .pNext                = nullptr,
       .flags                = 0,
@@ -411,10 +423,13 @@ void VulkanRenderGraph::SetupAttachments() {
       .layerCount           = 1,
       .viewMask             = 0,
       .colorAttachmentCount = color_attachment_count,
-      .pColorAttachments    = first_color_attachment,
-      .pDepthAttachment     = depth_stencil_attachment,
+      .pColorAttachments    = (first_color_attachment_idx != kInvalidIdx) ? &vk_attachments_[first_color_attachment_idx] : nullptr,
+      .pDepthAttachment     = (depth_stencil_attachment_idx != kInvalidIdx) ? &vk_attachments_[depth_stencil_attachment_idx] : nullptr,
       .pStencilAttachment   = nullptr // TODO (tralf-strues): Add stencil attachments
-    });
+    };
+
+    GetVulkanNode(node).rendering_info = &vk_rendering_infos_[cur_rendering_idx];
+    ++cur_rendering_idx;
   }
 }
 
@@ -821,7 +836,7 @@ void VulkanRenderGraph::LinkBarriersToResources() {
     barrier.image = static_cast<const VulkanTexture*>(resource.texture)->GetVulkanImage();
 
     barrier.subresourceRange = {
-      .aspectMask     = IsDepthContainingFormat(format) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT,
+      .aspectMask     = static_cast<VkImageAspectFlags>(IsDepthContainingFormat(format) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT),
       .baseMipLevel   = view_info.first_mip,
       .levelCount     = view_info.mip_count,
       .baseArrayLayer = view_info.first_layer,
@@ -846,6 +861,10 @@ void VulkanRenderGraph::CreateSemaphores() {
 
 void VulkanRenderGraph::DumpGraphviz(std::string_view filename) {
   std::ofstream os(filename.data(), std::ios::out);
+  if (!os.is_open()) {
+    LIGER_LOG_ERROR(kLogChannelRHI, "Failed to open file '{0}'", filename);
+    return;
+  }
 
   fmt::print(os,
              "digraph {{\n"
@@ -1022,7 +1041,7 @@ VkPipelineStageFlags2 VulkanRenderGraph::GetVulkanPipelineDstStage(Node::Type   
   } else if (node_type == Node::Type::Transfer) {
     stage = VK_PIPELINE_STAGE_2_TRANSFER_BIT;
   } else if (resource_state == DeviceResourceState::ShaderSampled) {
-    stage = VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT;  // TODO(tralf-strues): Sampling in vertex shaders is rare
+    stage = VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT;  // TODO (tralf-strues): Sampling in vertex shaders is rare
   } else if (resource_state == DeviceResourceState::ColorTarget) {
     stage = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT;
   } else if (resource_state == DeviceResourceState::DepthStencilTarget ||

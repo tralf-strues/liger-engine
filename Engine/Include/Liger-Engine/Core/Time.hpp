@@ -85,4 +85,64 @@ class ScopedTimer {
   Timer       timer_;
 };
 
+/**
+* @brief Utility class for measuring frame time.
+*/
+class FrameTimer {
+ public:
+  /**
+   * @brief Time point at which current frame started.
+   * @return Time point in seconds.
+   */
+  float AbsoluteTime() const;
+
+  /**
+   * @brief Same as @ref AbsoluteTime(), but in milliseconds.
+   * @return Time point in milliseconds.
+   */
+  float AbsoluteTimeMs() const;
+
+  /**
+   * @brief Time it took to process the previous frame.
+   * @return Delta time in seconds.
+   */
+  float DeltaTime() const;
+
+  /**
+   * @brief Same as @ref DeltaTime(), but in milliseconds.
+   * @return Delta time in milliseconds.
+   */
+  float DeltaTimeMs() const;
+
+  /**
+   * @brief Calculate Frames-per-second based on the current delta time.
+   * @return FPS.
+   */
+  float FPS() const;
+
+  /**
+   * @brief Frame number, i.e. how many times @ref BeginFrame() was called minus 1 (indexing starts from 0).
+   * @return Frame number.
+   */
+  uint64_t FrameNumber() const;
+
+  /**
+   * @return Whether current frame is the first one (i.e. FrameNumber() == 0).
+   */
+  bool FirstFrame() const;
+
+  /**
+   * @brief Proceed to the next frame.
+   */
+  void BeginFrame();
+
+ private:
+  static constexpr uint64_t kUndefinedFrameNumber = std::numeric_limits<uint64_t>::max();
+
+  Timer    timer_;
+  uint64_t frame_number_{kUndefinedFrameNumber};
+  float    absolute_time_{0.0f};
+  float    delta_time_{0.0f};
+};
+
 }  // namespace liger

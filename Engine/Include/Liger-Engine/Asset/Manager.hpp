@@ -77,7 +77,7 @@ Handle<Asset> Manager::GetAsset(Id id) {
   auto  filepath  = registry_.GetAbsoluteFile(id);
   auto  extension = filepath.extension();
   auto* loader    = loaders_.TryGet(extension);
-  LIGER_ASSERT(loader, kLogChannelAsset, "No loader for extension '{0}' found", extension.c_str());
+  LIGER_ASSERT(loader, kLogChannelAsset, "No loader for extension '{0}' found", extension.string());
 
   handle = storage_.Emplace<Asset>(id);
   handle.UpdateState(State::Loading);

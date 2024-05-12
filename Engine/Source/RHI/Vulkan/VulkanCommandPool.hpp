@@ -37,7 +37,7 @@ class VulkanCommandPool {
   VulkanCommandPool() = default;
   ~VulkanCommandPool();
 
-  void Init(VkDevice device, uint32_t frames_in_flight, const VulkanQueueSet& queue_set);
+  void Init(VkDevice device, uint32_t frames_in_flight, VkDescriptorSet ds, const VulkanQueueSet& queue_set);
   void Destroy();
 
   VulkanCommandBuffer AllocateCommandBuffer(uint32_t frame_idx, uint32_t queue_idx);
@@ -48,6 +48,7 @@ class VulkanCommandPool {
   VkCommandPool& GetCommandPool(uint32_t frame_idx, uint32_t queue_idx);
 
   VkDevice                   device_{VK_NULL_HANDLE};
+  VkDescriptorSet            ds_{VK_NULL_HANDLE};
   uint32_t                   frames_in_flight_{0};
   uint32_t                   queue_count_{0};
   std::vector<VkCommandPool> pools_;

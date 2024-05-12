@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file DefaultSystems.cpp
- * @date 2024-05-01
+ * @file Script.hpp
+ * @date 2024-05-11
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -25,28 +25,19 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <Liger-Engine/ECS/DefaultSystems.hpp>
-#include <Liger-Engine/ECS/LogChannel.hpp>
+#pragma once
+
+#include <Liger-Engine/Core/Event/EventDispatcher.hpp>
+#include <Liger-Engine/ECS/Scene.hpp>
 
 namespace liger::ecs {
 
-ScriptSystem::ScriptSystem(const FrameTimer& frame_timer) : frame_timer_(frame_timer) {}
+class IScript {
+ public:
+  virtual ~IScript() = default;
 
-void ScriptSystem::Setup(entt::registry& registry) {
-  registry.on_construct<ScriptComponent>().connect<&ScriptSystem::OnAttach>(this);
-}
-
-void ScriptSystem::Run(entt::registry& registry, entt::entity entity, const ScriptComponent& script) {
-  if (!script.script) {
-    LIGER_LOG_ERROR(kLogChannelECS, "Nullptr script");
-    return;
-  }
-
-  script.script->OnUpdate(registry, entity, frame_timer_.DeltaTime());
-}
-
-void ScriptSystem::OnAttach(entt::registry& registry, entt::entity entity) {
-  registry.get<ScriptComponent>(entity).script->OnAttach(entity);
-}
+  virtual void OnAttach(Entity entity)                                     = 0;
+  virtual void OnUpdate(entt::registry& registry, Entity entity, float dt) = 0;
+};
 
 }  // namespace liger::ecs

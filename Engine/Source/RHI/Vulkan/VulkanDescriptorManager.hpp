@@ -38,14 +38,12 @@ namespace liger::rhi {
 
 class VulkanDescriptorManager {
  public:
-  // static constexpr uint32_t kBindingUniformBuffer  = 0;
-  // static constexpr uint32_t kBindingStorageBuffer  = 1;
-  // static constexpr uint32_t kBindingSampledTexture = 2;
-  // static constexpr uint32_t kBindingStorageTexture = 3;
-  static constexpr uint32_t kBindingSampledTexture = 0;
-  static constexpr uint32_t kBindingStorageTexture = 1;
+  static constexpr uint32_t kBindingUniformBuffer  = 0;
+  static constexpr uint32_t kBindingStorageBuffer  = 1;
+  static constexpr uint32_t kBindingSampledTexture = 2;
+  static constexpr uint32_t kBindingStorageTexture = 3;
 
-  static constexpr uint32_t kMaxBindlessResourcesPerType = 8;
+  static constexpr uint32_t kMaxBindlessResourcesPerType = 1024;
 
   static constexpr VkSampler kUseDefaultSampler = VK_NULL_HANDLE;
 
@@ -63,10 +61,11 @@ class VulkanDescriptorManager {
   void Destroy();
 
   VkDescriptorSetLayout GetLayout() const;
+  VkDescriptorSet       GetSet() const;
 
-  // [[nodiscard]] BufferBindings AddBuffer(VkBuffer buffer, DeviceResourceState buffer_usage);
+  [[nodiscard]] BufferBindings AddBuffer(VkBuffer buffer, DeviceResourceState buffer_usage);
 
-  // void RemoveBuffer(BufferBindings bindings);
+  void RemoveBuffer(BufferBindings bindings);
 
   [[nodiscard]] TextureBindings AddImageView(VkImageView view, DeviceResourceState texture_usage,
                                              VkSampler sampler = kUseDefaultSampler);
@@ -83,8 +82,8 @@ class VulkanDescriptorManager {
   VkDescriptorSet       set_     {VK_NULL_HANDLE};
   VkSampler             sampler_ {VK_NULL_HANDLE};
 
-  // std::unordered_set<uint32_t> free_bindings_uniform_buffer_;
-  // std::unordered_set<uint32_t> free_bindings_storage_buffer_;
+  std::unordered_set<uint32_t> free_bindings_uniform_buffer_;
+  std::unordered_set<uint32_t> free_bindings_storage_buffer_;
   std::unordered_set<uint32_t> free_bindings_sampled_texture_;
   std::unordered_set<uint32_t> free_bindings_storage_texture_;
 };

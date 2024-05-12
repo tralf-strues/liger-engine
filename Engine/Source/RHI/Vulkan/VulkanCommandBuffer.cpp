@@ -33,13 +33,15 @@
 
 namespace liger::rhi {
 
-VulkanCommandBuffer::VulkanCommandBuffer(VkCommandBuffer vk_cmds) : vk_cmds_(vk_cmds) {}
+VulkanCommandBuffer::VulkanCommandBuffer(VkCommandBuffer vk_cmds, VkDescriptorSet ds) : vk_cmds_(vk_cmds), ds_(ds) {}
 
 VkCommandBuffer VulkanCommandBuffer::Get() {
   return vk_cmds_;
 }
 
 void VulkanCommandBuffer::Begin() {
+  ds_bound_ = false;
+
   const VkCommandBufferBeginInfo begin_info {
     .sType            = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
     .pNext            = nullptr,
@@ -51,6 +53,8 @@ void VulkanCommandBuffer::Begin() {
 }
 
 void VulkanCommandBuffer::End() {
+  ds_bound_ = false;
+
   VULKAN_CALL(vkEndCommandBuffer(vk_cmds_));
 }
 
@@ -58,33 +62,56 @@ void VulkanCommandBuffer::GenerateMipLevels(ITexture* /*texture*/, Filter /*filt
   LIGER_ASSERT(false, kLogChannelRHI, "Not implemented!");
 }
 
+void VulkanCommandBuffer::BufferBarrier(const IBuffer* buffer, DeviceResourceState src_state, DeviceResourceState dst_state) {
+  const auto& vulkan_buffer = static_cast<const VulkanBuffer&>(*buffer);
+
+  const VkBufferMemoryBarrier2 barrier {
+    .sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2,
+    .pNext = nullptr,
+    .srcStageMask = VK_PIPELINE_STAGE_TRANSFER_BIT,
+    .srcAccessMask = GetVulkanAccessFlags(src_state),
+    .dstStageMask = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+    .dstAccessMask = GetVulkanAccessFlags(dst_state),
+    .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+    .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+    .buffer = vulkan_buffer.GetVulkanBuffer(),
+    .offset = 0U,
+    .size = VK_WHOLE_SIZE,
+  };
+
+  const VkDependencyInfo dependency_info {
+    .sType                    = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
+    .pNext                    = nullptr,
+    .dependencyFlags          = 0,
+    .memoryBarrierCount       = 0,
+    .pMemoryBarriers          = nullptr,
+    .bufferMemoryBarrierCount = 1U,
+    .pBufferMemoryBarriers    = &barrier,
+    .imageMemoryBarrierCount  = 0,
+    .pImageMemoryBarriers     = nullptr
+  };
+
+  vkCmdPipelineBarrier2(vk_cmds_, &dependency_info);
+}
+
 void VulkanCommandBuffer::SetPushConstant(const IPipeline* pipeline, std::span<const char> data) {
   const auto& vulkan_pipeline = static_cast<const VulkanPipeline&>(*pipeline);
-  const auto bind_point = vulkan_pipeline.GetVulkanBindPoint();
-
-  VkShaderStageFlags shader_stages = 0U;
-  switch (bind_point) {
-    case VK_PIPELINE_BIND_POINT_GRAPHICS: {
-      shader_stages = GetVulkanAllGraphicsPipelineShaderStages();
-      break;
-    }
-
-    case VK_PIPELINE_BIND_POINT_COMPUTE: {
-      shader_stages = GetVulkanAllComputePipelineShaderStages();
-      break;
-    }
-
-    default: {
-      LIGER_ASSERT(false, kLogChannelRHI, "Unsupported vulkan bind point {}", string_VkPipelineBindPoint(bind_point));
-    }
-  }
+  const auto  bind_point      = vulkan_pipeline.GetVulkanBindPoint();
+  const auto  shader_stages   = vulkan_pipeline.GetVulkanPushConstantStages();
 
   vkCmdPushConstants(vk_cmds_, vulkan_pipeline.GetVulkanLayout(), shader_stages, 0, data.size(), data.data());
 }
 
 void VulkanCommandBuffer::BindPipeline(const IPipeline* pipeline) {
   const auto& vulkan_pipeline = static_cast<const VulkanPipeline&>(*pipeline);
-  vkCmdBindPipeline(vk_cmds_, vulkan_pipeline.GetVulkanBindPoint(), vulkan_pipeline.GetVulkanPipeline());
+  const auto  bind_point      = vulkan_pipeline.GetVulkanBindPoint();
+
+  vkCmdBindPipeline(vk_cmds_, bind_point, vulkan_pipeline.GetVulkanPipeline());
+
+  if (!ds_bound_) {
+    vkCmdBindDescriptorSets(vk_cmds_, bind_point, vulkan_pipeline.GetVulkanLayout(), 0U, 1U, &ds_, 0U, nullptr);
+    // ds_bound_ = true; // FIXME (tralf-strues):
+  }
 }
 
 void VulkanCommandBuffer::Dispatch(uint32_t group_count_x, uint32_t group_count_y, uint32_t group_count_z) {
@@ -92,7 +119,16 @@ void VulkanCommandBuffer::Dispatch(uint32_t group_count_x, uint32_t group_count_
 }
 
 void VulkanCommandBuffer::SetViewports(std::span<const Viewport> viewports) {
-  vkCmdSetViewport(vk_cmds_, 0, viewports.size(), reinterpret_cast<const VkViewport*>(viewports.data()));
+  const VkViewport vk_viewport {
+    .x        = 0.0f,
+    .y        =  viewports[0U].height,
+    .width    =  viewports[0U].width,
+    .height   = -viewports[0U].height,
+    .minDepth = 0.0f,
+    .maxDepth = 1.0f
+  };
+
+  vkCmdSetViewport(vk_cmds_, 0U, 1U, &vk_viewport);
 }
 
 void VulkanCommandBuffer::BindVertexBuffers(uint32_t first_binding, std::span<const IBuffer*> vertex_buffers) {

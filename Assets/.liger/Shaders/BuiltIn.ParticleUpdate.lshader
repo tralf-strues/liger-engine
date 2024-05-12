@@ -15,7 +15,6 @@ ComputeShader:
       Layout: std430
       Access: writeonly
       Contents: | #glsl
-        uint32_t count;
         Particle particles[];
 
     - Name: FreeList
@@ -38,7 +37,7 @@ ComputeShader:
             return;
           }
 
-          const ParticleSystem emitter = liger_in.emitter_data.emitter;
+          const ParticleSystem emitter = GetUniformBuffer(EmitterData, liger_in.binding_emitter_data).emitter;
 
           float32_t t = 1.0f - particle.lifetime / emitter.lifetime;
 
@@ -50,16 +49,16 @@ ComputeShader:
           if (particle.lifetime <= 0.0f) {
             particle.color.a = 0.0f;
 
-            int32_t free_list_idx = atomicAdd(liger_in.free_list.count, 1);
-            liger_in.free_list.indices[free_list_idx] = idx;
+            int32_t free_list_idx = atomicAdd(GetStorageBuffer(FreeList, liger_in.binding_free_list).count, 1);
+            GetStorageBuffer(FreeList, liger_in.binding_free_list).indices[free_list_idx] = idx;
           }
         }
 
   Code: | #glsl
     uint32_t idx = gl_GlobalInvocationID.x;
 
-    if (idx >= liger_in.emitter_data.emitter.max_particles) {
+    if (idx >= GetStorageBuffer(Particles, liger_in.binding_particles).particles.length()) {
       return;
     }
 
-    UpdateParticle(liger_in.particles.particles[idx], int32_t(idx), liger_in);
+    UpdateParticle(GetStorageBuffer(Particles, liger_in.binding_particles).particles[idx], int32_t(idx), liger_in);

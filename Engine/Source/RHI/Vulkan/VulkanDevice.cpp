@@ -102,7 +102,6 @@ bool VulkanDevice::Init(bool debug_enable) {
   device_features12.descriptorBindingSampledImageUpdateAfterBind  = VK_TRUE;
   device_features12.shaderUniformBufferArrayNonUniformIndexing    = VK_TRUE;
   device_features12.shaderStorageBufferArrayNonUniformIndexing    = VK_TRUE;
-  device_features12.bufferDeviceAddress                           = VK_TRUE;
 
   std::vector<const char*> extensions{std::begin(kRequiredDeviceExtensions), std::end(kRequiredDeviceExtensions)};
 
@@ -153,7 +152,6 @@ bool VulkanDevice::Init(bool debug_enable) {
   allocator_info.instance         = instance_;
   allocator_info.pVulkanFunctions = &vma_vulkan_functions;
   allocator_info.vulkanApiVersion = VK_API_VERSION_1_2;
-  allocator_info.flags            = VMA_ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT;
   VULKAN_CALL(vmaCreateAllocator(&allocator_info, &vma_allocator_));
 
   render_graph_semaphore_.Init(device_, kMaxRenderGraphsPerFrame);
@@ -234,7 +232,7 @@ bool VulkanDevice::EndFrame() {
     };
 
     // FIXME (tralf-strues): fence_render_finished must always be signaled, but currently under condition
-    VULKAN_CALL(vkQueueSubmit2KHR(queue_set_.GetMainQueue(), 1, &submit, frame_sync.fence_render_finished));
+    VULKAN_CALL(vkQueueSubmit2(queue_set_.GetMainQueue(), 1, &submit, frame_sync.fence_render_finished));
   }
 
   const VkSwapchainKHR vk_swapchain = current_swapchain_->GetVulkanSwapchain();

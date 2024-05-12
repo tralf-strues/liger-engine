@@ -29,6 +29,7 @@
 
 #include <Liger-Engine/Core/Math/Math.hpp>
 #include <Liger-Engine/ECS/Scene.hpp>
+#include <Liger-Engine/ECS/Script.hpp>
 
 #include <string>
 
@@ -41,5 +42,24 @@ struct NameComponent {
 };
 
 struct WorldTransform : Transform3D {};
+
+struct Camera {
+  float fov          {45.0f};
+  float near         {0.1f};
+  float far          {100.0f};
+  float aspect       {1.0f};
+  bool  fixed_aspect {false};
+
+  inline glm::mat4 ProjectionMatrix() const {
+    return glm::perspective(glm::radians(fov), aspect, near, far);
+  }
+};
+
+struct ScriptComponent {
+  ScriptComponent() = default;
+  ScriptComponent(std::unique_ptr<IScript> script) : script(std::move(script)) {}
+
+  std::unique_ptr<IScript> script;
+};
 
 }  // namespace liger::ecs

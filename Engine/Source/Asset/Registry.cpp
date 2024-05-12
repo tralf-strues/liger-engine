@@ -30,6 +30,7 @@
 #include <Liger-Engine/Asset/LogChannel.hpp>
 
 #include <fmt/ostream.h>
+#include <fmt/xchar.h>
 #include <yaml-cpp/yaml.h>
 
 #include <filesystem>
@@ -47,7 +48,7 @@ Registry::Registry(fs::path registry_file)
   }
 
   for (const auto& [filepath, id] : ids_) {
-    LIGER_LOG_INFO(kLogChannelAsset, "AssetEntry [file='{0}', id=0x{1:X}]", filepath.c_str(), id.Value());
+    LIGER_LOG_INFO(kLogChannelAsset, "AssetEntry [file='{0}', id=0x{1:X}]", filepath.string(), id.Value());
   }
 
   valid_ = true;
@@ -68,14 +69,14 @@ bool Registry::Valid() const {
 }
 
 bool Registry::Save() const {
-  std::ofstream out_file(registry_file_.c_str(), std::ios::out);
+  std::ofstream out_file(registry_file_.string(), std::ios::out);
   if (!out_file.is_open()) {
-    LIGER_LOG_ERROR(kLogChannelAsset, "Couldn't open registry file {0} for save", registry_file_.c_str());
+    LIGER_LOG_ERROR(kLogChannelAsset, "Couldn't open registry file {0} for save", registry_file_.string());
     return false;
   }
 
   for (const auto& [id, file_path] : files_) {
-    fmt::println(out_file, "- file: {0}", file_path.c_str());
+    fmt::println(out_file, "- file: {0}", file_path.string());
     fmt::println(out_file, "  id: 0x{0:X}", id.Value());
   }
 
@@ -106,7 +107,7 @@ fs::path Registry::GetAbsoluteFile(Id id) const {
 
 Id Registry::GetId(const std::filesystem::path& file) const {
   auto it = ids_.find(file);
-  LIGER_ASSERT(it != ids_.end(), kLogChannelAsset, "Trying to access invalid asset (file = '{0}')", file.c_str());
+  LIGER_ASSERT(it != ids_.end(), kLogChannelAsset, "Trying to access invalid asset (file = '{0}')", file.string());
 
   return it->second;
 }
@@ -142,16 +143,16 @@ void Registry::Unregister(Id id) {
 }
 
 bool Registry::ReadRegistryFile() {
-  YAML::Node registry = YAML::LoadFile(registry_file_.c_str());
+  YAML::Node registry = YAML::LoadFile(registry_file_.string());
 
   if (!registry) {
-    LIGER_LOG_ERROR(kLogChannelAsset, "Couldn't open asset registry file \"{}\"", registry_file_.c_str());
+    LIGER_LOG_ERROR(kLogChannelAsset, "Couldn't open asset registry file \"{}\"", registry_file_.string());
     return false;
   }
 
   for (auto asset : registry) {
     const auto parse_node = [&asset]<typename T>(std::string_view property, T& out) -> bool {
-      auto node = asset[property];
+      auto node = asset[property.data()];
       if (!node) {
         LIGER_LOG_ERROR(kLogChannelAsset, "Couldn't find \"{}\" property of an asset", property);
         return false;
