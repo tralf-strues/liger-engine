@@ -56,11 +56,11 @@ class Manager {
   [[nodiscard]] Handle<Asset> GetAsset(const std::filesystem::path& file);
 
  private:
-  tf::Executor& executor_;
-  Storage       storage_;
-  LoaderLibrary loaders_;
-  Registry      registry_;
-  std::mutex    mutex_;
+  tf::Executor&   executor_;
+  Storage         storage_;
+  LoaderLibrary   loaders_;
+  Registry        registry_;
+  std::mutex      mutex_;
 };
 
 template <typename Asset>
@@ -85,8 +85,7 @@ Handle<Asset> Manager::GetAsset(Id id) {
   lock.unlock();
 
   // executor_.silent_async("Load asset", [=, this]() mutable {
-    bool loaded = loader->Load(*this, id, filepath);
-    handle.UpdateState(loaded ? State::Loaded : State::Invalid);
+    loader->Load(*this, id, filepath);
   // });
 
   return handle;

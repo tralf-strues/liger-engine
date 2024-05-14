@@ -93,7 +93,7 @@ template <typename ResourceType>
 typename ResourceVersionRegistry<ResourceTypes...>::ResourceVersion
 ResourceVersionRegistry<ResourceTypes...>::AddResource(ResourceType resource) {
   auto version = static_cast<ResourceVersion>(version_to_id_.size());
-  auto id      = resources_.size();
+  auto id      = static_cast<ResourceId>(resources_.size());
   resources_.emplace_back(resource);
   version_to_id_.emplace_back(id);
   return version;

@@ -43,16 +43,15 @@ class IFeature {
 
   virtual std::span<const std::string_view> DependencyFeatures() const { return {}; }
   virtual std::span<Layer> Layers() { return {}; }
-  // virtual std::optional<shader::Declaration> GetShaderDeclaration() const { return std::nullopt; }
 
   virtual void SetupRenderGraph(rhi::RenderGraphBuilder&) {}
-  virtual void LinkRenderJobs(rhi::RenderGraph&) {}
-  virtual void SetupLayerJobs(LayerMap&) {}
+
+  virtual void SetupLayers(LayerMap&) {}
 
   virtual void SetupEntitySystems(ecs::SystemGraph&) {}
 
-  virtual void PreRender(rhi::IDevice&) {}
-  virtual void PostRender(rhi::IDevice&) {}
+  virtual void PreRender(rhi::IDevice&, rhi::Context&) {}
+  virtual void PostRender(rhi::IDevice&, rhi::Context&) {}
 };
 
 }  // namespace liger::render

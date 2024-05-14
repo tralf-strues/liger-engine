@@ -29,12 +29,13 @@
 
 namespace liger::render {
 
-ParticleSystemFeature::ParticleSystemFeature(rhi::IDevice& device, asset::Manager& asset_manager, CameraDataCollector& camera_collector)
+ParticleSystemFeature::ParticleSystemFeature(rhi::IDevice& device, asset::Manager& asset_manager,
+                                             const FrameTimer& frame_timer)
     : device_(device),
       emit_shader_(asset_manager.GetAsset<shader::Shader>(".liger/Shaders/BuiltIn.ParticleEmit.lshader")),
       update_shader_(asset_manager.GetAsset<shader::Shader>(".liger/Shaders/BuiltIn.ParticleUpdate.lshader")),
       render_shader_(asset_manager.GetAsset<shader::Shader>(".liger/Shaders/BuiltIn.ParticleRender.lshader")),
-      camera_collector_(camera_collector) {
+      frame_timer_(frame_timer) {
   ubo_transform_ = rhi::UniqueMappedBuffer<glm::mat4>(device_, rhi::DeviceResourceState::StorageBuffer,
                                                       "ParticleSystemFeature::ubo_transform_", kMaxParticleSystems);
   sbo_init_free_list_ = rhi::UniqueMappedBuffer<int32_t>(device_, rhi::DeviceResourceState::UniformBuffer,
@@ -48,11 +49,7 @@ ParticleSystemFeature::ParticleSystemFeature(rhi::IDevice& device, asset::Manage
 
 void ParticleSystemFeature::SetupRenderGraph(liger::rhi::RenderGraphBuilder& builder) {
   builder.BeginCompute("SimulateParticles", false);
-  builder.EndCompute();
-}
-
-void ParticleSystemFeature::LinkRenderJobs(rhi::RenderGraph& graph) {
-  graph.SetJob("SimulateParticles", [this](liger::rhi::ICommandBuffer& cmds) {
+  builder.SetJob([this](auto&, auto&, auto& cmds) {
     if (emit_shader_.GetState() != asset::State::Loaded ||
         update_shader_.GetState() != asset::State::Loaded ||
         render_shader_.GetState() != asset::State::Loaded) {
@@ -69,7 +66,7 @@ void ParticleSystemFeature::LinkRenderJobs(rhi::RenderGraph& graph) {
     }
 
     emit_shader_->BindPipeline(cmds);
-    emit_shader_->SetPushConstant("time", time_);
+    emit_shader_->SetPushConstant("time", frame_timer_.AbsoluteTime());
     for (auto& particle_system : particle_systems_) {
       float particles_to_spawn = 0.0f;
       particle_system.to_spawn = std::modf(particle_system.to_spawn, &particles_to_spawn);
@@ -86,7 +83,7 @@ void ParticleSystemFeature::LinkRenderJobs(rhi::RenderGraph& graph) {
     }
 
     update_shader_->BindPipeline(cmds);
-    update_shader_->SetPushConstant("delta_time", dt_);
+    update_shader_->SetPushConstant("delta_time", frame_timer_.DeltaTime());
     for (auto& particle_system : particle_systems_) {
       update_shader_->SetBuffer("EmitterData", particle_system.ubo_particle_system->GetUniformDescriptorBinding());
       update_shader_->SetBuffer("Particles",    particle_system.sbo_particles->GetStorageDescriptorBinding());
@@ -98,10 +95,11 @@ void ParticleSystemFeature::LinkRenderJobs(rhi::RenderGraph& graph) {
       cmds.BufferBarrier(particle_system.sbo_free_list.get(), rhi::DeviceResourceState::StorageBuffer, rhi::DeviceResourceState::StorageBuffer);
     }
   });
+  builder.EndCompute();
 }
 
-void ParticleSystemFeature::SetupLayerJobs(LayerMap& layer_map) {
-  layer_map["Transparent"]->Emplace([this](rhi::ICommandBuffer& cmds) {
+void ParticleSystemFeature::SetupLayers(LayerMap& layer_map) {
+  layer_map["Transparent"]->Emplace([this](auto&, rhi::Context& context, rhi::ICommandBuffer& cmds) {
     if (emit_shader_.GetState() != asset::State::Loaded ||
         update_shader_.GetState() != asset::State::Loaded ||
         render_shader_.GetState() != asset::State::Loaded) {
@@ -110,7 +108,7 @@ void ParticleSystemFeature::SetupLayerJobs(LayerMap& layer_map) {
 
     render_shader_->BindPipeline(cmds);
     render_shader_->SetBuffer("TransformData", ubo_transform_->GetStorageDescriptorBinding());
-    render_shader_->SetBuffer("CameraData", camera_collector_.GetBufferBinding());
+    render_shader_->SetBuffer("CameraData", context.Get<CameraDataBinding>().binding_ubo);
     for (size_t idx = 0U; idx < particle_systems_.size(); ++idx) {
       auto& particle_system = particle_systems_[idx];
 
@@ -131,11 +129,7 @@ void ParticleSystemFeature::SetupEntitySystems(liger::ecs::SystemGraph& systems)
 
 void ParticleSystemFeature::Run(const ecs::WorldTransform& transform, const ParticleSystemComponent& emitter,
                                 RuntimeParticleSystemData& runtime_data) {
-  runtime_data.transform  = transform.Matrix();
-  runtime_data.spawn_rate = emitter.spawn_rate;
-
-  bool valid = runtime_data.ubo_particle_system && runtime_data.sbo_particles && runtime_data.sbo_free_list;
-  if (!valid) {
+  if (runtime_data.runtime_handle == RuntimeParticleSystemData::kInvalidRuntimeHandle) {
     auto idx = particle_systems_.size();
 
     runtime_data.particles = emitter.max_particles;
@@ -159,24 +153,16 @@ void ParticleSystemFeature::Run(const ecs::WorldTransform& transform, const Part
       .name        = fmt::format("RuntimeParticleSystemData::sbo_free_list[{0}]", idx)
     });
 
+    runtime_data.runtime_handle = particle_systems_.size();
     particle_systems_.emplace_back(runtime_data);
-  } else {
-    *runtime_data.ubo_particle_system.GetData() = emitter;
-  }
-}
-
-void ParticleSystemFeature::PreRender(rhi::IDevice&) {
-  if (time_ == 0.0f) {
-    timer_.Reset();
   }
 
-  auto new_time = timer_.Elapsed();
-  dt_           = new_time - time_;
-  time_         = new_time;
-
-  for (auto& runtime_data : particle_systems_) {
-    runtime_data.to_spawn += runtime_data.spawn_rate * dt_;
-  }
+  uint32_t idx = runtime_data.runtime_handle;
+  
+  *particle_systems_[idx].ubo_particle_system.GetData() = emitter;
+  particle_systems_[idx].transform  = transform.Matrix();
+  particle_systems_[idx].spawn_rate = emitter.spawn_rate;
+  particle_systems_[idx].to_spawn  += particle_systems_[idx].spawn_rate * frame_timer_.DeltaTime();
 }
 
 }  // namespace liger::render

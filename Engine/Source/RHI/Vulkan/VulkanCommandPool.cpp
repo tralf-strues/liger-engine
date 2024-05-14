@@ -42,12 +42,13 @@ void VulkanCommandPool::Init(VkDevice device, uint32_t frames_in_flight, VkDescr
   queue_count_      = queue_set.GetQueueCount();
 
   pools_.resize(frames_in_flight_ * queue_count_);
+  command_buffers_per_pool_.resize(frames_in_flight_ * queue_count_);
 
   for (uint32_t queue_idx = 0; queue_idx < queue_count_; ++queue_idx) {
     const VkCommandPoolCreateInfo pool_info {
       .sType            = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
       .pNext            = nullptr,
-      .flags            = 0,
+      .flags            = 0U,
       .queueFamilyIndex = queue_set.GetQueueFamilyByIdx(queue_idx)
     };
 
@@ -69,6 +70,11 @@ void VulkanCommandPool::Destroy() {
 }
 
 VulkanCommandBuffer VulkanCommandPool::AllocateCommandBuffer(uint32_t frame_idx, uint32_t queue_idx) {
+  auto& cmd_buffers_list = GetCommandBufferList(frame_idx, queue_idx);
+  if (cmd_buffers_list.cur_idx < cmd_buffers_list.command_buffers.size()) {
+    return cmd_buffers_list.command_buffers[cmd_buffers_list.cur_idx++];
+  }
+
   const VkCommandBufferAllocateInfo allocate_info {
     .sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
     .pNext              = nullptr,
@@ -80,17 +86,26 @@ VulkanCommandBuffer VulkanCommandPool::AllocateCommandBuffer(uint32_t frame_idx,
   VkCommandBuffer vk_cmds = VK_NULL_HANDLE;
   VULKAN_CALL(vkAllocateCommandBuffers(device_, &allocate_info, &vk_cmds));
 
-  return VulkanCommandBuffer(vk_cmds, ds_);
+  auto cmds = VulkanCommandBuffer(vk_cmds, ds_);
+  cmd_buffers_list.command_buffers.emplace_back(cmds);
+  ++cmd_buffers_list.cur_idx;
+
+  return cmds;
 }
 
 void VulkanCommandPool::Reset(uint32_t frame_idx) {
   for (uint32_t queue_idx = 0; queue_idx < queue_count_; ++queue_idx) {
-    VULKAN_CALL(vkResetCommandPool(device_, GetCommandPool(frame_idx, queue_idx), 0));
+    VULKAN_CALL(vkResetCommandPool(device_, GetCommandPool(frame_idx, queue_idx), 0U));
+    GetCommandBufferList(frame_idx, queue_idx).cur_idx = 0U;
   }
 }
 
 VkCommandPool& VulkanCommandPool::GetCommandPool(uint32_t frame_idx, uint32_t queue_idx) {
   return pools_[frame_idx * queue_count_ + queue_idx];
+}
+
+VulkanCommandPool::CommandBufferList& VulkanCommandPool::GetCommandBufferList(uint32_t frame_idx, uint32_t queue_idx) {
+  return command_buffers_per_pool_[frame_idx * queue_count_ + queue_idx];
 }
 
 }  // namespace liger::rhi

@@ -57,6 +57,7 @@ class Renderer {
 
   rhi::RenderGraphBuilder           rg_builder_;
   std::unique_ptr<rhi::RenderGraph> render_graph_;
+  rhi::Context                      context_;
 };
 
 }  // namespace liger::render

@@ -29,34 +29,25 @@
 
 #include <Liger-Engine/ECS/DefaultComponents.hpp>
 #include <Liger-Engine/RHI/MappedBuffer.hpp>
-#include <Liger-Engine/RHI/ShaderAlignment.hpp>
+#include <Liger-Engine/Render/BuiltIn/CameraData.hpp>
 #include <Liger-Engine/Render/Feature.hpp>
 
 namespace liger::render {
 
 class CameraDataCollector : public IFeature, public ecs::ComponentSystem<const ecs::Camera, const ecs::WorldTransform> {
  public:
-  struct Data {
-    SHADER_STRUCT_MEMBER(glm::mat4) view;
-    SHADER_STRUCT_MEMBER(glm::mat4) proj;
-    SHADER_STRUCT_MEMBER(glm::vec3) ws_position;
-    SHADER_STRUCT_MEMBER(float)     near;
-    SHADER_STRUCT_MEMBER(float)     far;
-  };
-
   explicit CameraDataCollector(rhi::IDevice& device);
   ~CameraDataCollector() override = default;
 
   std::string_view Name() const override { return "CameraDataCollector<const Camera, const WorldTransform>"; }
 
-  const Data& GetData() const;
-  rhi::BufferDescriptorBinding GetBufferBinding() const;
-
   void SetupEntitySystems(ecs::SystemGraph& systems) override;
   void Run(const ecs::Camera& camera, const ecs::WorldTransform& transform) override;
 
+  void PreRender(rhi::IDevice&, rhi::Context& context) override;
+
  private:
-  rhi::UniqueMappedBuffer<Data> ubo_camera_data_;
+  rhi::UniqueMappedBuffer<CameraData> ubo_camera_data_;
 };
 
 }  // namespace liger::render

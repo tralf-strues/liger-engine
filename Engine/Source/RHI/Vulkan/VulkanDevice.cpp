@@ -47,7 +47,8 @@ VulkanDevice::VulkanDevice(Info info, uint32_t frames_in_flight, VkInstance inst
     : info_(std::move(info)),
       frames_in_flight_(frames_in_flight),
       instance_(instance),
-      physical_device_(physical_device) {}
+      physical_device_(physical_device),
+      transfer_engine_(*this) {}
 
 VulkanDevice::~VulkanDevice() {
   descriptor_manager_.Destroy();
@@ -151,7 +152,7 @@ bool VulkanDevice::Init(bool debug_enable) {
   allocator_info.device           = device_;
   allocator_info.instance         = instance_;
   allocator_info.pVulkanFunctions = &vma_vulkan_functions;
-  allocator_info.vulkanApiVersion = VK_API_VERSION_1_2;
+  allocator_info.vulkanApiVersion = VK_API_VERSION_1_3;
   VULKAN_CALL(vmaCreateAllocator(&allocator_info, &vma_allocator_));
 
   render_graph_semaphore_.Init(device_, kMaxRenderGraphsPerFrame);
@@ -259,6 +260,8 @@ bool VulkanDevice::EndFrame() {
   current_swapchain_ = nullptr;
   IncrementFrame();
 
+  transfer_engine_.SubmitAndWait();
+
   return valid;
 }
 
@@ -278,7 +281,7 @@ uint64_t VulkanDevice::CurrentAbsoluteFrame() const {
   return current_absolute_frame_;
 }
 
-void VulkanDevice::ExecuteConsecutive(RenderGraph& render_graph) {
+void VulkanDevice::ExecuteConsecutive(RenderGraph& render_graph, Context& context) {
   LIGER_ASSERT(current_graph_idx_ + 1 < kMaxRenderGraphsPerFrame, kLogChannelRHI,
                "Trying to execute too many render graphs per frame, the limit is kMaxRenderGraphsPerFrame={}",
                kMaxRenderGraphsPerFrame);
@@ -294,7 +297,11 @@ void VulkanDevice::ExecuteConsecutive(RenderGraph& render_graph) {
 
   auto signal_value = CalculateRenderGraphSemaphoreValue(current_graph_idx_);
 
-  vulkan_render_graph.Execute(wait_semaphore, wait_value, render_graph_semaphore_.Get(), signal_value);
+  vulkan_render_graph.Execute(context, wait_semaphore, wait_value, render_graph_semaphore_.Get(), signal_value);
+}
+
+void VulkanDevice::RequestDedicatedTransfer(DedicatedTransferRequest&& transfer) {
+  transfer_engine_.Request(std::move(transfer));
 }
 
 RenderGraphBuilder VulkanDevice::NewRenderGraphBuilder() {

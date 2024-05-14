@@ -64,8 +64,13 @@ using TemplateAssetStorage = RefCountStorage<Id, Holder<Asset>>;
 template <typename Asset>
 class Handle {
  public:
+  Handle() = default;
+
   Asset& operator*();
   Asset* operator->();
+
+  const Asset& operator*() const;
+  const Asset* operator->() const;
 
   explicit operator bool() const;
 
@@ -76,7 +81,7 @@ class Handle {
  private:
   explicit Handle(typename detail::TemplateAssetStorage<Asset>::Reference&& reference);
 
-  typename detail::TemplateAssetStorage<Asset>::Reference reference_{nullptr};
+  typename detail::TemplateAssetStorage<Asset>::Reference reference_;
 
   friend class Storage;
 };
@@ -91,6 +96,16 @@ Asset& Handle<Asset>::operator*() {
 
 template <typename Asset>
 Asset* Handle<Asset>::operator->() {
+  return &reference_->asset;
+}
+
+template <typename Asset>
+const Asset& Handle<Asset>::operator*() const {
+  return reference_->asset;
+}
+
+template <typename Asset>
+const Asset* Handle<Asset>::operator->() const {
   return &reference_->asset;
 }
 

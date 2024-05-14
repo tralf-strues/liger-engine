@@ -1,5 +1,7 @@
 include("../Cmake/CompileOptions.cmake")
 
+set(BUILD_SHARED_LIBS OFF)
+
 add_subdirectory(ThirdParty)
 
 add_library(liger-engine STATIC)
@@ -38,6 +40,7 @@ target_sources(liger-engine
 
 target_link_libraries(liger-engine
   PUBLIC
+    assimp
     EnTT::EnTT
     fmt
     glfw
@@ -60,6 +63,7 @@ install(
   TARGETS
     liger-engine
 
+    assimp zlibstatic
     EnTT
     fmt
     glfw

@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file ShaderLoader.hpp
- * @date 2024-05-07
+ * @file StaticMeshLoader.hpp
+ * @date 2024-05-13
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -28,21 +28,49 @@
 #pragma once
 
 #include <Liger-Engine/Asset/Loader.hpp>
-#include <Liger-Engine/ShaderSystem/Compiler.hpp>
 
-namespace liger::shader {
+namespace liger::rhi {
+class IDevice;
+}  // namespace liger::rhi
 
-class ShaderLoader : public asset::ILoader {
+namespace liger::asset::loaders {
+
+/**
+ * @brief Static mesh asset loader.
+ *
+ * File extension: .lsmesh
+ *
+ * File format (binary):
+ * @code{.unparsed}
+ *     uint32_t submeshes_count
+ *     -------- Submesh 0 --------
+ *     uint32_t         vertex_count
+ *     uint32_t         index_count
+ *     render::Vertex3D vertices[vertex_count]
+ *     uint32_t         indices[index_count]
+ *     glm::vec4        bounding_sphere
+ *     asset::Id        material
+ *     -------- Submesh 1 --------
+ *     uint32_t         vertex_count
+ *     uint32_t         index_count
+ *     render::Vertex3D vertices[vertex_count]
+ *     uint32_t         indices[index_count]
+ *     glm::vec4        bounding_sphere
+ *     asset::Id        material
+ *     --------    ...    --------
+ * @endcode
+ */
+class StaticMeshLoader : public asset::ILoader {
  public:
-  explicit ShaderLoader(rhi::IDevice& device);
-  ~ShaderLoader() override = default;
+  explicit StaticMeshLoader(rhi::IDevice& device);
+  ~StaticMeshLoader() override = default;
 
   const std::filesystem::path& FileExtension() const override;
 
-  bool Load(asset::Manager& manager, asset::Id asset_id, const std::filesystem::path& filepath) override;
+  void Load(asset::Manager& manager, asset::Id asset_id, const std::filesystem::path& filepath) override;
 
  private:
-  Compiler compiler_;
+  rhi::IDevice& device_;
 };
 
-}  // namespace liger::shader
+}  // namespace liger::asset::loaders

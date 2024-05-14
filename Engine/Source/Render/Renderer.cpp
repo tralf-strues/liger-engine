@@ -47,11 +47,10 @@ void Renderer::Setup() {
     feature->SetupRenderGraph(rg_builder_);
   }
 
-  render_graph_ = rg_builder_.Build(device_, "Renderer::render_graph_");
+  render_graph_ = rg_builder_.Build(device_, "Renderer - Render Graph");
 
   for (auto& feature : features_) {
-    feature->LinkRenderJobs(*render_graph_);
-    feature->SetupLayerJobs(layers);
+    feature->SetupLayers(layers);
   }
 
   for (auto& feature : features_) {
@@ -67,13 +66,13 @@ rhi::RenderGraph& Renderer::GetRenderGraph() { return *render_graph_; }
 
 void Renderer::Render() {
   for (auto& feature : features_) {
-    feature->PreRender(device_);
+    feature->PreRender(device_, context_);
   }
 
-  device_.ExecuteConsecutive(*render_graph_);
+  device_.ExecuteConsecutive(*render_graph_, context_);
 
   for (auto& feature : features_) {
-    feature->PostRender(device_);
+    feature->PostRender(device_, context_);
   }
 }
 

@@ -1,0 +1,115 @@
+InputAssemblyInfo:
+  Topology: TriangleList
+
+RasterizationInfo:
+  CullMode: None
+  FrontFace: CounterClockwise
+  PolygonMode: Fill
+
+DepthStencilTestInfo:
+  DepthTestEnable: true
+  DepthWriteEnable: false
+  DepthCompareOperation: Less
+
+ColorBlendInfo:
+  Enable: true
+
+  SrcColorFactor: One
+  DstColorFactor: One
+  ColorOperation: Add
+
+  SrcAlphaFactor: SrcAlpha
+  DstAlphaFactor: DstAlpha
+  AlphaOperation: Add
+
+AttachmentInfo:
+  RenderTargets: [B8G8R8A8_SRGB]
+  DepthStencilTarget: D32_SFLOAT
+  Samples: 1
+
+VertexShader:
+  Use:
+    - Include: BuiltIn.Camera.lsdecl
+    - Include: BuiltIn.StaticMeshData.lsdecl
+
+  Input:
+    - Name: vertex_idx
+      Type: vertex-index
+
+    - Name: instance_idx
+      Type: instance-index
+
+    - Name: Objects
+      Type: storage-buffer
+      Layout: std430
+      Access: readonly
+      Contents: | #glsl
+        Object objects[];
+
+    - Name: VisibleObjectIndices
+      Type: storage-buffer
+      Layout: std430
+      Access: readonly
+      Contents: | #glsl
+        uint32_t object_indices[];
+
+  Output:
+    - Name: ws_position
+      Type: f32vec3
+    - Name: tex_coords
+      Type: f32vec2
+    - Name: color
+      Type: f32vec3
+    - Name: tbn
+      Type: f32mat3
+
+  CodeSnippets:
+    - Insert: auto-global
+      Code: | #glsl
+        void UnpackObject(const LigerInput liger_in, out Vertex3D vertex, out f32mat4 transform, out Material material) {
+          uint32_t object_idx = GetStorageBuffer(VisibleObjectIndices, liger_in.binding_visible_object_indices).object_indices[liger_in.instance_idx];
+          Object   object     = GetStorageBuffer(Objects, liger_in.binding_objects).objects[object_idx];
+          Mesh     mesh       = GetUniformBuffer(MeshUBO, object.binding_mesh).mesh;
+          uint32_t vertex_idx = GetStorageBuffer(IndexBuffer, mesh.binding_index_buffer).vertex_indices[liger_in.vertex_idx];
+
+          vertex              = GetStorageBuffer(VertexBuffer, mesh.binding_vertex_buffer).vertices[vertex_idx];
+          transform           = object.transform;
+          material            = GetUniformBuffer(MaterialUBO, object.binding_material).material;
+        }
+
+  Code: | #glsl
+    Vertex3D ms_vertex;
+    f32mat4  transform;
+    Material material;
+
+    UnpackObject(liger_in, ms_vertex, transform, material);
+
+    f32mat4 proj_view     = GetCamera(liger_in).proj_view;
+    f32mat3 normal_matrix = transpose(inverse(f32mat3(transform)));
+    f32vec3 normal        = normalize(normal_matrix * ms_vertex.normal);
+    f32vec3 tangent       = normalize(normal_matrix * ms_vertex.tangent);
+    f32vec3 bitangent     = normalize(cross(normal, tangent));
+
+    ws_position           = (transform * f32vec4(ms_vertex.position, 1.0)).xyz;
+    tex_coords            = ms_vertex.tex_coords;
+    tbn                   = f32mat3(tangent, bitangent, normal);
+    color                 = material.color.rgb;
+    gl_Position           = proj_view * f32vec4(ws_position, 1.0);
+
+FragmentShader:
+  Input:
+    - Name: ws_position
+      Type: f32vec3
+    - Name: tex_coords
+      Type: f32vec2
+    - Name: color
+      Type: f32vec3
+    - Name: tbn
+      Type: f32mat3
+
+  Output:
+    - Name: out_color
+      Type: f32vec4
+
+  Code: | #glsl
+    out_color = f32vec4(liger_in.color, 1.0f);

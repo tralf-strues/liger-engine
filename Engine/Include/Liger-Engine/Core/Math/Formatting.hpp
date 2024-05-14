@@ -37,7 +37,7 @@ struct fmt::formatter<glm::vec2> {
 
   template <typename FormatContext>
   auto format(const glm::vec2& vector, FormatContext& ctx) {
-    return fmt::format_to(ctx.out(), "(x={}, y={})", vector.x, vector.y);
+    return fmt::format_to(ctx.out(), "({}, {})", vector.x, vector.y);
   }
 };
 
@@ -50,6 +50,19 @@ struct fmt::formatter<glm::vec3> {
 
   template <typename FormatContext>
   auto format(const glm::vec3& vector, FormatContext& ctx) {
-    return fmt::format_to(ctx.out(), "(x={}, y={}, z={})", vector.x, vector.y, vector.z);
+    return fmt::format_to(ctx.out(), "({}, {}, {})", vector.x, vector.y, vector.z);
+  }
+};
+
+template <>
+struct fmt::formatter<glm::vec4> {
+  template <typename ParseContext>
+  constexpr auto parse(ParseContext& ctx) {
+    return ctx.begin();
+  }
+
+  template <typename FormatContext>
+  auto format(const glm::vec4& vector, FormatContext& ctx) {
+    return fmt::format_to(ctx.out(), "({}, {}, {}, {})", vector.x, vector.y, vector.z, vector.w);
   }
 };

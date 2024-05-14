@@ -64,6 +64,7 @@ def AddAssets(asset_registry, asset_file_regex):
   for root, _, files in os.walk(asset_folder):
     for file in files:
       file = os.path.relpath(os.path.join(root, file), asset_folder)
+      file = file.replace(os.sep, '/')
       if asset_file_regex.match(file):
         any_match = True
         AddAsset(asset_registry, file)

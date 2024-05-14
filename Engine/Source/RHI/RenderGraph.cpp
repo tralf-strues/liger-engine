@@ -43,6 +43,7 @@ void RenderGraph::SetJob(const std::string_view node_name, Job job) {
   for (auto& node : dag_) {
     if (node.name == node_name) {
       node.job = std::move(job);
+      return;
     }
   }
 }
@@ -73,7 +74,9 @@ RenderGraphBuilder::ResourceVersion RenderGraphBuilder::DeclareImportTexture(Dev
                                                                              DeviceResourceState final_state) {
   auto version = graph_->resource_version_registry_.DeclareResource();
   graph_->imported_resource_usages_[graph_->resource_version_registry_.GetResourceId(version)] = {
-      .initial = initial_state, .final = final_state};
+    .initial = initial_state,
+    .final   = final_state
+  };
 
   return version;
 }
@@ -82,8 +85,25 @@ RenderGraphBuilder::ResourceVersion RenderGraphBuilder::DeclareImportBuffer(Devi
                                                                             DeviceResourceState final_state) {
   auto version = graph_->resource_version_registry_.DeclareResource();
   graph_->imported_resource_usages_[graph_->resource_version_registry_.GetResourceId(version)] = {
-      .initial = initial_state, .final = final_state};
+    .initial = initial_state,
+    .final   = final_state
+  };
 
+  return version;
+}
+
+RenderGraphBuilder::ResourceVersion RenderGraphBuilder::ImportTexture(RenderGraph::TextureResource texture,
+                                                                      DeviceResourceState          initial_state,
+                                                                      DeviceResourceState          final_state) {
+  auto version = DeclareImportTexture(initial_state, final_state);
+  graph_->ReimportTexture(version, texture);
+  return version;
+}
+RenderGraphBuilder::ResourceVersion RenderGraphBuilder::ImportBuffer(RenderGraph::BufferResource buffer,
+                                                                     DeviceResourceState         initial_state,
+                                                                     DeviceResourceState         final_state) {
+  auto version = DeclareImportBuffer(initial_state, final_state);
+  graph_->ReimportBuffer(version, buffer);
   return version;
 }
 
@@ -109,6 +129,11 @@ void RenderGraphBuilder::BeginTransfer(std::string_view name, bool async, IComma
 
 void RenderGraphBuilder::EndTransfer() {
   EndNode(RenderGraph::Node::Type::Transfer);
+}
+
+void RenderGraphBuilder::SetJob(RenderGraph::Job job) {
+  LIGER_ASSERT(current_node_.has_value(), kLogChannelRHI, "Setting job outside of begin/end scope!");
+  graph_->dag_.GetNode(*current_node_).job = std::move(job);
 }
 
 RenderGraphBuilder::ResourceVersion RenderGraphBuilder::AddColorTarget(ResourceVersion texture, AttachmentLoad load,

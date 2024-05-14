@@ -1,0 +1,46 @@
+Data: | #glsl
+  struct Vertex3D {
+    f32vec3 position;
+    f32vec3 normal;
+    f32vec3 tangent;
+    f32vec2 tex_coords;
+  };
+
+  RegisterStorageBuffer(std430, readonly, VertexBuffer, {
+    Vertex3D vertices[];
+  });
+
+  RegisterStorageBuffer(std430, readonly, IndexBuffer, {
+    uint32_t vertex_indices[];
+  });
+
+  struct Mesh {
+    uint32_t  binding_vertex_buffer;
+    uint32_t  binding_index_buffer;
+    uint32_t  vertex_count;
+    uint32_t  index_count;
+    float32_t bounding_sphere_radius;
+  };
+
+  RegisterUniformBuffer(MeshUBO, {
+    Mesh mesh;
+  });
+
+  struct Material {
+    f32vec4 color;
+  };
+
+  RegisterUniformBuffer(MaterialUBO, {
+    Material material;
+  });
+
+  struct Object {
+    f32mat4  transform;
+    uint32_t binding_mesh;
+    uint32_t binding_material;
+  };
+
+  struct BatchedObject {
+    uint32_t object_idx;
+    uint32_t batch_idx;
+  };

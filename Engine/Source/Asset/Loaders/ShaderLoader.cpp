@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file Layer.cpp
- * @date 2024-05-06
+ * @file ShaderLoader.cpp
+ * @date 2024-05-07
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -25,22 +25,42 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <Liger-Engine/Render/Layer.hpp>
+#include <Liger-Engine/Asset/Loaders/ShaderLoader.hpp>
 
-namespace liger::render {
+#include <Liger-Engine/Asset/Manager.hpp>
+#include <Liger-Engine/ShaderSystem/DeclarationParser.hpp>
+#include <Liger-Engine/ShaderSystem/Shader.hpp>
 
-Layer::Layer(std::string_view name) : name_(name) {}
+namespace liger::asset::loaders {
 
-std::string_view Layer::Name() const { return name_; }
+ShaderLoader::ShaderLoader(rhi::IDevice& device) : compiler_(device) {}
 
-void Layer::Emplace(Job job) {
-  jobs_.emplace_back(std::move(job));
+const std::filesystem::path& ShaderLoader::FileExtension() const {
+  static std::filesystem::path extension{".lshader"};
+  return extension;
 }
 
-void Layer::Execute(rhi::RenderGraph& graph, rhi::Context& context, rhi::ICommandBuffer& cmds) {
-  for (auto& job : jobs_) {
-    job(graph, context, cmds);
+void ShaderLoader::Load(asset::Manager& manager, asset::Id asset_id, const std::filesystem::path& filepath) {
+  auto shader = manager.GetAsset<shader::Shader>(asset_id);
+
+  shader::DeclarationParser parser(filepath);
+  if (!parser.Valid()) {
+    shader.UpdateState(asset::State::Invalid);
+    return;
   }
+
+  auto declaration = parser.Parse();
+  if (!declaration) {
+    shader.UpdateState(asset::State::Invalid);
+    return;
+  }
+
+  if (!compiler_.Compile(*shader, declaration.value())) {
+    shader.UpdateState(asset::State::Invalid);
+    return;
+  }
+
+  shader.UpdateState(asset::State::Loaded);
 }
 
-}  // namespace liger::render
+}  // namespace liger::asset::loaders

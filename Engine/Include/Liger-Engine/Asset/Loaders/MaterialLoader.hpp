@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file Layer.cpp
- * @date 2024-05-06
+ * @file MaterialLoader.hpp
+ * @date 2024-05-14
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -25,22 +25,37 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <Liger-Engine/Render/Layer.hpp>
+#pragma once
 
-namespace liger::render {
+#include <Liger-Engine/Asset/Loader.hpp>
 
-Layer::Layer(std::string_view name) : name_(name) {}
+namespace liger::rhi {
+class IDevice;
+}  // namespace liger::rhi
 
-std::string_view Layer::Name() const { return name_; }
+namespace liger::asset::loaders {
 
-void Layer::Emplace(Job job) {
-  jobs_.emplace_back(std::move(job));
-}
+/**
+ * @brief Static mesh material asset loader.
+ *
+ * File extension: .lmat
+ *
+ * File format (text):
+ * @code{.unparsed}
+ *     ... FIXME (tralf-strues): add format description
+ * @endcode
+ */
+class MaterialLoader : public asset::ILoader {
+ public:
+  explicit MaterialLoader(rhi::IDevice& device);
+  ~MaterialLoader() override = default;
 
-void Layer::Execute(rhi::RenderGraph& graph, rhi::Context& context, rhi::ICommandBuffer& cmds) {
-  for (auto& job : jobs_) {
-    job(graph, context, cmds);
-  }
-}
+  const std::filesystem::path& FileExtension() const override;
 
-}  // namespace liger::render
+  void Load(asset::Manager& manager, asset::Id asset_id, const std::filesystem::path& filepath) override;
+
+ private:
+  rhi::IDevice& device_;
+};
+
+}  // namespace liger::asset::loaders

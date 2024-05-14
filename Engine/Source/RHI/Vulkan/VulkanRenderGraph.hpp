@@ -48,7 +48,7 @@ class VulkanRenderGraph : public RenderGraph {
 
   void ReimportBuffer(ResourceVersion version, BufferResource new_buffer) override;
 
-  void Execute(VkSemaphore wait, uint64_t wait_value, VkSemaphore signal, uint64_t signal_value);
+  void Execute(Context& context, VkSemaphore wait, uint64_t wait_value, VkSemaphore signal, uint64_t signal_value);
 
   void DumpGraphviz(std::string_view filename) override;
 

@@ -34,3 +34,6 @@
 [submodule "Engine/ThirdParty/glslang"]
 	path = Engine/ThirdParty/glslang
 	url = https://github.com/KhronosGroup/glslang.git
+[submodule "Engine/ThirdParty/assimp"]
+	path = Engine/ThirdParty/assimp
+	url = https://github.com/assimp/assimp.git

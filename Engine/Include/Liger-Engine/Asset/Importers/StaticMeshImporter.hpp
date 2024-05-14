@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file Layer.cpp
- * @date 2024-05-06
+ * @file StaticMeshImporter.hpp
+ * @date 2024-05-13
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -25,22 +25,18 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <Liger-Engine/Render/Layer.hpp>
+#pragma once
 
-namespace liger::render {
+#include <Liger-Engine/Asset/Importer.hpp>
 
-Layer::Layer(std::string_view name) : name_(name) {}
+namespace liger::asset::importers {
 
-std::string_view Layer::Name() const { return name_; }
+class StaticMeshImporter : public IImporter {
+ public:
+  ~StaticMeshImporter() override = default;
 
-void Layer::Emplace(Job job) {
-  jobs_.emplace_back(std::move(job));
-}
+  Result Import(Registry& registry, const std::filesystem::path& src,
+                const std::filesystem::path& dst_folder) const override;
+};
 
-void Layer::Execute(rhi::RenderGraph& graph, rhi::Context& context, rhi::ICommandBuffer& cmds) {
-  for (auto& job : jobs_) {
-    job(graph, context, cmds);
-  }
-}
-
-}  // namespace liger::render
+}  // namespace liger::asset::importers

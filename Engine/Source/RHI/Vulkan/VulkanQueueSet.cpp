@@ -81,7 +81,10 @@ std::vector<VkDeviceQueueCreateInfo> VulkanQueueSet::FillQueueCreateInfos(VkPhys
   for (indices.transfer = 0; indices.transfer < queue_family_count; ++(*indices.transfer)) {
     const auto& properties = queue_families[*indices.transfer];
 
-    if (properties.queueFlags == VK_QUEUE_TRANSFER_BIT) {
+    bool has_transfer            = (properties.queueFlags & VK_QUEUE_TRANSFER_BIT) != 0;
+    bool has_graphics_or_compute = (properties.queueFlags & (VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT)) != 0;
+
+    if (has_transfer && !has_graphics_or_compute) {
       transfer_queue_found = true;
       break;
     }

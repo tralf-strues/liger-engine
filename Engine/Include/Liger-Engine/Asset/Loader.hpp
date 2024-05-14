@@ -41,7 +41,7 @@ class ILoader {
 
   virtual const std::filesystem::path& FileExtension() const = 0;
 
-  virtual bool Load(Manager& manager, Id asset_id, const std::filesystem::path& filepath) = 0;
+  virtual void Load(Manager& manager, Id asset_id, const std::filesystem::path& filepath) = 0;
 };
 
 }  // namespace liger::asset

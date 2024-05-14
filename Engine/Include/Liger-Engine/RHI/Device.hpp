@@ -72,6 +72,20 @@ class IDevice {
     Properties  properties;
   };
 
+  using TransferCallback = std::function<void()>;
+
+  struct DedicatedBufferTransfer {
+    IBuffer*                   buffer;
+    DeviceResourceState        final_state;
+    std::unique_ptr<uint8_t[]> data;
+    uint64_t                   size;
+  };
+
+  struct DedicatedTransferRequest {
+    std::list<DedicatedBufferTransfer> buffer_transfers;
+    TransferCallback                   callback;
+  };
+
   virtual ~IDevice() = default;
 
   /**
@@ -138,8 +152,11 @@ class IDevice {
    * @warning Calling this method outside of begin and end frame scope (either default or offscreen) can cause UB!
    *
    * @param render_graph Render graph to execute, which must be created by this particular device.
+   * @param context      Context data for render jobs to "communicate" with each other.
    */
-  virtual void ExecuteConsecutive(RenderGraph& render_graph) = 0;
+  virtual void ExecuteConsecutive(RenderGraph& render_graph, Context& context) = 0;
+
+  virtual void RequestDedicatedTransfer(DedicatedTransferRequest&& transfer) = 0;
 
   /**
    * @brief Create a render graph builder, the object for constructing a render graph.

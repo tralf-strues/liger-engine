@@ -27,8 +27,7 @@
 
 #pragma once
 
-#include <filesystem>
-#include <string_view>
+#include <Liger-Engine/Asset/Registry.hpp>
 
 namespace liger::asset {
 
@@ -52,21 +51,20 @@ class IImporter {
     bool success{false};
 
     /**
-     * @brief List of filepaths of imported assets.
+     * @brief List of imported assets.
      *
      * @note The filepaths are based on the import destination folder. For instance, if `dst_folder`
      *       is "assets/imported/", and the importer generated file "teapot.mesh", then the filepath
      *       will be "assets/imported/teapot.mesh".
      */
-    std::vector<std::filesystem::path> files;
+    std::vector<asset::Id> imported_assets;
 
     /**
      * @brief List of dependencies between assets.
      *
-     * Each dependency is represented by two indices into @ref files list. The first index is the
-     * index of the dependent file and the second one is of its dependency file.
+     * The first asset is dependent on the second asset.
      */
-    std::vector<std::pair<uint32_t, uint32_t>> dependencies;
+    std::vector<std::pair<asset::Id, asset::Id>> dependencies;
   };
 
   virtual ~IImporter() = default;
@@ -77,9 +75,9 @@ class IImporter {
   virtual const std::filesystem::path& FileExtension() const = 0;
 
   /**
-   * @brief Try to import `src` file and save generated files to `dst_folder`.
+   * @brief Try to import `src` file, save generated files to `dst_folder` and register them to the asset registry.
    */
-  virtual Result Import(const std::filesystem::path& src, const std::filesystem::path& dst_folder) const = 0;
+  virtual Result Import(Registry& registry, const std::filesystem::path& src, const std::filesystem::path& dst_folder) const = 0;
 };
 
 }  // namespace liger::asset

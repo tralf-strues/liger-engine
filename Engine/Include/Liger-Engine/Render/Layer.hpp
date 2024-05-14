@@ -35,7 +35,7 @@ namespace liger::render {
 
 class Layer {
  public:
-  using Job = std::function<void(rhi::ICommandBuffer&)>;
+  using Job = rhi::RenderGraph::Job;
 
   explicit Layer(std::string_view name);
 
@@ -43,7 +43,7 @@ class Layer {
 
   void Emplace(Job job);
 
-  void Execute(rhi::ICommandBuffer& cmds);
+  void Execute(rhi::RenderGraph& graph, rhi::Context& context, rhi::ICommandBuffer& cmds);
 
  private:
   std::string      name_;

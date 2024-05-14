@@ -1,5 +1,16 @@
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
+set(ASSIMP_BUILD_TESTS off)
+set(ASSIMP_BUILD_ASSIMP_TOOLS off)
+set(ASSIMP_INSTALL on)
+set(ASSIMP_WARNINGS_AS_ERRORS off)
+set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT off)
+set(ASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT off)
+
+set(ASSIMP_BUILD_GLTF_IMPORTER on)
+
+add_subdirectory(assimp)
+
 # entt
 add_subdirectory(entt)
 
@@ -18,7 +29,8 @@ add_subdirectory(glfw)
 add_subdirectory(glm)
 
 # glslang
-set(GLSLANG_ENABLE_INSTALL ON)
+set(GLSLANG_ENABLE_INSTALL OFF)
+set(ENABLE_SPVREMAPPER OFF)
 add_subdirectory(glslang)
 
 # magic-enum

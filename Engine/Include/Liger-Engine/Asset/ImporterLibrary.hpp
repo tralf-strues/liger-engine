@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file Layer.cpp
- * @date 2024-05-06
+ * @file ImporterLibrary.hpp
+ * @date 2024-05-14
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -25,22 +25,23 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <Liger-Engine/Render/Layer.hpp>
+#pragma once
 
-namespace liger::render {
+#include <Liger-Engine/Asset/Importer.hpp>
 
-Layer::Layer(std::string_view name) : name_(name) {}
+#include <map>
+#include <string>
 
-std::string_view Layer::Name() const { return name_; }
+namespace liger::asset {
 
-void Layer::Emplace(Job job) {
-  jobs_.emplace_back(std::move(job));
-}
+class ImporterLibrary {
+ public:
+  void AddImporter(std::unique_ptr<IImporter> importer);
 
-void Layer::Execute(rhi::RenderGraph& graph, rhi::Context& context, rhi::ICommandBuffer& cmds) {
-  for (auto& job : jobs_) {
-    job(graph, context, cmds);
-  }
-}
+  IImporter* TryGet(const std::filesystem::path& extension) const;
 
-}  // namespace liger::render
+ private:
+  std::map<std::filesystem::path, std::unique_ptr<IImporter>> importers_;
+};
+
+}  // namespace liger::asset

@@ -47,10 +47,7 @@ class ForwardRenderFeature : public IFeature {
   std::string_view Name() const override { return "ForwardRenderFeature"; }
   std::span<Layer> Layers() override { return std::span<Layer>(layers_); }
 
-  rhi::RenderGraph::ResourceVersion GetDepth();
-
   void SetupRenderGraph(rhi::RenderGraphBuilder& builder) override;
-  void LinkRenderJobs(rhi::RenderGraph& graph) override;
 
  private:
   std::vector<Layer>                layers_;

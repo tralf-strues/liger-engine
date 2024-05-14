@@ -33,6 +33,7 @@
 #include "VulkanQueueSet.hpp"
 #include "VulkanSwapchain.hpp"
 #include "VulkanTimelineSemaphore.hpp"
+#include "VulkanTransferEngine.hpp"
 
 #define VMA_STATIC_VULKAN_FUNCTIONS 0
 #define VMA_DYNAMIC_VULKAN_FUNCTIONS 1
@@ -81,7 +82,9 @@ class VulkanDevice : public IDevice {
   uint32_t CurrentFrame() const override;
   uint64_t CurrentAbsoluteFrame() const override;
 
-  void ExecuteConsecutive(RenderGraph& render_graph) override;
+  void ExecuteConsecutive(RenderGraph& render_graph, Context& context) override;
+
+  void RequestDedicatedTransfer(DedicatedTransferRequest&& transfer) override;
 
   RenderGraphBuilder NewRenderGraphBuilder() override;
 
@@ -116,6 +119,7 @@ class VulkanDevice : public IDevice {
 
   VulkanDescriptorManager descriptor_manager_;
   VulkanQueueSet          queue_set_;
+  VulkanTransferEngine    transfer_engine_;
 
   std::vector<FrameSynchronization> frame_sync_;
   VulkanSwapchain*                  current_swapchain_{nullptr};

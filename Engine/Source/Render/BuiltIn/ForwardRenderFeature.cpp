@@ -47,18 +47,15 @@ void ForwardRenderFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
   depth_info.name            = "Depth buffer";
   rg_depth_ = builder.DeclareTransientTexture(depth_info);
 
-  builder.BeginRenderPass("ForwardPass");
+  builder.BeginRenderPass("Forward Pass");
   builder.AddColorTarget(rg_color_, rhi::AttachmentLoad::Clear, rhi::AttachmentStore::Store);
   builder.SetDepthStencil(rg_depth_, rhi::AttachmentLoad::Clear, rhi::AttachmentStore::Discard);
-  builder.EndRenderPass();
-}
-
-void ForwardRenderFeature::LinkRenderJobs(rhi::RenderGraph& graph) {
-  graph.SetJob("ForwardPass", [this](rhi::ICommandBuffer& cmds) {
+  builder.SetJob([this](auto& graph, auto& context, rhi::ICommandBuffer& cmds) {
     for (auto& layer : layers_) {
-      layer.Execute(cmds);
+      layer.Execute(graph, context, cmds);
     }
   });
+  builder.EndRenderPass();
 }
 
 }  // namespace liger::render

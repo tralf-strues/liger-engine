@@ -1,0 +1,75 @@
+ComputeShader:
+  ThreadGroupSize: [64, 1, 1]
+
+  Use:
+    - Include: BuiltIn.StaticMeshData.lsdecl
+
+  Data: | #glsl
+    struct DrawCommand {
+      uint32_t index_count;
+      uint32_t instance_count;
+      uint32_t first_index;
+      int32_t  vertex_offset;
+      uint32_t first_instance;
+    };
+
+  Input:
+    - Name: BatchedObjects
+      Type: storage-buffer
+      Layout: std430
+      Access: readonly
+      Contents: | #glsl
+        BatchedObject batched_objects[];
+
+    - Name: Draws
+      Type: storage-buffer
+      Layout: std430
+      Access: readwrite
+      Contents: | #glsl
+        DrawCommand draws[];
+
+    - Name: Objects
+      Type: storage-buffer
+      Layout: std430
+      Access: readonly
+      Contents: | #glsl
+        Object objects[];
+
+    - Name: VisibleObjectIndices
+      Type: storage-buffer
+      Layout: std430
+      Access: writeonly
+      Contents: | #glsl
+        uint32_t object_indices[];
+
+    - Name: batched_object_count
+      Type: uint32_t
+      Modifier: push-constant
+
+  CodeSnippets:
+    - Insert: auto-global
+      Code: | #glsl
+        bool IsVisible(uint32_t object_idx) {
+          return true;
+        }
+
+  Code: | #glsl
+    uint32_t batched_object_idx = gl_GlobalInvocationID.x;
+    if (batched_object_idx >= liger_in.batched_object_count) {
+      return;
+    }
+
+    const BatchedObject batched_object = GetStorageBuffer(BatchedObjects, liger_in.binding_batched_objects).batched_objects[batched_object_idx];
+
+    uint32_t object_idx = batched_object.object_idx;
+    uint32_t batch_idx  = batched_object.batch_idx;
+
+    bool visible = IsVisible(object_idx);
+    if (!visible) {
+      return;
+    }
+
+    uint32_t local_instance_idx = atomicAdd(GetStorageBuffer(Draws, liger_in.binding_draws).draws[batch_idx].instance_count, 1U);
+    uint32_t final_instance_idx = GetStorageBuffer(Draws, liger_in.binding_draws).draws[batch_idx].first_instance + local_instance_idx;
+
+    GetStorageBuffer(VisibleObjectIndices, liger_in.binding_visible_object_indices).object_indices[final_instance_idx] = object_idx;

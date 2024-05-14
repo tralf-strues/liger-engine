@@ -64,6 +64,8 @@ class VulkanCommandBuffer : public ICommandBuffer {
   void DrawIndexed(uint32_t index_count, uint32_t first_index, uint32_t vertex_offset, uint32_t instance_count,
                    uint32_t first_instance) override;
 
+  void DrawIndexedIndirect(const IBuffer* indirect_buffer, uint64_t offset, uint64_t stride, uint32_t draw_count) override;
+
   void CopyBuffer(const IBuffer* src_buffer, IBuffer* dst_buffer, uint64_t size, uint64_t src_offset,
                   uint64_t dst_offset) override;
   void CopyBufferToTexture(const IBuffer* buffer, ITexture* texture, Extent3D extent, uint32_t mip_level) override;

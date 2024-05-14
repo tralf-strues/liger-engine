@@ -32,6 +32,8 @@
 #include <Liger-Engine/RHI/Extent.hpp>
 #include <Liger-Engine/RHI/Filter.hpp>
 
+#include <span>
+
 namespace liger::rhi {
 
 /* Viewport */
@@ -48,6 +50,15 @@ struct Viewport {
 struct RenderArea {
   Extent2D offset{0};  ///< In pixels
   Extent2D extent{0};  ///< In pixels
+};
+
+/* Indirect commands FIXME (tralf-strues): redesign in order to support APIs other than just Vulkan */
+struct DrawCommand {
+  uint32_t index_count;
+  uint32_t instance_count;
+  uint32_t first_index;
+  int32_t  vertex_offset;
+  uint32_t first_instance;
 };
 
 class IBuffer;
@@ -184,6 +195,8 @@ class ICommandBuffer {
    */
   virtual void DrawIndexed(uint32_t indices_count, uint32_t first_index = 0, uint32_t vertex_offset = 0,
                            uint32_t instances_count = 1, uint32_t first_instance = 0) = 0;
+
+  virtual void DrawIndexedIndirect(const IBuffer* indirect_buffer, uint64_t offset, uint64_t stride, uint32_t draw_count) = 0;
 
   /**
    * @brief Copy a region of src buffer's memory to dst buffer's memory.

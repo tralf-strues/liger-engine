@@ -48,7 +48,7 @@ void VulkanRenderGraph::ReimportBuffer(ResourceVersion version, BufferResource n
 //   dirty_ = true; TODO(tralf-strues): dependent buffer info
 }
 
-void VulkanRenderGraph::Execute(VkSemaphore wait, uint64_t wait_value, VkSemaphore signal, uint64_t signal_value) {
+void VulkanRenderGraph::Execute(Context& context, VkSemaphore wait, uint64_t wait_value, VkSemaphore signal, uint64_t signal_value) {
   if (first_frame_) {
     UpdateDependentResourceValues();
     RecreateTransientResources();
@@ -71,6 +71,7 @@ void VulkanRenderGraph::Execute(VkSemaphore wait, uint64_t wait_value, VkSemapho
   dirty_ = false;
 
   auto frame_idx = device_->CurrentFrame();
+  command_pool_.Reset(frame_idx);
 
   auto submit = [&](uint32_t queue_idx, auto& submit_it, auto& cmds) {
     cmds->End();
@@ -207,7 +208,7 @@ void VulkanRenderGraph::Execute(VkSemaphore wait, uint64_t wait_value, VkSemapho
       auto& job = dag_.GetNode(GetNodeHandle(*node)).job;
 
       if (job) {
-        job(*cmds);
+        job(*this, context, *cmds);
       }
 
       if (node->rendering_info) {

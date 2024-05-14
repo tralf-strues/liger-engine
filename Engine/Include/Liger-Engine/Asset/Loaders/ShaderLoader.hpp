@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file Layer.cpp
- * @date 2024-05-06
+ * @file ShaderLoader.hpp
+ * @date 2024-05-07
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -25,22 +25,24 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <Liger-Engine/Render/Layer.hpp>
+#pragma once
 
-namespace liger::render {
+#include <Liger-Engine/Asset/Loader.hpp>
+#include <Liger-Engine/ShaderSystem/Compiler.hpp>
 
-Layer::Layer(std::string_view name) : name_(name) {}
+namespace liger::asset::loaders {
 
-std::string_view Layer::Name() const { return name_; }
+class ShaderLoader : public asset::ILoader {
+ public:
+  explicit ShaderLoader(rhi::IDevice& device);
+  ~ShaderLoader() override = default;
 
-void Layer::Emplace(Job job) {
-  jobs_.emplace_back(std::move(job));
-}
+  const std::filesystem::path& FileExtension() const override;
 
-void Layer::Execute(rhi::RenderGraph& graph, rhi::Context& context, rhi::ICommandBuffer& cmds) {
-  for (auto& job : jobs_) {
-    job(graph, context, cmds);
-  }
-}
+  void Load(asset::Manager& manager, asset::Id asset_id, const std::filesystem::path& filepath) override;
 
-}  // namespace liger::render
+ private:
+  shader::Compiler compiler_;
+};
+
+}  // namespace liger::asset::loaders

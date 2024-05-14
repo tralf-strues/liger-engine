@@ -30,6 +30,7 @@
 #include <Liger-Engine/Core/Containers/DependencyGraph.hpp>
 #include <Liger-Engine/RHI/Buffer.hpp>
 #include <Liger-Engine/RHI/CommandBuffer.hpp>
+#include <Liger-Engine/RHI/Context.hpp>
 #include <Liger-Engine/RHI/DependentTextureInfo.hpp>
 #include <Liger-Engine/RHI/ResourceVersionRegistry.hpp>
 
@@ -65,7 +66,7 @@ class RenderGraph {
   using ResourceVersion         = ResourceVersionRegistry::ResourceVersion;
   using ResourceId              = ResourceVersionRegistry::ResourceId;
   using DependentTextureInfo    = DependentTextureInfo<ResourceVersion>;
-  using Job = std::function<void(ICommandBuffer& cmds)>;
+  using Job                     = std::function<void(RenderGraph&, Context&, ICommandBuffer&)>;
 
   virtual ~RenderGraph() = default;
 
@@ -163,6 +164,11 @@ class RenderGraphBuilder {
   [[nodiscard]] ResourceVersion DeclareImportBuffer(DeviceResourceState initial_state,
                                                      DeviceResourceState final_state);
 
+  [[nodiscard]] ResourceVersion ImportTexture(RenderGraph::TextureResource texture, DeviceResourceState initial_state,
+                                              DeviceResourceState final_state);
+  [[nodiscard]] ResourceVersion ImportBuffer(RenderGraph::BufferResource buffer, DeviceResourceState initial_state,
+                                             DeviceResourceState final_state);
+
   void BeginRenderPass(std::string_view           name,
                        ICommandBuffer::Capability capabilities = ICommandBuffer::Capability::Graphics);
   void EndRenderPass();
@@ -174,6 +180,8 @@ class RenderGraphBuilder {
   void BeginTransfer(std::string_view name, bool async = false,
                      ICommandBuffer::Capability capabilities = ICommandBuffer::Capability::Transfer);
   void EndTransfer();
+
+  void SetJob(RenderGraph::Job job);
 
   ResourceVersion AddColorTarget(ResourceVersion texture, AttachmentLoad load, AttachmentStore store);
   ResourceVersion SetDepthStencil(ResourceVersion texture, AttachmentLoad load, AttachmentStore store);

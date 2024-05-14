@@ -31,8 +31,7 @@
 #include <Liger-Engine/Core/Time.hpp>
 #include <Liger-Engine/ECS/DefaultComponents.hpp>
 #include <Liger-Engine/RHI/MappedBuffer.hpp>
-#include <Liger-Engine/RHI/ShaderAlignment.hpp>
-#include <Liger-Engine/Render/BuiltIn/CameraDataCollector.hpp>
+#include <Liger-Engine/Render/BuiltIn/CameraData.hpp>
 #include <Liger-Engine/Render/Feature.hpp>
 #include <Liger-Engine/ShaderSystem/Shader.hpp>
 
@@ -62,6 +61,8 @@ struct Particle {
 };
 
 struct RuntimeParticleSystemData {
+  static constexpr uint32_t kInvalidRuntimeHandle = std::numeric_limits<uint32_t>::max();
+
   bool                                             initialized{false};
   uint32_t                                         particles{0};
   float                                            spawn_rate{0.0f};
@@ -70,6 +71,7 @@ struct RuntimeParticleSystemData {
   rhi::SharedMappedBuffer<ParticleSystemComponent> ubo_particle_system;
   std::shared_ptr<rhi::IBuffer>                    sbo_particles;
   std::shared_ptr<rhi::IBuffer>                    sbo_free_list;
+  uint32_t                                         runtime_handle{kInvalidRuntimeHandle};
 };
 
 class ParticleSystemFeature
@@ -78,33 +80,26 @@ class ParticleSystemFeature
  public:
   static constexpr uint32_t kMaxParticleSystems = 1024U;
 
-  explicit ParticleSystemFeature(rhi::IDevice& device, asset::Manager& asset_manager, CameraDataCollector& camera_collector);
+  explicit ParticleSystemFeature(rhi::IDevice& device, asset::Manager& asset_manager, const FrameTimer& frame_timer);
   ~ParticleSystemFeature() override = default;
 
   std::string_view Name() const override { return "ParticleSystemFeature"; }
 
   void SetupRenderGraph(rhi::RenderGraphBuilder& builder) override;
-  void LinkRenderJobs(rhi::RenderGraph& graph) override;
-  void SetupLayerJobs(LayerMap& layer_map) override;
+  void SetupLayers(LayerMap& layer_map) override;
 
   void SetupEntitySystems(ecs::SystemGraph& systems) override;
 
   void Run(const ecs::WorldTransform& transform, const ParticleSystemComponent& emitter,
            RuntimeParticleSystemData& runtime_data) override;
 
-  void PreRender(rhi::IDevice&) override;
-
  private:
-  Timer                                  timer_;
-  float                                  time_{0.0f};
-  float                                  dt_{0.0f};
-
   rhi::IDevice&                          device_;
   asset::Handle<shader::Shader>          emit_shader_;
   asset::Handle<shader::Shader>          update_shader_;
   asset::Handle<shader::Shader>          render_shader_;
 
-  CameraDataCollector&                   camera_collector_;
+  const FrameTimer&                      frame_timer_;
 
   rhi::UniqueMappedBuffer<int32_t>       sbo_init_free_list_;
   rhi::UniqueMappedBuffer<glm::mat4>     ubo_transform_;

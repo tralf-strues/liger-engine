@@ -27,13 +27,38 @@
 
 #pragma once
 
+#include <Liger-Engine/RHI/Device.hpp>
+#include <Liger-Engine/RHI/ShaderAlignment.hpp>
+
 namespace liger::render {
 
 class View {
  public:
+  enum class Type : uint32_t {
+    Invalid,
+    World,
+    Shadow,
+    Custom
+  };
+
+  struct Info {
+    Type                        type;
+    uint32_t                    custom_type_id{0};
+    std::string                 name;
+    
+    std::vector<rhi::ITexture*> color_targets;
+    rhi::ITexture*              depth_target;
+  };
+
+  struct Data {
+    SHADER_STRUCT_MEMBER(glm::mat4) view;
+    SHADER_STRUCT_MEMBER(glm::mat4) proj;
+    SHADER_STRUCT_MEMBER(glm::vec3) ws_position;
+    SHADER_STRUCT_MEMBER(float)     near;
+    SHADER_STRUCT_MEMBER(float)     far;
+  };
 
  private:
-  
 };
 
-}
+}  // namespace liger::render

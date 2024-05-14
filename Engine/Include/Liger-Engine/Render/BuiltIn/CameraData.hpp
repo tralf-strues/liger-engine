@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file ShaderLoader.cpp
- * @date 2024-05-07
+ * @file CameraData.hpp
+ * @date 2024-05-14
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -25,35 +25,24 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include <Liger-Engine/ShaderSystem/ShaderLoader.hpp>
+#pragma once
 
-#include <Liger-Engine/Asset/Manager.hpp>
-#include <Liger-Engine/ShaderSystem/DeclarationParser.hpp>
-#include <Liger-Engine/ShaderSystem/Shader.hpp>
+#include <Liger-Engine/RHI/DescriptorBinding.hpp>
+#include <Liger-Engine/RHI/ShaderAlignment.hpp>
 
-namespace liger::shader {
+namespace liger::render {
 
-ShaderLoader::ShaderLoader(rhi::IDevice& device) : compiler_(device) {}
+struct CameraData {
+  SHADER_STRUCT_MEMBER(glm::mat4) view;
+  SHADER_STRUCT_MEMBER(glm::mat4) proj;
+  SHADER_STRUCT_MEMBER(glm::mat4) proj_view;
+  SHADER_STRUCT_MEMBER(glm::vec3) ws_position;
+  SHADER_STRUCT_MEMBER(float)     near;
+  SHADER_STRUCT_MEMBER(float)     far;
+};
 
-const std::filesystem::path& ShaderLoader::FileExtension() const {
-  static std::filesystem::path extension{".lshader"};
-  return extension;
-}
+struct CameraDataBinding {
+  rhi::BufferDescriptorBinding binding_ubo;
+};
 
-bool ShaderLoader::Load(asset::Manager& manager, asset::Id asset_id, const std::filesystem::path& filepath) {
-  auto shader = manager.GetAsset<Shader>(asset_id);
-
-  shader::DeclarationParser parser(filepath);
-  if (!parser.Valid()) {
-    return false;
-  }
-
-  auto declaration = parser.Parse();
-  if (!declaration) {
-    return false;
-  }
-
-  return compiler_.Compile(*shader, declaration.value());
-}
-
-}  // namespace liger::shader
+}  // namespace liger::render
