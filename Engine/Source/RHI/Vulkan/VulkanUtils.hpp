@@ -47,10 +47,11 @@
 #undef Status
 #undef None
 
-#define VULKAN_CALL(Call)                                                              \
-  {                                                                                    \
-    VkResult result = Call;                                                            \
-    LIGER_ASSERT(result == VK_SUCCESS, kLogChannelRHI, "Vulkan call error occurred!"); \
+#define VULKAN_CALL(Call)                                                                           \
+  {                                                                                                 \
+    VkResult result = Call;                                                                         \
+    LIGER_ASSERT(result == VK_SUCCESS, kLogChannelRHI, "Vulkan call error occurred, result = {0}!", \
+                 string_VkResult(result));                                                          \
   }
 
 template <>
@@ -183,31 +184,31 @@ inline constexpr VkExtent3D GetVulkanExtent3D(Extent3D extent) {
 inline constexpr VkBufferUsageFlags GetVulkanBufferUsage(DeviceResourceState states) {
   VkBufferUsageFlags vk_usage = 0;
 
-  if ((states & DeviceResourceState::TransferSrc) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(states, DeviceResourceState::TransferSrc)) {
     vk_usage |= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
   }
 
-  if ((states & DeviceResourceState::TransferDst) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(states, DeviceResourceState::TransferDst)) {
     vk_usage |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
   }
 
-  if ((states & DeviceResourceState::VertexBuffer) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(states, DeviceResourceState::VertexBuffer)) {
     vk_usage |= VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
   }
 
-  if ((states & DeviceResourceState::IndexBuffer) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(states, DeviceResourceState::IndexBuffer)) {
     vk_usage |= VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
   }
 
-  if ((states & DeviceResourceState::IndirectArgument) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(states, DeviceResourceState::IndirectArgument)) {
     vk_usage |= VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT;
   }
 
-  if ((states & DeviceResourceState::UniformBuffer) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(states, DeviceResourceState::UniformBuffer)) {
     vk_usage |= VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
   }
 
-  if ((states & DeviceResourceState::StorageBuffer) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContainsAny(states, DeviceResourceState::StorageBufferReadWrite)) {
     vk_usage |= VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
   }
 
@@ -217,31 +218,31 @@ inline constexpr VkBufferUsageFlags GetVulkanBufferUsage(DeviceResourceState sta
 inline constexpr VkImageUsageFlags GetVulkanImageUsage(DeviceResourceState states) {
   VkImageUsageFlags vk_usage = 0;
 
-  if ((states & DeviceResourceState::TransferSrc) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(states, DeviceResourceState::TransferSrc)) {
     vk_usage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
   }
 
-  if ((states & DeviceResourceState::TransferDst) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(states, DeviceResourceState::TransferDst)) {
     vk_usage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
   }
 
-  if ((states & DeviceResourceState::ShaderSampled) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(states, DeviceResourceState::ShaderSampled)) {
     vk_usage |= VK_IMAGE_USAGE_SAMPLED_BIT;
   }
 
-  if ((states & DeviceResourceState::ColorTarget) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(states, DeviceResourceState::ColorTarget)) {
     vk_usage |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
   }
 
-  if ((states & DeviceResourceState::DepthStencilTarget) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(states, DeviceResourceState::DepthStencilTarget)) {
     vk_usage |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
   }
 
-  if ((states & DeviceResourceState::DepthStencilRead) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(states, DeviceResourceState::DepthStencilRead)) {
     vk_usage |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
   }
 
-  if ((states & DeviceResourceState::StorageTexture) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContainsAny(states, DeviceResourceState::StorageTextureReadWrite)) {
     vk_usage |= VK_IMAGE_USAGE_STORAGE_BIT;
   }
 
@@ -307,58 +308,66 @@ inline constexpr VkBlendOp GetVulkanBlendOp(ColorBlendInfo::Operation operation)
 }
 
 inline constexpr VkAccessFlags2 GetVulkanAccessFlags(DeviceResourceState state) {
-  VkAccessFlags2 vk_access = 0;
+  VkAccessFlags2 vk_access = VK_ACCESS_2_NONE;
 
-  if ((state & DeviceResourceState::TransferSrc) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(state, DeviceResourceState::TransferSrc)) {
     vk_access |= VK_ACCESS_2_TRANSFER_READ_BIT;
   }
 
-  if ((state & DeviceResourceState::TransferDst) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(state, DeviceResourceState::TransferDst)) {
     vk_access |= VK_ACCESS_2_TRANSFER_WRITE_BIT;
   }
 
-  if ((state & DeviceResourceState::ShaderSampled) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(state, DeviceResourceState::ShaderSampled)) {
     vk_access |= VK_ACCESS_2_SHADER_SAMPLED_READ_BIT;
   }
 
-  if ((state & DeviceResourceState::ColorTarget) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(state, DeviceResourceState::ColorTarget)) {
     vk_access |= VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT;
   }
 
-  if ((state & DeviceResourceState::DepthStencilTarget) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(state, DeviceResourceState::DepthStencilTarget)) {
     vk_access |= VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
   }
 
-  if ((state & DeviceResourceState::DepthStencilRead) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(state, DeviceResourceState::DepthStencilRead)) {
     vk_access |= VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
   }
 
-  if ((state & DeviceResourceState::StorageTexture) != DeviceResourceState::Undefined) {
-    vk_access |= VK_ACCESS_2_SHADER_READ_BIT | VK_ACCESS_2_SHADER_WRITE_BIT;
+  if (EnumBitmaskContains(state, DeviceResourceState::StorageTextureRead)) {
+    vk_access |= VK_ACCESS_2_SHADER_READ_BIT;
   }
 
-  if ((state & DeviceResourceState::PresentTexture) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(state, DeviceResourceState::StorageTextureWrite)) {
+    vk_access |= VK_ACCESS_2_SHADER_WRITE_BIT;
+  }
+
+  if (EnumBitmaskContains(state, DeviceResourceState::PresentTexture)) {
     vk_access |= VK_ACCESS_2_NONE;
   }
 
-  if ((state & DeviceResourceState::VertexBuffer) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(state, DeviceResourceState::VertexBuffer)) {
     vk_access |= VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT;
   }
 
-  if ((state & DeviceResourceState::IndexBuffer) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(state, DeviceResourceState::IndexBuffer)) {
     vk_access |= VK_ACCESS_2_INDEX_READ_BIT;
   }
 
-  if ((state & DeviceResourceState::IndirectArgument) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(state, DeviceResourceState::IndirectArgument)) {
     vk_access |= VK_ACCESS_2_INDIRECT_COMMAND_READ_BIT;
   }
 
-  if ((state & DeviceResourceState::UniformBuffer) != DeviceResourceState::Undefined) {
+  if (EnumBitmaskContains(state, DeviceResourceState::UniformBuffer)) {
     vk_access |= VK_ACCESS_2_UNIFORM_READ_BIT;
   }
 
-  if ((state & DeviceResourceState::StorageBuffer) != DeviceResourceState::Undefined) {
-    vk_access |= VK_ACCESS_2_SHADER_STORAGE_READ_BIT | VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT;
+  if (EnumBitmaskContains(state, DeviceResourceState::StorageBufferRead)) {
+    vk_access |= VK_ACCESS_2_SHADER_STORAGE_READ_BIT;
+  }
+
+  if (EnumBitmaskContains(state, DeviceResourceState::StorageBufferWrite)) {
+    vk_access |= VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT;
   }
 
   return vk_access;
@@ -366,17 +375,18 @@ inline constexpr VkAccessFlags2 GetVulkanAccessFlags(DeviceResourceState state) 
 
 inline constexpr VkImageLayout GetVulkanImageLayout(DeviceResourceState state) {
   switch (state) {
-    case (DeviceResourceState::Undefined):          { return VK_IMAGE_LAYOUT_UNDEFINED; }
-    case (DeviceResourceState::TransferSrc):        { return VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL; }
-    case (DeviceResourceState::TransferDst):        { return VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL; }
-    case (DeviceResourceState::ShaderSampled):      { return VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL; }
-    case (DeviceResourceState::ColorTarget):        { return VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL; }
-    case (DeviceResourceState::DepthStencilTarget): { return VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL; }
-    case (DeviceResourceState::DepthStencilRead):   { return VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL; }
-    case (DeviceResourceState::StorageTexture):     { return VK_IMAGE_LAYOUT_GENERAL; }
-    case (DeviceResourceState::PresentTexture):     { return VK_IMAGE_LAYOUT_PRESENT_SRC_KHR; }
+    case (DeviceResourceState::Undefined):           { return VK_IMAGE_LAYOUT_UNDEFINED; }
+    case (DeviceResourceState::TransferSrc):         { return VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL; }
+    case (DeviceResourceState::TransferDst):         { return VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL; }
+    case (DeviceResourceState::ShaderSampled):       { return VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL; }
+    case (DeviceResourceState::ColorTarget):         { return VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL; }
+    case (DeviceResourceState::DepthStencilTarget):  { return VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL; }
+    case (DeviceResourceState::DepthStencilRead):    { return VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL; }
+    case (DeviceResourceState::StorageTextureRead):  { return VK_IMAGE_LAYOUT_GENERAL; }
+    case (DeviceResourceState::StorageTextureWrite): { return VK_IMAGE_LAYOUT_GENERAL; }
+    case (DeviceResourceState::PresentTexture):      { return VK_IMAGE_LAYOUT_PRESENT_SRC_KHR; }
 
-    default:                                        { return VK_IMAGE_LAYOUT_UNDEFINED; }
+    default:                                         { return VK_IMAGE_LAYOUT_UNDEFINED; }
   }
 }
 

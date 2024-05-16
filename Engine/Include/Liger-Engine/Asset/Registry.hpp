@@ -109,6 +109,11 @@ class Registry {
   bool Save() const;
 
   /**
+   * @brief Get the path of the asset folder, which is the parent directory of the registry file..
+   */
+  const std::filesystem::path& GetAssetFolder() const;
+
+  /**
    * @brief Whether the registry contains an asset with this id.
    */
   bool Contains(Id id) const;
@@ -136,7 +141,7 @@ class Registry {
   /**
    * @brief Register a new asset with the specified file.
    */
-  Id Register(std::filesystem::path file);
+  Id Register(const std::filesystem::path& file);
 
   /**
    * @brief Update the filepath corresponding to the registered asset.

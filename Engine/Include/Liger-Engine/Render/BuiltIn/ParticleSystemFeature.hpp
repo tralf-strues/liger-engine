@@ -86,7 +86,7 @@ class ParticleSystemFeature
   std::string_view Name() const override { return "ParticleSystemFeature"; }
 
   void SetupRenderGraph(rhi::RenderGraphBuilder& builder) override;
-  void SetupLayers(LayerMap& layer_map) override;
+  void AddLayerJobs(LayerMap& layer_map) override;
 
   void SetupEntitySystems(ecs::SystemGraph& systems) override;
 

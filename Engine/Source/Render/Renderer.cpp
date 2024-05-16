@@ -44,14 +44,14 @@ void Renderer::Setup() {
   }
 
   for (auto& feature : features_) {
+    feature->AddLayerJobs(layers);
+  }
+
+  for (auto& feature : features_) {
     feature->SetupRenderGraph(rg_builder_);
   }
 
   render_graph_ = rg_builder_.Build(device_, "Renderer - Render Graph");
-
-  for (auto& feature : features_) {
-    feature->SetupLayers(layers);
-  }
 
   for (auto& feature : features_) {
     feature->SetupEntitySystems(system_graph_);

@@ -59,20 +59,20 @@ DAG<RenderGraph::Node>::Depth RenderGraph::GetDependencyLevel(NodeHandle node_ha
 RenderGraphBuilder::RenderGraphBuilder(std::unique_ptr<RenderGraph> graph) : graph_(std::move(graph)) {}
 
 RenderGraphBuilder::ResourceVersion RenderGraphBuilder::DeclareTransientTexture(const DependentTextureInfo& info) {
-  auto version = graph_->resource_version_registry_.DeclareResource();
+  auto version = graph_->resource_version_registry_.DeclareResource<RenderGraph::TextureResource>();
   graph_->transient_texture_infos_[graph_->resource_version_registry_.GetResourceId(version)] = info;
   return version;
 }
 
 RenderGraphBuilder::ResourceVersion RenderGraphBuilder::DeclareTransientBuffer(const IBuffer::Info& info) {
-  auto version = graph_->resource_version_registry_.DeclareResource();
+  auto version = graph_->resource_version_registry_.DeclareResource<RenderGraph::BufferResource>();
   graph_->transient_buffer_infos_[graph_->resource_version_registry_.GetResourceId(version)] = info;
   return version;
 }
 
 RenderGraphBuilder::ResourceVersion RenderGraphBuilder::DeclareImportTexture(DeviceResourceState initial_state,
                                                                              DeviceResourceState final_state) {
-  auto version = graph_->resource_version_registry_.DeclareResource();
+  auto version = graph_->resource_version_registry_.DeclareResource<RenderGraph::TextureResource>();
   graph_->imported_resource_usages_[graph_->resource_version_registry_.GetResourceId(version)] = {
     .initial = initial_state,
     .final   = final_state
@@ -83,7 +83,7 @@ RenderGraphBuilder::ResourceVersion RenderGraphBuilder::DeclareImportTexture(Dev
 
 RenderGraphBuilder::ResourceVersion RenderGraphBuilder::DeclareImportBuffer(DeviceResourceState initial_state,
                                                                             DeviceResourceState final_state) {
-  auto version = graph_->resource_version_registry_.DeclareResource();
+  auto version = graph_->resource_version_registry_.DeclareResource<RenderGraph::BufferResource>();
   graph_->imported_resource_usages_[graph_->resource_version_registry_.GetResourceId(version)] = {
     .initial = initial_state,
     .final   = final_state
@@ -215,6 +215,17 @@ void RenderGraphBuilder::WriteBuffer(ResourceVersion buffer, DeviceResourceState
 
   auto& node = graph_->dag_.GetNode(*current_node_);
   node.write.push_back(RenderGraph::ResourceWrite{.version = buffer, .state = usage});
+}
+
+RenderGraphBuilder::ResourceVersion RenderGraphBuilder::ReadWriteBuffer(ResourceVersion buffer, DeviceResourceState usage) {
+  LIGER_ASSERT(current_node_.has_value(), kLogChannelRHI, "Adding resource access outside of begin/end scope!");
+
+  auto new_version = graph_->resource_version_registry_.NextVersion(buffer);
+  auto& node = graph_->dag_.GetNode(*current_node_);
+  node.read.push_back(RenderGraph::ResourceRead{.version = buffer, .state = usage});
+  node.write.push_back(RenderGraph::ResourceWrite{.version = new_version, .state = usage});
+
+  return new_version;
 }
 
 std::unique_ptr<RenderGraph> RenderGraphBuilder::Build(IDevice& device, std::string_view name) {

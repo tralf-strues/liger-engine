@@ -38,6 +38,11 @@ VulkanTransferEngine::VulkanTransferEngine(VulkanDevice& device) : device_(devic
 VulkanTransferEngine::~VulkanTransferEngine() {
   staging_capacity_ = 0U;
 
+  if (command_pool_ != VK_NULL_HANDLE) {
+    vkDestroyCommandPool(device_.GetVulkanDevice(), command_pool_, nullptr);
+    command_pool_ = VK_NULL_HANDLE;
+  }
+
   if (staging_buffers_[cur_idx_] != VK_NULL_HANDLE) {
     vmaUnmapMemory(device_.GetAllocator(), allocations_[cur_idx_]);
     cur_data_size_   = 0U;
@@ -45,10 +50,6 @@ VulkanTransferEngine::~VulkanTransferEngine() {
   }
 
   for (uint32_t i = 0U; i < 2U; ++i) {
-    if (command_pools_[i] != VK_NULL_HANDLE) {
-      vkDestroyCommandPool(device_.GetVulkanDevice(), command_pools_[i], nullptr);
-      command_pools_[i] = VK_NULL_HANDLE;
-    }
 
     if (staging_buffers_[i] != VK_NULL_HANDLE) {
       vmaDestroyBuffer(device_.GetAllocator(), staging_buffers_[i], allocations_[i]);
@@ -59,19 +60,29 @@ VulkanTransferEngine::~VulkanTransferEngine() {
 }
 
 void VulkanTransferEngine::Init(VkQueue queue, uint32_t queue_family, uint64_t staging_capacity) {
+  queue_ = queue;
   staging_capacity_ = staging_capacity;
 
+  const VkCommandPoolCreateInfo pool_info {
+    .sType            = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+    .pNext            = nullptr,
+    .flags            = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
+    .queueFamilyIndex = queue_family
+  };
+
+  VULKAN_CALL(vkCreateCommandPool(device_.GetVulkanDevice(), &pool_info, nullptr, &command_pool_));
+  device_.SetDebugName(command_pool_, "VulkanTransferEngine::command_pool_");
+
+  const VkCommandBufferAllocateInfo cmds_allocate_info {
+    .sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+    .pNext              = nullptr,
+    .commandPool        = command_pool_,
+    .level              = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+    .commandBufferCount = 2U
+  };
+  VULKAN_CALL(vkAllocateCommandBuffers(device_.GetVulkanDevice(), &cmds_allocate_info, cmds_));
+
   for (uint32_t i = 0U; i < 2U; ++i) {
-    const VkCommandPoolCreateInfo pool_info {
-      .sType            = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
-      .pNext            = nullptr,
-      .flags            = 0,
-      .queueFamilyIndex = queue_family
-    };
-
-    VULKAN_CALL(vkCreateCommandPool(device_.GetVulkanDevice(), &pool_info, nullptr, &command_pools_[i]));
-    device_.SetDebugName(command_pools_[i], "VulkanTransferEngine::command_pools_[{0}]", i);
-
     const VkBufferCreateInfo buffer_info{
       .sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
       .pNext                 = nullptr,
@@ -95,7 +106,7 @@ void VulkanTransferEngine::Init(VkQueue queue, uint32_t queue_family, uint64_t s
 }
 
 void VulkanTransferEngine::Request(IDevice::DedicatedTransferRequest&& transfer) {
-  for (auto it = transfer.buffer_transfers.begin(); it != transfer.buffer_transfers.end(); ++it) {
+  for (auto it = transfer.buffer_transfers.begin(); it != transfer.buffer_transfers.end();) {
     const auto& buffer_transfer = *it;
 
     if (buffer_transfer.size > staging_capacity_) {
@@ -107,6 +118,7 @@ void VulkanTransferEngine::Request(IDevice::DedicatedTransferRequest&& transfer)
 
     auto new_data_size_ = cur_data_size_ + buffer_transfer.size;
     if (new_data_size_ > staging_capacity_) {
+      ++it;
       continue;
     }
 
@@ -132,9 +144,9 @@ void VulkanTransferEngine::Request(IDevice::DedicatedTransferRequest&& transfer)
     std::memcpy(reinterpret_cast<uint8_t*>(cur_mapped_data_) + cur_data_size_, buffer_transfer.data.get(), buffer_transfer.size);
     cur_data_size_ = new_data_size_;
 
-    vkCmdCopyBuffer2(cur_cmds_, &copy_info);
+    vkCmdCopyBuffer2(cmds_[cur_idx_], &copy_info);
 
-    transfer.buffer_transfers.erase(it);
+    it = transfer.buffer_transfers.erase(it);
   }
 
   if (transfer.buffer_transfers.empty()) {
@@ -152,10 +164,12 @@ void VulkanTransferEngine::SubmitAndWait() {
 
   vmaUnmapMemory(device_.GetAllocator(), allocations_[cur_idx_]);
 
+  VULKAN_CALL(vkEndCommandBuffer(cmds_[cur_idx_]));
+
   const VkCommandBufferSubmitInfo cmds_submit_info {
     .sType         = VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO,
     .pNext         = nullptr,
-    .commandBuffer = cur_cmds_,
+    .commandBuffer = cmds_[cur_idx_],
     .deviceMask    = 0
   };
 
@@ -188,26 +202,29 @@ void VulkanTransferEngine::SubmitAndWait() {
 
 void VulkanTransferEngine::Flip() {
   cur_idx_ = (cur_idx_ + 1U) % 2U;
-  VULKAN_CALL(vkResetCommandPool(device_.GetVulkanDevice(), command_pools_[cur_idx_], 0));
 
-  const VkCommandBufferAllocateInfo cmds_allocate_info {
-    .sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
-    .pNext              = nullptr,
-    .commandPool        = command_pools_[cur_idx_],
-    .level              = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
-    .commandBufferCount = 1
+  VULKAN_CALL(vkResetCommandBuffer(cmds_[cur_idx_], 0));
+
+  const VkCommandBufferBeginInfo begin_info {
+    .sType            = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+    .pNext            = nullptr,
+    .flags            = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
+    .pInheritanceInfo = nullptr
   };
-
-  VULKAN_CALL(vkAllocateCommandBuffers(device_.GetVulkanDevice(), &cmds_allocate_info, &cur_cmds_));
+  VULKAN_CALL(vkBeginCommandBuffer(cmds_[cur_idx_], &begin_info));
 
   VULKAN_CALL(vmaMapMemory(device_.GetAllocator(), allocations_[cur_idx_], &cur_mapped_data_));
   cur_data_size_ = 0U;
 }
 
 void VulkanTransferEngine::ReschedulePending() {
-  for (auto it = pending_.begin(); it != pending_.end(); ++it) {
+  for (auto it = pending_.begin(); it != pending_.end();) {
     Request(std::move(*it));
-    pending_.erase(it);
+    it = pending_.erase(it);
+
+    if (pending_.size() <= 1U) {
+      break;
+    }
   }
 }
 

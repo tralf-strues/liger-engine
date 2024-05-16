@@ -27,6 +27,8 @@
 
 #include "VulkanQueueSet.hpp"
 
+#include "VulkanDevice.hpp"
+
 #include <Liger-Engine/RHI/LogChannel.hpp>
 
 namespace liger::rhi {
@@ -124,17 +126,22 @@ std::vector<VkDeviceQueueCreateInfo> VulkanQueueSet::FillQueueCreateInfos(VkPhys
   return create_infos;
 }
 
-void VulkanQueueSet::InitQueues(VkDevice device) {
+void VulkanQueueSet::InitQueues(VulkanDevice& device) {
+  auto vk_device = device.GetVulkanDevice();
+
   queue_count_ = 0;
 
-  vkGetDeviceQueue(device, queue_family_indices_.main, /*queueIndex=*/0, &queues_[queue_count_++]);
+  vkGetDeviceQueue(vk_device, queue_family_indices_.main, /*queueIndex=*/0, &queues_[queue_count_++]);
+  device.SetDebugName(queues_[queue_count_ - 1], "MainQueue");
 
   if (queue_family_indices_.compute.has_value()) {
-    vkGetDeviceQueue(device, *queue_family_indices_.compute, /*queueIndex=*/0, &queues_[queue_count_++]);
+    vkGetDeviceQueue(vk_device, *queue_family_indices_.compute, /*queueIndex=*/0, &queues_[queue_count_++]);
+    device.SetDebugName(queues_[queue_count_ - 1], "ComputeQueue");
   }
 
   if (queue_family_indices_.transfer.has_value()) {
-    vkGetDeviceQueue(device, *queue_family_indices_.transfer, /*queueIndex=*/0, &queues_[queue_count_++]);
+    vkGetDeviceQueue(vk_device, *queue_family_indices_.transfer, /*queueIndex=*/0, &queues_[queue_count_++]);
+    device.SetDebugName(queues_[queue_count_ - 1], "TransferQueue");
   }
 }
 

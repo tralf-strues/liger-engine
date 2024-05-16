@@ -37,7 +37,7 @@ class VulkanCommandBuffer : public ICommandBuffer {
  public:
   static constexpr uint32_t kMaxBindVertexBuffers = 8;
 
-  explicit VulkanCommandBuffer(VkCommandBuffer vk_cmds, VkDescriptorSet ds);
+  explicit VulkanCommandBuffer(VkCommandBuffer vk_cmds, VkDescriptorSet ds, bool use_debug_labels);
   ~VulkanCommandBuffer() override = default;
 
   VkCommandBuffer Get();
@@ -73,10 +73,14 @@ class VulkanCommandBuffer : public ICommandBuffer {
   void CopyTexture(const ITexture* src_texture, ITexture* dst_texture, Extent3D extent, uint32_t src_mip_level,
                    uint32_t dst_mip_level) override;
 
+  void BeginDebugLabelRegion(std::string_view name, const glm::vec4& color) override;
+  void EndDebugLabelRegion() override;
+
  private:
   VkCommandBuffer vk_cmds_{VK_NULL_HANDLE};
   VkDescriptorSet ds_{VK_NULL_HANDLE};
   bool            ds_bound_{false};
+  bool            use_debug_labels_{false};
 };
 
 }  // namespace liger::rhi

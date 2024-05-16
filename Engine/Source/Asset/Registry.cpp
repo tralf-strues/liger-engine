@@ -83,6 +83,10 @@ bool Registry::Save() const {
   return true;
 }
 
+const std::filesystem::path& Registry::GetAssetFolder() const {
+  return asset_folder_;
+}
+
 bool Registry::Contains(Id id) const {
   return files_.contains(id);
 }
@@ -112,10 +116,25 @@ Id Registry::GetId(const std::filesystem::path& file) const {
   return it->second;
 }
 
-Id Registry::Register(fs::path file) {
+inline void ReplaceOcurrences(std::string& str, std::string_view find, std::string_view replace) {
+  size_t pos = str.find(find);
+  while (pos != std::string::npos) {
+    str.replace(pos, find.size(), replace);
+    pos = str.find(find, pos + replace.size());
+  }
+}
+
+Id Registry::Register(const fs::path& file) {
+  std::string str_file = file.string();
+
+  ReplaceOcurrences(str_file, "\\\\", "/");
+  ReplaceOcurrences(str_file, "\\", "/");
+
+  auto new_file = fs::path(str_file);
+
   auto new_id = Id::Generate();
-  ids_[file] = new_id;
-  files_[new_id] = std::move(file);
+  ids_[new_file] = new_id;
+  files_[new_id] = std::move(new_file);
 
   return new_id;
 }

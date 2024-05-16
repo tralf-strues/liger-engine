@@ -32,12 +32,15 @@
 
 namespace liger::rhi {
 
+class VulkanDevice;
+
 class VulkanCommandPool {
  public:
   VulkanCommandPool() = default;
   ~VulkanCommandPool();
 
-  void Init(VkDevice device, uint32_t frames_in_flight, VkDescriptorSet ds, const VulkanQueueSet& queue_set);
+  void Init(VulkanDevice& device, uint32_t frames_in_flight, VkDescriptorSet ds, const VulkanQueueSet& queue_set,
+            bool use_debug_labels);
   void Destroy();
 
   VulkanCommandBuffer AllocateCommandBuffer(uint32_t frame_idx, uint32_t queue_idx);
@@ -53,8 +56,8 @@ class VulkanCommandPool {
   VkCommandPool& GetCommandPool(uint32_t frame_idx, uint32_t queue_idx);
   CommandBufferList& GetCommandBufferList(uint32_t frame_idx, uint32_t queue_idx);
 
-  VkDevice                       device_{VK_NULL_HANDLE};
-  VkDescriptorSet                ds_{VK_NULL_HANDLE};
+  VulkanDevice*                  device_{nullptr};
+  bool                           use_debug_labels_{false};
   uint32_t                       frames_in_flight_{0};
   uint32_t                       queue_count_{0};
   std::vector<VkCommandPool>     pools_;

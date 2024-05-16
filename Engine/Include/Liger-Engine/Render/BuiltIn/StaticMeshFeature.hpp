@@ -95,7 +95,7 @@ class StaticMeshFeature
   }
 
   void SetupRenderGraph(rhi::RenderGraphBuilder& builder) override;
-  void SetupLayers(LayerMap& layer_map) override;
+  void AddLayerJobs(LayerMap& layer_map) override;
 
   void SetupEntitySystems(ecs::SystemGraph& systems) override;
 
@@ -118,18 +118,27 @@ class StaticMeshFeature
     uint32_t batch_idx;
   };
 
+  struct CopyCmd {
+    const rhi::IBuffer* src;
+    uint64_t            size;
+    uint64_t            dst_offset;
+  };
+
   struct RenderGraphVersions {
+    rhi::RenderGraph::ResourceVersion staging_buffer;
+
     rhi::RenderGraph::ResourceVersion objects;
     rhi::RenderGraph::ResourceVersion batched_objects;
     rhi::RenderGraph::ResourceVersion draw_commands;
-    rhi::RenderGraph::ResourceVersion visible_object_indices;
 
-    rhi::RenderGraph::ResourceVersion staging_buffer;
+    rhi::RenderGraph::ResourceVersion final_draw_commands;
+    rhi::RenderGraph::ResourceVersion visible_object_indices;
   };
 
   uint32_t AddObject(Object object);
-  void Rebuild();
+  void Rebuild(rhi::ICommandBuffer& cmds);
 
+  rhi::IDevice&                 device_;
   std::vector<Object>           objects_;
   bool                          objects_added_{false};
   std::vector<uint32_t>         pending_remove_;
@@ -143,6 +152,11 @@ class StaticMeshFeature
   std::unique_ptr<rhi::IBuffer> sbo_objects_;
   std::unique_ptr<rhi::IBuffer> sbo_batched_objects_;
   std::unique_ptr<rhi::IBuffer> sbo_draw_commands_;
+
+  std::vector<rhi::IBuffer*>    index_buffers_per_object_;
+  std::unique_ptr<rhi::IBuffer> merged_index_buffer_;
+  uint64_t                      merged_index_buffer_total_size_;
+  std::vector<CopyCmd>          index_buffer_copies_;
 
   RenderGraphVersions           rg_versions_;
 };

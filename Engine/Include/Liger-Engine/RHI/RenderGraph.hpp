@@ -189,6 +189,7 @@ class RenderGraphBuilder {
 
   void ReadBuffer(ResourceVersion buffer, DeviceResourceState usage);
   void WriteBuffer(ResourceVersion buffer, DeviceResourceState usage);
+  ResourceVersion ReadWriteBuffer(ResourceVersion buffer, DeviceResourceState usage);
 
   [[nodiscard]] std::unique_ptr<RenderGraph> Build(IDevice& device, std::string_view name);
 

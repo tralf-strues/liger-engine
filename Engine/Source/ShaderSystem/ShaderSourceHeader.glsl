@@ -2,6 +2,7 @@ R"=====(#version 450
 
 #extension GL_EXT_shader_explicit_arithmetic_types : require
 #extension GL_EXT_nonuniform_qualifier : enable
+#extension GL_EXT_scalar_block_layout : enable
 
 /************************************************************************************************
  * Bindless resources setup
@@ -17,7 +18,7 @@ R"=====(#version 450
   layout(set = LIGER_DS, binding = LIGER_BINDING_UNIFORM_BUFFER) uniform Name Struct global_uniform_buffers_##Name[]
 
 #define RegisterStorageBuffer(Layout, Access, Name, Struct) \
-  layout(Layout, set = LIGER_DS, binding = LIGER_BINDING_STORAGE_BUFFER) Access buffer Name Struct global_storage_buffers_##Name[]
+  layout(Layout, set = LIGER_DS, binding = LIGER_BINDING_STORAGE_BUFFER, scalar) Access buffer Name Struct global_storage_buffers_##Name[]
 
 #define GetUniformBuffer(Name, Index) global_uniform_buffers_##Name[nonuniformEXT(Index)]
 #define GetStorageBuffer(Name, Index) global_storage_buffers_##Name[nonuniformEXT(Index)]

@@ -33,7 +33,8 @@
 
 namespace liger::rhi {
 
-VulkanCommandBuffer::VulkanCommandBuffer(VkCommandBuffer vk_cmds, VkDescriptorSet ds) : vk_cmds_(vk_cmds), ds_(ds) {}
+VulkanCommandBuffer::VulkanCommandBuffer(VkCommandBuffer vk_cmds, VkDescriptorSet ds, bool use_debug_labels)
+    : vk_cmds_(vk_cmds), ds_(ds), use_debug_labels_(use_debug_labels) {}
 
 VkCommandBuffer VulkanCommandBuffer::Get() {
   return vk_cmds_;
@@ -68,9 +69,9 @@ void VulkanCommandBuffer::BufferBarrier(const IBuffer* buffer, DeviceResourceSta
   const VkBufferMemoryBarrier2 barrier {
     .sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2,
     .pNext = nullptr,
-    .srcStageMask = VK_PIPELINE_STAGE_TRANSFER_BIT,
+    .srcStageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR,
     .srcAccessMask = GetVulkanAccessFlags(src_state),
-    .dstStageMask = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+    .dstStageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR,
     .dstAccessMask = GetVulkanAccessFlags(dst_state),
     .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
     .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
@@ -273,6 +274,29 @@ void VulkanCommandBuffer::CopyTexture(const ITexture* src_texture, ITexture* dst
 
   vkCmdCopyImage(vk_cmds_, vk_src, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, vk_dst, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                  1, &copy_info);
+}
+
+void VulkanCommandBuffer::BeginDebugLabelRegion(std::string_view name, const glm::vec4& color) {
+  if (!use_debug_labels_) {
+    return;
+  }
+
+  const VkDebugUtilsLabelEXT label {
+    .sType      = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT,
+    .pNext      = nullptr,
+    .pLabelName = name.data(),
+    .color      = {color.r, color.g, color.b, color.a}
+  };
+
+  vkCmdBeginDebugUtilsLabelEXT(vk_cmds_, &label);
+}
+
+void VulkanCommandBuffer::EndDebugLabelRegion() {
+  if (!use_debug_labels_) {
+    return;
+  }
+
+  vkCmdEndDebugUtilsLabelEXT(vk_cmds_);
 }
 
 }  // namespace liger::rhi

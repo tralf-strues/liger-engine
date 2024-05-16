@@ -36,6 +36,8 @@
 
 namespace liger::rhi {
 
+class VulkanDevice;
+
 class VulkanDescriptorManager {
  public:
   static constexpr uint32_t kBindingUniformBuffer  = 0;
@@ -43,7 +45,7 @@ class VulkanDescriptorManager {
   static constexpr uint32_t kBindingSampledTexture = 2;
   static constexpr uint32_t kBindingStorageTexture = 3;
 
-  static constexpr uint32_t kMaxBindlessResourcesPerType = 1024;
+  static constexpr uint32_t kMaxBindlessResourcesPerType = 2048;
 
   static constexpr VkSampler kUseDefaultSampler = VK_NULL_HANDLE;
 
@@ -57,7 +59,7 @@ class VulkanDescriptorManager {
     TextureDescriptorBinding storage{TextureDescriptorBinding::Invalid};
   };
 
-  bool Init(VkDevice device);
+  bool Init(VulkanDevice& device);
   void Destroy();
 
   VkDescriptorSetLayout GetLayout() const;

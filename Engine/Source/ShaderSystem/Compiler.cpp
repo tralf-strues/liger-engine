@@ -39,6 +39,7 @@
 #include <glslang/Include/glslang_c_interface.h>
 #include <glslang/Public/resource_limits_c.h>
 
+#include <filesystem>
 #include <memory>
 #include <set>
 #include <sstream>
@@ -362,7 +363,7 @@ void RegisterBuffer(std::stringstream& source, const Declaration::Member& member
 }
 
 void DeclarePushConstant(std::stringstream& source, const PushConstantMembers& push_constants) {
-  fmt::print(source, "layout(push_constant) uniform PushConstant {{\n");
+  fmt::print(source, "layout(push_constant, scalar) uniform PushConstant {{\n");
 
   for (const auto& member : push_constants.members) {
     fmt::print(source, "  {0} {1};\n", ToString(member.type), member.name);
@@ -548,7 +549,13 @@ bool DeclareMainFunction(std::stringstream& source, const Declaration& common, c
   return source.str();
 }
 
-std::vector<uint32_t> CompileToBinary(Declaration::Scope scope, const char* source) {
+std::vector<uint32_t> CompileToBinary(Declaration::Scope scope, const char* source, std::string_view shader_name) {
+  std::filesystem::path dump_source_filepath(fmt::format(".liger_log/{0}_{1}.glsl", shader_name, EnumToString(scope)));
+  std::ofstream dump_source_file(dump_source_filepath, std::ios::out);
+  LIGER_ASSERT(dump_source_file.is_open(), kLogChannelShader, "Failed to dump shader source!");
+  dump_source_file << source;
+  dump_source_file.close();
+
   glslang_initialize_process();
 
   const glslang_input_t input = {
@@ -592,6 +599,9 @@ std::vector<uint32_t> CompileToBinary(Declaration::Scope scope, const char* sour
     return {};
   }
 
+  glslang_program_add_source_text(program, input.stage, source, std::strlen(source));
+  glslang_program_set_source_file(program, input.stage, std::filesystem::absolute(dump_source_filepath).string().c_str());
+
   glslang_spv_options_t options = {
     .generate_debug_info                  = true,
     .strip_debug_info                     = false,
@@ -599,8 +609,9 @@ std::vector<uint32_t> CompileToBinary(Declaration::Scope scope, const char* sour
     .optimize_size                        = false,
     .disassemble                          = false,
     .validate                             = true,
-    .emit_nonsemantic_shader_debug_info   = true,
-    .emit_nonsemantic_shader_debug_source = true
+    .emit_nonsemantic_shader_debug_info   = false,
+    .emit_nonsemantic_shader_debug_source = false,
+    .compile_only                         = false
   };
 
   glslang_program_SPIRV_generate_with_options(program, input.stage, &options);
@@ -623,7 +634,7 @@ std::vector<uint32_t> CompileToBinary(Declaration::Scope scope, const char* sour
 
 Compiler::Compiler(rhi::IDevice& device) : device_(device) {}
 
-bool Compiler::Compile(Shader& shader, const Declaration& declaration) {
+bool Compiler::Compile(Shader& shader, const Declaration& declaration, std::string_view name) {
   if (declaration.scope != Declaration::Scope::None) {
     LIGER_LOG_ERROR(kLogChannelShader, "Declaration's scope must be Common, instead it is {}",
                     EnumToString(declaration.scope));
@@ -652,7 +663,7 @@ bool Compiler::Compile(Shader& shader, const Declaration& declaration) {
   for (const auto& [scope, source] : sources) {
     // LIGER_LOG_INFO(kLogChannelShader, "Generated shader source (stage = {0}):\n{1}", EnumToString(scope), source);
 
-    auto binary = CompileToBinary(scope, source.c_str());
+    auto binary = CompileToBinary(scope, source.c_str(), name);
     if (binary.empty()) {
       return false;
     }
@@ -688,7 +699,8 @@ bool Compiler::Compile(Shader& shader, const Declaration& declaration) {
       .blend              = declaration.color_blend.value(),
       .push_constant      = {.size = shader.push_constant_size_, .shader_types = push_constants.scopes_mask},
       .attachments        = declaration.attachments.value(),
-      .shader_modules     = shader_module_refs
+      .shader_modules     = shader_module_refs,
+      .name               = std::string(name)
     };
 
     shader.pipeline_ = device_.CreatePipeline(pipeline_info);
@@ -698,7 +710,8 @@ bool Compiler::Compile(Shader& shader, const Declaration& declaration) {
   } else if (pipeline_type == PipelineType::Compute) {
     rhi::IPipeline::ComputeInfo pipeline_info {
       .push_constant = {.size = shader.push_constant_size_, .shader_types = push_constants.scopes_mask},
-      .shader_module = shader_modules[0].get()
+      .shader_module = shader_modules[0].get(),
+      .name          = std::string(name)
     };
 
     shader.pipeline_ = device_.CreatePipeline(pipeline_info);

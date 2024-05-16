@@ -3,6 +3,7 @@ ComputeShader:
 
   Use:
     - Include: BuiltIn.StaticMeshData.lsdecl
+    - Include: BuiltIn.Camera.lsdecl
 
   Data: | #glsl
     struct DrawCommand {
@@ -42,6 +43,10 @@ ComputeShader:
       Contents: | #glsl
         uint32_t object_indices[];
 
+    - Name: frustum
+      Type: f32vec4
+      Modifier: push-constant
+
     - Name: batched_object_count
       Type: uint32_t
       Modifier: push-constant
@@ -49,8 +54,21 @@ ComputeShader:
   CodeSnippets:
     - Insert: auto-global
       Code: | #glsl
-        bool IsVisible(uint32_t object_idx) {
-          return true;
+        bool IsVisible(const LigerInput liger_in, uint32_t object_idx) {
+          Camera    camera = GetCamera(liger_in);
+          Object    object = GetStorageBuffer(Objects, liger_in.binding_objects).objects[object_idx];
+          f32vec4   sphere = GetUniformBuffer(MeshUBO, object.binding_mesh).mesh.bounding_sphere;
+
+          f32vec3   center = (object.transform * f32vec4(sphere.xyz, 1.0f)).xyz;
+          float32_t radius = object.transform[0U][0U] * sphere.w;
+
+          // Based on the assumption of frustum symmetry
+          bool visible = true;
+          visible = visible && center.z * liger_in.frustum.y - abs(center.x) * liger_in.frustum.x > -radius;
+          visible = visible && center.z * liger_in.frustum.w - abs(center.y) * liger_in.frustum.z > -radius;
+          visible = visible && center.z + radius > camera.near && center.z - radius < camera.far;
+
+          return visible;
         }
 
   Code: | #glsl
@@ -64,8 +82,7 @@ ComputeShader:
     uint32_t object_idx = batched_object.object_idx;
     uint32_t batch_idx  = batched_object.batch_idx;
 
-    bool visible = IsVisible(object_idx);
-    if (!visible) {
+    if (!IsVisible(liger_in, object_idx)) {
       return;
     }
 

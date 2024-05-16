@@ -32,6 +32,9 @@
 #include <Liger-Engine/RHI/Extent.hpp>
 #include <Liger-Engine/RHI/Filter.hpp>
 
+#include <fmt/format.h>
+#include <glm/glm.hpp>
+
 #include <span>
 
 namespace liger::rhi {
@@ -251,6 +254,28 @@ class ICommandBuffer {
    */
   virtual void CopyTexture(const ITexture* src_texture, ITexture* dst_texture, Extent3D extent,
                            uint32_t src_mip_level = 0, uint32_t dst_mip_level = 0) = 0;
+
+  /**
+   * @brief Open a debug label region, marking all commands in this region until closing.
+   *
+   * @note In order for this function to work, device must be created with at least basic validation.
+   *
+   * @param name
+   * @param color
+   */
+  virtual void BeginDebugLabelRegion(std::string_view name, const glm::vec4& color) = 0;
+
+  template <typename... FormatArgs>
+  void BeginDebugLabelRegion(const glm::vec4& color, std::string_view fmt, FormatArgs&&... args) {
+    BeginDebugLabelRegion(fmt::format(fmt::runtime(fmt), std::forward<FormatArgs>(args)...), color);
+  }
+
+  /**
+   * @brief Close the debug label region.
+   *
+   * @note In order for this function to work, device must be created with at least basic validation.
+   */
+  virtual void EndDebugLabelRegion() = 0;
 };
 
 }  // namespace liger::rhi

@@ -55,7 +55,7 @@ void ShaderLoader::Load(asset::Manager& manager, asset::Id asset_id, const std::
     return;
   }
 
-  if (!compiler_.Compile(*shader, declaration.value())) {
+  if (!compiler_.Compile(*shader, declaration.value(), filepath.stem().string())) {
     shader.UpdateState(asset::State::Invalid);
     return;
   }

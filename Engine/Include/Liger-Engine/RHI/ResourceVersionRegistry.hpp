@@ -47,6 +47,8 @@ class ResourceVersionRegistry {
 
   template <typename ResourceType>
   [[nodiscard]] ResourceVersion AddResource(ResourceType resource);
+
+  template <typename ResourceType>
   [[nodiscard]] ResourceVersion DeclareResource();
 
   template <typename ResourceType>
@@ -100,9 +102,10 @@ ResourceVersionRegistry<ResourceTypes...>::AddResource(ResourceType resource) {
 }
 
 template <typename... ResourceTypes>
+template <typename ResourceType>
 typename ResourceVersionRegistry<ResourceTypes...>::ResourceVersion
 ResourceVersionRegistry<ResourceTypes...>::DeclareResource() {
-  return AddResource(NullResource{});
+  return AddResource(ResourceType{});
 }
 
 template <typename... ResourceTypes>

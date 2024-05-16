@@ -27,58 +27,55 @@
 
 #include <Liger-Engine/Render/BuiltIn/StaticMeshFeature.hpp>
 
+#include <Liger-Engine/Render/BuiltIn/CameraData.hpp>
 #include <Liger-Engine/Render/LogChannel.hpp>
 
 namespace liger::render {
 
+inline glm::vec4 NormalizePlane(const glm::vec4& plane) {
+  return plane / glm::length(glm::vec3(plane));
+}
+
 StaticMeshFeature::StaticMeshFeature(rhi::IDevice& device, asset::Manager& asset_manager)
-    : cull_shader_(asset_manager.GetAsset<shader::Shader>(".liger/Shaders/BuiltIn.StaticMeshCull.lshader")),
+    : device_(device),
+      cull_shader_(asset_manager.GetAsset<shader::Shader>(".liger/Shaders/BuiltIn.StaticMeshCull.lshader")),
       render_shader_(asset_manager.GetAsset<shader::Shader>(".liger/Shaders/BuiltIn.StaticMeshRender.lshader")) {
   pending_remove_.reserve(kMaxObjects);
   free_list_.reserve(kMaxObjects);
-  objects_.reserve(kMaxObjects);
+  objects_.resize(kMaxObjects);
+  index_buffers_per_object_.resize(kMaxObjects, nullptr);
   batched_objects_.reserve(kMaxObjects);
   draw_commands_.reserve(kMaxMeshes);
+  index_buffer_copies_.reserve(kMaxMeshes);
 
   sbo_objects_ = device.CreateBuffer(rhi::IBuffer::Info {
     .size        = kMaxObjects * sizeof(Object),
-    .usage       = rhi::DeviceResourceState::StorageBuffer | rhi::DeviceResourceState::TransferDst,
+    .usage       = rhi::DeviceResourceState::StorageBufferRead | rhi::DeviceResourceState::TransferDst,
     .cpu_visible = false,
     .name        = "StaticMeshFeature::sbo_objects_"
   });
 
   sbo_batched_objects_ = device.CreateBuffer(rhi::IBuffer::Info {
     .size        = kMaxObjects * sizeof(BatchedObject),
-    .usage       = rhi::DeviceResourceState::StorageBuffer | rhi::DeviceResourceState::TransferDst,
+    .usage       = rhi::DeviceResourceState::StorageBufferRead | rhi::DeviceResourceState::TransferDst,
     .cpu_visible = false,
     .name        = "StaticMeshFeature::sbo_batched_objects_"
   });
 
   sbo_draw_commands_ = device.CreateBuffer(rhi::IBuffer::Info {
     .size        = kMaxMeshes * sizeof(rhi::DrawCommand),
-    .usage       = rhi::DeviceResourceState::StorageBuffer | rhi::DeviceResourceState::TransferDst,
+    .usage       = rhi::DeviceResourceState::StorageBufferReadWrite | rhi::DeviceResourceState::IndirectArgument | rhi::DeviceResourceState::TransferDst,
     .cpu_visible = false,
-    .name        = "StaticMeshFeature::sbo_batched_objects_"
+    .name        = "StaticMeshFeature::sbo_draw_commands_"
   });
 
-  for (uint32_t object_idx = 0U; object_idx <= kMaxObjects; ++object_idx) {
+  for (uint32_t object_idx = 0U; object_idx < kMaxObjects; ++object_idx) {
     free_list_.insert(object_idx);
   }
 }
 
 void StaticMeshFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
   using namespace rhi;
-
-  rg_versions_.objects         = builder.ImportBuffer(sbo_objects_.get(),         DeviceResourceState::TransferDst, DeviceResourceState::StorageBuffer);
-  rg_versions_.batched_objects = builder.ImportBuffer(sbo_batched_objects_.get(), DeviceResourceState::TransferDst, DeviceResourceState::StorageBuffer);
-  rg_versions_.draw_commands   = builder.ImportBuffer(sbo_draw_commands_.get(),   DeviceResourceState::TransferDst, DeviceResourceState::IndirectArgument);
-
-  rg_versions_.visible_object_indices = builder.DeclareTransientBuffer(IBuffer::Info {
-    .size        = kMaxObjects * sizeof(uint32_t),
-    .usage       = DeviceResourceState::StorageBuffer,
-    .cpu_visible = false,
-    .name        = "StaticMeshFeature::sbo_visible_object_indices_"
-  });
 
   rg_versions_.staging_buffer = builder.DeclareTransientBuffer(IBuffer::Info {
     .size        = sbo_objects_->GetInfo().size + sbo_batched_objects_->GetInfo().size + sbo_draw_commands_->GetInfo().size,
@@ -87,17 +84,33 @@ void StaticMeshFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
     .name        = "StaticMeshFeature - staging_buffer"
   });
 
-  builder.BeginTransfer("StaticMeshFeature - prepare buffers");
-  builder.ReadBuffer(rg_versions_.staging_buffer,          DeviceResourceState::TransferSrc);
-  builder.WriteBuffer(rg_versions_.objects,                DeviceResourceState::TransferDst);
-  builder.WriteBuffer(rg_versions_.batched_objects,        DeviceResourceState::TransferDst);
-  builder.WriteBuffer(rg_versions_.draw_commands,          DeviceResourceState::TransferDst);
+  rg_versions_.objects         = builder.ImportBuffer(sbo_objects_.get(),         DeviceResourceState::TransferDst, DeviceResourceState::StorageBufferRead);
+  rg_versions_.batched_objects = builder.ImportBuffer(sbo_batched_objects_.get(), DeviceResourceState::TransferDst, DeviceResourceState::StorageBufferRead);
+  rg_versions_.draw_commands   = builder.ImportBuffer(sbo_draw_commands_.get(),   DeviceResourceState::TransferDst, DeviceResourceState::IndirectArgument);
+
+  rg_versions_.visible_object_indices = builder.DeclareTransientBuffer(IBuffer::Info {
+    .size        = kMaxObjects * sizeof(uint32_t),
+    .usage       = DeviceResourceState::StorageBufferReadWrite,
+    .cpu_visible = false,
+    .name        = "StaticMeshFeature - sbo_visible_object_indices"
+  });
+
+  builder.BeginTransfer("StaticMeshFeature - Prepare Buffers");
+  builder.ReadBuffer(rg_versions_.staging_buffer,   DeviceResourceState::TransferSrc);
+  builder.WriteBuffer(rg_versions_.objects,         DeviceResourceState::TransferDst);
+  builder.WriteBuffer(rg_versions_.batched_objects, DeviceResourceState::TransferDst);
+  builder.WriteBuffer(rg_versions_.draw_commands,   DeviceResourceState::TransferDst);
   builder.SetJob([this](auto& graph, auto& context, auto& cmds) {
-    if (!objects_added_ && pending_remove_.empty()) {
-      return;
+    bool prepare_draws_only = true;
+
+    if (objects_added_ || !pending_remove_.empty()) {
+      Rebuild(cmds);
+      prepare_draws_only = false;
     }
 
-    Rebuild();
+    if (draw_commands_.empty()) {
+      return;
+    }
 
     auto staging_buffer = graph.GetBuffer(rg_versions_.staging_buffer);
     auto* staging_data = staging_buffer->MapMemory();
@@ -107,36 +120,75 @@ void StaticMeshFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
     uint64_t draw_commands_data_size   = draw_commands_.size() * sizeof(draw_commands_[0U]);
 
     uint64_t offset = 0U;
-    std::memcpy(reinterpret_cast<uint8_t*>(staging_data) + offset, objects_.data(), objects_data_size);
-    cmds.CopyBuffer(staging_buffer, sbo_objects_.get(), objects_data_size, offset);
-    offset += objects_data_size;
-    std::memcpy(reinterpret_cast<uint8_t*>(staging_data) + offset, batched_objects_.data(), batched_objects_data_size);
-    cmds.CopyBuffer(staging_buffer, sbo_batched_objects_.get(), batched_objects_data_size, offset);
-    offset += batched_objects_data_size;
+    if (!prepare_draws_only) {
+      std::memcpy(reinterpret_cast<uint8_t*>(staging_data) + offset, objects_.data(), objects_data_size);
+      cmds.CopyBuffer(staging_buffer, sbo_objects_.get(), objects_data_size, offset, 0U);
+      offset += objects_data_size;
+      std::memcpy(reinterpret_cast<uint8_t*>(staging_data) + offset, batched_objects_.data(), batched_objects_data_size);
+      cmds.CopyBuffer(staging_buffer, sbo_batched_objects_.get(), batched_objects_data_size, offset, 0U);
+      offset += batched_objects_data_size;
+    }
     std::memcpy(reinterpret_cast<uint8_t*>(staging_data) + offset, draw_commands_.data(), draw_commands_data_size);
-    cmds.CopyBuffer(staging_buffer, sbo_draw_commands_.get(), draw_commands_data_size, offset);
+    cmds.CopyBuffer(staging_buffer, sbo_draw_commands_.get(), draw_commands_data_size, offset, 0U);
 
     staging_buffer->UnmapMemory();
   });
   builder.EndTransfer();
 
-  builder.BeginCompute("StaticMeshFeature - frustum cull");
-  builder.ReadBuffer(rg_versions_.objects,                 DeviceResourceState::StorageBuffer);
-  builder.ReadBuffer(rg_versions_.batched_objects,         DeviceResourceState::StorageBuffer);
-  builder.WriteBuffer(rg_versions_.visible_object_indices, DeviceResourceState::StorageBuffer);
-  builder.ReadBuffer(rg_versions_.draw_commands,           DeviceResourceState::IndirectArgument);
+  builder.BeginCompute("StaticMeshFeature - Frustum Cull");
+  builder.ReadBuffer(rg_versions_.objects,                 DeviceResourceState::StorageBufferRead);
+  builder.ReadBuffer(rg_versions_.batched_objects,         DeviceResourceState::StorageBufferRead);
+  builder.WriteBuffer(rg_versions_.visible_object_indices, DeviceResourceState::StorageBufferWrite);
+  rg_versions_.final_draw_commands = builder.ReadWriteBuffer(rg_versions_.draw_commands, DeviceResourceState::StorageBufferReadWrite);
   builder.SetJob([this](auto& graph, auto& context, auto& cmds) {
+    if (draw_commands_.empty()) {
+      return;
+    }
+
+    const auto& camera_data = context.Get<CameraData>();
+    glm::mat4 proj_transposed = glm::transpose(camera_data.proj);
+    glm::vec4 frustum_x = NormalizePlane(proj_transposed[3U] + proj_transposed[0U]);  // x + w < 0
+    glm::vec4 frustum_y = NormalizePlane(proj_transposed[3U] + proj_transposed[1U]);  // y + w < 0
+    glm::vec4 frustum   = glm::vec4(frustum_x.x, frustum_x.z, frustum_y.y, frustum_y.z);
+
+    auto sbo_visible_object_indices = graph.GetBuffer(rg_versions_.visible_object_indices);
+    cull_shader_->SetBuffer("BatchedObjects", sbo_batched_objects_->GetStorageDescriptorBinding());
+    cull_shader_->SetBuffer("Draws", sbo_draw_commands_->GetStorageDescriptorBinding());
+    cull_shader_->SetBuffer("Objects", sbo_objects_->GetStorageDescriptorBinding());
+    cull_shader_->SetBuffer("VisibleObjectIndices", sbo_visible_object_indices->GetStorageDescriptorBinding());
+    cull_shader_->SetBuffer("CameraData", context.Get<CameraDataBinding>().binding_ubo);
+    cull_shader_->SetPushConstant<glm::vec4>("frustum", frustum);
+    cull_shader_->SetPushConstant<uint32_t>("batched_object_count", static_cast<uint32_t>(batched_objects_.size()));
+
     cull_shader_->BindPipeline(cmds);
-    // TODO (tralf-strues): bind data!
+    cull_shader_->BindPushConstants(cmds);
     cmds.Dispatch((batched_objects_.size() + 63U) / 64U, 1U, 1U);
   });
   builder.EndCompute();
 }
 
-void StaticMeshFeature::SetupLayers(LayerMap& layer_map) {
-  layer_map["Opaque"]->Emplace([this](auto& graph, auto& context, auto& cmds) {
+void StaticMeshFeature::AddLayerJobs(LayerMap& layer_map) {
+  auto& layer = layer_map["Opaque"];
+
+  layer->Emplace([this](rhi::RenderGraphBuilder& builder) {
+    builder.ReadBuffer(rg_versions_.objects,                rhi::DeviceResourceState::StorageBufferRead);
+    builder.ReadBuffer(rg_versions_.visible_object_indices, rhi::DeviceResourceState::StorageBufferRead);
+    builder.ReadBuffer(rg_versions_.final_draw_commands,    rhi::DeviceResourceState::IndirectArgument);
+  });
+
+  layer->Emplace([this](auto& graph, auto& context, auto& cmds) {
+    if (draw_commands_.empty()) {
+      return;
+    }
+
+    auto sbo_visible_object_indices = graph.GetBuffer(rg_versions_.visible_object_indices);
+    render_shader_->SetBuffer("Objects", sbo_objects_->GetStorageDescriptorBinding());
+    render_shader_->SetBuffer("VisibleObjectIndices", sbo_visible_object_indices->GetStorageDescriptorBinding());
+    render_shader_->SetBuffer("CameraData", context.Get<CameraDataBinding>().binding_ubo);
+
     render_shader_->BindPipeline(cmds);
-    // TODO (tralf-strues): bind data!
+    render_shader_->BindPushConstants(cmds);
+    cmds.BindIndexBuffer(merged_index_buffer_.get());
     cmds.DrawIndexedIndirect(sbo_draw_commands_.get(), 0U, sizeof(draw_commands_[0]), draw_commands_.size());
   });
 }
@@ -146,6 +198,10 @@ void StaticMeshFeature::SetupEntitySystems(ecs::SystemGraph& systems) {
 }
 
 void StaticMeshFeature::Run(const ecs::WorldTransform& transform, StaticMeshComponent& static_mesh) {
+  if (static_mesh.mesh.GetState() != asset::State::Loaded) {
+    return;
+  }
+
   const uint32_t submeshes_count = static_mesh.mesh->submeshes.size();
 
   if (static_mesh.runtime_submesh_handles.size() != submeshes_count) {
@@ -154,6 +210,9 @@ void StaticMeshFeature::Run(const ecs::WorldTransform& transform, StaticMeshComp
     for (uint32_t submesh_idx = 0U; submesh_idx < submeshes_count; ++submesh_idx) {
       const auto& submesh    = static_mesh.mesh->submeshes[submesh_idx];
       auto&       object_idx = static_mesh.runtime_submesh_handles[submesh_idx];
+      if (submesh.material.GetState() != asset::State::Loaded) {
+        continue;
+      }
 
       object_idx = AddObject(Object {
         .binding_mesh     = submesh.ubo->GetUniformDescriptorBinding(),
@@ -161,6 +220,8 @@ void StaticMeshFeature::Run(const ecs::WorldTransform& transform, StaticMeshComp
         .vertex_count     = submesh.vertex_count,
         .index_count      = submesh.index_count
       });
+
+      index_buffers_per_object_[object_idx] = static_mesh.mesh->submeshes[submesh_idx].index_buffer.get();
     }
   }
 
@@ -182,7 +243,7 @@ uint32_t StaticMeshFeature::AddObject(Object object) {
   return object_idx;
 }
 
-void StaticMeshFeature::Rebuild() {
+void StaticMeshFeature::Rebuild(rhi::ICommandBuffer& cmds) {
   /* Add and remove objects */
   for (auto object_idx : pending_remove_) {
     free_list_.insert(object_idx);
@@ -207,20 +268,56 @@ void StaticMeshFeature::Rebuild() {
   /* Slice objects into batches (aka group objects with the same mesh data into a single instanced draw call) */
   draw_commands_.clear();
 
-  for (uint32_t i = 0U, batch_idx = 0U; i < batched_objects_.size(); ++i) {
-    if (i > 0 && objects_[batched_objects_[i - 1].object_idx].binding_mesh != objects_[batched_objects_[i].object_idx].binding_mesh) {
-      draw_commands_.emplace_back(rhi::DrawCommand {
-        .index_count    = objects_[batched_objects_[i].object_idx].index_count,
-        .instance_count = 0U,  // NOTE (tralf-strues): this value is computed in culling shader
-        .first_index    = 0U,
-        .vertex_offset  = 0U,
-        .first_instance = i,
-      });
+  index_buffer_copies_.clear();
+  merged_index_buffer_total_size_ = 0U;
 
-      ++batch_idx;
+  auto add_batch = [this](uint32_t from_idx, uint32_t batch_idx) {
+    uint32_t object_idx = batched_objects_[from_idx].object_idx;
+
+    uint64_t copy_size = index_buffers_per_object_[object_idx]->GetInfo().size;
+    index_buffer_copies_.emplace_back(CopyCmd {
+      .src        = index_buffers_per_object_[object_idx],
+      .size       = copy_size,
+      .dst_offset = merged_index_buffer_total_size_
+    });
+
+    uint32_t cur_first_index = merged_index_buffer_total_size_ / sizeof(uint32_t);
+    merged_index_buffer_total_size_ += copy_size;
+
+    draw_commands_.emplace_back(rhi::DrawCommand {
+      .index_count    = objects_[object_idx].index_count,
+      .instance_count = 0U,  // NOTE (tralf-strues): this value is computed in culling shader
+      .first_index    = cur_first_index,
+      .vertex_offset  = 0U,
+      .first_instance = from_idx,
+    });
+  };
+
+  uint32_t last_from_idx = 0U;
+  uint32_t batch_idx     = 0U;
+  for (uint32_t i = 0U; i < batched_objects_.size(); ++i) {
+    if (i > 0 && objects_[batched_objects_[i - 1].object_idx].binding_mesh != objects_[batched_objects_[i].object_idx].binding_mesh) {
+      add_batch(last_from_idx, batch_idx++);
+      last_from_idx = i;
     }
 
     batched_objects_[i].batch_idx = batch_idx;
+  }
+  add_batch(last_from_idx, batch_idx);
+
+  if (!merged_index_buffer_ || merged_index_buffer_->GetInfo().size > merged_index_buffer_total_size_) {
+    merged_index_buffer_ = device_.CreateBuffer(rhi::IBuffer::Info {
+      .size        = merged_index_buffer_total_size_,
+      .usage       = rhi::DeviceResourceState::TransferDst | rhi::DeviceResourceState::IndexBuffer,
+      .cpu_visible = false,
+      .name        = "StaticMeshFeature::merged_index_buffer_"
+    });
+  }
+
+  for (auto& copy : index_buffer_copies_) {
+    cmds.CopyBuffer(copy.src, merged_index_buffer_.get(), copy.size, 0U, copy.dst_offset);
+    cmds.BufferBarrier(merged_index_buffer_.get(), rhi::DeviceResourceState::TransferDst,
+                       rhi::DeviceResourceState::IndexBuffer);
   }
 
   objects_added_ = false;

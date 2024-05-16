@@ -35,19 +35,23 @@ namespace liger::render {
 
 class Layer {
  public:
-  using Job = rhi::RenderGraph::Job;
+  using SetupTask = std::function<void(rhi::RenderGraphBuilder&)>;
+  using Job       = rhi::RenderGraph::Job;
 
   explicit Layer(std::string_view name);
 
   std::string_view Name() const;
 
   void Emplace(Job job);
+  void Emplace(SetupTask setup_task);
 
+  void Setup(rhi::RenderGraphBuilder& builder);
   void Execute(rhi::RenderGraph& graph, rhi::Context& context, rhi::ICommandBuffer& cmds);
 
  private:
-  std::string      name_;
-  std::vector<Job> jobs_;
+  std::string            name_;
+  std::vector<Job>       jobs_;
+  std::vector<SetupTask> setup_tasks_;
 };
 
 using LayerMap = std::unordered_map<std::string_view, Layer*>;

@@ -89,8 +89,10 @@ bool VulkanDevice::Init(bool debug_enable) {
   auto queue_create_infos = queue_set_.FillQueueCreateInfos(physical_device_);
 
   VkPhysicalDeviceFeatures2 device_features2{.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2};
-  device_features2.features.samplerAnisotropy = VK_TRUE;
-  device_features2.features.shaderInt64 = VK_TRUE;
+  device_features2.features.samplerAnisotropy         = VK_TRUE;
+  device_features2.features.shaderInt64               = VK_TRUE;
+  device_features2.features.multiDrawIndirect         = VK_TRUE;
+  device_features2.features.drawIndirectFirstInstance = VK_TRUE;
 
   VkPhysicalDeviceVulkan12Features device_features12 {.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES};
   device_features12.timelineSemaphore                             = VK_TRUE;
@@ -141,7 +143,7 @@ bool VulkanDevice::Init(bool debug_enable) {
 
   volkLoadDevice(device_);
 
-  queue_set_.InitQueues(device_);
+  queue_set_.InitQueues(*this);
 
   VmaVulkanFunctions vma_vulkan_functions = {};
   vma_vulkan_functions.vkGetInstanceProcAddr = vkGetInstanceProcAddr;
@@ -160,7 +162,10 @@ bool VulkanDevice::Init(bool debug_enable) {
 
   CreateFrameSync();
 
-  return descriptor_manager_.Init(device_);
+  constexpr uint64_t kTransferSize = 128U * 1024U * 1024U;
+  transfer_engine_.Init(*queue_set_.GetTransferQueue(), *queue_set_.GetQueueFamilyIndices().transfer, kTransferSize);
+
+  return descriptor_manager_.Init(*this);
 }
 
 VkInstance                VulkanDevice::GetInstance()             { return instance_; }
@@ -169,6 +174,7 @@ VkDevice                  VulkanDevice::GetVulkanDevice()         { return devic
 VulkanQueueSet&           VulkanDevice::GetQueues()               { return queue_set_; }
 VmaAllocator              VulkanDevice::GetAllocator()            { return vma_allocator_; }
 VulkanDescriptorManager&  VulkanDevice::GetDescriptorManager()    { return descriptor_manager_; }
+bool                      VulkanDevice::GetDebugEnabled() const   { return debug_enabled_; }
 const VulkanDevice::Info& VulkanDevice::GetInfo() const           { return info_; }
 uint32_t                  VulkanDevice::GetFramesInFlight() const { return frames_in_flight_; }
 

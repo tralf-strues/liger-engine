@@ -27,12 +27,13 @@
 
 #include "VulkanDescriptorManager.hpp"
 
+#include "VulkanDevice.hpp"
 #include "VulkanUtils.hpp"
 
 namespace liger::rhi {
 
-bool VulkanDescriptorManager::Init(VkDevice device) {
-  device_ = device;
+bool VulkanDescriptorManager::Init(VulkanDevice& device) {
+  device_ = device.GetVulkanDevice();
 
   /* Descriptor set layout */
   const VkDescriptorSetLayoutBinding bindings[]{
@@ -89,6 +90,7 @@ bool VulkanDescriptorManager::Init(VkDevice device) {
   };
 
   VULKAN_CALL(vkCreateDescriptorSetLayout(device_, &layout_info, nullptr, &layout_));
+  device.SetDebugName(layout_, "VulkanDescriptorManager::layout_");
 
   /* Descriptor pool */
   const VkDescriptorPoolSize pool_sizes[kBindingsCount] {
@@ -120,6 +122,7 @@ bool VulkanDescriptorManager::Init(VkDevice device) {
   };
 
   VULKAN_CALL(vkCreateDescriptorPool(device_, &pool_info, nullptr, &pool_));
+  device.SetDebugName(pool_, "VulkanDescriptorManager::pool_");
 
   /* Allocate descriptor set */
   const VkDescriptorSetAllocateInfo allocate_info {
@@ -131,6 +134,7 @@ bool VulkanDescriptorManager::Init(VkDevice device) {
   };
 
   VULKAN_CALL(vkAllocateDescriptorSets(device_, &allocate_info, &set_));
+  device.SetDebugName(set_, "VulkanDescriptorManager::set_");
 
   /* Initialize free binding sets */
   auto initialize_set = [](auto& free_bindings) {
@@ -168,6 +172,7 @@ bool VulkanDescriptorManager::Init(VkDevice device) {
   };
 
   VULKAN_CALL(vkCreateSampler(device_, &sampler_info, /*allocator=*/nullptr, &sampler_));
+  device.SetDebugName(sampler_, "VulkanDescriptorManager::sampler_");
 
   return true;
 }
@@ -233,7 +238,8 @@ VulkanDescriptorManager::BufferBindings VulkanDescriptorManager::AddBuffer(VkBuf
     };
   }
 
-  if (EnumBitmaskContains(buffer_usage, DeviceResourceState::StorageBuffer)) {
+  if (EnumBitmaskContainsAny(buffer_usage, DeviceResourceState::StorageBufferRead |
+                                           DeviceResourceState::StorageBufferWrite)) {
     LIGER_ASSERT(!free_bindings_storage_buffer_.empty(), kLogChannelRHI, "Max bindless storage buffers limit reached!");
 
     uint32_t storage_binding = *free_bindings_storage_buffer_.begin();
@@ -308,7 +314,8 @@ VulkanDescriptorManager::TextureBindings VulkanDescriptorManager::AddImageView(V
     };
   }
 
-  if (EnumBitmaskContains(texture_usage, DeviceResourceState::StorageTexture)) {
+  if (EnumBitmaskContainsAny(texture_usage, DeviceResourceState::StorageTextureRead |
+                                            DeviceResourceState::StorageTextureWrite)) {
     LIGER_ASSERT(!free_bindings_storage_texture_.empty(), kLogChannelRHI,
                  "Max bindless storage textures limit reached!");
 

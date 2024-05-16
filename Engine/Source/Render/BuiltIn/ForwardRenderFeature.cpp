@@ -48,13 +48,20 @@ void ForwardRenderFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
   rg_depth_ = builder.DeclareTransientTexture(depth_info);
 
   builder.BeginRenderPass("Forward Pass");
+
   builder.AddColorTarget(rg_color_, rhi::AttachmentLoad::Clear, rhi::AttachmentStore::Store);
   builder.SetDepthStencil(rg_depth_, rhi::AttachmentLoad::Clear, rhi::AttachmentStore::Discard);
+
+  for (auto& layer : layers_) {
+    layer.Setup(builder);
+  }
+
   builder.SetJob([this](auto& graph, auto& context, rhi::ICommandBuffer& cmds) {
     for (auto& layer : layers_) {
       layer.Execute(graph, context, cmds);
     }
   });
+
   builder.EndRenderPass();
 }
 

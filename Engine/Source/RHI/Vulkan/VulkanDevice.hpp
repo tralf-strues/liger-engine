@@ -65,6 +65,7 @@ class VulkanDevice : public IDevice {
   VmaAllocator GetAllocator();
   VulkanDescriptorManager& GetDescriptorManager();
 
+  bool GetDebugEnabled() const;
   const Info& GetInfo() const override;
   uint32_t GetFramesInFlight() const override;
 

@@ -36,9 +36,9 @@ ParticleSystemFeature::ParticleSystemFeature(rhi::IDevice& device, asset::Manage
       update_shader_(asset_manager.GetAsset<shader::Shader>(".liger/Shaders/BuiltIn.ParticleUpdate.lshader")),
       render_shader_(asset_manager.GetAsset<shader::Shader>(".liger/Shaders/BuiltIn.ParticleRender.lshader")),
       frame_timer_(frame_timer) {
-  ubo_transform_ = rhi::UniqueMappedBuffer<glm::mat4>(device_, rhi::DeviceResourceState::StorageBuffer,
+  ubo_transform_ = rhi::UniqueMappedBuffer<glm::mat4>(device_, rhi::DeviceResourceState::StorageBufferRead,
                                                       "ParticleSystemFeature::ubo_transform_", kMaxParticleSystems);
-  sbo_init_free_list_ = rhi::UniqueMappedBuffer<int32_t>(device_, rhi::DeviceResourceState::UniformBuffer,
+  sbo_init_free_list_ = rhi::UniqueMappedBuffer<int32_t>(device_, rhi::DeviceResourceState::TransferSrc,
                                                          "ParticleSystemFeature::sbo_init_free_list_", 2049U);
 
   sbo_init_free_list_.GetData()[0U] = 2048U;
@@ -59,7 +59,7 @@ void ParticleSystemFeature::SetupRenderGraph(liger::rhi::RenderGraphBuilder& bui
     for (auto& particle_system : particle_systems_) {
       if (!particle_system.initialized) {
         cmds.CopyBuffer(sbo_init_free_list_.get(), particle_system.sbo_free_list.get(), sbo_init_free_list_->GetInfo().size);
-        cmds.BufferBarrier(sbo_init_free_list_.get(), rhi::DeviceResourceState::TransferDst, rhi::DeviceResourceState::StorageBuffer);
+        //cmds.BufferBarrier(particle_system.sbo_free_list.get(), rhi::DeviceResourceState::TransferDst, rhi::DeviceResourceState::StorageBufferReadWrite);
 
         particle_system.initialized = true;
       }
@@ -78,8 +78,8 @@ void ParticleSystemFeature::SetupRenderGraph(liger::rhi::RenderGraphBuilder& bui
       emit_shader_->BindPushConstants(cmds);
 
       cmds.Dispatch((particle_system.particles + 63) / 64, 1, 1);
-      cmds.BufferBarrier(particle_system.sbo_particles.get(), rhi::DeviceResourceState::StorageBuffer, rhi::DeviceResourceState::StorageBuffer);
-      cmds.BufferBarrier(particle_system.sbo_free_list.get(), rhi::DeviceResourceState::StorageBuffer, rhi::DeviceResourceState::StorageBuffer);
+      //cmds.BufferBarrier(particle_system.sbo_particles.get(), rhi::DeviceResourceState::StorageBuffer, rhi::DeviceResourceState::StorageBuffer);
+      //cmds.BufferBarrier(particle_system.sbo_free_list.get(), rhi::DeviceResourceState::StorageBuffer, rhi::DeviceResourceState::StorageBuffer);
     }
 
     update_shader_->BindPipeline(cmds);
@@ -91,15 +91,19 @@ void ParticleSystemFeature::SetupRenderGraph(liger::rhi::RenderGraphBuilder& bui
       update_shader_->BindPushConstants(cmds);
 
       cmds.Dispatch((particle_system.particles + 63) / 64, 1, 1);
-      cmds.BufferBarrier(particle_system.sbo_particles.get(), rhi::DeviceResourceState::StorageBuffer, rhi::DeviceResourceState::StorageBuffer);
-      cmds.BufferBarrier(particle_system.sbo_free_list.get(), rhi::DeviceResourceState::StorageBuffer, rhi::DeviceResourceState::StorageBuffer);
+      //cmds.BufferBarrier(particle_system.sbo_particles.get(), rhi::DeviceResourceState::StorageBuffer, rhi::DeviceResourceState::StorageBuffer);
+      //cmds.BufferBarrier(particle_system.sbo_free_list.get(), rhi::DeviceResourceState::StorageBuffer, rhi::DeviceResourceState::StorageBuffer);
     }
   });
   builder.EndCompute();
 }
 
-void ParticleSystemFeature::SetupLayers(LayerMap& layer_map) {
-  layer_map["Transparent"]->Emplace([this](auto&, rhi::Context& context, rhi::ICommandBuffer& cmds) {
+void ParticleSystemFeature::AddLayerJobs(LayerMap& layer_map) {
+  auto& layer = layer_map["Transparent"];
+
+  // TODO: setup tasks
+
+  layer->Emplace([this](auto&, rhi::Context& context, rhi::ICommandBuffer& cmds) {
     if (emit_shader_.GetState() != asset::State::Loaded ||
         update_shader_.GetState() != asset::State::Loaded ||
         render_shader_.GetState() != asset::State::Loaded) {
@@ -141,14 +145,14 @@ void ParticleSystemFeature::Run(const ecs::WorldTransform& transform, const Part
 
     runtime_data.sbo_particles = device_.CreateBuffer(rhi::IBuffer::Info {
       .size        = emitter.max_particles * sizeof(Particle),
-      .usage       = rhi::DeviceResourceState::StorageBuffer,
+      .usage       = rhi::DeviceResourceState::StorageBufferReadWrite,
       .cpu_visible = false,
       .name        = fmt::format("RuntimeParticleSystemData::sbo_particles[{0}]", idx)
     });
 
     runtime_data.sbo_free_list = device_.CreateBuffer(rhi::IBuffer::Info {
       .size        = sizeof(int32_t) + emitter.max_particles * sizeof(int32_t),
-      .usage       = rhi::DeviceResourceState::StorageBuffer | rhi::DeviceResourceState::TransferDst,
+      .usage       = rhi::DeviceResourceState::StorageBufferReadWrite | rhi::DeviceResourceState::TransferDst,
       .cpu_visible = false,
       .name        = fmt::format("RuntimeParticleSystemData::sbo_free_list[{0}]", idx)
     });

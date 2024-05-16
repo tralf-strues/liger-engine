@@ -46,7 +46,7 @@ class IFeature {
 
   virtual void SetupRenderGraph(rhi::RenderGraphBuilder&) {}
 
-  virtual void SetupLayers(LayerMap&) {}
+  virtual void AddLayerJobs(LayerMap&) {}
 
   virtual void SetupEntitySystems(ecs::SystemGraph&) {}
 

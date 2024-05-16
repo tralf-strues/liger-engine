@@ -54,9 +54,12 @@ class VulkanRenderGraph : public RenderGraph {
 
   static VkPipelineStageFlags2 GetVulkanPipelineSrcStage(Node::Type node_type, DeviceResourceState resource_state);
   static VkPipelineStageFlags2 GetVulkanPipelineDstStage(Node::Type node_type, DeviceResourceState resource_state);
+  static glm::vec4             GetDebugLabelColor(Node::Type node_type);
 
  private:
   struct VulkanNode {
+    std::string name;
+
     VkRenderingInfoKHR* rendering_info   = nullptr;
     uint32_t            queue_idx        = 0;
     DependencyLevel     dependency_level = 0;
@@ -125,6 +128,7 @@ class VulkanRenderGraph : public RenderGraph {
   std::vector<VkImageMemoryBarrier2>  vk_image_barriers_;
   std::vector<ResourceId>             image_barrier_resources_;
   std::vector<VkBufferMemoryBarrier2> vk_buffer_barriers_;
+  std::vector<ResourceId>             buffer_barrier_resources_;
 };
 
 }  // namespace liger::rhi

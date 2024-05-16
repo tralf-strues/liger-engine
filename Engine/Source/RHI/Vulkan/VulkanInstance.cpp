@@ -183,7 +183,7 @@ bool VulkanInstance::Init(ValidationLevel validation) {
     .pUserData       = nullptr,
   };
 
-  if (validation != IInstance::ValidationLevel::None) {
+  if (validation != IInstance::ValidationLevel::None && validation != IInstance::ValidationLevel::DebugInfoOnly) {
     instance_info.enabledLayerCount = 1;
     instance_info.ppEnabledLayerNames = &VulkanDevice::kValidationLayerName;
   }
@@ -358,6 +358,8 @@ bool VulkanInstance::FillDeviceInfoList() {
       .engine_supported = required_extensions_supported && swapchain_supported &&
                           static_cast<bool>(features2.features.samplerAnisotropy) &&
                           static_cast<bool>(features2.features.shaderInt64) &&
+                          static_cast<bool>(features2.features.multiDrawIndirect) &&
+                          static_cast<bool>(features2.features.drawIndirectFirstInstance) &&
                           static_cast<bool>(features12.descriptorBindingPartiallyBound) &&
                           static_cast<bool>(features12.runtimeDescriptorArray) &&
                           static_cast<bool>(features12.shaderUniformBufferArrayNonUniformIndexing) &&

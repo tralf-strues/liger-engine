@@ -36,7 +36,7 @@ class Compiler {
  public:
   explicit Compiler(rhi::IDevice& device);
 
-  [[nodiscard]] bool Compile(Shader& shader, const Declaration& declaration);
+  [[nodiscard]] bool Compile(Shader& shader, const Declaration& declaration, std::string_view name = "");
 
  private:
   rhi::IDevice& device_;

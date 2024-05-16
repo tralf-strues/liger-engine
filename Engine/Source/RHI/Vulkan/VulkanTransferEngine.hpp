@@ -55,13 +55,13 @@ class VulkanTransferEngine {
   VulkanDevice&                                device_;
   VkQueue                                      queue_{VK_NULL_HANDLE};
 
-  VkCommandPool                                command_pools_[2U]{VK_NULL_HANDLE, VK_NULL_HANDLE};
+  VkCommandPool                                command_pool_{VK_NULL_HANDLE};
+  VkCommandBuffer                              cmds_[2U]{VK_NULL_HANDLE, VK_NULL_HANDLE};
 
   VkBuffer                                     staging_buffers_[2U]{VK_NULL_HANDLE, VK_NULL_HANDLE};
   VmaAllocation                                allocations_[2U]{VK_NULL_HANDLE, VK_NULL_HANDLE};
   uint64_t                                     staging_capacity_{0U};
 
-  VkCommandBuffer                              cur_cmds_{VK_NULL_HANDLE};
   uint32_t                                     cur_idx_{0U};
   std::vector<IDevice::TransferCallback>       cur_callbacks_;
   void*                                        cur_mapped_data_{nullptr};

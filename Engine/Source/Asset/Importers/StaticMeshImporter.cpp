@@ -94,7 +94,7 @@ bool LoadSubmeshes(const aiScene* scene, std::vector<SubmeshData>& submeshes) {
     const uint32_t vertex_count = assimp_mesh->mNumVertices;
     const uint32_t index_count  = 3 * assimp_mesh->mNumFaces;
 
-    auto& submesh = submeshes.emplace_back();
+    auto& submesh = submeshes[mesh_idx];
 
     auto& vertices = submesh.vertices;
     vertices.resize(vertex_count);
@@ -148,12 +148,15 @@ bool LoadSubmeshes(const aiScene* scene, std::vector<SubmeshData>& submeshes) {
 bool SaveMaterials(asset::Registry& registry, const std::filesystem::path& dst_folder,
                    const std::filesystem::path& base_filename, const std::vector<MaterialData>& materials,
                    std::vector<asset::Id>& out_ids) {
-  auto base_out_path = dst_folder / "Materials" / base_filename;
+  auto base_out_path = dst_folder / "Materials";
+  std::filesystem::create_directories(base_out_path);
+
+  base_out_path /= base_filename;
   out_ids.reserve(materials.size());
 
   for (uint32_t material_idx = 0U; material_idx < materials.size(); ++material_idx) {
     std::filesystem::path filename = base_out_path;
-    filename += fmt::format("{0}.lmat", base_filename.string());
+    filename += fmt::format("{0}.lmat", material_idx);
 
     std::ofstream file(filename, std::ios::out);
     if (!file.is_open()) {
@@ -165,7 +168,7 @@ bool SaveMaterials(asset::Registry& registry, const std::filesystem::path& dst_f
     
     file.close();
 
-    out_ids.push_back(registry.Register(filename));
+    out_ids.push_back(registry.Register(filename.lexically_relative(registry.GetAssetFolder())));
   }
 
   return true;
@@ -179,6 +182,8 @@ void BinaryWrite(std::ofstream& os, const T* data, uint32_t count = 1U) {
 bool SaveMesh(asset::Registry& registry, const std::filesystem::path& dst_folder,
               const std::filesystem::path& base_filename, const std::vector<SubmeshData>& submeshes,
               const std::vector<asset::Id>& material_asset_ids, asset::Id& out_id) {
+  std::filesystem::create_directories(dst_folder);
+
   auto filename = dst_folder / base_filename;
   filename += ".lsmesh";
 
@@ -206,7 +211,7 @@ bool SaveMesh(asset::Registry& registry, const std::filesystem::path& dst_folder
 
   file.close();
 
-  out_id = registry.Register(filename);
+  out_id = registry.Register(filename.lexically_relative(registry.GetAssetFolder()));
 
   return true;
 }
@@ -217,7 +222,8 @@ asset::IImporter::Result StaticMeshImporter::Import(asset::Registry& registry, c
                                      aiProcess_SortByPType |
                                      aiProcess_GenSmoothNormals |
                                      aiProcess_CalcTangentSpace |
-                                     aiProcess_GenUVCoords;
+                                     aiProcess_GenUVCoords |
+                                     aiProcess_GenBoundingBoxes;
   const Result kFailedResult{.success = false};
 
   auto src_str = src.string();
@@ -255,14 +261,15 @@ asset::IImporter::Result StaticMeshImporter::Import(asset::Registry& registry, c
   }
 
   auto base_filename = src.stem();
+  auto abs_dst_folder = registry.GetAssetFolder() / dst_folder;
 
   std::vector<asset::Id> material_asset_ids;
-  if (!SaveMaterials(registry, dst_folder, base_filename, materials, material_asset_ids)) {
+  if (!SaveMaterials(registry, abs_dst_folder, base_filename, materials, material_asset_ids)) {
     return kFailedResult;
   }
 
   asset::Id mesh_asset_id;
-  if (!SaveMesh(registry, dst_folder, base_filename, submeshes, material_asset_ids, mesh_asset_id)) {
+  if (!SaveMesh(registry, abs_dst_folder, base_filename, submeshes, material_asset_ids, mesh_asset_id)) {
     return kFailedResult;
   }
 

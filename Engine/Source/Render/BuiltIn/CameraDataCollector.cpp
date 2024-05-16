@@ -40,6 +40,7 @@ void CameraDataCollector::Run(const ecs::Camera& camera, const ecs::WorldTransfo
   auto* data        = ubo_camera_data_.GetData();
   data->view        = transform.InverseMatrix();
   data->proj        = camera.ProjectionMatrix();
+  data->proj_view   = data->proj * data->view;
   data->ws_position = transform.position;
   data->near        = camera.near;
   data->far         = camera.far;

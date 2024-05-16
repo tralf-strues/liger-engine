@@ -68,10 +68,10 @@ void StaticMeshLoader::Load(asset::Manager& manager, asset::Id asset_id, const s
     const uint64_t vertex_buffer_size = vertex_count * sizeof(render::Vertex3D);
     const uint64_t index_buffer_size  = index_count * sizeof(uint32_t);
 
-    auto vertices = std::make_unique<uint8_t[]>(vertex_count);
+    auto vertices = std::make_unique<uint8_t[]>(vertex_buffer_size);
     BinaryRead(file, vertices.get(), vertex_buffer_size);
     
-    auto indices = std::make_unique<uint8_t[]>(index_count);
+    auto indices = std::make_unique<uint8_t[]>(index_buffer_size);
     BinaryRead(file, indices.get(), index_buffer_size);
 
     glm::vec4 bounding_sphere;
@@ -91,18 +91,18 @@ void StaticMeshLoader::Load(asset::Manager& manager, asset::Id asset_id, const s
       .usage       = rhi::DeviceResourceState::UniformBuffer | rhi::DeviceResourceState::TransferDst,
       .cpu_visible = false,
       .name        = fmt::format("StaticMesh_0x{0:X}::submeshes[{1}]::ubo", asset_id.Value(), submesh_idx)
-      });
+    });
 
     submesh.vertex_buffer = device_.CreateBuffer(rhi::IBuffer::Info {
       .size        = vertex_buffer_size,
-      .usage       = rhi::DeviceResourceState::StorageBuffer | rhi::DeviceResourceState::TransferDst,
+      .usage       = rhi::DeviceResourceState::StorageBufferRead | rhi::DeviceResourceState::TransferDst,
       .cpu_visible = false,
       .name        = fmt::format("StaticMesh_0x{0:X}::submeshes[{1}]::vertex_buffer", asset_id.Value(), submesh_idx)
     });
 
     submesh.index_buffer = device_.CreateBuffer(rhi::IBuffer::Info {
       .size        = index_buffer_size,
-      .usage       = rhi::DeviceResourceState::StorageBuffer | rhi::DeviceResourceState::TransferDst,
+      .usage       = rhi::DeviceResourceState::IndexBuffer | rhi::DeviceResourceState::TransferDst | rhi::DeviceResourceState::TransferSrc,
       .cpu_visible = false,
       .name        = fmt::format("StaticMesh_0x{0:X}::submeshes[{1}]::index_buffer", asset_id.Value(), submesh_idx)
     });
@@ -124,14 +124,14 @@ void StaticMeshLoader::Load(asset::Manager& manager, asset::Id asset_id, const s
 
     transfer_request.buffer_transfers.emplace_back(rhi::IDevice::DedicatedBufferTransfer {
       .buffer      = submesh.vertex_buffer.get(),
-      .final_state = rhi::DeviceResourceState::StorageBuffer,
+      .final_state = rhi::DeviceResourceState::StorageBufferRead,
       .data        = std::move(vertices),
       .size        = vertex_buffer_size,
     });
 
     transfer_request.buffer_transfers.emplace_back(rhi::IDevice::DedicatedBufferTransfer {
       .buffer      = submesh.index_buffer.get(),
-      .final_state = rhi::DeviceResourceState::StorageBuffer,
+      .final_state = rhi::DeviceResourceState::IndexBuffer,
       .data        = std::move(indices),
       .size        = index_buffer_size,
     });

@@ -19,7 +19,7 @@ Data: | #glsl
     uint32_t  binding_index_buffer;
     uint32_t  vertex_count;
     uint32_t  index_count;
-    float32_t bounding_sphere_radius;
+    f32vec4   bounding_sphere;
   };
 
   RegisterUniformBuffer(MeshUBO, {
@@ -38,6 +38,8 @@ Data: | #glsl
     f32mat4  transform;
     uint32_t binding_mesh;
     uint32_t binding_material;
+    uint32_t vertex_count;
+    uint32_t index_count;
   };
 
   struct BatchedObject {

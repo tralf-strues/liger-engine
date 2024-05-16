@@ -2,17 +2,17 @@ InputAssemblyInfo:
   Topology: TriangleList
 
 RasterizationInfo:
-  CullMode: None
+  CullMode: BackOnly
   FrontFace: CounterClockwise
   PolygonMode: Fill
 
 DepthStencilTestInfo:
   DepthTestEnable: true
-  DepthWriteEnable: false
+  DepthWriteEnable: true
   DepthCompareOperation: Less
 
 ColorBlendInfo:
-  Enable: true
+  Enable: false
 
   SrcColorFactor: One
   DstColorFactor: One
@@ -70,9 +70,8 @@ VertexShader:
           uint32_t object_idx = GetStorageBuffer(VisibleObjectIndices, liger_in.binding_visible_object_indices).object_indices[liger_in.instance_idx];
           Object   object     = GetStorageBuffer(Objects, liger_in.binding_objects).objects[object_idx];
           Mesh     mesh       = GetUniformBuffer(MeshUBO, object.binding_mesh).mesh;
-          uint32_t vertex_idx = GetStorageBuffer(IndexBuffer, mesh.binding_index_buffer).vertex_indices[liger_in.vertex_idx];
 
-          vertex              = GetStorageBuffer(VertexBuffer, mesh.binding_vertex_buffer).vertices[vertex_idx];
+          vertex              = GetStorageBuffer(VertexBuffer, mesh.binding_vertex_buffer).vertices[liger_in.vertex_idx];
           transform           = object.transform;
           material            = GetUniformBuffer(MaterialUBO, object.binding_material).material;
         }

@@ -34,16 +34,18 @@
 
 namespace liger::rhi {
 
+class VulkanDevice;
+
 class VulkanQueueSet {
  public:
-   struct QueueFamilyIndices {
-    uint32_t main;
+  struct QueueFamilyIndices {
+    uint32_t                main;
     std::optional<uint32_t> compute;
     std::optional<uint32_t> transfer;
   };
 
   std::vector<VkDeviceQueueCreateInfo> FillQueueCreateInfos(VkPhysicalDevice physical_device);
-  void InitQueues(VkDevice device);
+  void InitQueues(VulkanDevice& device);
 
   const QueueFamilyIndices& GetQueueFamilyIndices() const;
 

@@ -37,6 +37,16 @@ void Layer::Emplace(Job job) {
   jobs_.emplace_back(std::move(job));
 }
 
+void Layer::Emplace(SetupTask setup_task) {
+  setup_tasks_.emplace_back(std::move(setup_task));
+}
+
+void Layer::Setup(rhi::RenderGraphBuilder& builder) {
+  for (auto& setup : setup_tasks_) {
+    setup(builder);
+  }
+}
+
 void Layer::Execute(rhi::RenderGraph& graph, rhi::Context& context, rhi::ICommandBuffer& cmds) {
   for (auto& job : jobs_) {
     job(graph, context, cmds);

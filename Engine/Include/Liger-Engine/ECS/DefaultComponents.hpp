@@ -46,7 +46,7 @@ struct WorldTransform : Transform3D {};
 struct Camera {
   float fov          {45.0f};
   float near         {0.1f};
-  float far          {100.0f};
+  float far          {250.0f};
   float aspect       {1.0f};
   bool  fixed_aspect {false};
 
