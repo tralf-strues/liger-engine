@@ -61,8 +61,14 @@ class RenderGraph {
     uint32_t  view    {kTextureDefaultViewIdx};
   };
 
-  using BufferResource          = IBuffer*;
-  using ResourceVersionRegistry = ResourceVersionRegistry<TextureResource, BufferResource>;
+  using BufferResource = IBuffer*;
+
+  struct BufferPackResource {
+    std::string_view       name;
+    std::vector<IBuffer*>* buffers;
+  };
+
+  using ResourceVersionRegistry = ResourceVersionRegistry<TextureResource, BufferResource, BufferPackResource>;
   using ResourceVersion         = ResourceVersionRegistry::ResourceVersion;
   using ResourceId              = ResourceVersionRegistry::ResourceId;
   using DependentTextureInfo    = DependentTextureInfo<ResourceVersion>;
@@ -70,8 +76,9 @@ class RenderGraph {
 
   virtual ~RenderGraph() = default;
 
-  TextureResource GetTexture(ResourceVersion version);
-  BufferResource GetBuffer(ResourceVersion version);
+  TextureResource    GetTexture(ResourceVersion version);
+  BufferResource     GetBuffer(ResourceVersion version);
+  BufferPackResource GetBufferPack(ResourceVersion version);
 
   virtual void ReimportTexture(ResourceVersion version, TextureResource new_texture) = 0;
   virtual void ReimportBuffer(ResourceVersion version, BufferResource new_buffer) = 0;
@@ -162,7 +169,10 @@ class RenderGraphBuilder {
   [[nodiscard]] ResourceVersion DeclareImportTexture(DeviceResourceState initial_state,
                                                      DeviceResourceState final_state);
   [[nodiscard]] ResourceVersion DeclareImportBuffer(DeviceResourceState initial_state,
-                                                     DeviceResourceState final_state);
+                                                    DeviceResourceState final_state);
+  [[nodiscard]] ResourceVersion DeclareImportBufferPack(std::string_view name,
+                                                        DeviceResourceState initial_state,
+                                                        DeviceResourceState final_state);
 
   [[nodiscard]] ResourceVersion ImportTexture(RenderGraph::TextureResource texture, DeviceResourceState initial_state,
                                               DeviceResourceState final_state);

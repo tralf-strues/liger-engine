@@ -81,9 +81,19 @@ class IDevice {
     uint64_t                   size;
   };
 
+  struct DedicatedTextureTransfer {
+    ITexture*                  texture;
+    DeviceResourceState        final_state;
+    std::unique_ptr<uint8_t[]> data;
+    uint64_t                   size;
+    bool                       gen_mips{false};
+    Filter                     gen_mips_filter{Filter::Linear};
+  };
+
   struct DedicatedTransferRequest {
-    std::list<DedicatedBufferTransfer> buffer_transfers;
-    TransferCallback                   callback;
+    std::list<DedicatedBufferTransfer>  buffer_transfers;
+    std::list<DedicatedTextureTransfer> texture_transfers;
+    TransferCallback                    callback;
   };
 
   virtual ~IDevice() = default;

@@ -39,6 +39,9 @@ add_subdirectory(magic_enum)
 # # shaderc
 # add_subdirectory(shaderc)
 
+# stb_image
+add_subdirectory(stb-image)
+
 # taskflow
 set(TF_BUILD_TESTS OFF)
 set(TF_BUILD_EXAMPLES OFF)

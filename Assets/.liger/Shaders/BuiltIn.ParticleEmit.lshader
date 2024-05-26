@@ -1,5 +1,5 @@
 ComputeShader:
-  ThreadGroupSize: [64, 1, 1]
+  ThreadGroupSize: [32, 1, 1]
 
   Use:
     - Include: BuiltIn.Random.lsdecl

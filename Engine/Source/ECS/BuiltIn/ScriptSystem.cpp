@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file DefaultSystems.hpp
- * @date 2024-05-01
+ * @file ScriptSystem.cpp
+ * @date 2024-05-26
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -25,28 +25,29 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#pragma once
+#include <Liger-Engine/ECS/BuiltIn/ScriptSystem.hpp>
 
-#include <Liger-Engine/Core/Time.hpp>
-#include <Liger-Engine/ECS/DefaultComponents.hpp>
-#include <Liger-Engine/ECS/System.hpp>
+#include <Liger-Engine/ECS/LogChannel.hpp>
 
 namespace liger::ecs {
 
-class ScriptSystem : public ExclusiveComponentSystem<const ScriptComponent> {
- public:
-  explicit ScriptSystem(const FrameTimer& frame_timer);
-  ~ScriptSystem() override = default;
+ScriptSystem::ScriptSystem(const FrameTimer& frame_timer) : frame_timer_(frame_timer) {}
 
-  void Setup(entt::registry& registry) override;
-  void Run(entt::registry& registry, entt::entity entity, const ScriptComponent& script) override;
+void ScriptSystem::Setup(entt::registry& registry) {
+  registry.on_construct<ScriptComponent>().connect<&ScriptSystem::OnAttach>(this);
+}
 
-  void OnAttach(entt::registry& registry, entt::entity entity);
+void ScriptSystem::Run(entt::registry& registry, entt::entity entity, const ScriptComponent& script) {
+  if (!script.script) {
+    LIGER_LOG_ERROR(kLogChannelECS, "Nullptr script");
+    return;
+  }
 
-  std::string_view Name() const override { return "ScriptSystem<const ScriptComponent>"; }
+  script.script->OnUpdate(registry, entity, frame_timer_.DeltaTime());
+}
 
- private:
-  const FrameTimer& frame_timer_;
-};
+void ScriptSystem::OnAttach(entt::registry& registry, entt::entity entity) {
+  registry.get<ScriptComponent>(entity).script->OnAttach(entity);
+}
 
 }  // namespace liger::ecs

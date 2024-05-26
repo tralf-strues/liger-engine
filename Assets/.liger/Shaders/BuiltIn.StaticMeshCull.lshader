@@ -59,14 +59,15 @@ ComputeShader:
           Object    object = GetStorageBuffer(Objects, liger_in.binding_objects).objects[object_idx];
           f32vec4   sphere = GetUniformBuffer(MeshUBO, object.binding_mesh).mesh.bounding_sphere;
 
-          f32vec3   center = (object.transform * f32vec4(sphere.xyz, 1.0f)).xyz;
-          float32_t radius = object.transform[0U][0U] * sphere.w;
+          f32vec3   center = (camera.view * object.transform * f32vec4(sphere.xyz, 1.0f)).xyz;
+          float32_t radius = length(object.transform[0U]) * sphere.w;
 
           // Based on the assumption of frustum symmetry
           bool visible = true;
           visible = visible && center.z * liger_in.frustum.y - abs(center.x) * liger_in.frustum.x > -radius;
           visible = visible && center.z * liger_in.frustum.w - abs(center.y) * liger_in.frustum.z > -radius;
-          visible = visible && center.z + radius > camera.near && center.z - radius < camera.far;
+          visible = visible && !(center.z + radius < -camera.far || center.z - radius > -camera.near);
+          // visible = visible && center.z + radius > camera.near && center.z - radius < camera.far;
 
           return visible;
         }

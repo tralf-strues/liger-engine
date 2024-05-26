@@ -105,6 +105,8 @@ bool VulkanDevice::Init(bool debug_enable) {
   device_features12.descriptorBindingSampledImageUpdateAfterBind  = VK_TRUE;
   device_features12.shaderUniformBufferArrayNonUniformIndexing    = VK_TRUE;
   device_features12.shaderStorageBufferArrayNonUniformIndexing    = VK_TRUE;
+  device_features12.shaderSampledImageArrayNonUniformIndexing     = VK_TRUE;
+  device_features12.scalarBlockLayout                             = VK_TRUE;
 
   std::vector<const char*> extensions{std::begin(kRequiredDeviceExtensions), std::end(kRequiredDeviceExtensions)};
 
@@ -162,8 +164,8 @@ bool VulkanDevice::Init(bool debug_enable) {
 
   CreateFrameSync();
 
-  constexpr uint64_t kTransferSize = 128U * 1024U * 1024U;
-  transfer_engine_.Init(*queue_set_.GetTransferQueue(), *queue_set_.GetQueueFamilyIndices().transfer, kTransferSize);
+  constexpr uint64_t kTransferSize = 16U * 1024U * 1024U;
+  transfer_engine_.Init(kTransferSize);
 
   return descriptor_manager_.Init(*this);
 }
@@ -199,6 +201,8 @@ std::optional<uint32_t> VulkanDevice::BeginFrame(ISwapchain& swapchain) {
 
   current_swapchain_image_idx_ = next_texture_idx.value();
   current_graph_idx_ = 0;
+
+  transfer_engine_.Submit();
 
   return next_texture_idx;
 }
@@ -266,8 +270,6 @@ bool VulkanDevice::EndFrame() {
   current_swapchain_ = nullptr;
   IncrementFrame();
 
-  transfer_engine_.SubmitAndWait();
-
   return valid;
 }
 
@@ -281,6 +283,10 @@ void VulkanDevice::EndOffscreenFrame() {
 
 uint32_t VulkanDevice::CurrentFrame() const {
   return current_frame_idx_;
+}
+
+uint32_t VulkanDevice::NextFrame() const {
+  return (current_frame_idx_ + 1) % frames_in_flight_;
 }
 
 uint64_t VulkanDevice::CurrentAbsoluteFrame() const {

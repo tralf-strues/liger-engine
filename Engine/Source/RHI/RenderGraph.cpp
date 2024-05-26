@@ -39,6 +39,10 @@ RenderGraph::BufferResource RenderGraph::GetBuffer(ResourceVersion version) {
   return resource_version_registry_.GetResourceByVersion<BufferResource>(version);
 }
 
+RenderGraph::BufferPackResource RenderGraph::GetBufferPack(ResourceVersion version) {
+  return resource_version_registry_.GetResourceByVersion<BufferPackResource>(version);
+}
+
 void RenderGraph::SetJob(const std::string_view node_name, Job job) {
   for (auto& node : dag_) {
     if (node.name == node_name) {
@@ -84,6 +88,22 @@ RenderGraphBuilder::ResourceVersion RenderGraphBuilder::DeclareImportTexture(Dev
 RenderGraphBuilder::ResourceVersion RenderGraphBuilder::DeclareImportBuffer(DeviceResourceState initial_state,
                                                                             DeviceResourceState final_state) {
   auto version = graph_->resource_version_registry_.DeclareResource<RenderGraph::BufferResource>();
+  graph_->imported_resource_usages_[graph_->resource_version_registry_.GetResourceId(version)] = {
+    .initial = initial_state,
+    .final   = final_state
+  };
+
+  return version;
+}
+
+RenderGraphBuilder::ResourceVersion RenderGraphBuilder::DeclareImportBufferPack(std::string_view name,
+                                                                                DeviceResourceState initial_state,
+                                                                                DeviceResourceState final_state) {
+  auto version = graph_->resource_version_registry_.AddResource<RenderGraph::BufferPackResource>({
+    .name    = name,
+    .buffers = new std::vector<RenderGraph::BufferResource>()
+  });
+
   graph_->imported_resource_usages_[graph_->resource_version_registry_.GetResourceId(version)] = {
     .initial = initial_state,
     .final   = final_state

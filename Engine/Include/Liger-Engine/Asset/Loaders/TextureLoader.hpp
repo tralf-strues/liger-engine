@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file VulkanTimelineSemaphore.hpp
- * @date 2024-02-25
+ * @file TextureLoader.hpp
+ * @date 2024-05-17
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,28 +27,25 @@
 
 #pragma once
 
-#include "VulkanUtils.hpp"
+#include <Liger-Engine/Asset/Loader.hpp>
 
 namespace liger::rhi {
+class IDevice;
+}  // namespace liger::rhi
 
-class VulkanTimelineSemaphore {
+namespace liger::asset::loaders {
+
+class TextureLoader : public asset::ILoader {
  public:
-  VulkanTimelineSemaphore() = default;
-  ~VulkanTimelineSemaphore();
+  explicit TextureLoader(rhi::IDevice& device);
+  ~TextureLoader() override = default;
 
-  void Init(VkDevice vk_device, uint64_t max_per_frame);
-  void Destroy();
+  const std::filesystem::path& FileExtension() const override;
 
-  VkSemaphore Get();
-
-  uint64_t GetValue() const;
-
-  uint64_t TimePoint(uint64_t absolute_frame, uint64_t local_time_point) const;
+  void Load(asset::Manager& manager, asset::Id asset_id, const std::filesystem::path& filepath) override;
 
  private:
-  VkDevice    vk_device_     {VK_NULL_HANDLE};
-  VkSemaphore vk_semaphore_  {VK_NULL_HANDLE};
-  uint64_t    max_per_frame_ {0};
+  rhi::IDevice& device_;
 };
 
-}  // namespace liger::rhi
+}  // namespace liger::asset::loaders

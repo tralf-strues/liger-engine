@@ -37,18 +37,18 @@
 
 namespace liger::render {
 
-struct ParticleSystemComponent {
-  SHADER_STRUCT_MEMBER(uint32_t)  max_particles {2048};
-  SHADER_STRUCT_MEMBER(float)     spawn_rate    {16.0f};
+struct ParticleEmitterInfo {
+  SHADER_STRUCT_MEMBER(uint32_t)  max_particles {512U};
+  SHADER_STRUCT_MEMBER(float)     spawn_rate    {32.0f};
   SHADER_STRUCT_MEMBER(float)     lifetime      {2.0f};
 
-  SHADER_STRUCT_MEMBER(glm::vec3) velocity_min  {-0.4f, 0.01f, -0.4f};
-  SHADER_STRUCT_MEMBER(glm::vec3) velocity_max  { 0.4f, 1.5f,   0.4f};
+  SHADER_STRUCT_MEMBER(glm::vec3) velocity_min  {-0.4f, 0.3f, -0.4f};
+  SHADER_STRUCT_MEMBER(glm::vec3) velocity_max  { 0.4f, 1.5f,  0.4f};
 
   SHADER_STRUCT_MEMBER(glm::vec4) color_start   {1.0f,  0.9f, 0.2f, 1.0f};
-  SHADER_STRUCT_MEMBER(glm::vec4) color_end     {1.0f,  0.7f, 0.6f, 0.7f};
+  SHADER_STRUCT_MEMBER(glm::vec4) color_end     {1.0f,  0.7f, 0.6f, 0.4f};
 
-  SHADER_STRUCT_MEMBER(float)     size_start    {0.07f};
+  SHADER_STRUCT_MEMBER(float)     size_start    {0.025f};
   SHADER_STRUCT_MEMBER(float)     size_end      {0.01f};
 };
 
@@ -60,25 +60,16 @@ struct Particle {
   SHADER_STRUCT_MEMBER(float)     lifetime;
 };
 
-struct RuntimeParticleSystemData {
-  static constexpr uint32_t kInvalidRuntimeHandle = std::numeric_limits<uint32_t>::max();
+struct RuntimeParticleEmitterHandle {
+  static constexpr uint32_t kInvalid = std::numeric_limits<uint32_t>::max();
 
-  bool                                             initialized{false};
-  uint32_t                                         particles{0};
-  float                                            spawn_rate{0.0f};
-  float                                            to_spawn{0.0f};
-  glm::mat4                                        transform;
-  rhi::SharedMappedBuffer<ParticleSystemComponent> ubo_particle_system;
-  std::shared_ptr<rhi::IBuffer>                    sbo_particles;
-  std::shared_ptr<rhi::IBuffer>                    sbo_free_list;
-  uint32_t                                         runtime_handle{kInvalidRuntimeHandle};
+  uint32_t runtime_handle{kInvalid};
 };
 
-class ParticleSystemFeature
-    : public IFeature,
-      public ecs::ComponentSystem<const ecs::WorldTransform, const ParticleSystemComponent, RuntimeParticleSystemData> {
+class ParticleSystemFeature : public IFeature {
  public:
-  static constexpr uint32_t kMaxParticleSystems = 1024U;
+  static constexpr uint32_t kMaxParticleSystems     = 64U;
+  static constexpr uint32_t kMaxParticlesPerEmitter = 512U;
 
   explicit ParticleSystemFeature(rhi::IDevice& device, asset::Manager& asset_manager, const FrameTimer& frame_timer);
   ~ParticleSystemFeature() override = default;
@@ -90,21 +81,43 @@ class ParticleSystemFeature
 
   void SetupEntitySystems(ecs::SystemGraph& systems) override;
 
-  void Run(const ecs::WorldTransform& transform, const ParticleSystemComponent& emitter,
-           RuntimeParticleSystemData& runtime_data) override;
+  RuntimeParticleEmitterHandle Add(const ParticleEmitterInfo& emitter_info);
+  void Update(RuntimeParticleEmitterHandle handle, const ParticleEmitterInfo& emitter_info, const glm::mat4& transform);
 
  private:
-  rhi::IDevice&                          device_;
-  asset::Handle<shader::Shader>          emit_shader_;
-  asset::Handle<shader::Shader>          update_shader_;
-  asset::Handle<shader::Shader>          render_shader_;
+  struct RenderGraphVersions {
+    rhi::RenderGraph::ResourceVersion emit_free_list;
+    rhi::RenderGraph::ResourceVersion emit_particles;
+    
+    rhi::RenderGraph::ResourceVersion update_free_list;
+    rhi::RenderGraph::ResourceVersion update_particles;
 
-  const FrameTimer&                      frame_timer_;
+    rhi::RenderGraph::ResourceVersion render_particles;
+  };
 
-  rhi::UniqueMappedBuffer<int32_t>       sbo_init_free_list_;
-  rhi::UniqueMappedBuffer<glm::mat4>     ubo_transform_;
+  struct Instance {
+    rhi::UniqueMappedBuffer<ParticleEmitterInfo> ubo_emitter;
+    std::unique_ptr<rhi::IBuffer>                sbo_particles;
+    std::unique_ptr<rhi::IBuffer>                sbo_free_list;
 
-  std::vector<RuntimeParticleSystemData> particle_systems_;
+    glm::mat4                                    transform;
+    float                                        pending_spawn{0.0f};
+    uint32_t                                     max_particles{0U};
+    bool                                         initialized{false};
+  };
+
+  bool Initialized() const;
+
+  rhi::IDevice&                 device_;
+  const FrameTimer&             frame_timer_;
+
+  asset::Handle<shader::Shader> emit_shader_;
+  asset::Handle<shader::Shader> update_shader_;
+  asset::Handle<shader::Shader> render_shader_;
+
+  std::vector<Instance>         instances_;
+  std::unique_ptr<rhi::IBuffer> sbo_init_free_list_;
+  RenderGraphVersions           rg_versions_;
 };
 
 }  // namespace liger::render

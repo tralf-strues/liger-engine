@@ -81,6 +81,7 @@ class VulkanDevice : public IDevice {
   void EndOffscreenFrame() override;
 
   uint32_t CurrentFrame() const override;
+  uint32_t NextFrame() const;
   uint64_t CurrentAbsoluteFrame() const override;
 
   void ExecuteConsecutive(RenderGraph& render_graph, Context& context) override;

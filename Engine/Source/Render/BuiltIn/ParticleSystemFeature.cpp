@@ -29,6 +29,53 @@
 
 namespace liger::render {
 
+class InitializeParticleEmitter : public ecs::ExclusiveComponentSystem<const ParticleEmitterInfo> {
+ public:
+  explicit InitializeParticleEmitter(ParticleSystemFeature& feature) : feature_(feature) {}
+  ~InitializeParticleEmitter() override = default;
+
+  void Setup(entt::registry& registry) override {
+    registry.on_construct<ParticleEmitterInfo>().connect<&InitializeParticleEmitter::OnAttach>(this);
+  }
+
+  void OnAttach(entt::registry& registry, entt::entity entity) {
+    const auto& emitter_info = registry.get<ParticleEmitterInfo>(entity);
+
+    auto* runtime_handle_ptr = registry.try_get<RuntimeParticleEmitterHandle>(entity);
+    if (runtime_handle_ptr == nullptr) {
+      registry.emplace<RuntimeParticleEmitterHandle>(entity, feature_.Add(emitter_info));
+    }
+  }
+
+  void Run(entt::registry& registry, entt::entity entity, const ParticleEmitterInfo& emitter_info) override {}
+
+  std::string_view Name() const override { return "InitializeParticleEmitter<const ParticleEmitterInfo>"; }
+
+ private:
+  ParticleSystemFeature& feature_;
+};
+
+class UpdateParticleEmitter : public ecs::ComponentSystem<const RuntimeParticleEmitterHandle,
+                                                          const ParticleEmitterInfo,
+                                                          const ecs::WorldTransform> {
+ public:
+  explicit UpdateParticleEmitter(ParticleSystemFeature& feature) : feature_(feature) {}
+  ~UpdateParticleEmitter() override = default;
+
+  void Run(const RuntimeParticleEmitterHandle& handle,
+           const ParticleEmitterInfo& emitter_info,
+           const ecs::WorldTransform& transform) override {
+    feature_.Update(handle, emitter_info, transform.Matrix());
+  }
+
+  std::string_view Name() const override {
+    return "UpdateParticleEmitter<const RuntimeParticleEmitterHandle, const ParticleEmitterInfo, const WorldTransform>";
+  }
+
+ private:
+  ParticleSystemFeature& feature_;
+};
+
 ParticleSystemFeature::ParticleSystemFeature(rhi::IDevice& device, asset::Manager& asset_manager,
                                              const FrameTimer& frame_timer)
     : device_(device),
@@ -36,137 +83,172 @@ ParticleSystemFeature::ParticleSystemFeature(rhi::IDevice& device, asset::Manage
       update_shader_(asset_manager.GetAsset<shader::Shader>(".liger/Shaders/BuiltIn.ParticleUpdate.lshader")),
       render_shader_(asset_manager.GetAsset<shader::Shader>(".liger/Shaders/BuiltIn.ParticleRender.lshader")),
       frame_timer_(frame_timer) {
-  ubo_transform_ = rhi::UniqueMappedBuffer<glm::mat4>(device_, rhi::DeviceResourceState::StorageBufferRead,
-                                                      "ParticleSystemFeature::ubo_transform_", kMaxParticleSystems);
-  sbo_init_free_list_ = rhi::UniqueMappedBuffer<int32_t>(device_, rhi::DeviceResourceState::TransferSrc,
-                                                         "ParticleSystemFeature::sbo_init_free_list_", 2049U);
+  instances_.reserve(kMaxParticleSystems);
 
-  sbo_init_free_list_.GetData()[0U] = 2048U;
-  for (uint32_t i = 0; i < 2048U; ++i) {
-    sbo_init_free_list_.GetData()[i + 1U] = i;
+  sbo_init_free_list_ = device_.CreateBuffer(rhi::IBuffer::Info {
+    .size        = (kMaxParticlesPerEmitter + 1U) * sizeof(int32_t),
+    .usage       = rhi::DeviceResourceState::TransferSrc,
+    .cpu_visible = true,
+    .name        = "ParticleSystemFeature::sbo_init_free_list_"
+  });
+
+  auto* mapped_free_list = reinterpret_cast<int32_t*>(sbo_init_free_list_->MapMemory());
+  mapped_free_list[0U] = 512U; // NOTE (tralf-strues): first element is the count of free particles
+  for (uint32_t i = 0; i < 512U; ++i) {
+    mapped_free_list[i + 1U] = i; 
   }
+  sbo_init_free_list_->UnmapMemory();
 }
 
-void ParticleSystemFeature::SetupRenderGraph(liger::rhi::RenderGraphBuilder& builder) {
-  builder.BeginCompute("SimulateParticles", false);
-  builder.SetJob([this](auto&, auto&, auto& cmds) {
-    if (emit_shader_.GetState() != asset::State::Loaded ||
-        update_shader_.GetState() != asset::State::Loaded ||
-        render_shader_.GetState() != asset::State::Loaded) {
+void ParticleSystemFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
+  rg_versions_.emit_free_list = builder.DeclareImportBufferPack("Particle Free Lists",
+                                                                rhi::DeviceResourceState::Undefined,
+                                                                rhi::DeviceResourceState::Undefined);
+  rg_versions_.emit_particles = builder.DeclareImportBufferPack("Particle Lists",
+                                                                rhi::DeviceResourceState::Undefined,
+                                                                rhi::DeviceResourceState::Undefined);
+
+  /* Emit */
+  builder.BeginCompute("ParticleSystemFeature - Emit");
+
+  rg_versions_.update_free_list = builder.ReadWriteBuffer(rg_versions_.emit_free_list, rhi::DeviceResourceState::StorageBufferReadWrite);
+  rg_versions_.update_particles = builder.ReadWriteBuffer(rg_versions_.emit_particles, rhi::DeviceResourceState::StorageBufferWrite);
+
+  builder.SetJob([this](rhi::RenderGraph& graph, auto&, auto& cmds) {
+    if (!Initialized()) {
       return;
     }
 
-    for (auto& particle_system : particle_systems_) {
-      if (!particle_system.initialized) {
-        cmds.CopyBuffer(sbo_init_free_list_.get(), particle_system.sbo_free_list.get(), sbo_init_free_list_->GetInfo().size);
-        //cmds.BufferBarrier(particle_system.sbo_free_list.get(), rhi::DeviceResourceState::TransferDst, rhi::DeviceResourceState::StorageBufferReadWrite);
-
-        particle_system.initialized = true;
+    for (auto& instance : instances_) {
+      if (instance.initialized) {
+        continue;
       }
+
+      graph.GetBufferPack(rg_versions_.emit_free_list).buffers->push_back(instance.sbo_free_list.get());
+      graph.GetBufferPack(rg_versions_.emit_particles).buffers->push_back(instance.sbo_particles.get());
+
+      cmds.CopyBuffer(sbo_init_free_list_.get(), instance.sbo_free_list.get(), instance.sbo_free_list->GetInfo().size);
+
+      instance.initialized = true;
     }
 
     emit_shader_->BindPipeline(cmds);
     emit_shader_->SetPushConstant("time", frame_timer_.AbsoluteTime());
-    for (auto& particle_system : particle_systems_) {
+    for (auto& instance : instances_) {
       float particles_to_spawn = 0.0f;
-      particle_system.to_spawn = std::modf(particle_system.to_spawn, &particles_to_spawn);
+      instance.pending_spawn = std::modf(instance.pending_spawn, &particles_to_spawn);
 
-      emit_shader_->SetBuffer("EmitterData", particle_system.ubo_particle_system->GetUniformDescriptorBinding());
-      emit_shader_->SetBuffer("Particles",   particle_system.sbo_particles->GetStorageDescriptorBinding());
-      emit_shader_->SetBuffer("FreeList",    particle_system.sbo_free_list->GetStorageDescriptorBinding());
+      emit_shader_->SetBuffer("EmitterData", instance.ubo_emitter->GetUniformDescriptorBinding());
+      emit_shader_->SetBuffer("Particles",   instance.sbo_particles->GetStorageDescriptorBinding());
+      emit_shader_->SetBuffer("FreeList",    instance.sbo_free_list->GetStorageDescriptorBinding());
       emit_shader_->SetPushConstant("particles_to_spawn", uint32_t(particles_to_spawn));
       emit_shader_->BindPushConstants(cmds);
 
-      cmds.Dispatch((particle_system.particles + 63) / 64, 1, 1);
-      //cmds.BufferBarrier(particle_system.sbo_particles.get(), rhi::DeviceResourceState::StorageBuffer, rhi::DeviceResourceState::StorageBuffer);
-      //cmds.BufferBarrier(particle_system.sbo_free_list.get(), rhi::DeviceResourceState::StorageBuffer, rhi::DeviceResourceState::StorageBuffer);
+      cmds.Dispatch((uint32_t(particles_to_spawn) + 31) / 32, 1, 1);
+    }
+  });
+
+  builder.EndCompute();
+
+  /* Update */
+  builder.BeginCompute("ParticleSystemFeature - Update");
+
+  builder.ReadWriteBuffer(rg_versions_.update_free_list, rhi::DeviceResourceState::StorageBufferReadWrite);
+  rg_versions_.render_particles = builder.ReadWriteBuffer(rg_versions_.update_particles, rhi::DeviceResourceState::StorageBufferWrite);
+
+  builder.SetJob([this](auto&, auto&, auto& cmds) {
+    if (!Initialized()) {
+      return;
     }
 
     update_shader_->BindPipeline(cmds);
     update_shader_->SetPushConstant("delta_time", frame_timer_.DeltaTime());
-    for (auto& particle_system : particle_systems_) {
-      update_shader_->SetBuffer("EmitterData", particle_system.ubo_particle_system->GetUniformDescriptorBinding());
-      update_shader_->SetBuffer("Particles",    particle_system.sbo_particles->GetStorageDescriptorBinding());
-      update_shader_->SetBuffer("FreeList",    particle_system.sbo_free_list->GetStorageDescriptorBinding());
+    for (auto& instance : instances_) {
+      update_shader_->SetBuffer("EmitterData", instance.ubo_emitter->GetUniformDescriptorBinding());
+      update_shader_->SetBuffer("Particles",   instance.sbo_particles->GetStorageDescriptorBinding());
+      update_shader_->SetBuffer("FreeList",    instance.sbo_free_list->GetStorageDescriptorBinding());
       update_shader_->BindPushConstants(cmds);
 
-      cmds.Dispatch((particle_system.particles + 63) / 64, 1, 1);
-      //cmds.BufferBarrier(particle_system.sbo_particles.get(), rhi::DeviceResourceState::StorageBuffer, rhi::DeviceResourceState::StorageBuffer);
-      //cmds.BufferBarrier(particle_system.sbo_free_list.get(), rhi::DeviceResourceState::StorageBuffer, rhi::DeviceResourceState::StorageBuffer);
+      cmds.Dispatch((instance.ubo_emitter.GetData()->max_particles + 63) / 64, 1, 1);
     }
   });
+
   builder.EndCompute();
 }
 
 void ParticleSystemFeature::AddLayerJobs(LayerMap& layer_map) {
   auto& layer = layer_map["Transparent"];
 
-  // TODO: setup tasks
+  layer->Emplace([this](rhi::RenderGraphBuilder& builder) {
+    builder.ReadBuffer(rg_versions_.render_particles, rhi::DeviceResourceState::StorageBufferRead);
+  });
 
   layer->Emplace([this](auto&, rhi::Context& context, rhi::ICommandBuffer& cmds) {
-    if (emit_shader_.GetState() != asset::State::Loaded ||
-        update_shader_.GetState() != asset::State::Loaded ||
-        render_shader_.GetState() != asset::State::Loaded) {
+    if (!Initialized()) {
       return;
     }
 
     render_shader_->BindPipeline(cmds);
-    render_shader_->SetBuffer("TransformData", ubo_transform_->GetStorageDescriptorBinding());
     render_shader_->SetBuffer("CameraData", context.Get<CameraDataBinding>().binding_ubo);
-    for (size_t idx = 0U; idx < particle_systems_.size(); ++idx) {
-      auto& particle_system = particle_systems_[idx];
-
-      ubo_transform_.GetData()[idx] = particle_system.transform;
-
-      render_shader_->SetPushConstant("transform_idx", static_cast<uint32_t>(idx));
-      render_shader_->SetBuffer("Particles", particle_system.sbo_particles->GetStorageDescriptorBinding());
+    for (auto& instance : instances_) {
+      render_shader_->SetPushConstant("transform", instance.transform);
+      render_shader_->SetBuffer("Particles", instance.sbo_particles->GetStorageDescriptorBinding());
       render_shader_->BindPushConstants(cmds);
 
-      cmds.Draw(4, 0, particle_system.particles, 0);
+      cmds.Draw(4, 0, instance.max_particles, 0);
     }
   });
 }
 
 void ParticleSystemFeature::SetupEntitySystems(liger::ecs::SystemGraph& systems) {
-  systems.Insert(this);
+  systems.Emplace(std::make_unique<InitializeParticleEmitter>(*this));
+  systems.Emplace(std::make_unique<UpdateParticleEmitter>(*this));
 }
 
-void ParticleSystemFeature::Run(const ecs::WorldTransform& transform, const ParticleSystemComponent& emitter,
-                                RuntimeParticleSystemData& runtime_data) {
-  if (runtime_data.runtime_handle == RuntimeParticleSystemData::kInvalidRuntimeHandle) {
-    auto idx = particle_systems_.size();
+RuntimeParticleEmitterHandle ParticleSystemFeature::Add(const ParticleEmitterInfo& emitter_info) {
+  const auto idx = static_cast<uint32_t>(instances_.size());
 
-    runtime_data.particles = emitter.max_particles;
+  auto& instance = instances_.emplace_back();
 
-    runtime_data.ubo_particle_system = rhi::SharedMappedBuffer<ParticleSystemComponent>(
-        device_, rhi::DeviceResourceState::UniformBuffer,
-        fmt::format("RuntimeParticleSystemData::ubo_particle_system[{0}]", idx)
-    );
+  instance.max_particles = emitter_info.max_particles;
 
-    runtime_data.sbo_particles = device_.CreateBuffer(rhi::IBuffer::Info {
-      .size        = emitter.max_particles * sizeof(Particle),
-      .usage       = rhi::DeviceResourceState::StorageBufferReadWrite,
-      .cpu_visible = false,
-      .name        = fmt::format("RuntimeParticleSystemData::sbo_particles[{0}]", idx)
-    });
+  instance.ubo_emitter = rhi::UniqueMappedBuffer<ParticleEmitterInfo>(
+      device_,
+      rhi::DeviceResourceState::UniformBuffer,
+      fmt::format("ParticleSystemFeature::instances_[{0}]::ubo_emitter", idx)
+  );
 
-    runtime_data.sbo_free_list = device_.CreateBuffer(rhi::IBuffer::Info {
-      .size        = sizeof(int32_t) + emitter.max_particles * sizeof(int32_t),
-      .usage       = rhi::DeviceResourceState::StorageBufferReadWrite | rhi::DeviceResourceState::TransferDst,
-      .cpu_visible = false,
-      .name        = fmt::format("RuntimeParticleSystemData::sbo_free_list[{0}]", idx)
-    });
+  instance.sbo_particles = device_.CreateBuffer(rhi::IBuffer::Info {
+    .size        = instance.max_particles * sizeof(Particle),
+    .usage       = rhi::DeviceResourceState::StorageBufferReadWrite,
+    .cpu_visible = false,
+    .name        = fmt::format("ParticleSystemFeature::instances_[{0}]::sbo_particles", idx)
+  });
 
-    runtime_data.runtime_handle = particle_systems_.size();
-    particle_systems_.emplace_back(runtime_data);
-  }
+  instance.sbo_free_list = device_.CreateBuffer(rhi::IBuffer::Info {
+    .size        = instance.max_particles * sizeof(int32_t),
+    .usage       = rhi::DeviceResourceState::StorageBufferReadWrite | rhi::DeviceResourceState::TransferDst,
+    .cpu_visible = false,
+    .name        = fmt::format("ParticleSystemFeature::instances_[{0}]::sbo_free_list", idx)
+  });
 
-  uint32_t idx = runtime_data.runtime_handle;
+  return RuntimeParticleEmitterHandle{.runtime_handle = idx};
+}
+
+void ParticleSystemFeature::Update(RuntimeParticleEmitterHandle handle,
+                                   const ParticleEmitterInfo& emitter_info,
+                                   const glm::mat4& transform) {
+  uint32_t idx = handle.runtime_handle;
   
-  *particle_systems_[idx].ubo_particle_system.GetData() = emitter;
-  particle_systems_[idx].transform  = transform.Matrix();
-  particle_systems_[idx].spawn_rate = emitter.spawn_rate;
-  particle_systems_[idx].to_spawn  += particle_systems_[idx].spawn_rate * frame_timer_.DeltaTime();
+  *instances_[idx].ubo_emitter.GetData() = emitter_info;
+  instances_[idx].transform              = transform;
+  instances_[idx].pending_spawn         += emitter_info.spawn_rate * frame_timer_.DeltaTime();
+}
+
+bool ParticleSystemFeature::Initialized() const {
+  return emit_shader_.GetState()   == asset::State::Loaded &&
+         update_shader_.GetState() == asset::State::Loaded &&
+         render_shader_.GetState() == asset::State::Loaded;
 }
 
 }  // namespace liger::render

@@ -34,6 +34,8 @@ layout(set = LIGER_DS, binding = LIGER_BINDING_SAMPLED_TEXTURE)       uniform sa
 
 layout(set = LIGER_DS, binding = LIGER_BINDING_STORAGE_TEXTURE, r32f) uniform image2D     global_images_2d[];
 
+const uint32_t kInvalidBinding = 0U;
+
 /************************************************************************************************
  * Source
  ************************************************************************************************/

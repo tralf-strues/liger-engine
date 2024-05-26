@@ -40,7 +40,13 @@
 namespace liger::asset::importers {
 
 struct MaterialData {
-  glm::vec4 color;
+  glm::vec3   albedo_color;
+  float       metallic;
+  float       roughness;
+
+  std::string albedo_map;
+  std::string normal_map;
+  std::string metallic_roughness_map;
 };
 
 struct SubmeshData {
@@ -68,17 +74,42 @@ void CalculateBoundingSphere(SubmeshData& submesh, aiAABB aabb) {
   submesh.bounding_sphere = glm::vec4(center, radius);
 }
 
-bool LoadMaterials(const aiScene* scene, std::vector<MaterialData>& materials) {
+bool LoadMaterials(const aiScene* scene, std::vector<MaterialData>& materials,
+                   const std::filesystem::path& source_filepath) {
+  std::filesystem::path source_dir = source_filepath.parent_path();
+
   materials.resize(scene->mNumMaterials);
   for (uint32_t material_idx = 0U; material_idx < scene->mNumMaterials; ++material_idx) {
-    /* Color values */
     const aiMaterial* assimp_material = scene->mMaterials[material_idx];
 
+    /* Color values */
     aiColor4D albedo_color{1, 1, 1, 1};
     if (aiGetMaterialColor(assimp_material, AI_MATKEY_BASE_COLOR, &albedo_color) == aiReturn_SUCCESS) {
-      materials[material_idx].color = ConvertAssimpColor(albedo_color);
+      materials[material_idx].albedo_color = ConvertAssimpColor(albedo_color);
     } else if (aiGetMaterialColor(assimp_material, AI_MATKEY_COLOR_DIFFUSE, &albedo_color) == aiReturn_SUCCESS) {
-      materials[material_idx].color = ConvertAssimpColor(albedo_color);
+      materials[material_idx].albedo_color = ConvertAssimpColor(albedo_color);
+    }
+
+    /* Scalars */
+    aiGetMaterialFloat(assimp_material, AI_MATKEY_METALLIC_FACTOR,  &materials[material_idx].metallic);
+    aiGetMaterialFloat(assimp_material, AI_MATKEY_ROUGHNESS_FACTOR, &materials[material_idx].roughness);
+    
+    /* Texture maps */
+    aiString albedo_map_path;
+    if (assimp_material->GetTexture(AI_MATKEY_BASE_COLOR_TEXTURE, &albedo_map_path) == aiReturn_SUCCESS ||
+        assimp_material->GetTexture(aiTextureType_DIFFUSE, 0, &albedo_map_path) == aiReturn_SUCCESS) {
+      materials[material_idx].albedo_map = (source_dir / albedo_map_path.C_Str()).string();
+    }
+
+    aiString normal_map_path;
+    if (assimp_material->GetTexture(aiTextureType_NORMALS, 0, &normal_map_path) == aiReturn_SUCCESS) {
+      materials[material_idx].normal_map = (source_dir / normal_map_path.C_Str()).string();
+    }
+
+    aiString metallic_roughness_map_path;
+    if (assimp_material->GetTexture(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_METALLICROUGHNESS_TEXTURE,
+                                    &metallic_roughness_map_path) == aiReturn_SUCCESS) {
+      materials[material_idx].metallic_roughness_map = (source_dir / metallic_roughness_map_path.C_Str()).string();
     }
   }
 
@@ -122,8 +153,9 @@ bool LoadSubmeshes(const aiScene* scene, std::vector<SubmeshData>& submeshes) {
                                  assimp_mesh->mTangents[vertex_idx].y,
                                  assimp_mesh->mTangents[vertex_idx].z};
 
-      //vertex.bitangent =
-      //    glm::vec3{mesh->mBitangents[vertex_idx].x, mesh->mBitangents[vertex_idx].y, mesh->mBitangents[vertex_idx].z};
+      vertex.bitangent = glm::vec3{assimp_mesh->mBitangents[vertex_idx].x,
+                                   assimp_mesh->mBitangents[vertex_idx].y,
+                                   assimp_mesh->mBitangents[vertex_idx].z};
     }
 
     for (uint32_t i = 0; i < assimp_mesh->mNumFaces; ++i) {
@@ -148,14 +180,53 @@ bool LoadSubmeshes(const aiScene* scene, std::vector<SubmeshData>& submeshes) {
 bool SaveMaterials(asset::Registry& registry, const std::filesystem::path& dst_folder,
                    const std::filesystem::path& base_filename, const std::vector<MaterialData>& materials,
                    std::vector<asset::Id>& out_ids) {
-  auto base_out_path = dst_folder / "Materials";
-  std::filesystem::create_directories(base_out_path);
+  auto base_out_path_textures = dst_folder / "Textures";
+  std::filesystem::create_directories(base_out_path_textures);
 
-  base_out_path /= base_filename;
+  std::unordered_map<std::string_view, asset::Id> texture_ids;
+  auto save_texture = [&texture_ids, &base_out_path_textures, &registry](std::string_view src_filename) -> asset::Id {
+    auto it = texture_ids.find(src_filename);
+    if (it != texture_ids.end()) {
+      return it->second;
+    }
+
+    std::filesystem::path dst_filename = base_out_path_textures / std::filesystem::path(src_filename).filename();
+    if (!std::filesystem::copy_file(src_filename, dst_filename)) {
+      LIGER_LOG_ERROR(kLogChannelAsset, "Failed to copy texture '{0}' to '{1}'", src_filename, dst_filename.string());
+      return asset::kInvalidId;
+    }
+
+    auto id = registry.Register(dst_filename.lexically_relative(registry.GetAssetFolder()));
+    texture_ids[src_filename] = id;
+
+    return id;
+  };
+
+  for (uint32_t material_idx = 0U; material_idx < materials.size(); ++material_idx) {
+    if (!materials[material_idx].albedo_map.empty() &&
+        save_texture(materials[material_idx].albedo_map) == asset::kInvalidId) {
+      return false;
+    }
+
+    if (!materials[material_idx].normal_map.empty() &&
+        save_texture(materials[material_idx].normal_map) == asset::kInvalidId) {
+      return false;
+    }
+
+    if (!materials[material_idx].metallic_roughness_map.empty() &&
+        save_texture(materials[material_idx].metallic_roughness_map) == asset::kInvalidId) {
+      return false;
+    }
+  }
+
+  auto base_out_path_materials = dst_folder / "Materials";
+  std::filesystem::create_directories(base_out_path_materials);
+
+  base_out_path_materials /= base_filename;
   out_ids.reserve(materials.size());
 
   for (uint32_t material_idx = 0U; material_idx < materials.size(); ++material_idx) {
-    std::filesystem::path filename = base_out_path;
+    std::filesystem::path filename = base_out_path_materials;
     filename += fmt::format("{0}.lmat", material_idx);
 
     std::ofstream file(filename, std::ios::out);
@@ -164,7 +235,27 @@ bool SaveMaterials(asset::Registry& registry, const std::filesystem::path& dst_f
       return false;
     }
 
-    fmt::print(file, "Color: {0}", materials[material_idx].color);
+    fmt::println(file, "Albedo: {0}",    materials[material_idx].albedo_color);
+    fmt::println(file, "Metallic: {0}",  materials[material_idx].metallic);
+    fmt::println(file, "Roughness: {0}", materials[material_idx].roughness);
+
+    if (!materials[material_idx].albedo_map.empty()) {
+      fmt::println(file, "AlbedoMap: 0x{0:X}", *texture_ids[materials[material_idx].albedo_map]);
+    } else {
+      fmt::println(file, "AlbedoMap: 0x0");
+    }
+
+    if (!materials[material_idx].normal_map.empty()) {
+      fmt::println(file, "NormalMap: 0x{0:X}", *texture_ids[materials[material_idx].normal_map]);
+    } else {
+      fmt::println(file, "NormalMap: 0x0");
+    }
+
+    if (!materials[material_idx].metallic_roughness_map.empty()) {
+      fmt::println(file, "MetallicRoughnessMap: 0x{0:X}", *texture_ids[materials[material_idx].metallic_roughness_map]);
+    } else {
+      fmt::println(file, "MetallicRoughnessMap: 0x0");
+    }
     
     file.close();
 
@@ -251,7 +342,7 @@ asset::IImporter::Result StaticMeshImporter::Import(asset::Registry& registry, c
   }
 
   std::vector<MaterialData> materials;
-  if (!LoadMaterials(scene, materials)) {
+  if (!LoadMaterials(scene, materials, src)) {
     return kFailedResult;
   }
 

@@ -139,7 +139,7 @@ bool VulkanDescriptorManager::Init(VulkanDevice& device) {
   /* Initialize free binding sets */
   auto initialize_set = [](auto& free_bindings) {
     free_bindings.reserve(kMaxBindlessResourcesPerType);
-    for (uint32_t binding = 1; binding < kMaxBindlessResourcesPerType; ++binding) {
+    for (uint32_t binding = 1U; binding < kMaxBindlessResourcesPerType; ++binding) {
       free_bindings.insert(binding);
     }
   };
@@ -157,12 +157,12 @@ bool VulkanDescriptorManager::Init(VulkanDevice& device) {
     .magFilter               = VK_FILTER_LINEAR,
     .minFilter               = VK_FILTER_LINEAR,
     .mipmapMode              = VK_SAMPLER_MIPMAP_MODE_LINEAR,
-    .addressModeU            = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
-    .addressModeV            = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
-    .addressModeW            = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
+    .addressModeU            = VK_SAMPLER_ADDRESS_MODE_REPEAT,
+    .addressModeV            = VK_SAMPLER_ADDRESS_MODE_REPEAT,
+    .addressModeW            = VK_SAMPLER_ADDRESS_MODE_REPEAT,
     .mipLodBias              = 0,
-    .anisotropyEnable        = VK_TRUE,  // FIXME (tralf-strues):
-    .maxAnisotropy           = 4.0,      // FIXME (tralf-strues):
+    .anisotropyEnable        = VK_TRUE,   // FIXME (tralf-strues):
+    .maxAnisotropy           = 4.0,       // FIXME (tralf-strues):
     .compareEnable           = VK_FALSE,
     .compareOp               = VK_COMPARE_OP_ALWAYS,
     .minLod                  = 0.0,

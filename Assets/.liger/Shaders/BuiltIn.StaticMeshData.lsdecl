@@ -3,6 +3,7 @@ Data: | #glsl
     f32vec3 position;
     f32vec3 normal;
     f32vec3 tangent;
+    f32vec3 bitangent;
     f32vec2 tex_coords;
   };
 
@@ -27,7 +28,14 @@ Data: | #glsl
   });
 
   struct Material {
-    f32vec4 color;
+    f32vec3   albedo_color;
+    float32_t metallic;
+    float32_t roughness;
+
+    /* NOTE (tralf-strues): texture maps may be invalid, must be checked against kInvalidBinding! */
+    uint32_t  binding_albedo_map;
+    uint32_t  binding_normal_map;
+    uint32_t  binding_metallic_roughness_map;
   };
 
   RegisterUniformBuffer(MaterialUBO, {

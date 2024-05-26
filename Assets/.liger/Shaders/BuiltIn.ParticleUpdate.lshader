@@ -32,8 +32,11 @@ ComputeShader:
   CodeSnippets:
     - Insert: auto-global
       Code: | #glsl
+        const f32vec3 kGravity = f32vec3(0.0f, -0.1f, 0.0f);
+
         void UpdateParticle(inout Particle particle, int32_t idx, const LigerInput liger_in) {
           if (particle.lifetime <= 0.0f) {
+            particle.color.a = 0.0f;
             return;
           }
 
@@ -41,7 +44,9 @@ ComputeShader:
 
           float32_t t = 1.0f - particle.lifetime / emitter.lifetime;
 
+          particle.velocity += kGravity * liger_in.delta_time;
           particle.position += particle.velocity * liger_in.delta_time;
+
           particle.color     = mix(emitter.color_start, emitter.color_end, t);
           particle.size      = mix(emitter.size_start, emitter.size_end, t);
           particle.lifetime -= liger_in.delta_time;

@@ -85,9 +85,10 @@ class ICommandBuffer {
    * @note Command capabilities must contain @ref Capability::Graphics and @ref Capability::Transfer!
    *
    * @param texture
+   * @param final_state
    * @param filter
    */
-  virtual void GenerateMipLevels(ITexture* texture, Filter filter = Filter::Linear) = 0;
+  virtual void GenerateMipLevels(ITexture* texture, DeviceResourceState final_state, Filter filter) = 0;
 
   /**
    * @brief Set buffer barrier to transition it from src state to dst state.

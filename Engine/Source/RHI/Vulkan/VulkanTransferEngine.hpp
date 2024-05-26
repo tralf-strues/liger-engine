@@ -29,7 +29,8 @@
 
 #include <Liger-Engine/RHI/Device.hpp>
 
-#include "VulkanUtils.hpp"
+#include "VulkanCommandPool.hpp"
+#include "VulkanTimelineSemaphore.hpp"
 
 #include <list>
 
@@ -42,31 +43,44 @@ class VulkanTransferEngine {
   explicit VulkanTransferEngine(VulkanDevice& device);
   ~VulkanTransferEngine();
 
-  void Init(VkQueue queue, uint32_t queue_family, uint64_t staging_capacity);
+  void Init(uint64_t staging_capacity);
 
   void Request(IDevice::DedicatedTransferRequest&& transfer);
 
-  void SubmitAndWait();
+  void Submit();
 
  private:
-  void Flip();
+  void Flip(uint32_t next_frame);
   void ReschedulePending();
 
+  void ProcessBufferTransfers(IDevice::DedicatedTransferRequest& transfer);
+  void ProcessTextureTransfers(IDevice::DedicatedTransferRequest& transfer);
+
+  struct Callback {
+    IDevice::TransferCallback callback;
+    uint64_t                  semaphore_value;
+  };
+
+  struct StagingBuffer {
+    VkBuffer      buffer;
+    VmaAllocation allocation;
+  };
+
   VulkanDevice&                                device_;
-  VkQueue                                      queue_{VK_NULL_HANDLE};
+  VulkanTimelineSemaphore                      timeline_semaphore_;
 
-  VkCommandPool                                command_pool_{VK_NULL_HANDLE};
-  VkCommandBuffer                              cmds_[2U]{VK_NULL_HANDLE, VK_NULL_HANDLE};
+  VulkanCommandPool                            command_pool_;
+  VulkanCommandBuffer                          cmds_transfer_;
+  VulkanCommandBuffer                          cmds_graphics_;
 
-  VkBuffer                                     staging_buffers_[2U]{VK_NULL_HANDLE, VK_NULL_HANDLE};
-  VmaAllocation                                allocations_[2U]{VK_NULL_HANDLE, VK_NULL_HANDLE};
+  std::vector<StagingBuffer>                   staging_buffers_;
   uint64_t                                     staging_capacity_{0U};
 
-  uint32_t                                     cur_idx_{0U};
-  std::vector<IDevice::TransferCallback>       cur_callbacks_;
+  uint32_t                                     cur_frame_;
   void*                                        cur_mapped_data_{nullptr};
   uint64_t                                     cur_data_size_{0U};
 
+  std::list<Callback>                          callbacks_;
   std::list<IDevice::DedicatedTransferRequest> pending_;
 };
 

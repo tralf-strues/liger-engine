@@ -101,7 +101,7 @@ void StaticMeshFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
   builder.WriteBuffer(rg_versions_.batched_objects, DeviceResourceState::TransferDst);
   builder.WriteBuffer(rg_versions_.draw_commands,   DeviceResourceState::TransferDst);
   builder.SetJob([this](auto& graph, auto& context, auto& cmds) {
-    bool prepare_draws_only = true;
+    bool prepare_draws_only = false;
 
     if (objects_added_ || !pending_remove_.empty()) {
       Rebuild(cmds);

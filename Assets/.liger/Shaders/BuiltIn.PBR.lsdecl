@@ -19,5 +19,69 @@ Data: | #glsl
 CodeSnippets:
   - Insert: auto-global
     Code: | #glsl
-      f32vec3 PBR_RadianceSample(PBR_SurfacePoint surface_point, PBR_LightSample light_sample);
-      // TODO (tralf-strues): Implement
+      const float32_t PI = 3.14159265359f;
+
+      float32_t PBR_NDF_TR_GGX(f32vec3 n, f32vec3 h, float32_t roughness);
+      f32vec3   PBR_FresnelSchlick(f32vec3 h, f32vec3 v, f32vec3 f0);
+      float32_t PBR_GSF_Schlick_GGX(f32vec3 n, f32vec3 v, float32_t k);
+      float32_t PBR_GSF_Smith_Schlick_GGX(f32vec3 n, f32vec3 v, f32vec3 l, float32_t k);
+
+      f32vec3 PBR_RadianceSample(PBR_SurfacePoint surface_point, PBR_LightSample light_sample) {
+        // Normal Distribution Function, aka alignment of microfacets to the halfway vector
+        float32_t NDF                  = PBR_NDF_TR_GGX(surface_point.normal, light_sample.half_vector, surface_point.roughness);
+
+        // Fresnel Function, aka how much light is reflected
+        f32vec3   Fresnel              = PBR_FresnelSchlick(light_sample.half_vector, surface_point.to_camera, surface_point.f0);
+
+        // Geometry Shadowing Function, aka coefficient on the amount of light, which is self-shadowed or obstructed
+        float32_t k                    = (surface_point.roughness + 1.0f) * (surface_point.roughness + 1.0f) / 8.0f;  // Roughness remapping
+        float32_t GSF                  = PBR_GSF_Smith_Schlick_GGX(surface_point.normal, surface_point.to_camera, light_sample.to_light, k);
+
+        // Specular part
+        f32vec3   Ks                   = Fresnel;
+        float32_t specular_numerator   = NDF * GSF; 
+        float32_t specular_denominator = 4.0f *
+                                         max(dot(surface_point.normal, surface_point.to_camera), 0.0f) *
+                                         max(dot(surface_point.normal, light_sample.to_light),   0.0f) +
+                                         0.0001f; // Used to avoid division by zero
+        float32_t specular             = specular_numerator / specular_denominator;
+
+        // Diffuse part
+        f32vec3   Kd                   = (1.0f - Ks) * (1.0f - surface_point.metallic);
+        f32vec3   diffuse              = surface_point.base_color / PI;
+
+        // Assemble it all together
+        f32vec3   BRDF                 = Ks * specular + Kd * diffuse;
+        f32vec3   radiance             = BRDF * light_sample.radiance * max(dot(surface_point.normal, light_sample.to_light), 0.0f);
+
+        return radiance;
+      }
+
+      float32_t PBR_NDF_TR_GGX(f32vec3 n, f32vec3 h, float32_t roughness) {
+        float32_t a  = roughness * roughness;  // Apparently looks better
+        float32_t a2 = a * a; 
+
+        float32_t nh = max(dot(n, h), 0.0f);
+
+        float32_t numerator   = a2;
+        float32_t denominator = nh * nh * (a2 - 1.0) + 1.0;
+                  denominator = PI * denominator * denominator;
+
+        return numerator / denominator;
+      }
+
+      f32vec3 PBR_FresnelSchlick(f32vec3 h, f32vec3 v, f32vec3 f0) {
+        return f0 + (1.0 - f0) * pow(clamp(1.0f - max(dot(h, v), 0.0f), 0.0f, 1.0f), 5.0f);
+      }
+
+      float32_t PBR_GSF_Schlick_GGX(f32vec3 n, f32vec3 v, float32_t k) {
+        float32_t nv = max(dot(n, v), 0.0f);
+        return nv / (nv * (1.0f - k) + k);
+      }
+
+      float32_t PBR_GSF_Smith_Schlick_GGX(f32vec3 n, f32vec3 v, f32vec3 l, float32_t k) {
+        float32_t shadowing   = PBR_GSF_Schlick_GGX(n, l, k);
+        float32_t obstruction = PBR_GSF_Schlick_GGX(n, v, k);
+
+        return shadowing * obstruction;
+      }

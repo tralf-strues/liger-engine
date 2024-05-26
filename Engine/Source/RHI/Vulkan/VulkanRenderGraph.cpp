@@ -169,7 +169,7 @@ void VulkanRenderGraph::Execute(Context& context, VkSemaphore wait, uint64_t wai
       const auto& original_node = dag_.GetNode(GetNodeHandle(*node));
       cmds->BeginDebugLabelRegion(original_node.name, GetDebugLabelColor(original_node.type));
 
-      if (node->in_image_barrier_count > 0 || node->in_buffer_barrier_count) {
+      if (node->in_image_barrier_count > 0 || node->in_buffer_barrier_count > 0) {
         const VkDependencyInfo dependency_info {
           .sType                    = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
           .pNext                    = nullptr,
@@ -184,6 +184,8 @@ void VulkanRenderGraph::Execute(Context& context, VkSemaphore wait, uint64_t wai
 
         vkCmdPipelineBarrier2(cmds->Get(), &dependency_info);
       }
+
+      SetBufferPackBarriers(cmds->Get(), *node);
 
       const auto* rendering_info = node->rendering_info;
 
@@ -856,14 +858,75 @@ void VulkanRenderGraph::SetupBarriers() {
         ++vulkan_node.in_buffer_barrier_count;
       };
 
+      auto add_in_buffer_pack_barrier = [&](auto read_write) {
+        const auto resource_id = resource_version_registry_.GetResourceId(read_write.version);
+        if (!resource_version_registry_.TryGetResourceById<BufferPackResource>(resource_id)) {
+          return;
+        }
+
+        const auto state    = read_write.state;
+        const auto usage_it = last_usages.find(resource_id);
+        if (usage_it == last_usages.end()) {
+          last_usages[resource_id] = {
+            .access      = GetVulkanAccessFlags(state),
+            .stages      = GetVulkanPipelineDstStage(node.type, state),
+            .node_handle = node_handle
+          };
+          return;
+        }
+
+        auto& last_usage = usage_it->second;
+
+        if (last_usage.node_handle && last_usage.node_handle == node_handle) {
+          return;
+        }
+
+        auto dst_stages = GetVulkanPipelineDstStage(node.type, state);
+        auto dst_access = GetVulkanAccessFlags(state);
+
+        //if (last_usage.access == dst_access) {
+        //  return;
+        //}
+
+        VkBufferMemoryBarrier2 buffer_barrier {
+          .sType               = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2,
+          .pNext               = nullptr,
+          .srcStageMask        = last_usage.stages,
+          .srcAccessMask       = last_usage.access,
+          .dstStageMask        = dst_stages,
+          .dstAccessMask       = dst_access,
+          .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+          .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+          .buffer              = VK_NULL_HANDLE,  // Set dynamically
+          .offset              = 0U,              // Set dynamically
+          .size                = 0U,              // Set dynamically
+        };
+
+        last_usages[resource_id] = {
+          .access      = dst_access,
+          .stages      = dst_stages,
+          .node_handle = node_handle
+        };
+
+        if (vulkan_node.in_buffer_pack_barrier_count == 0) {
+          vulkan_node.in_buffer_pack_barrier_begin_idx = vk_buffer_pack_barriers_.size();
+        }
+
+        vk_buffer_pack_barriers_.emplace_back(buffer_barrier);
+        buffer_pack_barrier_resources_.emplace_back(resource_id);
+        ++vulkan_node.in_buffer_pack_barrier_count;
+      };
+
       for (const auto& read : node.read) {
         add_in_image_barrier(read);
         add_in_buffer_barrier(read);
+        add_in_buffer_pack_barrier(read);
       }
 
       for (const auto& write : node.write) {
         add_in_image_barrier(write);
         add_in_buffer_barrier(write);
+        add_in_buffer_pack_barrier(write);
       }
 
       for (const auto& write : node.write) {
@@ -973,8 +1036,8 @@ void VulkanRenderGraph::DumpGraphviz(std::string_view filename) {
 
   static const std::unordered_map<Node::Type, const char*> kFillcolorPerNodeType {
       {Node::Type::RenderPass, "goldenrod1"},
-      {Node::Type::Compute, "chartreuse3"},
-      {Node::Type::Transfer, "darkturquoise"}
+      {Node::Type::Compute,    "chartreuse3"},
+      {Node::Type::Transfer,   "darkturquoise"}
   };
 
   constexpr const char* kFillcolorBuffer  = "gainsboro";
@@ -1028,12 +1091,29 @@ void VulkanRenderGraph::DumpGraphviz(std::string_view filename) {
           fmt::print(os, "</td></tr>\n");
         };
 
+        auto dump_buffer_pack_barrier = [&](auto barrier_idx, auto type) {
+          const auto  pack    = resource_version_registry_.GetResourceById<BufferPackResource>(buffer_pack_barrier_resources_[barrier_idx]);
+          const auto& barrier = vk_buffer_pack_barriers_[barrier_idx];
+
+          fmt::print(os, "\t\t\t<tr><td align=\"left\">");
+          fmt::print(os, "[{0}] {1} barrier for <B>{2}</B> <BR align=\"left\"/><BR align=\"left\"/>", barrier_idx, type, pack.name);
+          fmt::print(os, "- srcStageMask: {0} <BR align=\"left\"/>", string_VkPipelineStageFlags2(barrier.srcStageMask));
+          fmt::print(os, "- srcAccessMask: {0} <BR align=\"left\"/><BR align=\"left\"/>", string_VkAccessFlags2(barrier.srcAccessMask));
+          fmt::print(os, "- dstStageMask: {0} <BR align=\"left\"/>", string_VkPipelineStageFlags2(barrier.dstStageMask));
+          fmt::print(os, "- dstAccessMask: {0} <BR align=\"left\"/>", string_VkAccessFlags2(barrier.dstAccessMask));
+          fmt::print(os, "</td></tr>\n");
+        };
+
         for (uint32_t i = 0; i < vulkan_node.in_image_barrier_count; ++i) {
           dump_image_barrier(vulkan_node.in_image_barrier_begin_idx + i, "In");
         }
 
         for (uint32_t i = 0; i < vulkan_node.in_buffer_barrier_count; ++i) {
           dump_buffer_barrier(vulkan_node.in_buffer_barrier_begin_idx + i, "In");
+        }
+
+        for (uint32_t i = 0; i < vulkan_node.in_buffer_pack_barrier_count; ++i) {
+          dump_buffer_pack_barrier(vulkan_node.in_buffer_pack_barrier_begin_idx + i, "In");
         }
 
         for (uint32_t i = 0; i < vulkan_node.out_image_barrier_count; ++i) {
@@ -1063,6 +1143,19 @@ void VulkanRenderGraph::DumpGraphviz(std::string_view filename) {
                  "style=\"rounded, filled\", fillcolor={7}, fontsize={8}]\n",
                  version, info.name, info.size, info.cpu_visible, EnumMaskToString(info.usage, ','), version,
                  resource_version_registry_.GetResourceId(version),
+                 kFillcolorBuffer, kFontSizeResource);
+    }
+
+    const auto buffer_pack = resource_version_registry_.TryGetResourceByVersion<BufferPackResource>(version);
+    if (buffer_pack) {
+      size_t count = buffer_pack->buffers ? buffer_pack->buffers->size() : 0U;
+      fmt::print(os,
+                 "R{0} "
+                 "[label=<{{ <B>{1}</B> <BR/><BR/> "
+                 "[Buffer Pack] <BR/> Buffers: {2} | "
+                 "Version: {3} <BR/> ID: {4} }}> "
+                 "style=\"rounded, filled\", fillcolor={5}, fontsize={6}]\n",
+                 version, buffer_pack->name, count, version, resource_version_registry_.GetResourceId(version),
                  kFillcolorBuffer, kFontSizeResource);
     }
 
@@ -1122,6 +1215,44 @@ DAG<VulkanRenderGraph::Node>::NodeHandle VulkanRenderGraph::GetNodeHandle(const 
 
 uint64_t VulkanRenderGraph::GetSemaphoreValue(uint32_t queue_idx, uint64_t base_value) const {
   return device_->CurrentAbsoluteFrame() * (submits_per_queue_[queue_idx].size() + 1) + base_value;
+}
+
+void VulkanRenderGraph::SetBufferPackBarriers(VkCommandBuffer vk_cmds, VulkanNode& vulkan_node) const {
+  if (vulkan_node.in_buffer_pack_barrier_count == 0U) {
+    return;
+  }
+
+  std::vector<VkBufferMemoryBarrier2> barriers;
+  for (uint32_t i = 0U; i < vulkan_node.in_buffer_pack_barrier_count; ++i) {
+    const size_t start_idx   = barriers.size();
+    const size_t barrier_idx = vulkan_node.in_buffer_pack_barrier_begin_idx + i;
+
+    auto pack =
+      *resource_version_registry_.TryGetResourceById<BufferPackResource>(buffer_pack_barrier_resources_[barrier_idx]);
+    barriers.insert(barriers.end(), pack.buffers->size(), vk_buffer_pack_barriers_[barrier_idx]);
+
+    for (size_t buffer_idx = 0U; buffer_idx < pack.buffers->size(); ++buffer_idx) {
+      auto& barrier = barriers[start_idx + buffer_idx];
+
+      barrier.buffer = static_cast<const VulkanBuffer*>(pack.buffers->at(buffer_idx))->GetVulkanBuffer();
+      barrier.offset = 0U;
+      barrier.size   = VK_WHOLE_SIZE;
+    }
+  }
+
+  const VkDependencyInfo dependency_info {
+    .sType                    = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
+    .pNext                    = nullptr,
+    .dependencyFlags          = 0,
+    .memoryBarrierCount       = 0,
+    .pMemoryBarriers          = nullptr,
+    .bufferMemoryBarrierCount = static_cast<uint32_t>(barriers.size()),
+    .pBufferMemoryBarriers    = barriers.data(),
+    .imageMemoryBarrierCount  = 0,
+    .pImageMemoryBarriers     = nullptr
+  };
+
+  vkCmdPipelineBarrier2(vk_cmds, &dependency_info);
 }
 
 VkPipelineStageFlags2 VulkanRenderGraph::GetVulkanPipelineSrcStage(Node::Type          node_type,

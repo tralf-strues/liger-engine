@@ -60,19 +60,24 @@ class VulkanRenderGraph : public RenderGraph {
   struct VulkanNode {
     std::string name;
 
-    VkRenderingInfoKHR* rendering_info   = nullptr;
-    uint32_t            queue_idx        = 0;
-    DependencyLevel     dependency_level = 0;
+    VkRenderingInfoKHR* rendering_info         = nullptr;
+    uint32_t            queue_idx              = 0;
+    DependencyLevel     dependency_level       = 0;
 
-    uint32_t in_image_barrier_begin_idx  = 0;
-    uint32_t in_image_barrier_count      = 0;
-    uint32_t out_image_barrier_begin_idx = 0;
-    uint32_t out_image_barrier_count     = 0;
+    uint32_t in_image_barrier_begin_idx        = 0;
+    uint32_t in_image_barrier_count            = 0;
+    uint32_t out_image_barrier_begin_idx       = 0;
+    uint32_t out_image_barrier_count           = 0;
 
-    uint32_t in_buffer_barrier_begin_idx  = 0;
-    uint32_t in_buffer_barrier_count      = 0;
-    uint32_t out_buffer_barrier_begin_idx = 0;
-    uint32_t out_buffer_barrier_count     = 0;
+    uint32_t in_buffer_barrier_begin_idx       = 0;
+    uint32_t in_buffer_barrier_count           = 0;
+    uint32_t out_buffer_barrier_begin_idx      = 0;
+    uint32_t out_buffer_barrier_count          = 0;
+
+    uint32_t in_buffer_pack_barrier_begin_idx  = 0;
+    uint32_t in_buffer_pack_barrier_count      = 0;
+    uint32_t out_buffer_pack_barrier_begin_idx = 0;
+    uint32_t out_buffer_pack_barrier_count     = 0;    
   };
 
   struct Submit {
@@ -104,6 +109,8 @@ class VulkanRenderGraph : public RenderGraph {
 
   uint64_t GetSemaphoreValue(uint32_t queue_idx, uint64_t base_value) const;
 
+  void SetBufferPackBarriers(VkCommandBuffer vk_cmds, VulkanNode& vulkan_node) const;
+
   VulkanDevice* device_{nullptr};
   bool          dirty_{false};
   bool          first_frame_{true};
@@ -129,6 +136,8 @@ class VulkanRenderGraph : public RenderGraph {
   std::vector<ResourceId>             image_barrier_resources_;
   std::vector<VkBufferMemoryBarrier2> vk_buffer_barriers_;
   std::vector<ResourceId>             buffer_barrier_resources_;
+  std::vector<VkBufferMemoryBarrier2> vk_buffer_pack_barriers_;
+  std::vector<ResourceId>             buffer_pack_barrier_resources_;
 };
 
 }  // namespace liger::rhi

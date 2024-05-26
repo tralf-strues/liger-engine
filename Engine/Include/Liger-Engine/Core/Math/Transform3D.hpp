@@ -62,7 +62,7 @@ struct Transform3D {
   inline void Rotate(float angle, const glm::vec3& axis);
 
   glm::vec3 position{0.0f};
-  glm::quat rotation{};
+  glm::quat rotation{1.0f, 0.0f, 0.0f, 0.0f};
   glm::vec3 scale{1.0f};
 };
 

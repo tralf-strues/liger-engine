@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file VulkanTimelineSemaphore.hpp
- * @date 2024-02-25
+ * @file CameraAspectSystem.cpp
+ * @date 2024-05-26
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -25,30 +25,16 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#pragma once
+#include <Liger-Engine/ECS/BuiltIn/CameraAspectSystem.hpp>
 
-#include "VulkanUtils.hpp"
+namespace liger::ecs {
 
-namespace liger::rhi {
+CameraAspectSystem::CameraAspectSystem(const Window& window) : window_(window) {}
 
-class VulkanTimelineSemaphore {
- public:
-  VulkanTimelineSemaphore() = default;
-  ~VulkanTimelineSemaphore();
+void CameraAspectSystem::Run(Camera& camera) {
+  if (!camera.fixed_aspect) {
+    camera.aspect = static_cast<float>(window_.GetWidth()) / static_cast<float>(window_.GetHeight());
+  }
+}
 
-  void Init(VkDevice vk_device, uint64_t max_per_frame);
-  void Destroy();
-
-  VkSemaphore Get();
-
-  uint64_t GetValue() const;
-
-  uint64_t TimePoint(uint64_t absolute_frame, uint64_t local_time_point) const;
-
- private:
-  VkDevice    vk_device_     {VK_NULL_HANDLE};
-  VkSemaphore vk_semaphore_  {VK_NULL_HANDLE};
-  uint64_t    max_per_frame_ {0};
-};
-
-}  // namespace liger::rhi
+}  // namespace liger::ecs

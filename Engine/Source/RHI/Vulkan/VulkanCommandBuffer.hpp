@@ -37,6 +37,7 @@ class VulkanCommandBuffer : public ICommandBuffer {
  public:
   static constexpr uint32_t kMaxBindVertexBuffers = 8;
 
+  VulkanCommandBuffer() = default;
   explicit VulkanCommandBuffer(VkCommandBuffer vk_cmds, VkDescriptorSet ds, bool use_debug_labels);
   ~VulkanCommandBuffer() override = default;
 
@@ -45,7 +46,7 @@ class VulkanCommandBuffer : public ICommandBuffer {
   void Begin();
   void End();
 
-  void GenerateMipLevels(ITexture* texture, Filter filter) override;
+  void GenerateMipLevels(ITexture* texture, DeviceResourceState final_state, Filter filter) override;
 
   void BufferBarrier(const IBuffer* buffer, DeviceResourceState src_state, DeviceResourceState dst_state) override;
 
@@ -64,7 +65,8 @@ class VulkanCommandBuffer : public ICommandBuffer {
   void DrawIndexed(uint32_t index_count, uint32_t first_index, uint32_t vertex_offset, uint32_t instance_count,
                    uint32_t first_instance) override;
 
-  void DrawIndexedIndirect(const IBuffer* indirect_buffer, uint64_t offset, uint64_t stride, uint32_t draw_count) override;
+  void DrawIndexedIndirect(const IBuffer* indirect_buffer, uint64_t offset, uint64_t stride,
+                           uint32_t draw_count) override;
 
   void CopyBuffer(const IBuffer* src_buffer, IBuffer* dst_buffer, uint64_t size, uint64_t src_offset,
                   uint64_t dst_offset) override;

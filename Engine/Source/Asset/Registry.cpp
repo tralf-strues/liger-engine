@@ -47,10 +47,6 @@ Registry::Registry(fs::path registry_file)
     return;
   }
 
-  for (const auto& [filepath, id] : ids_) {
-    LIGER_LOG_INFO(kLogChannelAsset, "AssetEntry [file='{0}', id=0x{1:X}]", filepath.string(), id.Value());
-  }
-
   valid_ = true;
 }
 

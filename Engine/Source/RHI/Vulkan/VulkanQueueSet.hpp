@@ -50,7 +50,7 @@ class VulkanQueueSet {
   const QueueFamilyIndices& GetQueueFamilyIndices() const;
 
   uint32_t GetQueueCount() const;
-  VkQueue GetQueueByIdx(uint32_t queue_idx) const;
+  VkQueue  GetQueueByIdx(uint32_t queue_idx) const;
   uint32_t GetQueueFamilyByIdx(uint32_t queue_idx) const;
 
   VkQueue GetMainQueue() const;

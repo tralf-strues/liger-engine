@@ -52,10 +52,11 @@ target_link_libraries(liger-engine
     # shaderc
     # shaderc glslang glslang-default-resource-limits SPIRV
     glslang glslang-default-resource-limits SPIRV
+    stb_image
     VulkanMemoryAllocator
+    volk
     vulkan-headers
     vulkan-utility-libraries
-    volk
     yaml-cpp
 )
 
@@ -72,11 +73,12 @@ install(
     glslang OSDependent MachineIndependent GenericCodeGen glslang-default-resource-limits SPIRV
     # shaderc shaderc_util glslang OSDependent MachineIndependent GenericCodeGen glslang-default-resource-limits SPIRV
     # shaderc shaderc_util glslang OSDependent MachineIndependent GenericCodeGen SPIRV
+    stb_image
     Taskflow
     VulkanMemoryAllocator
+    volk
     vulkan-headers
     vulkan-utility-libraries
-    volk
     yaml-cpp
 
   EXPORT liger-engine-targets

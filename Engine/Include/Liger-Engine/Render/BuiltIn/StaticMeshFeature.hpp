@@ -39,26 +39,38 @@ struct Vertex3D {
   glm::vec3 position;
   glm::vec3 normal;
   glm::vec3 tangent;
+  glm::vec3 bitangent;
   glm::vec2 tex_coords;
 };
 
 /* Assets */
 struct Material {
   struct UBO {
-    glm::vec4 color;
+    SHADER_STRUCT_MEMBER(glm::vec3)                     albedo_color;
+    SHADER_STRUCT_MEMBER(float)                         metallic;
+    SHADER_STRUCT_MEMBER(float)                         roughness;
+    SHADER_STRUCT_MEMBER(rhi::TextureDescriptorBinding) binding_albedo_map;
+    SHADER_STRUCT_MEMBER(rhi::TextureDescriptorBinding) binding_normal_map;
+    SHADER_STRUCT_MEMBER(rhi::TextureDescriptorBinding) binding_metallic_roughness_map;
   };
 
-  std::unique_ptr<rhi::IBuffer> ubo;
-  glm::vec4                     color;
+  std::unique_ptr<rhi::IBuffer>                 ubo;
+
+  glm::vec3                                     albedo_color;
+  float                                         metallic;
+  float                                         roughness;
+  asset::Handle<std::unique_ptr<rhi::ITexture>> albedo_map;
+  asset::Handle<std::unique_ptr<rhi::ITexture>> normal_map;
+  asset::Handle<std::unique_ptr<rhi::ITexture>> metallic_roughness_map;
 };
 
 struct Submesh {
   struct UBO {
-    rhi::BufferDescriptorBinding binding_vertex_buffer;
-    rhi::BufferDescriptorBinding binding_index_buffer;
-    uint32_t                     vertex_count;
-    uint32_t                     index_count;
-    glm::vec4                    bounding_sphere;
+    SHADER_STRUCT_MEMBER(rhi::BufferDescriptorBinding) binding_vertex_buffer;
+    SHADER_STRUCT_MEMBER(rhi::BufferDescriptorBinding) binding_index_buffer;
+    SHADER_STRUCT_MEMBER(uint32_t)                     vertex_count;
+    SHADER_STRUCT_MEMBER(uint32_t)                     index_count;
+    SHADER_STRUCT_MEMBER(glm::vec4)                    bounding_sphere;
   };
 
   std::unique_ptr<rhi::IBuffer> ubo;
@@ -102,8 +114,8 @@ class StaticMeshFeature
   void Run(const ecs::WorldTransform& transform, StaticMeshComponent& static_mesh) override;
 
  private:
-  static constexpr uint32_t kMaxObjects = 8192;
-  static constexpr uint32_t kMaxMeshes  = 2048;
+  static constexpr uint32_t kMaxObjects = 512;
+  static constexpr uint32_t kMaxMeshes  = 256;
 
   struct Object {
     glm::mat4                    transform;

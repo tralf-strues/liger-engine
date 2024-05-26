@@ -373,13 +373,15 @@ void DeclarePushConstant(std::stringstream& source, const PushConstantMembers& p
 }
 
 void DeclareFragmentShaderInput(std::stringstream& source, StageLinking::MemberList& members) {
-  fmt::print(source, "layout(location = 0) in _FragmentInput_ {{\n");
-
-  for (const auto& member : members) {
-    fmt::print(source, "  {0} {1};\n", ToString(member.type), member.name);
+  if (members.empty()) {
+    return;
   }
 
-  fmt::print(source, "}} fragment_input;\n");
+  for (uint32_t i = 0; i < members.size(); ++i) {
+    fmt::print(source, "layout(location = {0}) in {1} {2} {3};\n", i,
+               members[i].type == Declaration::Member::Type::UInt32 ? "flat" : "", ToString(members[i].type),
+               members[i].name);
+  }
 }
 
 void DeclareStageOutput(std::stringstream& source, StageLinking::MemberList& members) {
@@ -388,7 +390,9 @@ void DeclareStageOutput(std::stringstream& source, StageLinking::MemberList& mem
   }
 
   for (uint32_t i = 0; i < members.size(); ++i) {
-    fmt::print(source, "layout(location = {0}) out {1} {2};\n", i, ToString(members[i].type), members[i].name);
+    fmt::print(source, "layout(location = {0}) out {1} {2} {3};\n", i,
+               members[i].type == Declaration::Member::Type::UInt32 ? "flat" : "", ToString(members[i].type),
+               members[i].name);
   }
 }
 
@@ -443,9 +447,8 @@ void DeclareInputFill(std::stringstream& source, const Declaration& common, cons
       fmt::print(source, "liger_in.{0} = gl_InstanceIndex;\n", member.name);
     } else if (member.modifier == Declaration::Member::Modifier::PushConstant) {
       fmt::print(source, "liger_in.{0} = push_constant.{0};\n", member.name);
-    } else if (member.modifier == Declaration::Member::Modifier::StageIO &&
-               shader.scope == Declaration::Scope::Fragment) {
-      fmt::print(source, "liger_in.{0} = fragment_input.{0};\n", member.name);
+    } else if (member.modifier == Declaration::Member::Modifier::StageIO) {
+      fmt::print(source, "liger_in.{0} = {0};\n", member.name);
     }
   };
 

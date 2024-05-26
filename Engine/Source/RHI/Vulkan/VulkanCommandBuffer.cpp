@@ -59,8 +59,150 @@ void VulkanCommandBuffer::End() {
   VULKAN_CALL(vkEndCommandBuffer(vk_cmds_));
 }
 
-void VulkanCommandBuffer::GenerateMipLevels(ITexture* /*texture*/, Filter /*filter*/) {
-  LIGER_ASSERT(false, kLogChannelRHI, "Not implemented!");
+void VulkanCommandBuffer::GenerateMipLevels(ITexture* texture, DeviceResourceState final_state, Filter filter) {
+  VulkanTexture& vulkan_texture = static_cast<VulkanTexture&>(*texture);
+
+  const auto vk_final_layout = GetVulkanImageLayout(final_state);
+
+  auto transfer_mip_to_final_state = [this, vk_final_layout](VkImage image, VkImageLayout old_layout,
+                                                             VkAccessFlags2 src_access, uint32_t mip) {
+    const VkImageMemoryBarrier2 barrier_final {
+      .sType               = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+      .pNext               = nullptr,
+      .srcStageMask        = VK_PIPELINE_STAGE_2_TRANSFER_BIT,
+      .srcAccessMask       = src_access,
+      .dstStageMask        = VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT,
+      .dstAccessMask       = VK_ACCESS_2_SHADER_READ_BIT,
+      .oldLayout           = old_layout,
+      .newLayout           = vk_final_layout,
+      .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+      .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+      .image               = image,
+
+      .subresourceRange = {
+        .aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT,
+        .baseMipLevel   = mip,
+        .levelCount     = 1U,
+        .baseArrayLayer = 0U,
+        .layerCount     = 1U
+      }
+    };
+
+    const VkDependencyInfo barrier_final_dependency_info {
+      .sType                    = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
+      .pNext                    = nullptr,
+      .dependencyFlags          = 0,
+      .memoryBarrierCount       = 0U,
+      .pMemoryBarriers          = nullptr,
+      .bufferMemoryBarrierCount = 0U,
+      .pBufferMemoryBarriers    = nullptr,
+      .imageMemoryBarrierCount  = 1U,
+      .pImageMemoryBarriers     = &barrier_final
+    };
+
+    vkCmdPipelineBarrier2(vk_cmds_, &barrier_final_dependency_info);
+  };  
+
+  uint32_t mip_levels = vulkan_texture.GetInfo().mip_levels;
+  uint32_t mip_width  = vulkan_texture.GetInfo().extent.x;
+  uint32_t mip_height = vulkan_texture.GetInfo().extent.y;
+  for (uint32_t i = 1; i < mip_levels; ++i) {
+    /* Transition mip (i - 1) to VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL */
+    const VkImageMemoryBarrier2 barrier_src {
+      .sType               = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+      .pNext               = nullptr,
+      .srcStageMask        = VK_PIPELINE_STAGE_2_TRANSFER_BIT,
+      .srcAccessMask       = VK_ACCESS_2_TRANSFER_WRITE_BIT,
+      .dstStageMask        = VK_PIPELINE_STAGE_2_TRANSFER_BIT,
+      .dstAccessMask       = VK_ACCESS_2_TRANSFER_READ_BIT,
+      .oldLayout           = VK_IMAGE_LAYOUT_UNDEFINED,
+      .newLayout           = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+      .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+      .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+      .image               = vulkan_texture.GetVulkanImage(),
+
+      .subresourceRange = {
+        .aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT,
+        .baseMipLevel   = i - 1,
+        .levelCount     = 1U,
+        .baseArrayLayer = 0U,
+        .layerCount     = 1U
+      }
+    };
+
+    const VkDependencyInfo barrier_src_dependency_info {
+      .sType                    = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
+      .pNext                    = nullptr,
+      .dependencyFlags          = 0,
+      .memoryBarrierCount       = 0U,
+      .pMemoryBarriers          = nullptr,
+      .bufferMemoryBarrierCount = 0U,
+      .pBufferMemoryBarriers    = nullptr,
+      .imageMemoryBarrierCount  = 1U,
+      .pImageMemoryBarriers     = &barrier_src
+    };
+
+    vkCmdPipelineBarrier2(vk_cmds_, &barrier_src_dependency_info);
+
+    /* Blit mip (i - 1) to mip i */
+    int32_t src_offset_x = static_cast<int32_t>(mip_width);
+    int32_t src_offset_y = static_cast<int32_t>(mip_height);
+    int32_t dst_offset_x = static_cast<int32_t>((mip_width  > 1) ? (mip_width  / 2) : 1);
+    int32_t dst_offset_y = static_cast<int32_t>((mip_height > 1) ? (mip_height / 2) : 1);
+
+    const VkImageBlit2 blit_region {
+      .sType          = VK_STRUCTURE_TYPE_IMAGE_BLIT_2,
+      .pNext          = nullptr,
+
+      .srcSubresource {
+        .aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT,
+        .mipLevel       = i - 1,
+        .baseArrayLayer = 0U,
+        .layerCount     = 1U,
+      },
+      .srcOffsets {
+        {0, 0, 0},
+        {src_offset_x, src_offset_y, 1}
+      },
+
+      .dstSubresource {
+        .aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT,
+        .mipLevel       = i,
+        .baseArrayLayer = 0U,
+        .layerCount     = 1U,
+      },
+      .dstOffsets {
+        {0, 0, 0},
+        {dst_offset_x, dst_offset_y, 1}
+      },
+    };
+
+    const VkBlitImageInfo2 blit_info {
+      .sType          = VK_STRUCTURE_TYPE_BLIT_IMAGE_INFO_2,
+      .pNext          = nullptr,
+      .srcImage       = vulkan_texture.GetVulkanImage(),
+      .srcImageLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+      .dstImage       = vulkan_texture.GetVulkanImage(),
+      .dstImageLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+      .regionCount    = 1U,
+      .pRegions       = &blit_region,
+      .filter         = GetVulkanFilter(filter)
+    };
+
+    vkCmdBlitImage2(vk_cmds_, &blit_info);
+
+    /* Transition mip (i - 1) to vk_final_layout */
+    transfer_mip_to_final_state(vulkan_texture.GetVulkanImage(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                                VK_ACCESS_2_TRANSFER_READ_BIT, i - 1U);
+
+    /* Next mip size */
+    if (mip_width  > 1U) { mip_width  /= 2U; }
+    if (mip_height > 1U) { mip_height /= 2U; }
+  }
+
+  /* Transition last mip (not handled in the loop) */
+  transfer_mip_to_final_state(vulkan_texture.GetVulkanImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                              VK_ACCESS_2_TRANSFER_WRITE_BIT, mip_levels - 1U);
 }
 
 void VulkanCommandBuffer::BufferBarrier(const IBuffer* buffer, DeviceResourceState src_state, DeviceResourceState dst_state) {
