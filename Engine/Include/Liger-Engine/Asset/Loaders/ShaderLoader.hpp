@@ -37,7 +37,7 @@ class ShaderLoader : public asset::ILoader {
   explicit ShaderLoader(rhi::IDevice& device);
   ~ShaderLoader() override = default;
 
-  const std::filesystem::path& FileExtension() const override;
+  std::span<const std::filesystem::path> FileExtensions() const override;
 
   void Load(asset::Manager& manager, asset::Id asset_id, const std::filesystem::path& filepath) override;
 

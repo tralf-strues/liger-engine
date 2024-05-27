@@ -40,7 +40,7 @@ class TextureLoader : public asset::ILoader {
   explicit TextureLoader(rhi::IDevice& device);
   ~TextureLoader() override = default;
 
-  const std::filesystem::path& FileExtension() const override;
+  std::span<const std::filesystem::path> FileExtensions() const override;
 
   void Load(asset::Manager& manager, asset::Id asset_id, const std::filesystem::path& filepath) override;
 

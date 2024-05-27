@@ -65,6 +65,7 @@ class VulkanCommandBuffer : public ICommandBuffer {
   void DrawIndexed(uint32_t index_count, uint32_t first_index, uint32_t vertex_offset, uint32_t instance_count,
                    uint32_t first_instance) override;
 
+  void DrawIndirect(const IBuffer* indirect_buffer, uint64_t offset, uint64_t stride, uint32_t draw_count) override;
   void DrawIndexedIndirect(const IBuffer* indirect_buffer, uint64_t offset, uint64_t stride,
                            uint32_t draw_count) override;
 

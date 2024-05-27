@@ -38,9 +38,9 @@ namespace liger::asset::loaders {
 
 TextureLoader::TextureLoader(rhi::IDevice& device) : device_(device) {}
 
-const std::filesystem::path& TextureLoader::FileExtension() const {
-  static std::filesystem::path extension{".jpg"};
-  return extension;
+std::span<const std::filesystem::path> TextureLoader::FileExtensions() const {
+  static std::array<std::filesystem::path, 2U> extensions = {".jpg", ".png"};
+  return extensions;
 }
 
 void TextureLoader::Load(asset::Manager& manager, asset::Id asset_id, const std::filesystem::path& filepath) {
@@ -50,22 +50,48 @@ void TextureLoader::Load(asset::Manager& manager, asset::Id asset_id, const std:
   int32_t tex_height   = 0;
   int32_t tex_channels = 0;
 
+  int32_t info_result = stbi_info(filepath.string().c_str(), &tex_width, &tex_height, &tex_channels);
+  if (!info_result) {
+    LIGER_LOG_ERROR(kLogChannelAsset, "Texture file '{}' not found!", filepath.string());
+    return;
+  }
+
+  rhi::Format format;
+  int32_t     desired_channels;
+  switch (tex_channels) {
+    case 1: {
+      format           = rhi::Format::R8_UNORM;
+      desired_channels = STBI_grey;
+      break;
+    }
+    case 3:
+    case 4: {
+      format           = rhi::Format::R8G8B8A8_SRGB;
+      desired_channels = STBI_rgb_alpha;
+      break;
+    }
+    default: {
+      LIGER_LOG_FATAL(kLogChannelAsset, "Unsupported number of channels: {0}", tex_channels);
+      return;
+    }
+  }
+
   stbi_set_flip_vertically_on_load(true);
-  stbi_uc* pixels = stbi_load(filepath.string().c_str(), &tex_width, &tex_height, &tex_channels, STBI_rgb_alpha);
+  stbi_uc* pixels = stbi_load(filepath.string().c_str(), &tex_width, &tex_height, &tex_channels, desired_channels);
   if (!pixels) {
     LIGER_LOG_ERROR(kLogChannelAsset, "Texture file '{}' not found!", filepath.string());
     return;
   }
 
   uint32_t tex_mip_levels     = static_cast<uint32_t>(std::floor(std::log2(std::max(tex_width, tex_height)))) + 1U;
-  uint32_t texture_size_bytes = tex_width * tex_height * 4U;
+  uint32_t texture_size_bytes = tex_width * tex_height * static_cast<uint32_t>(desired_channels);
 
   std::unique_ptr<uint8_t[]> raw_data = std::make_unique<uint8_t[]>(texture_size_bytes);
   std::memcpy(raw_data.get(), pixels, texture_size_bytes);
   stbi_image_free(pixels);
 
   (*texture) = device_.CreateTexture(rhi::ITexture::Info {
-    .format          = rhi::Format::R8G8B8A8_SRGB,
+    .format          = format,
     .type            = rhi::TextureType::Texture2D,
     .usage           = rhi::DeviceResourceState::ShaderSampled | rhi::DeviceResourceState::TransferSrc | rhi::DeviceResourceState::TransferDst,
     .cube_compatible = false,

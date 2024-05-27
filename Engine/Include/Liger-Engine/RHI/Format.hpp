@@ -44,6 +44,8 @@ enum class Format : uint32_t {
   Invalid = 0,
 
   /* One-component */
+  R8_UNORM,
+
   R32_UINT,
   R32_SINT,
   R32_SFLOAT,
@@ -60,6 +62,7 @@ enum class Format : uint32_t {
 
   /* Three-component */
   R8G8B8_UNORM,
+  B8G8R8_UNORM,
   R8G8B8_SRGB,
 
   R16G16B16_SFLOAT,
@@ -80,6 +83,7 @@ enum class Format : uint32_t {
 inline uint32_t GetFormatSize(Format format) {
   switch (format) {
     /* One-component */
+    case (Format::R8_UNORM):            { return 1; }
     case (Format::R32_UINT):            { return 4; }
     case (Format::R32_SINT):            { return 4; }
     case (Format::R32_SFLOAT):          { return 4; }
@@ -96,6 +100,7 @@ inline uint32_t GetFormatSize(Format format) {
 
     /* Three-component */
     case (Format::R8G8B8_UNORM):        { return 3; }
+    case (Format::B8G8R8_UNORM):        { return 3; }
     case (Format::R8G8B8_SRGB):         { return 3; }
 
     case (Format::R16G16B16_SFLOAT):    { return 6; }

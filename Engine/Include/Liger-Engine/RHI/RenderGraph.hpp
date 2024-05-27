@@ -82,7 +82,7 @@ class RenderGraph {
 
   virtual void ReimportTexture(ResourceVersion version, TextureResource new_texture) = 0;
   virtual void ReimportBuffer(ResourceVersion version, BufferResource new_buffer) = 0;
-  virtual void DumpGraphviz(std::string_view filename) = 0;
+  virtual void DumpGraphviz(std::string_view filename, bool detailed) = 0;
 
   void SetJob(std::string_view node_name, Job job);
 

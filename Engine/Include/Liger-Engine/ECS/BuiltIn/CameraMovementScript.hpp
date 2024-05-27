@@ -48,7 +48,7 @@ class CameraMovementScript : public IScript {
  private:
   Window* window_{nullptr};  // FIXME (tralf-strues):
 
-  float rotation_y_{0};  // Yaw
+  float rotation_y_{glm::pi<float>()};  // Yaw
   float rotation_z_{0};  // Pitch
   bool  rotation_mode_{false};
 

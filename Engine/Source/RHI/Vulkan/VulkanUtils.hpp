@@ -108,6 +108,8 @@ inline constexpr uint8_t GetMaxSamplesFromVulkan(const VkPhysicalDevicePropertie
 inline constexpr VkFormat GetVulkanFormat(Format format) {
   switch (format) {
     /* One-component */
+    case (Format::R8_UNORM):            { return VK_FORMAT_R8_UNORM; }
+
     case (Format::R32_UINT):            { return VK_FORMAT_R32_UINT; }
     case (Format::R32_SINT):            { return VK_FORMAT_R32_SINT; }
     case (Format::R32_SFLOAT):          { return VK_FORMAT_R32_SFLOAT; }
@@ -124,6 +126,7 @@ inline constexpr VkFormat GetVulkanFormat(Format format) {
 
     /* Three-component */
     case (Format::R8G8B8_UNORM):        { return VK_FORMAT_R8G8B8_UNORM; }
+    case (Format::B8G8R8_UNORM):        { return VK_FORMAT_B8G8R8_UNORM; }
     case (Format::R8G8B8_SRGB):         { return VK_FORMAT_R8G8B8_SRGB; }
 
     case (Format::R16G16B16_SFLOAT):    { return VK_FORMAT_R16G16B16_SFLOAT; }

@@ -150,27 +150,27 @@ class StaticMeshFeature
   uint32_t AddObject(Object object);
   void Rebuild(rhi::ICommandBuffer& cmds);
 
-  rhi::IDevice&                 device_;
-  std::vector<Object>           objects_;
-  bool                          objects_added_{false};
-  std::vector<uint32_t>         pending_remove_;
-  std::unordered_set<uint32_t>  free_list_;
+  rhi::IDevice&                        device_;
+  std::vector<Object>                  objects_;
+  bool                                 objects_added_{false};
+  std::vector<uint32_t>                pending_remove_;
+  std::unordered_set<uint32_t>         free_list_;
 
-  std::vector<BatchedObject>    batched_objects_;
-  std::vector<rhi::DrawCommand> draw_commands_;
+  std::vector<BatchedObject>           batched_objects_;
+  std::vector<rhi::DrawIndexedCommand> draw_commands_;
 
-  asset::Handle<shader::Shader> cull_shader_;
-  asset::Handle<shader::Shader> render_shader_;
-  std::unique_ptr<rhi::IBuffer> sbo_objects_;
-  std::unique_ptr<rhi::IBuffer> sbo_batched_objects_;
-  std::unique_ptr<rhi::IBuffer> sbo_draw_commands_;
+  asset::Handle<shader::Shader>        cull_shader_;
+  asset::Handle<shader::Shader>        render_shader_;
+  std::unique_ptr<rhi::IBuffer>        sbo_objects_;
+  std::unique_ptr<rhi::IBuffer>        sbo_batched_objects_;
+  std::unique_ptr<rhi::IBuffer>        sbo_draw_commands_;
 
-  std::vector<rhi::IBuffer*>    index_buffers_per_object_;
-  std::unique_ptr<rhi::IBuffer> merged_index_buffer_;
-  uint64_t                      merged_index_buffer_total_size_;
-  std::vector<CopyCmd>          index_buffer_copies_;
+  std::vector<rhi::IBuffer*>           index_buffers_per_object_;
+  std::unique_ptr<rhi::IBuffer>        merged_index_buffer_;
+  uint64_t                             merged_index_buffer_total_size_;
+  std::vector<CopyCmd>                 index_buffer_copies_;
 
-  RenderGraphVersions           rg_versions_;
+  RenderGraphVersions                  rg_versions_;
 };
 
 }  // namespace liger::render

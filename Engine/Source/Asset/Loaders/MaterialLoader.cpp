@@ -36,8 +36,8 @@ namespace liger::asset::loaders {
 
 MaterialLoader::MaterialLoader(rhi::IDevice& device) : device_(device) {}
 
-const std::filesystem::path& MaterialLoader::FileExtension() const {
-  static std::filesystem::path extension{".lmat"};
+std::span<const std::filesystem::path> MaterialLoader::FileExtensions() const {
+  static std::array<std::filesystem::path, 1U> extension{".lmat"};
   return extension;
 }
 

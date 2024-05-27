@@ -30,6 +30,7 @@
 #include <Liger-Engine/Asset/Id.hpp>
 
 #include <filesystem>
+#include <span>
 
 namespace liger::asset {
 
@@ -39,7 +40,7 @@ class ILoader {
  public:
   virtual ~ILoader() = default;
 
-  virtual const std::filesystem::path& FileExtension() const = 0;
+  virtual std::span<const std::filesystem::path> FileExtensions() const = 0;
 
   virtual void Load(Manager& manager, Id asset_id, const std::filesystem::path& filepath) = 0;
 };

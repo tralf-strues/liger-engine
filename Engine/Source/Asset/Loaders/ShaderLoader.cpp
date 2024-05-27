@@ -35,8 +35,8 @@ namespace liger::asset::loaders {
 
 ShaderLoader::ShaderLoader(rhi::IDevice& device) : compiler_(device) {}
 
-const std::filesystem::path& ShaderLoader::FileExtension() const {
-  static std::filesystem::path extension{".lshader"};
+std::span<const std::filesystem::path> ShaderLoader::FileExtensions() const {
+  static std::array<std::filesystem::path, 1U> extension{".lshader"};
   return extension;
 }
 

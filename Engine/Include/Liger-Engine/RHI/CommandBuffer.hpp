@@ -57,6 +57,13 @@ struct RenderArea {
 
 /* Indirect commands FIXME (tralf-strues): redesign in order to support APIs other than just Vulkan */
 struct DrawCommand {
+  uint32_t vertex_count;
+  uint32_t instance_count;
+  uint32_t first_vertex;
+  uint32_t first_instance;
+};
+
+struct DrawIndexedCommand {
   uint32_t index_count;
   uint32_t instance_count;
   uint32_t first_index;
@@ -185,6 +192,8 @@ class ICommandBuffer {
    */
   virtual void Draw(uint32_t vertices_count, uint32_t first_vertex = 0, uint32_t instances_count = 1,
                     uint32_t first_instance = 0) = 0;
+
+  virtual void DrawIndirect(const IBuffer* indirect_buffer, uint64_t offset, uint64_t stride, uint32_t draw_count) = 0;
 
   /**
    * @brief Draw call with an index buffer bound.

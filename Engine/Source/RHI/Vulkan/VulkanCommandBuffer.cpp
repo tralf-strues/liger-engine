@@ -302,7 +302,14 @@ void VulkanCommandBuffer::DrawIndexed(uint32_t index_count, uint32_t first_index
   vkCmdDrawIndexed(vk_cmds_, index_count, instance_count, first_index, vertex_offset, first_instance);
 }
 
-void VulkanCommandBuffer::DrawIndexedIndirect(const IBuffer* indirect_buffer, uint64_t offset, uint64_t stride, uint32_t draw_count) {
+void VulkanCommandBuffer::DrawIndirect(const IBuffer* indirect_buffer, uint64_t offset, uint64_t stride,
+                                       uint32_t draw_count) {
+  auto vk_buffer = static_cast<const VulkanBuffer*>(indirect_buffer)->GetVulkanBuffer();
+  vkCmdDrawIndirect(vk_cmds_, vk_buffer, offset, draw_count, stride);
+}
+
+void VulkanCommandBuffer::DrawIndexedIndirect(const IBuffer* indirect_buffer, uint64_t offset, uint64_t stride,
+                                              uint32_t draw_count) {
   auto vk_buffer = static_cast<const VulkanBuffer*>(indirect_buffer)->GetVulkanBuffer();
   vkCmdDrawIndexedIndirect(vk_cmds_, vk_buffer, offset, draw_count, stride);
 }

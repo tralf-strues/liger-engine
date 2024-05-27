@@ -93,18 +93,24 @@ ParticleSystemFeature::ParticleSystemFeature(rhi::IDevice& device, asset::Manage
   });
 
   auto* mapped_free_list = reinterpret_cast<int32_t*>(sbo_init_free_list_->MapMemory());
-  mapped_free_list[0U] = 512U; // NOTE (tralf-strues): first element is the count of free particles
-  for (uint32_t i = 0; i < 512U; ++i) {
+  mapped_free_list[0U] = kMaxParticlesPerEmitter; // NOTE (tralf-strues): first element is the count of free particles
+  for (uint32_t i = 0; i < kMaxParticlesPerEmitter; ++i) {
     mapped_free_list[i + 1U] = i; 
   }
   sbo_init_free_list_->UnmapMemory();
 }
 
 void ParticleSystemFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
-  rg_versions_.emit_free_list = builder.DeclareImportBufferPack("Particle Free Lists",
+  rg_versions_.emit_free_list = builder.DeclareImportBufferPack("Particle Free List",
                                                                 rhi::DeviceResourceState::Undefined,
                                                                 rhi::DeviceResourceState::Undefined);
-  rg_versions_.emit_particles = builder.DeclareImportBufferPack("Particle Lists",
+  rg_versions_.emit_particles = builder.DeclareImportBufferPack("Particles",
+                                                                rhi::DeviceResourceState::Undefined,
+                                                                rhi::DeviceResourceState::Undefined);
+  rg_versions_.update_draw_command = builder.DeclareImportBufferPack("Particle Draw Command",
+                                                                rhi::DeviceResourceState::Undefined,
+                                                                rhi::DeviceResourceState::Undefined);
+  rg_versions_.update_draw_particle_indices = builder.DeclareImportBufferPack("Particle Draw Particle Indices",
                                                                 rhi::DeviceResourceState::Undefined,
                                                                 rhi::DeviceResourceState::Undefined);
 
@@ -126,6 +132,8 @@ void ParticleSystemFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
 
       graph.GetBufferPack(rg_versions_.emit_free_list).buffers->push_back(instance.sbo_free_list.get());
       graph.GetBufferPack(rg_versions_.emit_particles).buffers->push_back(instance.sbo_particles.get());
+      graph.GetBufferPack(rg_versions_.update_draw_command).buffers->push_back(instance.sbo_draw_command.get());
+      graph.GetBufferPack(rg_versions_.update_draw_particle_indices).buffers->push_back(instance.sbo_draw_particle_indices.get());
 
       cmds.CopyBuffer(sbo_init_free_list_.get(), instance.sbo_free_list.get(), instance.sbo_free_list->GetInfo().size);
 
@@ -133,11 +141,11 @@ void ParticleSystemFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
     }
 
     emit_shader_->BindPipeline(cmds);
-    emit_shader_->SetPushConstant("time", frame_timer_.AbsoluteTime());
     for (auto& instance : instances_) {
       float particles_to_spawn = 0.0f;
       instance.pending_spawn = std::modf(instance.pending_spawn, &particles_to_spawn);
 
+      emit_shader_->SetPushConstant("time",  frame_timer_.GetTimer().ElapsedMs());
       emit_shader_->SetBuffer("EmitterData", instance.ubo_emitter->GetUniformDescriptorBinding());
       emit_shader_->SetBuffer("Particles",   instance.sbo_particles->GetStorageDescriptorBinding());
       emit_shader_->SetBuffer("FreeList",    instance.sbo_free_list->GetStorageDescriptorBinding());
@@ -154,7 +162,9 @@ void ParticleSystemFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
   builder.BeginCompute("ParticleSystemFeature - Update");
 
   builder.ReadWriteBuffer(rg_versions_.update_free_list, rhi::DeviceResourceState::StorageBufferReadWrite);
-  rg_versions_.render_particles = builder.ReadWriteBuffer(rg_versions_.update_particles, rhi::DeviceResourceState::StorageBufferWrite);
+  rg_versions_.render_particles             = builder.ReadWriteBuffer(rg_versions_.update_particles, rhi::DeviceResourceState::StorageBufferWrite);
+  rg_versions_.render_draw_command          = builder.ReadWriteBuffer(rg_versions_.update_draw_command, rhi::DeviceResourceState::StorageBufferReadWrite);
+  rg_versions_.render_draw_particle_indices = builder.ReadWriteBuffer(rg_versions_.update_draw_particle_indices, rhi::DeviceResourceState::StorageBufferWrite);
 
   builder.SetJob([this](auto&, auto&, auto& cmds) {
     if (!Initialized()) {
@@ -164,9 +174,11 @@ void ParticleSystemFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
     update_shader_->BindPipeline(cmds);
     update_shader_->SetPushConstant("delta_time", frame_timer_.DeltaTime());
     for (auto& instance : instances_) {
-      update_shader_->SetBuffer("EmitterData", instance.ubo_emitter->GetUniformDescriptorBinding());
-      update_shader_->SetBuffer("Particles",   instance.sbo_particles->GetStorageDescriptorBinding());
-      update_shader_->SetBuffer("FreeList",    instance.sbo_free_list->GetStorageDescriptorBinding());
+      update_shader_->SetBuffer("EmitterData",         instance.ubo_emitter->GetUniformDescriptorBinding());
+      update_shader_->SetBuffer("Particles",           instance.sbo_particles->GetStorageDescriptorBinding());
+      update_shader_->SetBuffer("FreeList",            instance.sbo_free_list->GetStorageDescriptorBinding());
+      update_shader_->SetBuffer("Draw",                instance.sbo_draw_command->GetStorageDescriptorBinding());
+      update_shader_->SetBuffer("DrawParticleIndices", instance.sbo_draw_particle_indices->GetStorageDescriptorBinding());
       update_shader_->BindPushConstants(cmds);
 
       cmds.Dispatch((instance.ubo_emitter.GetData()->max_particles + 63) / 64, 1, 1);
@@ -181,6 +193,8 @@ void ParticleSystemFeature::AddLayerJobs(LayerMap& layer_map) {
 
   layer->Emplace([this](rhi::RenderGraphBuilder& builder) {
     builder.ReadBuffer(rg_versions_.render_particles, rhi::DeviceResourceState::StorageBufferRead);
+    builder.ReadBuffer(rg_versions_.render_draw_command, rhi::DeviceResourceState::IndirectArgument);
+    builder.ReadBuffer(rg_versions_.render_draw_particle_indices, rhi::DeviceResourceState::StorageBufferRead);
   });
 
   layer->Emplace([this](auto&, rhi::Context& context, rhi::ICommandBuffer& cmds) {
@@ -191,11 +205,13 @@ void ParticleSystemFeature::AddLayerJobs(LayerMap& layer_map) {
     render_shader_->BindPipeline(cmds);
     render_shader_->SetBuffer("CameraData", context.Get<CameraDataBinding>().binding_ubo);
     for (auto& instance : instances_) {
-      render_shader_->SetPushConstant("transform", instance.transform);
-      render_shader_->SetBuffer("Particles", instance.sbo_particles->GetStorageDescriptorBinding());
+      render_shader_->SetPushConstant("transform",     instance.transform);
+      render_shader_->SetBuffer("EmitterData",         instance.ubo_emitter->GetUniformDescriptorBinding());
+      render_shader_->SetBuffer("Particles",           instance.sbo_particles->GetStorageDescriptorBinding());
+      render_shader_->SetBuffer("DrawParticleIndices", instance.sbo_draw_particle_indices->GetStorageDescriptorBinding());
       render_shader_->BindPushConstants(cmds);
 
-      cmds.Draw(4, 0, instance.max_particles, 0);
+      cmds.DrawIndirect(instance.sbo_draw_command.get(), 0U, sizeof(rhi::DrawCommand), 1U);
     }
   });
 }
@@ -212,7 +228,7 @@ RuntimeParticleEmitterHandle ParticleSystemFeature::Add(const ParticleEmitterInf
 
   instance.max_particles = emitter_info.max_particles;
 
-  instance.ubo_emitter = rhi::UniqueMappedBuffer<ParticleEmitterInfo>(
+  instance.ubo_emitter = rhi::UniqueMappedBuffer<ParticleEmitterUBO>(
       device_,
       rhi::DeviceResourceState::UniformBuffer,
       fmt::format("ParticleSystemFeature::instances_[{0}]::ubo_emitter", idx)
@@ -232,6 +248,20 @@ RuntimeParticleEmitterHandle ParticleSystemFeature::Add(const ParticleEmitterInf
     .name        = fmt::format("ParticleSystemFeature::instances_[{0}]::sbo_free_list", idx)
   });
 
+  instance.sbo_draw_command = device_.CreateBuffer(rhi::IBuffer::Info {
+    .size        = sizeof(rhi::DrawCommand),
+    .usage       = rhi::DeviceResourceState::StorageBufferReadWrite | rhi::DeviceResourceState::IndirectArgument,
+    .cpu_visible = false,
+    .name        = fmt::format("ParticleSystemFeature::instances_[{0}]::sbo_draw_command", idx)
+  });
+
+  instance.sbo_draw_particle_indices = device_.CreateBuffer(rhi::IBuffer::Info {
+    .size        = instance.max_particles * sizeof(uint32_t),
+    .usage       = rhi::DeviceResourceState::StorageBufferReadWrite,
+    .cpu_visible = false,
+    .name        = fmt::format("ParticleSystemFeature::instances_[{0}]::sbo_draw_particle_indices", idx)
+  });
+
   return RuntimeParticleEmitterHandle{.runtime_handle = idx};
 }
 
@@ -240,7 +270,7 @@ void ParticleSystemFeature::Update(RuntimeParticleEmitterHandle handle,
                                    const glm::mat4& transform) {
   uint32_t idx = handle.runtime_handle;
   
-  *instances_[idx].ubo_emitter.GetData() = emitter_info;
+  *instances_[idx].ubo_emitter.GetData() = ParticleEmitterUBO(emitter_info);
   instances_[idx].transform              = transform;
   instances_[idx].pending_spawn         += emitter_info.spawn_rate * frame_timer_.DeltaTime();
 }

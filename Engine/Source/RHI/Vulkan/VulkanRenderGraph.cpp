@@ -1014,7 +1014,7 @@ void VulkanRenderGraph::CreateSemaphores() {
   }
 }
 
-void VulkanRenderGraph::DumpGraphviz(std::string_view filename) {
+void VulkanRenderGraph::DumpGraphviz(std::string_view filename, bool detailed) {
   std::ofstream os(filename.data(), std::ios::out);
   if (!os.is_open()) {
     LIGER_LOG_ERROR(kLogChannelRHI, "Failed to open file '{0}'", filename);
@@ -1104,20 +1104,22 @@ void VulkanRenderGraph::DumpGraphviz(std::string_view filename) {
           fmt::print(os, "</td></tr>\n");
         };
 
-        for (uint32_t i = 0; i < vulkan_node.in_image_barrier_count; ++i) {
-          dump_image_barrier(vulkan_node.in_image_barrier_begin_idx + i, "In");
-        }
+        if (detailed) {
+          for (uint32_t i = 0; i < vulkan_node.in_image_barrier_count; ++i) {
+            dump_image_barrier(vulkan_node.in_image_barrier_begin_idx + i, "In");
+          }
 
-        for (uint32_t i = 0; i < vulkan_node.in_buffer_barrier_count; ++i) {
-          dump_buffer_barrier(vulkan_node.in_buffer_barrier_begin_idx + i, "In");
-        }
+          for (uint32_t i = 0; i < vulkan_node.in_buffer_barrier_count; ++i) {
+            dump_buffer_barrier(vulkan_node.in_buffer_barrier_begin_idx + i, "In");
+          }
 
-        for (uint32_t i = 0; i < vulkan_node.in_buffer_pack_barrier_count; ++i) {
-          dump_buffer_pack_barrier(vulkan_node.in_buffer_pack_barrier_begin_idx + i, "In");
-        }
+          for (uint32_t i = 0; i < vulkan_node.in_buffer_pack_barrier_count; ++i) {
+            dump_buffer_pack_barrier(vulkan_node.in_buffer_pack_barrier_begin_idx + i, "In");
+          }
 
-        for (uint32_t i = 0; i < vulkan_node.out_image_barrier_count; ++i) {
-          dump_image_barrier(vulkan_node.out_image_barrier_begin_idx + i, "Out");
+          for (uint32_t i = 0; i < vulkan_node.out_image_barrier_count; ++i) {
+            dump_image_barrier(vulkan_node.out_image_barrier_begin_idx + i, "Out");
+          }
         }
 
         fmt::print(os, "\t\t</table>\n");
@@ -1135,46 +1137,72 @@ void VulkanRenderGraph::DumpGraphviz(std::string_view filename) {
     if (buffer) {
       const auto& info = buffer.value()->GetInfo();
 
-      fmt::print(os,
-                 "R{0} "
-                 "[label=<{{ <B>{1}</B> <BR align=\"left\"/><BR align=\"left\"/> Size: {2} bytes <BR align=\"left\"/> "
-                 "Cpu visible: {3} <BR align=\"left\"/><BR align=\"left\"/> Usage: {4} <BR align=\"left\"/> | "
-                 "Version: {5} <BR/> ID: {6} }}> "
-                 "style=\"rounded, filled\", fillcolor={7}, fontsize={8}]\n",
-                 version, info.name, info.size, info.cpu_visible, EnumMaskToString(info.usage, ','), version,
-                 resource_version_registry_.GetResourceId(version),
-                 kFillcolorBuffer, kFontSizeResource);
+      if (detailed) {
+        fmt::print(
+            os,
+            "R{0} "
+            "[label=<{{ <B>{1}</B> <BR align=\"left\"/><BR align=\"left\"/> Size: {2} bytes <BR align=\"left\"/> "
+            "Cpu visible: {3} <BR align=\"left\"/><BR align=\"left\"/> Usage: {4} <BR align=\"left\"/> | "
+            "Version: {5} <BR/> ID: {6} }}> "
+            "style=\"rounded, filled\", fillcolor={7}, fontsize={8}]\n",
+            version, info.name, info.size, info.cpu_visible, EnumMaskToString(info.usage, ','), version,
+            resource_version_registry_.GetResourceId(version), kFillcolorBuffer, kFontSizeResource);
+      } else {
+        fmt::print(os,
+              "R{0} "
+              "[label=<{{ <B>{1}</B> }}> "
+              "style=\"rounded, filled\", fillcolor={2}, fontsize={3}]\n",
+              version, info.name, kFillcolorBuffer, kFontSizeResource);
+      }
     }
 
     const auto buffer_pack = resource_version_registry_.TryGetResourceByVersion<BufferPackResource>(version);
     if (buffer_pack) {
       size_t count = buffer_pack->buffers ? buffer_pack->buffers->size() : 0U;
-      fmt::print(os,
-                 "R{0} "
-                 "[label=<{{ <B>{1}</B> <BR/><BR/> "
-                 "[Buffer Pack] <BR/> Buffers: {2} | "
-                 "Version: {3} <BR/> ID: {4} }}> "
-                 "style=\"rounded, filled\", fillcolor={5}, fontsize={6}]\n",
-                 version, buffer_pack->name, count, version, resource_version_registry_.GetResourceId(version),
-                 kFillcolorBuffer, kFontSizeResource);
+
+      if (detailed) {
+        fmt::print(os,
+                   "R{0} "
+                   "[label=<{{ <B>{1}</B> <BR/><BR/> "
+                   "[Buffer Pack] <BR/> Buffers: {2} | "
+                   "Version: {3} <BR/> ID: {4} }}> "
+                   "style=\"rounded, filled\", fillcolor={5}, fontsize={6}]\n",
+                   version, buffer_pack->name, count, version, resource_version_registry_.GetResourceId(version),
+                   kFillcolorBuffer, kFontSizeResource);
+      } else {
+        fmt::print(os,
+                   "R{0} "
+                   "[label=<{{ <B>{1}</B> <BR/><BR/> "
+                   "[Buffer Pack] <BR/> Buffers: {2} }}> "
+                   "style=\"rounded, filled\", fillcolor={3}, fontsize={4}]\n",
+                   version, buffer_pack->name, count, kFillcolorBuffer, kFontSizeResource);
+      }
     }
 
     const auto texture = resource_version_registry_.TryGetResourceByVersion<TextureResource>(version);
     if (texture) {
       const auto& info = texture.value().texture->GetInfo();
 
-      fmt::print(os, "R{0} [label=<{{ <B>{1}</B> <BR align=\"left\"/><BR align=\"left\"/>"
-                 "Extent: {2} x {3} x {4} <BR align=\"left\"/>"
-                 "Samples: {5} <BR align=\"left\"/>"
-                 "Mip levels: {6} <BR align=\"left\"/>"
-                 "Format: {7} <BR align=\"left\"/><BR align=\"left\"/>"
-                 "Usage: {8} <BR align=\"left\"/> | "
-                 "Version: {9} <BR/> ID: {10} <BR/><BR/> View: {11} }}> "
-                 "style=\"rounded, filled\", fillcolor={12}, fontsize={13}]\n",
-                 version, info.name, info.extent.x, info.extent.y, info.extent.z, info.samples, info.mip_levels,
-                 EnumToString(info.format), EnumMaskToString(info.usage, ','), version,
-                 resource_version_registry_.GetResourceId(version), texture->view,
-                 kFillcolorTexture, kFontSizeResource);
+      if (detailed) {
+        fmt::print(os,
+                   "R{0} [label=<{{ <B>{1}</B> <BR align=\"left\"/><BR align=\"left\"/>"
+                   "Extent: {2} x {3} x {4} <BR align=\"left\"/>"
+                   "Samples: {5} <BR align=\"left\"/>"
+                   "Mip levels: {6} <BR align=\"left\"/>"
+                   "Format: {7} <BR align=\"left\"/><BR align=\"left\"/>"
+                   "Usage: {8} <BR align=\"left\"/> | "
+                   "Version: {9} <BR/> ID: {10} <BR/><BR/> View: {11} }}> "
+                   "style=\"rounded, filled\", fillcolor={12}, fontsize={13}]\n",
+                   version, info.name, info.extent.x, info.extent.y, info.extent.z, info.samples, info.mip_levels,
+                   EnumToString(info.format), EnumMaskToString(info.usage, ','), version,
+                   resource_version_registry_.GetResourceId(version), texture->view, kFillcolorTexture,
+                   kFontSizeResource);
+      } else {
+        fmt::print(os,
+                   "R{0} [label=<{{ <B>{1}</B> }}> "
+                   "style=\"rounded, filled\", fillcolor={2}, fontsize={3}]\n",
+                   version, info.name, kFillcolorTexture, kFontSizeResource);
+      }
     }
   }
 
@@ -1183,8 +1211,12 @@ void VulkanRenderGraph::DumpGraphviz(std::string_view filename) {
     auto node_handle = dag_.GetNodeHandle(node);
 
     for (const auto& read : node.read) {
-      fmt::print(os, "R{0} -> N{1} [label=\"{2}\", fontcolor=gray, color=gray]\n", read.version, node_handle,
-                 EnumMaskToString(read.state));
+      if (detailed) {
+        fmt::print(os, "R{0} -> N{1} [label=\"{2}\", fontcolor=gray, color=gray]\n", read.version, node_handle,
+                   EnumMaskToString(read.state));
+      } else {
+        fmt::print(os, "R{0} -> N{1} [fontcolor=gray, color=gray]\n", read.version, node_handle);
+      }
     }
 
     for (const auto& write : node.write) {
@@ -1193,8 +1225,12 @@ void VulkanRenderGraph::DumpGraphviz(std::string_view filename) {
         store_str = fmt::format(", Store = {0}", EnumToString(write.attachment_store));
       }
 
-      fmt::print(os, "N{0} -> R{1} [label=\"{2}{3}\", fontcolor=black, color=black]\n", node_handle, write.version,
-                 EnumMaskToString(write.state), store_str);
+      if (detailed) {
+        fmt::print(os, "N{0} -> R{1} [label=\"{2}{3}\", fontcolor=black, color=black]\n", node_handle, write.version,
+                   EnumMaskToString(write.state), store_str);
+      } else {
+        fmt::print(os, "N{0} -> R{1} [fontcolor=black, color=black]\n", node_handle, write.version);
+      }
     }
   }
 

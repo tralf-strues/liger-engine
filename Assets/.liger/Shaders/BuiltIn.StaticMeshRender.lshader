@@ -157,7 +157,7 @@ FragmentShader:
   Code: | #glsl
     PBR_SurfacePoint surface_point = GetSurfaceProperties(liger_in);
 
-    f32vec3 kLightDirection = normalize(f32vec3(-0.1f, -2.0f, -1.0f));
+    f32vec3 kLightDirection = normalize(f32vec3(-1.0f, -2.0f, -0.1f));
     f32vec3 kLightRadiance  = f32vec3(1.5f,  1.5f,  1.5f);
     f32vec3 kAmbient        = f32vec3(0.03f, 0.03f, 0.03f);
 

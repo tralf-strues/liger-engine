@@ -63,7 +63,7 @@ StaticMeshFeature::StaticMeshFeature(rhi::IDevice& device, asset::Manager& asset
   });
 
   sbo_draw_commands_ = device.CreateBuffer(rhi::IBuffer::Info {
-    .size        = kMaxMeshes * sizeof(rhi::DrawCommand),
+    .size        = kMaxMeshes * sizeof(rhi::DrawIndexedCommand),
     .usage       = rhi::DeviceResourceState::StorageBufferReadWrite | rhi::DeviceResourceState::IndirectArgument | rhi::DeviceResourceState::TransferDst,
     .cpu_visible = false,
     .name        = "StaticMeshFeature::sbo_draw_commands_"
@@ -284,7 +284,7 @@ void StaticMeshFeature::Rebuild(rhi::ICommandBuffer& cmds) {
     uint32_t cur_first_index = merged_index_buffer_total_size_ / sizeof(uint32_t);
     merged_index_buffer_total_size_ += copy_size;
 
-    draw_commands_.emplace_back(rhi::DrawCommand {
+    draw_commands_.emplace_back(rhi::DrawIndexedCommand {
       .index_count    = objects_[object_idx].index_count,
       .instance_count = 0U,  // NOTE (tralf-strues): this value is computed in culling shader
       .first_index    = cur_first_index,

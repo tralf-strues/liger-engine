@@ -51,13 +51,13 @@ class Timer {
    * @brief Elapsed time in seconds since either construction of the timer or last call to @ref Reset().
    * @return Time in seconds.
    */
-  float Elapsed();
+  float Elapsed() const;
 
   /**
    * @brief Elapsed time in milliseconds since either construction of the timer or last call to @ref Reset().
    * @return Time in milliseconds.
    */
-  float ElapsedMs();
+  float ElapsedMs() const;
 
  private:
   std::chrono::time_point<std::chrono::high_resolution_clock> start_;
@@ -113,6 +113,12 @@ class FrameTimer {
    * @return Delta time in milliseconds.
    */
   float DeltaTimeMs() const;
+
+  /**
+   * @brief Get internal timer.
+   * @return Internal timer reference.
+   */
+  const Timer& GetTimer() const;
 
   /**
    * @brief Calculate Frames-per-second based on the current delta time.

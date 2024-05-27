@@ -69,7 +69,6 @@ void CameraMovementScript::OnUpdate(entt::registry& registry, Entity entity, flo
   }
 
   transform->rotation = glm::quat(glm::vec3(rotation_z_, rotation_y_, 0));
-  //transform->position.y = std::max(2.5f, transform->position.y);
 }
 
 bool CameraMovementScript::OnMouseMove(const MouseMoveEvent& mouse_move) {

@@ -34,12 +34,12 @@ Timer::Timer() { Reset(); }
 
 void Timer::Reset() { start_ = std::chrono::high_resolution_clock::now(); }
 
-float Timer::Elapsed() {
+float Timer::Elapsed() const {
   using namespace std::chrono;
   return duration_cast<nanoseconds>(high_resolution_clock::now() - start_).count() * 1e-9f;
 }
 
-float Timer::ElapsedMs() { return Elapsed() * 1e3f; }
+float Timer::ElapsedMs() const { return Elapsed() * 1e3f; }
 
 ScopedTimer::ScopedTimer(const std::string_view channel, const std::string_view message)
     : channel_(channel), message_(message) {}
@@ -53,6 +53,8 @@ float FrameTimer::AbsoluteTimeMs() const { return absolute_time_ * 1e3f; }
 
 float FrameTimer::DeltaTime()   const { return delta_time_; }
 float FrameTimer::DeltaTimeMs() const { return delta_time_ * 1e3f; }
+
+const Timer& FrameTimer::GetTimer() const { return timer_; }
 
 float FrameTimer::FPS() const { return 1.0f / delta_time_; }
 

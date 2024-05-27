@@ -50,7 +50,7 @@ class VulkanRenderGraph : public RenderGraph {
 
   void Execute(Context& context, VkSemaphore wait, uint64_t wait_value, VkSemaphore signal, uint64_t signal_value);
 
-  void DumpGraphviz(std::string_view filename) override;
+  void DumpGraphviz(std::string_view filename, bool detailed) override;
 
   static VkPipelineStageFlags2 GetVulkanPipelineSrcStage(Node::Type node_type, DeviceResourceState resource_state);
   static VkPipelineStageFlags2 GetVulkanPipelineDstStage(Node::Type node_type, DeviceResourceState resource_state);

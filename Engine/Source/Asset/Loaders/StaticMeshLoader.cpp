@@ -38,8 +38,8 @@ void BinaryRead(std::ifstream& is, T* data, uint32_t count = 1U) {
 
 StaticMeshLoader::StaticMeshLoader(rhi::IDevice& device) : device_(device) {}
 
-const std::filesystem::path& StaticMeshLoader::FileExtension() const {
-  static std::filesystem::path extension{".lsmesh"};
+std::span<const std::filesystem::path> StaticMeshLoader::FileExtensions() const {
+  static std::array<std::filesystem::path, 1U> extension{".lsmesh"};
   return extension;
 }
 

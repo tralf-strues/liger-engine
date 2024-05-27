@@ -38,6 +38,11 @@ Input:
     Contents: | #glsl
       Particle particles[];
 
+  - Name: EmitterData
+    Type: uniform-buffer
+    Contents: | #glsl
+      ParticleSystem emitter;
+
 VertexShader:
   Use:
     - Include: BuiltIn.Camera.lsdecl
@@ -53,20 +58,39 @@ VertexShader:
       Type: f32mat4
       Modifier: push-constant
 
+    - Name: DrawParticleIndices
+      Type: storage-buffer
+      Layout: std430
+      Access: readonly
+      Contents: | #glsl
+        uint32_t particle_indices[];
+
   Output:
     - Name: ws_position
       Type: f32vec3
+    - Name: atlas_uv
+      Type: f32vec2
     - Name: color
       Type: f32vec4
 
   Code: | #glsl
-    Camera   camera    = GetCamera(liger_in);
-    Particle particle  = GetStorageBuffer(Particles, liger_in.binding_particles).particles[liger_in.instance_idx];
+    const ParticleSystem emitter = GetUniformBuffer(EmitterData, liger_in.binding_emitter_data).emitter;
+
+    Camera   camera       = GetCamera(liger_in);
+    uint32_t particle_idx = GetStorageBuffer(DrawParticleIndices, liger_in.binding_draw_particle_indices).particle_indices[liger_in.instance_idx];
+    Particle particle     = GetStorageBuffer(Particles, liger_in.binding_particles).particles[particle_idx];
 
     uint32_t b               = 1U << liger_in.vertex_idx;
     f32vec2  uv              = f32vec2((0x3 & b) != 0U, (0x9 & b) != 0U);
     f32vec2  quad_vertex_pos = uv - f32vec2(0.5f);
     f32vec3  ws_center_pos   = (liger_in.transform * f32vec4(particle.position, 1.0f)).xyz;
+
+    float32_t normalized_lifetime = particle.lifetime / emitter.lifetime;
+    uint32_t  atlas_total_size    = emitter.atlas_size_x * emitter.atlas_size_y;
+    uint32_t  atlas_idx           = uint32_t((1.0f - normalized_lifetime) * float32_t(atlas_total_size));
+    u32vec2   atlas_pos           = u32vec2(atlas_idx % emitter.atlas_size_x, emitter.atlas_size_y - atlas_idx / emitter.atlas_size_x - 1U);
+    f32vec2   atlas_elem_size     = f32vec2(emitter.atlas_inv_size_x, emitter.atlas_inv_size_y);
+    atlas_uv                      = (f32vec2(atlas_pos) + uv) * atlas_elem_size;
 
     color       = particle.color;
     ws_position = ws_center_pos + CameraRightWS(camera) * quad_vertex_pos.x * particle.size
@@ -77,6 +101,8 @@ FragmentShader:
   Input:
     - Name: ws_position
       Type: f32vec3
+    - Name: atlas_uv
+      Type: f32vec2
     - Name: color
       Type: f32vec4
 
@@ -85,4 +111,9 @@ FragmentShader:
       Type: f32vec4
 
   Code: | #glsl
+    const ParticleSystem emitter = GetUniformBuffer(EmitterData, liger_in.binding_emitter_data).emitter;
+
     out_color = liger_in.color;
+    if (emitter.binding_atlas != kInvalidBinding) {
+      out_color.a *= texture(GetSampler2D(emitter.binding_atlas), atlas_uv).r;
+    }

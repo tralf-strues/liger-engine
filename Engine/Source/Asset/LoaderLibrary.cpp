@@ -30,16 +30,20 @@
 namespace liger::asset {
 
 void LoaderLibrary::AddLoader(std::unique_ptr<ILoader> loader) {
-  loaders_[loader->FileExtension()] = std::move(loader);
+  for (const auto& extension : loader->FileExtensions()) {
+    loaders_map_[extension] = loader.get();
+  }
+
+  loaders_.push_back(std::move(loader));
 }
 
 ILoader* LoaderLibrary::TryGet(const std::filesystem::path& extension) const {
-  auto it = loaders_.find(extension);
-  if (it == loaders_.end()) {
+  auto it = loaders_map_.find(extension);
+  if (it == loaders_map_.end()) {
     return nullptr;
   }
 
-  return it->second.get();
+  return it->second;
 }
 
 }  // namespace liger::asset

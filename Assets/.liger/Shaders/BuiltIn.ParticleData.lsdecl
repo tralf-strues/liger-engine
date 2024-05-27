@@ -4,6 +4,7 @@ Data: | #glsl
     float32_t spawn_rate;
     float32_t lifetime;
 
+    f32vec3   acceleration;
     f32vec3   velocity_min;
     f32vec3   velocity_max;
 
@@ -12,6 +13,12 @@ Data: | #glsl
 
     float32_t size_start;
     float32_t size_end;
+
+    uint32_t  binding_atlas;
+    uint32_t  atlas_size_x;
+    uint32_t  atlas_size_y;
+    float32_t atlas_inv_size_x;
+    float32_t atlas_inv_size_y;
   };
 
   struct Particle {
