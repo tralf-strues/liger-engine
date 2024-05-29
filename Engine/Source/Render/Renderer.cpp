@@ -29,10 +29,14 @@
 
 namespace liger::render {
 
-Renderer::Renderer(rhi::IDevice& device) : device_(device), rg_builder_(device_.NewRenderGraphBuilder()) {}
+Renderer::Renderer(rhi::IDevice& device) : device_(device), rg_builder_(device_.NewRenderGraphBuilder(context_)) {}
 
 void Renderer::EmplaceFeature(std::unique_ptr<IFeature> feature) {
   features_.emplace_back(std::move(feature));
+}
+
+Renderer::FeatureList& Renderer::GetFeatureList() {
+  return features_;
 }
 
 void Renderer::Setup() {

@@ -237,6 +237,51 @@ void VulkanCommandBuffer::BufferBarrier(const IBuffer* buffer, DeviceResourceSta
   vkCmdPipelineBarrier2(vk_cmds_, &dependency_info);
 }
 
+void VulkanCommandBuffer::TextureBarrier(const ITexture* texture, JobType src_job,
+                                         JobType dst_job, DeviceResourceState src_state,
+                                         DeviceResourceState dst_state, uint32_t view) {
+  const auto& vulkan_texture = static_cast<const VulkanTexture&>(*texture);
+  const auto& view_info      = vulkan_texture.GetViewInfo(view);
+  const auto  aspect_mask    = static_cast<VkImageAspectFlags>(
+      IsDepthContainingFormat(vulkan_texture.GetInfo().format) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
+
+  const VkImageMemoryBarrier2 image_barrier {
+    .sType               = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+    .pNext               = nullptr,
+    .srcStageMask        = GetVulkanPipelineDstStage(src_job, src_state),
+    .srcAccessMask       = GetVulkanAccessFlags(src_state),
+    .dstStageMask        = GetVulkanPipelineDstStage(dst_job, dst_state),
+    .dstAccessMask       = GetVulkanAccessFlags(dst_state),
+    .oldLayout           = GetVulkanImageLayout(src_state),
+    .newLayout           = GetVulkanImageLayout(dst_state),
+    .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+    .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+    .image               = vulkan_texture.GetVulkanImage(),
+
+    .subresourceRange    = {
+      .aspectMask     = aspect_mask,
+      .baseMipLevel   = view_info.first_mip,
+      .levelCount     = view_info.mip_count,
+      .baseArrayLayer = view_info.first_layer,
+      .layerCount     = view_info.layer_count
+    }
+  };
+
+  const VkDependencyInfo dependency_info {
+    .sType                    = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
+    .pNext                    = nullptr,
+    .dependencyFlags          = 0,
+    .memoryBarrierCount       = 0,
+    .pMemoryBarriers          = nullptr,
+    .bufferMemoryBarrierCount = 0U,
+    .pBufferMemoryBarriers    = nullptr,
+    .imageMemoryBarrierCount  = 1U,
+    .pImageMemoryBarriers     = &image_barrier
+  };
+
+  vkCmdPipelineBarrier2(vk_cmds_, &dependency_info);
+}
+
 void VulkanCommandBuffer::SetPushConstant(const IPipeline* pipeline, std::span<const char> data) {
   const auto& vulkan_pipeline = static_cast<const VulkanPipeline&>(*pipeline);
   const auto  bind_point      = vulkan_pipeline.GetVulkanBindPoint();

@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file Extent.hpp
- * @date 2023-12-07
+ * @file TonemapFeature.hpp
+ * @date 2024-05-29
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,31 +27,26 @@
 
 #pragma once
 
-#include <cstdint>
+#include <Liger-Engine/Asset/Manager.hpp>
+#include <Liger-Engine/ECS/DefaultComponents.hpp>
+#include <Liger-Engine/RHI/ShaderAlignment.hpp>
+#include <Liger-Engine/Render/Feature.hpp>
+#include <Liger-Engine/ShaderSystem/Shader.hpp>
 
-namespace liger::rhi {
+namespace liger::render {
 
-struct Extent2D {
-  uint32_t x{0};
-  uint32_t y{0};
+class TonemapFeature : public IFeature {
+ public:
+  explicit TonemapFeature(asset::Manager& asset_manager, float exposure);
+  ~TonemapFeature() override = default;
 
-  bool operator==(const Extent2D& rhs) const {
-    return (x == rhs.x) && (y == rhs.y);
-  }
+  std::string_view Name() const override { return "TonemapFeature"; }
 
-  Extent2D MipExtent(uint32_t mip) const {
-    return Extent2D {.x = (x >> mip), .y = (y >> mip)};
-  }
+  void SetupRenderGraph(rhi::RenderGraphBuilder& builder) override;
+
+ private:
+  asset::Handle<shader::Shader> shader_;
+  float                         exposure_;
 };
 
-struct Extent3D {
-  uint32_t x{0};
-  uint32_t y{0};
-  uint32_t z{0};
-
-  bool operator==(const Extent3D& rhs) const {
-    return (x == rhs.x) && (y == rhs.y) && (z == rhs.z);
-  }
-};
-
-}  // namespace liger::rhi
+}  // namespace liger::render

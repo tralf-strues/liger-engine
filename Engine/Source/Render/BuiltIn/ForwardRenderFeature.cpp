@@ -27,17 +27,34 @@
 
 #include <Liger-Engine/Core/EnumReflection.hpp>
 #include <Liger-Engine/Render/BuiltIn/ForwardRenderFeature.hpp>
+#include <Liger-Engine/Render/BuiltIn/OutputTexture.hpp>
 
 namespace liger::render {
 
-ForwardRenderFeature::ForwardRenderFeature(rhi::RenderGraph::ResourceVersion rg_color) : rg_color_(rg_color) {
+ForwardRenderFeature::ForwardRenderFeature(rhi::RenderGraph::ResourceVersion rg_output) : rg_output_(rg_output) {
   layers_.emplace_back(EnumToString(LayerType::Opaque));
   layers_.emplace_back(EnumToString(LayerType::Transparent));
 }
 
 void ForwardRenderFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
+  rhi::RenderGraph::DependentTextureInfo color_info{};
+  color_info.extent.SetDependency(rg_output_);
+  color_info.format          = rhi::Format::R16G16B16A16_SFLOAT;
+  color_info.type            = rhi::TextureType::Texture2D;
+  color_info.usage           = rhi::DeviceResourceState::ColorTarget | rhi::DeviceResourceState::ShaderSampled | rhi::DeviceResourceState::StorageTextureReadWrite;
+  color_info.cube_compatible = false;
+  color_info.mip_levels      = 1;
+  color_info.samples         = 1;
+  color_info.name            = "HDR Color";
+  rg_color_ = builder.DeclareTransientTexture(color_info);
+
+  builder.GetContext().Insert(OutputTexture {
+    .rg_hdr_color   = rg_color_,
+    .rg_final_color = rg_output_
+  });
+
   rhi::RenderGraph::DependentTextureInfo depth_info{};
-  depth_info.extent.SetDependency(rg_color_);
+  depth_info.extent.SetDependency(rg_output_);
   depth_info.format          = rhi::Format::D32_SFLOAT;
   depth_info.type            = rhi::TextureType::Texture2D;
   depth_info.usage           = rhi::DeviceResourceState::DepthStencilTarget;

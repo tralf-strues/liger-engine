@@ -41,7 +41,7 @@ class ForwardRenderFeature : public IFeature {
     Transparent
   };
 
-  explicit ForwardRenderFeature(rhi::RenderGraph::ResourceVersion rg_color);
+  explicit ForwardRenderFeature(rhi::RenderGraph::ResourceVersion rg_output);
   ~ForwardRenderFeature() override = default;
 
   std::string_view Name() const override { return "ForwardRenderFeature"; }
@@ -51,6 +51,7 @@ class ForwardRenderFeature : public IFeature {
 
  private:
   std::vector<Layer>                layers_;
+  rhi::RenderGraph::ResourceVersion rg_output_;
   rhi::RenderGraph::ResourceVersion rg_color_;
   rhi::RenderGraph::ResourceVersion rg_depth_;
 };

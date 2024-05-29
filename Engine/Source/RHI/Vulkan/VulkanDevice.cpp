@@ -106,6 +106,7 @@ bool VulkanDevice::Init(bool debug_enable) {
   device_features12.shaderUniformBufferArrayNonUniformIndexing    = VK_TRUE;
   device_features12.shaderStorageBufferArrayNonUniformIndexing    = VK_TRUE;
   device_features12.shaderSampledImageArrayNonUniformIndexing     = VK_TRUE;
+  device_features12.shaderStorageImageArrayNonUniformIndexing     = VK_TRUE;
   device_features12.scalarBlockLayout                             = VK_TRUE;
 
   std::vector<const char*> extensions{std::begin(kRequiredDeviceExtensions), std::end(kRequiredDeviceExtensions)};
@@ -316,8 +317,8 @@ void VulkanDevice::RequestDedicatedTransfer(DedicatedTransferRequest&& transfer)
   transfer_engine_.Request(std::move(transfer));
 }
 
-RenderGraphBuilder VulkanDevice::NewRenderGraphBuilder() {
-  return RenderGraphBuilder(std::make_unique<VulkanRenderGraph>());
+RenderGraphBuilder VulkanDevice::NewRenderGraphBuilder(Context& context) {
+  return RenderGraphBuilder(std::make_unique<VulkanRenderGraph>(), context);
 }
 
 std::unique_ptr<ISwapchain> VulkanDevice::CreateSwapchain(const ISwapchain::Info& info) {

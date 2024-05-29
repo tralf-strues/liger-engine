@@ -45,6 +45,7 @@ class VulkanTexture : public ITexture {
   bool Init();
 
   uint32_t CreateView(const TextureViewInfo& info) override;
+  bool ViewCreated(uint32_t view) const override;
   const TextureViewInfo& GetViewInfo(uint32_t view) const override;
 
   TextureDescriptorBinding GetSampledDescriptorBinding(uint32_t view) const override;

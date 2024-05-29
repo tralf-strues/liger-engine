@@ -20,7 +20,7 @@ ColorBlendInfo:
   AlphaOperation: Add
 
 AttachmentInfo:
-  RenderTargets: [B8G8R8A8_SRGB]
+  RenderTargets: [R16G16B16A16_SFLOAT]
   DepthStencilTarget: D32_SFLOAT
   Samples: 1
 

@@ -144,18 +144,21 @@ inline const char* ToString(Declaration::Member::Type type) {
 [[nodiscard]] inline uint32_t TypeSize(Declaration::Member::Type type) {
   switch (type) {
     case Declaration::Member::Type::UniformBuffer:
-    case Declaration::Member::Type::StorageBuffer: { return         sizeof(uint64_t); }
+    case Declaration::Member::Type::StorageBuffer:
+    case Declaration::Member::Type::Sampler2D:
+    case Declaration::Member::Type::Sampler2DArray:
+    case Declaration::Member::Type::StorageTexture: { return         sizeof(uint32_t); }
 
-    case Declaration::Member::Type::Bool:          { return         sizeof(uint32_t); }
-    case Declaration::Member::Type::Int32:         { return         sizeof(int32_t);  }
-    case Declaration::Member::Type::UInt32:        { return         sizeof(uint32_t); }
-    case Declaration::Member::Type::UInt64:        { return         sizeof(uint64_t); }
-    case Declaration::Member::Type::Float32:       { return         sizeof(float);    }
-    case Declaration::Member::Type::F32Vec2:       { return     2 * sizeof(float);    }
-    case Declaration::Member::Type::F32Vec3:       { return     3 * sizeof(float);    }
-    case Declaration::Member::Type::F32Vec4:       { return     4 * sizeof(float);    }
-    case Declaration::Member::Type::F32Mat3:       { return 3 * 3 * sizeof(float);    }
-    case Declaration::Member::Type::F32Mat4:       { return 4 * 4 * sizeof(float);    }
+    case Declaration::Member::Type::Bool:           { return         sizeof(uint32_t); }
+    case Declaration::Member::Type::Int32:          { return         sizeof(int32_t);  }
+    case Declaration::Member::Type::UInt32:         { return         sizeof(uint32_t); }
+    case Declaration::Member::Type::UInt64:         { return         sizeof(uint64_t); }
+    case Declaration::Member::Type::Float32:        { return         sizeof(float);    }
+    case Declaration::Member::Type::F32Vec2:        { return     2 * sizeof(float);    }
+    case Declaration::Member::Type::F32Vec3:        { return     3 * sizeof(float);    }
+    case Declaration::Member::Type::F32Vec4:        { return     4 * sizeof(float);    }
+    case Declaration::Member::Type::F32Mat3:        { return 3 * 3 * sizeof(float);    }
+    case Declaration::Member::Type::F32Mat4:        { return 4 * 4 * sizeof(float);    }
 
     default: { return 0; }
   }
@@ -280,7 +283,7 @@ PushConstantMembers GatherPushConstants(const Declaration& declaration) {
     if (IsResourceType(member.type)) {
       push_constants.members.emplace_back(PushConstantMember {
         .name        = "binding_" + ToSnakeCase(member.name),
-        .buffer_name = (IsBufferType(member.type) ? member.name : ""),
+        .buffer_name = member.name,
         .type        = Declaration::Member::Type::UInt32
       });
 
@@ -664,8 +667,6 @@ bool Compiler::Compile(Shader& shader, const Declaration& declaration, std::stri
 
   std::vector<std::unique_ptr<rhi::IShaderModule>> shader_modules;
   for (const auto& [scope, source] : sources) {
-    // LIGER_LOG_INFO(kLogChannelShader, "Generated shader source (stage = {0}):\n{1}", EnumToString(scope), source);
-
     auto binary = CompileToBinary(scope, source.c_str(), name);
     if (binary.empty()) {
       return false;

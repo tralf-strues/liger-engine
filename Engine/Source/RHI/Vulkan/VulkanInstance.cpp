@@ -368,6 +368,7 @@ bool VulkanInstance::FillDeviceInfoList() {
                           static_cast<bool>(features12.bufferDeviceAddress) &&
                           static_cast<bool>(features12.scalarBlockLayout) &&
                           static_cast<bool>(features12.shaderSampledImageArrayNonUniformIndexing) &&
+                          static_cast<bool>(features12.shaderStorageImageArrayNonUniformIndexing) &&
                           static_cast<bool>(sync2_feature.synchronization2),
 
       .properties = {

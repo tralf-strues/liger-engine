@@ -172,7 +172,7 @@ class IDevice {
    * @brief Create a render graph builder, the object for constructing a render graph.
    * @return Render graph builder.
    */
-  [[nodiscard]] virtual RenderGraphBuilder NewRenderGraphBuilder() = 0;
+  [[nodiscard]] virtual RenderGraphBuilder NewRenderGraphBuilder(Context& context) = 0;
 
   [[nodiscard]] virtual std::unique_ptr<ISwapchain> CreateSwapchain(const ISwapchain::Info& info) = 0;
   [[nodiscard]] virtual std::unique_ptr<ITexture> CreateTexture(const ITexture::Info& info) = 0;

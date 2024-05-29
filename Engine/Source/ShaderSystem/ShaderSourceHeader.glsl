@@ -26,13 +26,15 @@ R"=====(#version 450
 #define GetSampler2D(Index) global_samplers_2d[nonuniformEXT(Index)]
 #define GetSamplerCube(Index) global_samplers_cube[nonuniformEXT(Index)]
 
+#define GetStorageTexture(Index) global_images_2d[nonuniformEXT(Index)]
+
 RegisterUniformBuffer(DummyUniform, { uint ignore; });
 RegisterStorageBuffer(std430, readonly, DummyBuffer, { uint ignore; });
 
-layout(set = LIGER_DS, binding = LIGER_BINDING_SAMPLED_TEXTURE)       uniform sampler2D   global_samplers_2d[];
-layout(set = LIGER_DS, binding = LIGER_BINDING_SAMPLED_TEXTURE)       uniform samplerCube global_samplers_cube[];
+layout(set = LIGER_DS, binding = LIGER_BINDING_SAMPLED_TEXTURE)          uniform sampler2D   global_samplers_2d[];
+layout(set = LIGER_DS, binding = LIGER_BINDING_SAMPLED_TEXTURE)          uniform samplerCube global_samplers_cube[];
 
-layout(set = LIGER_DS, binding = LIGER_BINDING_STORAGE_TEXTURE, r32f) uniform image2D     global_images_2d[];
+layout(set = LIGER_DS, binding = LIGER_BINDING_STORAGE_TEXTURE, rgba32f) uniform image2D     global_images_2d[];
 
 const uint32_t kInvalidBinding = 0U;
 

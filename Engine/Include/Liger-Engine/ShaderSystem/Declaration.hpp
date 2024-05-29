@@ -43,6 +43,7 @@ struct Declaration {
 
       Sampler2D,
       Sampler2DArray,
+      StorageTexture,
 
       Bool,
       Int32,
@@ -120,7 +121,8 @@ struct Declaration {
 };
 
 inline constexpr bool IsTextureType(Declaration::Member::Type type) {
-  return type == Declaration::Member::Type::Sampler2D || type == Declaration::Member::Type::Sampler2DArray;
+  return type == Declaration::Member::Type::Sampler2D || type == Declaration::Member::Type::Sampler2DArray ||
+         type == Declaration::Member::Type::StorageTexture;
 }
 
 inline constexpr bool IsBufferType(Declaration::Member::Type type) {

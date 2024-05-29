@@ -88,7 +88,7 @@ class VulkanDevice : public IDevice {
 
   void RequestDedicatedTransfer(DedicatedTransferRequest&& transfer) override;
 
-  RenderGraphBuilder NewRenderGraphBuilder() override;
+  RenderGraphBuilder NewRenderGraphBuilder(Context& context) override;
 
   [[nodiscard]] std::unique_ptr<ISwapchain> CreateSwapchain(const ISwapchain::Info& info) override;
   [[nodiscard]] std::unique_ptr<ITexture> CreateTexture(const ITexture::Info& info) override;

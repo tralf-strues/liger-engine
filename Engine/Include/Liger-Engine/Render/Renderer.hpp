@@ -39,6 +39,8 @@ class Renderer {
   explicit Renderer(rhi::IDevice& device);
 
   void EmplaceFeature(std::unique_ptr<IFeature> feature);
+  FeatureList& GetFeatureList();
+
   rhi::RenderGraphBuilder& GetRenderGraphBuilder();
 
   void Setup();

@@ -41,6 +41,7 @@ static const std::unordered_map<std::string, Declaration::Member::Type> kStringT
 
   {"sampler2D",        Declaration::Member::Type::Sampler2D},
   {"sampler2DArray",   Declaration::Member::Type::Sampler2DArray},
+  {"storage-texture",  Declaration::Member::Type::StorageTexture},
 
   {"bool",             Declaration::Member::Type::Bool},
   {"int32_t",          Declaration::Member::Type::Int32},

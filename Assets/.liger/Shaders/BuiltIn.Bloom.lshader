@@ -1,0 +1,150 @@
+ComputeShader:
+  ThreadGroupSize: [32, 32, 1]
+
+  Input:
+    - Name: SrcTexture
+      Type: sampler2D
+
+    - Name: DstTexture
+      Type: storage-texture
+
+    - Name: intensity
+      Type: float32_t
+      Modifier: push-constant
+
+    - Name: stage
+      Type: uint32_t
+      Modifier: push-constant
+
+    - Name: prefilter_params
+      Type: f32vec4
+      Modifier: push-constant
+
+  CodeSnippets:
+    - Insert: auto-global
+      Code: | #glsl
+        const uint32_t kStagePrefilter  = 0U;
+        const uint32_t kStageDownsample = 1U;
+        const uint32_t kStageUpsample   = 2U;
+        const uint32_t kStageCompose    = 3U;
+
+        /**
+         * Inspired by https://catlikecoding.com/unity/tutorials/advanced-rendering/bloom/
+         *
+         * The formulas are:
+         *   brightness(color)  := max{color.r, color.g, color.b}
+         *   knee               := threshold * soft_threshold
+         *   soft_curve(b)      := (clamp(b - threshold + knee, 0, 2 * knee))^2 / (4 * (knee + 0.00001))
+         *   contribution(b)    := max{soft_curve(b), b - threshold} / max{b, 0.00001}
+         *   prefilter(color)   := color * contribution(brightness(color))
+         *
+         * Some operations can be precomputed:
+         *   prefilter_params.x := threshold
+         *   prefilter_params.y := threshold - knee
+         *   prefilter_params.z := 2.0f * knee
+         *   prefilter_params.w := 0.25f / (knee + 0.00001f)
+         */
+        f32vec3 Prefilter(f32vec3 color, f32vec4 prefilter_params) {
+          float32_t brightness   = max(color.r, max(color.g, color.b));
+
+          float32_t soft_curve   = brightness - prefilter_params.y;
+                    soft_curve   = clamp(soft_curve, 0.0f, prefilter_params.z);
+                    soft_curve   = soft_curve * soft_curve * prefilter_params.w;
+
+          float32_t contribution = max(soft_curve, brightness - prefilter_params.x);
+                    contribution = contribution / max(brightness, 0.00001f);
+
+          return color * contribution; 
+        }
+
+        /**
+         * Inspired by https://www.iryoku.com/next-generation-post-processing-in-call-of-duty-advanced-warfare/
+         */
+        f32vec3 Downsample(sampler2D src_texture, f32vec2 uv, f32vec2 texel_size) {
+          f32vec3 A = textureLod(src_texture, uv, 0).rgb;
+
+          texel_size *= 0.5f; // Sample from center of texels
+
+          f32vec3 B = textureLod(src_texture, uv + texel_size * f32vec2(-1.0f, -1.0f), 0).rgb;
+          f32vec3 C = textureLod(src_texture, uv + texel_size * f32vec2(-1.0f,  1.0f), 0).rgb;
+          f32vec3 D = textureLod(src_texture, uv + texel_size * f32vec2( 1.0f,  1.0f), 0).rgb;
+          f32vec3 E = textureLod(src_texture, uv + texel_size * f32vec2( 1.0f, -1.0f), 0).rgb;
+
+          f32vec3 F = textureLod(src_texture, uv + texel_size * f32vec2(-2.0f, -2.0f), 0).rgb;
+          f32vec3 G = textureLod(src_texture, uv + texel_size * f32vec2(-2.0f,  0.0f), 0).rgb;
+          f32vec3 H = textureLod(src_texture, uv + texel_size * f32vec2( 0.0f,  2.0f), 0).rgb;
+          f32vec3 I = textureLod(src_texture, uv + texel_size * f32vec2( 2.0f,  2.0f), 0).rgb;
+          f32vec3 J = textureLod(src_texture, uv + texel_size * f32vec2( 2.0f,  2.0f), 0).rgb;
+          f32vec3 K = textureLod(src_texture, uv + texel_size * f32vec2( 2.0f,  0.0f), 0).rgb;
+          f32vec3 L = textureLod(src_texture, uv + texel_size * f32vec2(-2.0f, -2.0f), 0).rgb;
+          f32vec3 M = textureLod(src_texture, uv + texel_size * f32vec2( 0.0f, -2.0f), 0).rgb;
+
+          f32vec3 result = f32vec3(0.0f);
+          result += (B + C + D + E) * 0.5f;
+          result += (F + G + A + M) * 0.125f;
+          result += (G + H + I + A) * 0.125f;
+          result += (A + I + J + K) * 0.125f;
+          result += (M + A + K + L) * 0.125f;
+
+          result *= 0.25f;  // NOTE (tralf-strues): each sample was added 4 times
+          return result;
+        }
+
+        /**
+         * Inspired by https://www.iryoku.com/next-generation-post-processing-in-call-of-duty-advanced-warfare/
+         */
+        f32vec3 UpsampleTent9(sampler2D src_texture, f32vec2 uv, f32vec2 texel_size) {
+          const float32_t kRadius = 1.0f;
+
+          f32vec4 offset = texel_size.xyxy * f32vec4(1.0f, 1.0f, -1.0f, 0.0f) * kRadius;
+
+          f32vec3 result = textureLod(src_texture, uv, 0).rgb * 4.0f;
+          result += textureLod(src_texture, uv - offset.xy, 0).rgb;
+          result += textureLod(src_texture, uv - offset.wy, 0).rgb * 2.0f;
+          result += textureLod(src_texture, uv - offset.zy, 0).rgb;
+          result += textureLod(src_texture, uv + offset.zw, 0).rgb * 2.0f;
+          result += textureLod(src_texture, uv + offset.xw, 0).rgb * 2.0f;
+          result += textureLod(src_texture, uv + offset.zy, 0).rgb;
+          result += textureLod(src_texture, uv + offset.wy, 0).rgb * 2.0f;
+          result += textureLod(src_texture, uv + offset.xy, 0).rgb;
+
+          return result * (1.0f / 16.0f);
+        }
+
+  Code: | #glsl
+    u32vec2 dst_usize = imageSize(GetStorageTexture(liger_in.binding_dst_texture));
+    if (gl_GlobalInvocationID.x >= dst_usize.x || gl_GlobalInvocationID.y >= dst_usize.y) {
+      return;
+    }
+
+    f32vec2 src_size  = f32vec2(textureSize(GetSampler2D(liger_in.binding_src_texture), 0));
+    f32vec2 dst_size  = f32vec2(dst_usize);
+    f32vec2 dst_uv    = (f32vec2(gl_GlobalInvocationID.xy) + 0.5f) / dst_size;
+
+    f32vec4 result    = f32vec4(1.0f);
+    switch (liger_in.stage) {
+      case kStagePrefilter: {
+        result.rgb = Downsample(GetSampler2D(liger_in.binding_src_texture), dst_uv, 1.0f / src_size);
+        result.rgb = Prefilter(result.rgb, liger_in.prefilter_params);
+        break;
+      }
+
+      case kStageDownsample: {
+        result.rgb = Downsample(GetSampler2D(liger_in.binding_src_texture), dst_uv, 1.0f / src_size);
+        break;
+      }
+
+      case kStageUpsample: {
+        result.rgb  = imageLoad(GetStorageTexture(liger_in.binding_dst_texture), i32vec2(gl_GlobalInvocationID.xy)).rgb;
+        result.rgb += UpsampleTent9(GetSampler2D(liger_in.binding_src_texture), dst_uv, 1.0f / src_size);
+        break;
+      }
+
+      case kStageCompose: {
+        result.rgb  = imageLoad(GetStorageTexture(liger_in.binding_dst_texture), i32vec2(gl_GlobalInvocationID.xy)).rgb;
+        result.rgb += liger_in.intensity * textureLod(GetSampler2D(liger_in.binding_src_texture), dst_uv, 0).rgb;
+        break;
+      }
+    }
+
+    imageStore(GetStorageTexture(liger_in.binding_dst_texture), i32vec2(gl_GlobalInvocationID.xy), result);

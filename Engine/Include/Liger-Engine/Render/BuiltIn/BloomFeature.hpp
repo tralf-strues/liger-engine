@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file Extent.hpp
- * @date 2023-12-07
+ * @file BloomFeature.hpp
+ * @date 2024-05-28
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,31 +27,47 @@
 
 #pragma once
 
-#include <cstdint>
+#include <Liger-Engine/Asset/Manager.hpp>
+#include <Liger-Engine/ECS/DefaultComponents.hpp>
+#include <Liger-Engine/RHI/ShaderAlignment.hpp>
+#include <Liger-Engine/Render/Feature.hpp>
+#include <Liger-Engine/ShaderSystem/Shader.hpp>
 
-namespace liger::rhi {
+namespace liger::render {
 
-struct Extent2D {
-  uint32_t x{0};
-  uint32_t y{0};
+class BloomFeature : public IFeature {
+ public:
+  struct Info {
+    uint32_t mip_count      = 6U;
+    float    threshold      = 1.0f;
+    float    soft_threshold = 0.5f;
+    float    intensity      = 1.0f;
+  };
 
-  bool operator==(const Extent2D& rhs) const {
-    return (x == rhs.x) && (y == rhs.y);
-  }
+  explicit BloomFeature(asset::Manager& asset_manager, Info info);
+  ~BloomFeature() override = default;
 
-  Extent2D MipExtent(uint32_t mip) const {
-    return Extent2D {.x = (x >> mip), .y = (y >> mip)};
-  }
+  std::string_view Name() const override { return "BloomFeature"; }
+
+  void SetupRenderGraph(rhi::RenderGraphBuilder& builder) override;
+
+  void UpdateInfo(const Info& info);
+
+ private:
+  enum class Stage : uint32_t {
+    Prefilter  = 0U,
+    Downsample = 1U,
+    Upsample   = 2U,
+    Compose    = 3U
+  };
+
+  Info                              info_;
+  asset::Handle<shader::Shader>     shader_;
+
+  rhi::RenderGraph::ResourceVersion rg_src_color_;
+  rhi::RenderGraph::ResourceVersion rg_dst_color_;
+
+  rhi::RenderGraph::ResourceVersion rg_transient_;
 };
 
-struct Extent3D {
-  uint32_t x{0};
-  uint32_t y{0};
-  uint32_t z{0};
-
-  bool operator==(const Extent3D& rhs) const {
-    return (x == rhs.x) && (y == rhs.y) && (z == rhs.z);
-  }
-};
-
-}  // namespace liger::rhi
+}  // namespace liger::render

@@ -49,6 +49,8 @@ class VulkanCommandBuffer : public ICommandBuffer {
   void GenerateMipLevels(ITexture* texture, DeviceResourceState final_state, Filter filter) override;
 
   void BufferBarrier(const IBuffer* buffer, DeviceResourceState src_state, DeviceResourceState dst_state) override;
+  void TextureBarrier(const ITexture* texture, JobType src_job, JobType dst_job, DeviceResourceState src_state,
+                      DeviceResourceState dst_state, uint32_t view) override;
 
   void SetPushConstant(const IPipeline* pipeline, std::span<const char> data) override;
 

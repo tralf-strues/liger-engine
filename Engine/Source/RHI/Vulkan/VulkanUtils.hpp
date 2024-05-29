@@ -129,6 +129,7 @@ inline constexpr VkFormat GetVulkanFormat(Format format) {
     case (Format::B8G8R8_UNORM):        { return VK_FORMAT_B8G8R8_UNORM; }
     case (Format::R8G8B8_SRGB):         { return VK_FORMAT_R8G8B8_SRGB; }
 
+    case (Format::B10G11R11_UFLOAT):    { return VK_FORMAT_B10G11R11_UFLOAT_PACK32; }
     case (Format::R16G16B16_SFLOAT):    { return VK_FORMAT_R16G16B16_SFLOAT; }
     case (Format::R32G32B32_SFLOAT):    { return VK_FORMAT_R32G32B32_SFLOAT; }
 
@@ -136,6 +137,8 @@ inline constexpr VkFormat GetVulkanFormat(Format format) {
     case (Format::R8G8B8A8_UNORM):      { return VK_FORMAT_R8G8B8A8_UNORM; }
     case (Format::R8G8B8A8_SRGB):       { return VK_FORMAT_R8G8B8A8_SRGB; }
     case (Format::B8G8R8A8_SRGB):       { return VK_FORMAT_B8G8R8A8_SRGB; }
+
+    case (Format::R16G16B16A16_SFLOAT): { return VK_FORMAT_R16G16B16A16_SFLOAT; }
     case (Format::R32G32B32A32_SFLOAT): { return VK_FORMAT_R32G32B32A32_SFLOAT; }
 
     default:                            { return VK_FORMAT_UNDEFINED; }
@@ -310,6 +313,50 @@ inline constexpr VkBlendOp GetVulkanBlendOp(ColorBlendInfo::Operation operation)
   return static_cast<VkBlendOp>(operation);
 }
 
+inline constexpr VkPipelineStageFlags2 GetVulkanPipelineSrcStage(JobType node_type, DeviceResourceState resource_state) {
+  VkPipelineStageFlags2 stage = VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT;
+
+  if (node_type == JobType::Compute) {
+    stage = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT;
+  } else if (node_type == JobType::Transfer) {
+    stage = VK_PIPELINE_STAGE_2_TRANSFER_BIT;
+  } else if (resource_state == DeviceResourceState::ShaderSampled) {
+    stage = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT;
+  } else if (resource_state == DeviceResourceState::ColorTarget) {
+    stage = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT;
+  } else if (resource_state == DeviceResourceState::DepthStencilTarget ||
+             resource_state == DeviceResourceState::DepthStencilRead) {
+    stage = VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT;
+  }
+
+  return stage;
+}
+
+inline constexpr VkPipelineStageFlags2 GetVulkanPipelineDstStage(JobType node_type, DeviceResourceState resource_state) {
+  VkPipelineStageFlags2 stage = VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT;
+
+  if (node_type == JobType::Compute) {
+    stage = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT;
+  } else if (node_type == JobType::Transfer) {
+    stage = VK_PIPELINE_STAGE_2_TRANSFER_BIT;
+  } else if (resource_state == DeviceResourceState::ShaderSampled ||
+             resource_state == DeviceResourceState::UniformBuffer ||
+             resource_state == DeviceResourceState::StorageBufferRead) {
+    stage = VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT;  // TODO (tralf-strues): Sampling in vertex shaders is rare
+  } else if (resource_state == DeviceResourceState::ColorTarget) {
+    stage = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT;
+  } else if (resource_state == DeviceResourceState::DepthStencilTarget ||
+             resource_state == DeviceResourceState::DepthStencilRead) {
+    stage = VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT;
+  } else if (resource_state == DeviceResourceState::IndirectArgument) {
+    stage = VK_PIPELINE_STAGE_2_DRAW_INDIRECT_BIT;
+  } else if (resource_state == DeviceResourceState::IndexBuffer) {
+    stage = VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT;
+  }
+
+  return stage;
+}
+
 inline constexpr VkAccessFlags2 GetVulkanAccessFlags(DeviceResourceState state) {
   VkAccessFlags2 vk_access = VK_ACCESS_2_NONE;
 
@@ -378,18 +425,19 @@ inline constexpr VkAccessFlags2 GetVulkanAccessFlags(DeviceResourceState state) 
 
 inline constexpr VkImageLayout GetVulkanImageLayout(DeviceResourceState state) {
   switch (state) {
-    case (DeviceResourceState::Undefined):           { return VK_IMAGE_LAYOUT_UNDEFINED; }
-    case (DeviceResourceState::TransferSrc):         { return VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL; }
-    case (DeviceResourceState::TransferDst):         { return VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL; }
-    case (DeviceResourceState::ShaderSampled):       { return VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL; }
-    case (DeviceResourceState::ColorTarget):         { return VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL; }
-    case (DeviceResourceState::DepthStencilTarget):  { return VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL; }
-    case (DeviceResourceState::DepthStencilRead):    { return VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL; }
-    case (DeviceResourceState::StorageTextureRead):  { return VK_IMAGE_LAYOUT_GENERAL; }
-    case (DeviceResourceState::StorageTextureWrite): { return VK_IMAGE_LAYOUT_GENERAL; }
-    case (DeviceResourceState::PresentTexture):      { return VK_IMAGE_LAYOUT_PRESENT_SRC_KHR; }
+    case (DeviceResourceState::Undefined):               { return VK_IMAGE_LAYOUT_UNDEFINED; }
+    case (DeviceResourceState::TransferSrc):             { return VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL; }
+    case (DeviceResourceState::TransferDst):             { return VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL; }
+    case (DeviceResourceState::ShaderSampled):           { return VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL; }
+    case (DeviceResourceState::ColorTarget):             { return VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL; }
+    case (DeviceResourceState::DepthStencilTarget):      { return VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL; }
+    case (DeviceResourceState::DepthStencilRead):        { return VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL; }
+    case (DeviceResourceState::StorageTextureRead):      { return VK_IMAGE_LAYOUT_GENERAL; }
+    case (DeviceResourceState::StorageTextureWrite):     { return VK_IMAGE_LAYOUT_GENERAL; }
+    case (DeviceResourceState::StorageTextureReadWrite): { return VK_IMAGE_LAYOUT_GENERAL; }
+    case (DeviceResourceState::PresentTexture):          { return VK_IMAGE_LAYOUT_PRESENT_SRC_KHR; }
 
-    default:                                         { return VK_IMAGE_LAYOUT_UNDEFINED; }
+    default:                                             { return VK_IMAGE_LAYOUT_UNDEFINED; }
   }
 }
 

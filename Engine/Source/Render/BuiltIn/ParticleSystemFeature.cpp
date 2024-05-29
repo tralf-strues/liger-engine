@@ -242,7 +242,7 @@ RuntimeParticleEmitterHandle ParticleSystemFeature::Add(const ParticleEmitterInf
   });
 
   instance.sbo_free_list = device_.CreateBuffer(rhi::IBuffer::Info {
-    .size        = instance.max_particles * sizeof(int32_t),
+    .size        = (instance.max_particles + 1U) * sizeof(int32_t),
     .usage       = rhi::DeviceResourceState::StorageBufferReadWrite | rhi::DeviceResourceState::TransferDst,
     .cpu_visible = false,
     .name        = fmt::format("ParticleSystemFeature::instances_[{0}]::sbo_free_list", idx)

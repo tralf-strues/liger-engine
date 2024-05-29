@@ -24,3 +24,7 @@
   id: 0x69A66A82CD1B1097
 - file: .liger/Shaders/BuiltIn.StaticMeshRender.lshader
   id: 0xDD66995B55F52506
+- file: .liger/Shaders/BuiltIn.Bloom.lshader
+  id: 0x4A63915B05CB750F
+- file: .liger/Shaders/BuiltIn.Tonemap.lshader
+  id: 0xAC01F12A0DCB92DC

@@ -31,6 +31,7 @@
 #include <Liger-Engine/RHI/DeviceResourceState.hpp>
 #include <Liger-Engine/RHI/Extent.hpp>
 #include <Liger-Engine/RHI/Filter.hpp>
+#include <Liger-Engine/RHI/JobType.hpp>
 
 #include <fmt/format.h>
 #include <glm/glm.hpp>
@@ -100,13 +101,17 @@ class ICommandBuffer {
   /**
    * @brief Set buffer barrier to transition it from src state to dst state.
    *
-   * @note Must only be used to transition buffer's state within this command buffer stream, i.e. within a single render graph node.
+   * @note Must only be used to transition buffer's state within this command buffer stream, i.e. within
+   *       a single render graph node.
    *
    * @param buffer
    * @param src_state
    * @param dst_state
    */
   virtual void BufferBarrier(const IBuffer* buffer, DeviceResourceState src_state, DeviceResourceState dst_state) = 0;
+
+  virtual void TextureBarrier(const ITexture* texture, JobType src_job, JobType dst_job, DeviceResourceState src_state,
+                              DeviceResourceState dst_state, uint32_t view) = 0;
 
   /**
    * @brief Set the push constant for the pipeline.

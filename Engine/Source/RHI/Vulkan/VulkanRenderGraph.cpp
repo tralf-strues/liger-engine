@@ -269,13 +269,14 @@ bool VulkanRenderGraph::UpdateDependentResourceValues() {
     }
 
     DependentTextureInfo& dependent_info = it->second;
+    bool changed = false;
 
     if (dependent_info.format.IsDependent()) {
       const auto dependency =
           resource_version_registry_.TryGetResourceByVersion<TextureResource>(dependent_info.format.GetDependency());
 
       if (dependency && dependency->texture) {
-        changed_any = changed_any || (dependent_info.format.Get() != dependency->texture->GetInfo().format);
+        changed = changed || (dependent_info.format.Get() != dependency->texture->GetInfo().format);
         dependent_info.format.UpdateDependentValue(dependency->texture->GetInfo().format);
       }
     }
@@ -285,7 +286,7 @@ bool VulkanRenderGraph::UpdateDependentResourceValues() {
           resource_version_registry_.TryGetResourceByVersion<TextureResource>(dependent_info.extent.GetDependency());
 
       if (dependency && dependency->texture) {
-        changed_any = changed_any || (dependent_info.extent.Get() != dependency->texture->GetInfo().extent);
+        changed = changed || (dependent_info.extent.Get() != dependency->texture->GetInfo().extent);
         dependent_info.extent.UpdateDependentValue(dependency->texture->GetInfo().extent);
       }
     }
@@ -295,7 +296,7 @@ bool VulkanRenderGraph::UpdateDependentResourceValues() {
           dependent_info.mip_levels.GetDependency());
 
       if (dependency && dependency->texture) {
-        changed_any = changed_any || (dependent_info.mip_levels.Get() != dependency->texture->GetInfo().mip_levels);
+        changed = changed || (dependent_info.mip_levels.Get() != dependency->texture->GetInfo().mip_levels);
         dependent_info.mip_levels.UpdateDependentValue(dependency->texture->GetInfo().mip_levels);
       }
     }
@@ -305,21 +306,28 @@ bool VulkanRenderGraph::UpdateDependentResourceValues() {
           resource_version_registry_.TryGetResourceByVersion<TextureResource>(dependent_info.samples.GetDependency());
 
       if (dependency && dependency->texture) {
-        changed_any = changed_any || (dependent_info.samples.Get() != dependency->texture->GetInfo().samples);
+        changed = changed || (dependent_info.samples.Get() != dependency->texture->GetInfo().samples);
         dependent_info.samples.UpdateDependentValue(dependency->texture->GetInfo().samples);
       }
     }
+
+    if (changed) {
+      auto& texture = transient_textures_.emplace_back(device_->CreateTexture(dependent_info.Get()));
+
+      for (const auto& view_info : transient_texture_view_infos_[resource_id]) {
+        texture->CreateView(view_info);
+      }
+
+      resource_version_registry_.UpdateResource(resource_id, TextureResource{texture.get(), kTextureDefaultViewIdx});
+    }
+
+    changed_any = changed_any || changed;
   }
 
   return changed_any;
 }
 
 void VulkanRenderGraph::RecreateTransientResources() {
-  for (const auto& [id, info] : transient_texture_infos_) {
-    auto& texture = transient_textures_.emplace_back(device_->CreateTexture(info.Get()));
-    resource_version_registry_.UpdateResource(id, TextureResource{texture.get(), kTextureDefaultViewIdx});
-  }
-
   for (const auto& [id, info] : transient_buffer_infos_) {
     auto& buffer = transient_buffers_.emplace_back(device_->CreateBuffer(info));
     resource_version_registry_.UpdateResource(id, buffer.get());
@@ -343,7 +351,7 @@ void VulkanRenderGraph::SetupAttachments() {
   size_t cur_attachment_idx = 0U;
 
   for (const auto& node : dag_) {
-    if (node.type != RenderGraph::Node::Type::RenderPass) {
+    if (node.type != JobType::RenderPass) {
       continue;
     }
 
@@ -443,7 +451,7 @@ void VulkanRenderGraph::SetupAttachments() {
 
 void VulkanRenderGraph::CalculateRenderPassCount(size_t& render_pass_count, size_t& total_attachment_count) const {
   for (const auto& node : dag_) {
-    if (node.type != RenderGraph::Node::Type::RenderPass) {
+    if (node.type != JobType::RenderPass) {
       continue;
     }
 
@@ -489,11 +497,11 @@ void VulkanRenderGraph::ScheduleToQueues() {
 
     vulkan_node.queue_idx = main_queue_idx;
 
-    if (node.type == RenderGraph::Node::Type::Compute && node.async) {
+    if (node.type == JobType::Compute && node.async) {
       vulkan_node.queue_idx = compute_queue_idx;
     }
 
-    if (node.type == RenderGraph::Node::Type::Transfer && node.async) {
+    if (node.type == JobType::Transfer && node.async) {
       vulkan_node.queue_idx = transfer_queue_idx;
     }
 
@@ -1031,13 +1039,13 @@ void VulkanRenderGraph::DumpGraphviz(std::string_view filename, bool detailed) {
              "node [shape=record, fontname=\"helvetica\", fontsize=14, margin=\"0.2,0.15\"]\n\n",
              name_);
 
-  constexpr uint32_t kFontSizeNode     = 14;
+  constexpr uint32_t kFontSizeNode     = 16;
   constexpr uint32_t kFontSizeResource = 14;
 
-  static const std::unordered_map<Node::Type, const char*> kFillcolorPerNodeType {
-      {Node::Type::RenderPass, "goldenrod1"},
-      {Node::Type::Compute,    "chartreuse3"},
-      {Node::Type::Transfer,   "darkturquoise"}
+  static const std::unordered_map<JobType, const char*> kFillcolorPerNodeType {
+      {JobType::RenderPass, "goldenrod1"},
+      {JobType::Compute,    "chartreuse3"},
+      {JobType::Transfer,   "darkturquoise"}
   };
 
   constexpr const char* kFillcolorBuffer  = "gainsboro";
@@ -1166,7 +1174,7 @@ void VulkanRenderGraph::DumpGraphviz(std::string_view filename, bool detailed) {
                    "[label=<{{ <B>{1}</B> <BR/><BR/> "
                    "[Buffer Pack] <BR/> Buffers: {2} | "
                    "Version: {3} <BR/> ID: {4} }}> "
-                   "style=\"rounded, filled\", fillcolor={5}, fontsize={6}]\n",
+                   "style=\"dashed, rounded, filled\", fillcolor={5}, fontsize={6}]\n",
                    version, buffer_pack->name, count, version, resource_version_registry_.GetResourceId(version),
                    kFillcolorBuffer, kFontSizeResource);
       } else {
@@ -1174,7 +1182,7 @@ void VulkanRenderGraph::DumpGraphviz(std::string_view filename, bool detailed) {
                    "R{0} "
                    "[label=<{{ <B>{1}</B> <BR/><BR/> "
                    "[Buffer Pack] <BR/> Buffers: {2} }}> "
-                   "style=\"rounded, filled\", fillcolor={3}, fontsize={4}]\n",
+                   "style=\"dashed, rounded, filled\", fillcolor={3}, fontsize={4}]\n",
                    version, buffer_pack->name, count, kFillcolorBuffer, kFontSizeResource);
       }
     }
@@ -1291,57 +1299,11 @@ void VulkanRenderGraph::SetBufferPackBarriers(VkCommandBuffer vk_cmds, VulkanNod
   vkCmdPipelineBarrier2(vk_cmds, &dependency_info);
 }
 
-VkPipelineStageFlags2 VulkanRenderGraph::GetVulkanPipelineSrcStage(Node::Type          node_type,
-                                                                   DeviceResourceState resource_state) {
-  VkPipelineStageFlags2 stage = VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT;
-
-  if (node_type == Node::Type::Compute) {
-    stage = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT;
-  } else if (node_type == Node::Type::Transfer) {
-    stage = VK_PIPELINE_STAGE_2_TRANSFER_BIT;
-  } else if (resource_state == DeviceResourceState::ShaderSampled) {
-    stage = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT;
-  } else if (resource_state == DeviceResourceState::ColorTarget) {
-    stage = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT;
-  } else if (resource_state == DeviceResourceState::DepthStencilTarget ||
-             resource_state == DeviceResourceState::DepthStencilRead) {
-    stage = VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT;
-  }
-
-  return stage;
-}
-
-VkPipelineStageFlags2 VulkanRenderGraph::GetVulkanPipelineDstStage(Node::Type          node_type,
-                                                                   DeviceResourceState resource_state) {
-  VkPipelineStageFlags2 stage = VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT;
-
-  if (node_type == Node::Type::Compute) {
-    stage = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT;
-  } else if (node_type == Node::Type::Transfer) {
-    stage = VK_PIPELINE_STAGE_2_TRANSFER_BIT;
-  } else if (resource_state == DeviceResourceState::ShaderSampled ||
-             resource_state == DeviceResourceState::UniformBuffer ||
-             resource_state == DeviceResourceState::StorageBufferRead) {
-    stage = VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT;  // TODO (tralf-strues): Sampling in vertex shaders is rare
-  } else if (resource_state == DeviceResourceState::ColorTarget) {
-    stage = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT;
-  } else if (resource_state == DeviceResourceState::DepthStencilTarget ||
-             resource_state == DeviceResourceState::DepthStencilRead) {
-    stage = VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT;
-  } else if (resource_state == DeviceResourceState::IndirectArgument) {
-    stage = VK_PIPELINE_STAGE_2_DRAW_INDIRECT_BIT;
-  } else if (resource_state == DeviceResourceState::IndexBuffer) {
-    stage = VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT;
-  }
-
-  return stage;
-}
-
-glm::vec4 VulkanRenderGraph::GetDebugLabelColor(Node::Type node_type) {
+glm::vec4 VulkanRenderGraph::GetDebugLabelColor(JobType node_type) {
   switch (node_type) {
-    case Node::Type::RenderPass: { return glm::vec4(1.0f, 0.757f, 0.145f, 1.0f); }
-    case Node::Type::Compute:    { return glm::vec4(0.4f, 0.804f, 0.0f,   1.0f);; }
-    case Node::Type::Transfer:   { return glm::vec4(0.0f, 0.81f,  0.82f,  1.0f);; }
+    case JobType::RenderPass: { return glm::vec4(1.0f, 0.757f, 0.145f, 1.0f); }
+    case JobType::Compute:    { return glm::vec4(0.4f, 0.804f, 0.0f,   1.0f);; }
+    case JobType::Transfer:   { return glm::vec4(0.0f, 0.81f,  0.82f,  1.0f);; }
 
     default:                     { return glm::vec4(1.0f); }
   }

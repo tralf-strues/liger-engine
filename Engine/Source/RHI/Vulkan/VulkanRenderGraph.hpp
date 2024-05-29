@@ -52,9 +52,7 @@ class VulkanRenderGraph : public RenderGraph {
 
   void DumpGraphviz(std::string_view filename, bool detailed) override;
 
-  static VkPipelineStageFlags2 GetVulkanPipelineSrcStage(Node::Type node_type, DeviceResourceState resource_state);
-  static VkPipelineStageFlags2 GetVulkanPipelineDstStage(Node::Type node_type, DeviceResourceState resource_state);
-  static glm::vec4             GetDebugLabelColor(Node::Type node_type);
+  static glm::vec4 GetDebugLabelColor(JobType node_type);
 
  private:
   struct VulkanNode {

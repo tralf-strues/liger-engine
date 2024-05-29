@@ -60,12 +60,18 @@ DAG<RenderGraph::Node>::Depth RenderGraph::GetDependencyLevel(NodeHandle node_ha
   return node_dependency_levels_[node_handle];
 }
 
-RenderGraphBuilder::RenderGraphBuilder(std::unique_ptr<RenderGraph> graph) : graph_(std::move(graph)) {}
+RenderGraphBuilder::RenderGraphBuilder(std::unique_ptr<RenderGraph> graph, Context& context)
+    : graph_(std::move(graph)), context_(context) {}
 
 RenderGraphBuilder::ResourceVersion RenderGraphBuilder::DeclareTransientTexture(const DependentTextureInfo& info) {
   auto version = graph_->resource_version_registry_.DeclareResource<RenderGraph::TextureResource>();
   graph_->transient_texture_infos_[graph_->resource_version_registry_.GetResourceId(version)] = info;
   return version;
+}
+
+void RenderGraphBuilder::DeclareTextureView(ResourceVersion texture, const rhi::TextureViewInfo& view_info) {
+  graph_->transient_texture_view_infos_[graph_->resource_version_registry_.GetResourceId(texture)]
+    .emplace_back(view_info);
 }
 
 RenderGraphBuilder::ResourceVersion RenderGraphBuilder::DeclareTransientBuffer(const IBuffer::Info& info) {
@@ -127,28 +133,32 @@ RenderGraphBuilder::ResourceVersion RenderGraphBuilder::ImportBuffer(RenderGraph
   return version;
 }
 
+RenderGraphBuilder::ResourceVersion RenderGraphBuilder::LastResourceVersion(ResourceVersion resource) {
+  return graph_->resource_version_registry_.LastUsageVersion(graph_->resource_version_registry_.GetResourceId(resource));
+}
+
 void RenderGraphBuilder::BeginRenderPass(std::string_view name, ICommandBuffer::Capability capabilities) {
-  BeginNode(RenderGraph::Node::Type::RenderPass, false, capabilities, name);
+  BeginNode(JobType::RenderPass, false, capabilities, name);
 }
 
 void RenderGraphBuilder::EndRenderPass() {
-  EndNode(RenderGraph::Node::Type::RenderPass);
+  EndNode(JobType::RenderPass);
 }
 
 void RenderGraphBuilder::BeginCompute(std::string_view name, bool async, ICommandBuffer::Capability capabilities) {
-  BeginNode(RenderGraph::Node::Type::Compute, async, capabilities, name);
+  BeginNode(JobType::Compute, async, capabilities, name);
 }
 
 void RenderGraphBuilder::EndCompute() {
-  EndNode(RenderGraph::Node::Type::Compute);
+  EndNode(JobType::Compute);
 }
 
 void RenderGraphBuilder::BeginTransfer(std::string_view name, bool async, ICommandBuffer::Capability capabilities) {
-  BeginNode(RenderGraph::Node::Type::Transfer, async, capabilities, name);
+  BeginNode(JobType::Transfer, async, capabilities, name);
 }
 
 void RenderGraphBuilder::EndTransfer() {
-  EndNode(RenderGraph::Node::Type::Transfer);
+  EndNode(JobType::Transfer);
 }
 
 void RenderGraphBuilder::SetJob(RenderGraph::Job job) {
@@ -161,7 +171,7 @@ RenderGraphBuilder::ResourceVersion RenderGraphBuilder::AddColorTarget(ResourceV
   LIGER_ASSERT(current_node_.has_value(), kLogChannelRHI, "Adding resource access outside of begin/end scope!");
 
   auto& node = graph_->dag_.GetNode(*current_node_);
-  LIGER_ASSERT(node.type == RenderGraph::Node::Type::RenderPass, kLogChannelRHI,
+  LIGER_ASSERT(node.type == JobType::RenderPass, kLogChannelRHI,
                "Incompatible resource access with the current node type!");
 
   auto new_version = texture;
@@ -190,7 +200,7 @@ RenderGraphBuilder::ResourceVersion RenderGraphBuilder::SetDepthStencil(Resource
   LIGER_ASSERT(current_node_.has_value(), kLogChannelRHI, "Adding resource access outside of begin/end scope!");
 
   auto& node = graph_->dag_.GetNode(*current_node_);
-  LIGER_ASSERT(node.type == RenderGraph::Node::Type::RenderPass, kLogChannelRHI,
+  LIGER_ASSERT(node.type == JobType::RenderPass, kLogChannelRHI,
                "Incompatible resource access with the current node type!");
 
   auto new_version = texture;
@@ -223,6 +233,24 @@ void RenderGraphBuilder::SampleTexture(ResourceVersion texture) {
   node.read.push_back(RenderGraph::ResourceRead{texture, usage});
 }
 
+void RenderGraphBuilder::WriteTexture(ResourceVersion texture) {
+  LIGER_ASSERT(current_node_.has_value(), kLogChannelRHI, "Adding resource access outside of begin/end scope!");
+
+  auto& node = graph_->dag_.GetNode(*current_node_);
+  node.write.push_back(RenderGraph::ResourceWrite{.version = texture, .state = DeviceResourceState::StorageTextureWrite});
+}
+
+RenderGraphBuilder::ResourceVersion RenderGraphBuilder::ReadWriteTexture(ResourceVersion texture) {
+  LIGER_ASSERT(current_node_.has_value(), kLogChannelRHI, "Adding resource access outside of begin/end scope!");
+
+  auto new_version = graph_->resource_version_registry_.NextVersion(texture);
+  auto& node = graph_->dag_.GetNode(*current_node_);
+  node.read.push_back(RenderGraph::ResourceRead{.version = texture, .state = DeviceResourceState::StorageTextureReadWrite});
+  node.write.push_back(RenderGraph::ResourceWrite{.version = new_version, .state = DeviceResourceState::StorageTextureReadWrite});
+
+  return new_version;
+}
+
 void RenderGraphBuilder::ReadBuffer(ResourceVersion buffer, DeviceResourceState usage) {
   LIGER_ASSERT(current_node_.has_value(), kLogChannelRHI, "Adding resource access outside of begin/end scope!");
 
@@ -246,6 +274,10 @@ RenderGraphBuilder::ResourceVersion RenderGraphBuilder::ReadWriteBuffer(Resource
   node.write.push_back(RenderGraph::ResourceWrite{.version = new_version, .state = usage});
 
   return new_version;
+}
+
+Context& RenderGraphBuilder::GetContext() {
+  return context_;
 }
 
 std::unique_ptr<RenderGraph> RenderGraphBuilder::Build(IDevice& device, std::string_view name) {
@@ -304,7 +336,7 @@ std::unique_ptr<RenderGraph> RenderGraphBuilder::Build(IDevice& device, std::str
   return std::move(graph_);
 }
 
-void RenderGraphBuilder::BeginNode(RenderGraph::Node::Type type, bool async, ICommandBuffer::Capability capabilities,
+void RenderGraphBuilder::BeginNode(JobType type, bool async, ICommandBuffer::Capability capabilities,
                                    const std::string_view name) {
   LIGER_ASSERT(!current_node_.has_value(), kLogChannelRHI,
                "Cannot begin a render graph node without ending the previous one!");
@@ -317,7 +349,7 @@ void RenderGraphBuilder::BeginNode(RenderGraph::Node::Type type, bool async, ICo
   current_node_             = graph_->dag_.EmplaceNode(std::move(node));
 }
 
-void RenderGraphBuilder::EndNode(RenderGraph::Node::Type type) {
+void RenderGraphBuilder::EndNode(JobType type) {
   LIGER_ASSERT(current_node_.has_value(), kLogChannelRHI,
                "Cannot end a render graph node without beginning it prior to this!");
 
@@ -327,7 +359,7 @@ void RenderGraphBuilder::EndNode(RenderGraph::Node::Type type) {
   current_node_.reset();
 }
 
-RenderGraphBuilder::ResourceVersion RenderGraphBuilder::AddWrite(RenderGraph::Node::Type type, ResourceVersion resource,
+RenderGraphBuilder::ResourceVersion RenderGraphBuilder::AddWrite(JobType type, ResourceVersion resource,
                                                                  DeviceResourceState usage) {
   LIGER_ASSERT(current_node_.has_value(), kLogChannelRHI, "Adding resource access outside of begin/end scope!");
 

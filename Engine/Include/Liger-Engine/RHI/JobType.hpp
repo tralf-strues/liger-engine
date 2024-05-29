@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file Extent.hpp
- * @date 2023-12-07
+ * @file JobType.hpp
+ * @date 2024-05-29
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,31 +27,12 @@
 
 #pragma once
 
-#include <cstdint>
-
 namespace liger::rhi {
 
-struct Extent2D {
-  uint32_t x{0};
-  uint32_t y{0};
-
-  bool operator==(const Extent2D& rhs) const {
-    return (x == rhs.x) && (y == rhs.y);
-  }
-
-  Extent2D MipExtent(uint32_t mip) const {
-    return Extent2D {.x = (x >> mip), .y = (y >> mip)};
-  }
-};
-
-struct Extent3D {
-  uint32_t x{0};
-  uint32_t y{0};
-  uint32_t z{0};
-
-  bool operator==(const Extent3D& rhs) const {
-    return (x == rhs.x) && (y == rhs.y) && (z == rhs.z);
-  }
+enum class JobType : uint8_t {
+  RenderPass,
+  Compute,
+  Transfer
 };
 
 }  // namespace liger::rhi

@@ -101,6 +101,23 @@ void TextureLoader::Load(asset::Manager& manager, asset::Id asset_id, const std:
     .name            = std::format("Texture_0x{0:X}({1})", asset_id.Value(), filepath.stem().string())
   });
 
+  const rhi::SamplerInfo sampler_info {
+    .min_filter         = rhi::Filter::Linear,
+    .mag_filter         = rhi::Filter::Linear,
+    .address_mode_u     = rhi::SamplerInfo::AddressMode::Repeat,
+    .address_mode_v     = rhi::SamplerInfo::AddressMode::Repeat,
+    .address_mode_w     = rhi::SamplerInfo::AddressMode::Repeat,
+    .border_color       = rhi::SamplerInfo::BorderColor::IntOpaqueBlack,
+    .anisotropy_enabled = true,
+    .max_anisotropy     = 4.0f,
+    .mipmap_mode        = rhi::Filter::Linear,
+    .min_lod            = 0.0f,
+    .max_lod            = rhi::SamplerInfo::kMaxLODClampNone,
+    .lod_bias           = 0.0f
+  };
+
+  (*texture)->SetSampler(sampler_info, rhi::kTextureDefaultViewIdx);
+
   rhi::IDevice::DedicatedTransferRequest transfer_request;
   transfer_request.texture_transfers.emplace_back(rhi::IDevice::DedicatedTextureTransfer {
     .texture         = texture->get(),
