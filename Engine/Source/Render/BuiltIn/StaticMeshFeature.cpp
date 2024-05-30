@@ -145,7 +145,7 @@ void StaticMeshFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
       return;
     }
 
-    const auto& camera_data = context.Get<CameraData>();
+    const auto& camera_data = context.template Get<CameraData>();
     glm::mat4 proj_transposed = glm::transpose(camera_data.proj);
     glm::vec4 frustum_x = NormalizePlane(proj_transposed[3U] + proj_transposed[0U]);  // x + w < 0
     glm::vec4 frustum_y = NormalizePlane(proj_transposed[3U] + proj_transposed[1U]);  // y + w < 0
@@ -156,7 +156,7 @@ void StaticMeshFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
     cull_shader_->SetBuffer("Draws", sbo_draw_commands_->GetStorageDescriptorBinding());
     cull_shader_->SetBuffer("Objects", sbo_objects_->GetStorageDescriptorBinding());
     cull_shader_->SetBuffer("VisibleObjectIndices", sbo_visible_object_indices->GetStorageDescriptorBinding());
-    cull_shader_->SetBuffer("CameraData", context.Get<CameraDataBinding>().binding_ubo);
+    cull_shader_->SetBuffer("CameraData", context.template Get<CameraDataBinding>().binding_ubo);
     cull_shader_->SetPushConstant<glm::vec4>("frustum", frustum);
     cull_shader_->SetPushConstant<uint32_t>("batched_object_count", static_cast<uint32_t>(batched_objects_.size()));
 
@@ -184,7 +184,7 @@ void StaticMeshFeature::AddLayerJobs(LayerMap& layer_map) {
     auto sbo_visible_object_indices = graph.GetBuffer(rg_versions_.visible_object_indices);
     render_shader_->SetBuffer("Objects", sbo_objects_->GetStorageDescriptorBinding());
     render_shader_->SetBuffer("VisibleObjectIndices", sbo_visible_object_indices->GetStorageDescriptorBinding());
-    render_shader_->SetBuffer("CameraData", context.Get<CameraDataBinding>().binding_ubo);
+    render_shader_->SetBuffer("CameraData", context.template Get<CameraDataBinding>().binding_ubo);
 
     render_shader_->BindPipeline(cmds);
     render_shader_->BindPushConstants(cmds);

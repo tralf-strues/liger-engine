@@ -203,7 +203,7 @@ void ParticleSystemFeature::AddLayerJobs(LayerMap& layer_map) {
     }
 
     render_shader_->BindPipeline(cmds);
-    render_shader_->SetBuffer("CameraData", context.Get<CameraDataBinding>().binding_ubo);
+    render_shader_->SetBuffer("CameraData", context.template Get<CameraDataBinding>().binding_ubo);
     for (auto& instance : instances_) {
       render_shader_->SetPushConstant("transform",     instance.transform);
       render_shader_->SetBuffer("EmitterData",         instance.ubo_emitter->GetUniformDescriptorBinding());
