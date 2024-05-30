@@ -39,7 +39,6 @@
 /out/
 
 /liger-editor*
-/liger-sandbox*
 
 #=== MacOS ===#
 *.DS_Store
@@ -53,6 +52,3 @@
 
 #=== Logging and caches ===#
 /.liger_log/
-
-#=== Local/Internal tools ===#
-/copy_shaders.sh
