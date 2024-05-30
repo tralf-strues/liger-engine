@@ -48,7 +48,7 @@ void CameraDataCollector::Run(const ecs::Camera& camera, const ecs::WorldTransfo
 
 void CameraDataCollector::PreRender(rhi::IDevice&, rhi::Context& context) {
   context.Insert(*ubo_camera_data_.GetData());
-  context.Insert(CameraDataBinding(ubo_camera_data_->GetUniformDescriptorBinding()));
+  context.Insert(CameraDataBinding{.binding_ubo = ubo_camera_data_->GetUniformDescriptorBinding()});
 }
 
 }  // namespace liger::render
