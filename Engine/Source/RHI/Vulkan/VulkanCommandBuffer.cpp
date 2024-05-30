@@ -28,19 +28,21 @@
 #include "VulkanCommandBuffer.hpp"
 
 #include "VulkanBuffer.hpp"
-#include "VulkanComputePipeline.hpp"
-#include "VulkanGraphicsPipeline.hpp"
+#include "VulkanPipeline.hpp"
 #include "VulkanTexture.hpp"
 
 namespace liger::rhi {
 
-VulkanCommandBuffer::VulkanCommandBuffer(VkCommandBuffer vk_cmds) : vk_cmds_(vk_cmds) {}
+VulkanCommandBuffer::VulkanCommandBuffer(VkCommandBuffer vk_cmds, VkDescriptorSet ds, bool use_debug_labels)
+    : vk_cmds_(vk_cmds), ds_(ds), use_debug_labels_(use_debug_labels) {}
 
 VkCommandBuffer VulkanCommandBuffer::Get() {
   return vk_cmds_;
 }
 
 void VulkanCommandBuffer::Begin() {
+  ds_bound_ = false;
+
   const VkCommandBufferBeginInfo begin_info {
     .sType            = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
     .pNext            = nullptr,
@@ -52,35 +54,252 @@ void VulkanCommandBuffer::Begin() {
 }
 
 void VulkanCommandBuffer::End() {
+  ds_bound_ = false;
+
   VULKAN_CALL(vkEndCommandBuffer(vk_cmds_));
 }
 
-void VulkanCommandBuffer::GenerateMipLevels(ITexture* /*texture*/, Filter /*filter*/) {
-  LIGER_ASSERT(false, kLogChannelRHI, "Not implemented!");
+void VulkanCommandBuffer::GenerateMipLevels(ITexture* texture, DeviceResourceState final_state, Filter filter) {
+  VulkanTexture& vulkan_texture = static_cast<VulkanTexture&>(*texture);
+
+  const auto vk_final_layout = GetVulkanImageLayout(final_state);
+
+  auto transfer_mip_to_final_state = [this, vk_final_layout](VkImage image, VkImageLayout old_layout,
+                                                             VkAccessFlags2 src_access, uint32_t mip) {
+    const VkImageMemoryBarrier2 barrier_final {
+      .sType               = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+      .pNext               = nullptr,
+      .srcStageMask        = VK_PIPELINE_STAGE_2_TRANSFER_BIT,
+      .srcAccessMask       = src_access,
+      .dstStageMask        = VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT,
+      .dstAccessMask       = VK_ACCESS_2_SHADER_READ_BIT,
+      .oldLayout           = old_layout,
+      .newLayout           = vk_final_layout,
+      .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+      .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+      .image               = image,
+
+      .subresourceRange = {
+        .aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT,
+        .baseMipLevel   = mip,
+        .levelCount     = 1U,
+        .baseArrayLayer = 0U,
+        .layerCount     = 1U
+      }
+    };
+
+    const VkDependencyInfo barrier_final_dependency_info {
+      .sType                    = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
+      .pNext                    = nullptr,
+      .dependencyFlags          = 0,
+      .memoryBarrierCount       = 0U,
+      .pMemoryBarriers          = nullptr,
+      .bufferMemoryBarrierCount = 0U,
+      .pBufferMemoryBarriers    = nullptr,
+      .imageMemoryBarrierCount  = 1U,
+      .pImageMemoryBarriers     = &barrier_final
+    };
+
+    vkCmdPipelineBarrier2(vk_cmds_, &barrier_final_dependency_info);
+  };  
+
+  uint32_t mip_levels = vulkan_texture.GetInfo().mip_levels;
+  uint32_t mip_width  = vulkan_texture.GetInfo().extent.x;
+  uint32_t mip_height = vulkan_texture.GetInfo().extent.y;
+  for (uint32_t i = 1; i < mip_levels; ++i) {
+    /* Transition mip (i - 1) to VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL */
+    const VkImageMemoryBarrier2 barrier_src {
+      .sType               = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+      .pNext               = nullptr,
+      .srcStageMask        = VK_PIPELINE_STAGE_2_TRANSFER_BIT,
+      .srcAccessMask       = VK_ACCESS_2_TRANSFER_WRITE_BIT,
+      .dstStageMask        = VK_PIPELINE_STAGE_2_TRANSFER_BIT,
+      .dstAccessMask       = VK_ACCESS_2_TRANSFER_READ_BIT,
+      .oldLayout           = VK_IMAGE_LAYOUT_UNDEFINED,
+      .newLayout           = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+      .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+      .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+      .image               = vulkan_texture.GetVulkanImage(),
+
+      .subresourceRange = {
+        .aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT,
+        .baseMipLevel   = i - 1,
+        .levelCount     = 1U,
+        .baseArrayLayer = 0U,
+        .layerCount     = 1U
+      }
+    };
+
+    const VkDependencyInfo barrier_src_dependency_info {
+      .sType                    = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
+      .pNext                    = nullptr,
+      .dependencyFlags          = 0,
+      .memoryBarrierCount       = 0U,
+      .pMemoryBarriers          = nullptr,
+      .bufferMemoryBarrierCount = 0U,
+      .pBufferMemoryBarriers    = nullptr,
+      .imageMemoryBarrierCount  = 1U,
+      .pImageMemoryBarriers     = &barrier_src
+    };
+
+    vkCmdPipelineBarrier2(vk_cmds_, &barrier_src_dependency_info);
+
+    /* Blit mip (i - 1) to mip i */
+    int32_t src_offset_x = static_cast<int32_t>(mip_width);
+    int32_t src_offset_y = static_cast<int32_t>(mip_height);
+    int32_t dst_offset_x = static_cast<int32_t>((mip_width  > 1) ? (mip_width  / 2) : 1);
+    int32_t dst_offset_y = static_cast<int32_t>((mip_height > 1) ? (mip_height / 2) : 1);
+
+    const VkImageBlit2 blit_region {
+      .sType          = VK_STRUCTURE_TYPE_IMAGE_BLIT_2,
+      .pNext          = nullptr,
+
+      .srcSubresource {
+        .aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT,
+        .mipLevel       = i - 1,
+        .baseArrayLayer = 0U,
+        .layerCount     = 1U,
+      },
+      .srcOffsets {
+        {0, 0, 0},
+        {src_offset_x, src_offset_y, 1}
+      },
+
+      .dstSubresource {
+        .aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT,
+        .mipLevel       = i,
+        .baseArrayLayer = 0U,
+        .layerCount     = 1U,
+      },
+      .dstOffsets {
+        {0, 0, 0},
+        {dst_offset_x, dst_offset_y, 1}
+      },
+    };
+
+    const VkBlitImageInfo2 blit_info {
+      .sType          = VK_STRUCTURE_TYPE_BLIT_IMAGE_INFO_2,
+      .pNext          = nullptr,
+      .srcImage       = vulkan_texture.GetVulkanImage(),
+      .srcImageLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+      .dstImage       = vulkan_texture.GetVulkanImage(),
+      .dstImageLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+      .regionCount    = 1U,
+      .pRegions       = &blit_region,
+      .filter         = GetVulkanFilter(filter)
+    };
+
+    vkCmdBlitImage2(vk_cmds_, &blit_info);
+
+    /* Transition mip (i - 1) to vk_final_layout */
+    transfer_mip_to_final_state(vulkan_texture.GetVulkanImage(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                                VK_ACCESS_2_TRANSFER_READ_BIT, i - 1U);
+
+    /* Next mip size */
+    if (mip_width  > 1U) { mip_width  /= 2U; }
+    if (mip_height > 1U) { mip_height /= 2U; }
+  }
+
+  /* Transition last mip (not handled in the loop) */
+  transfer_mip_to_final_state(vulkan_texture.GetVulkanImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                              VK_ACCESS_2_TRANSFER_WRITE_BIT, mip_levels - 1U);
 }
 
-void VulkanCommandBuffer::SetPushConstant(const IComputePipeline* compute_pipeline, std::span<const char> data) {
-  const auto& vulkan_pipeline = static_cast<const VulkanComputePipeline&>(*compute_pipeline);
+void VulkanCommandBuffer::BufferBarrier(const IBuffer* buffer, DeviceResourceState src_state, DeviceResourceState dst_state) {
+  const auto& vulkan_buffer = static_cast<const VulkanBuffer&>(*buffer);
 
-  vkCmdPushConstants(vk_cmds_, vulkan_pipeline.GetVulkanLayout(), VK_SHADER_STAGE_COMPUTE_BIT, 0, data.size(),
-                     data.data());
+  const VkBufferMemoryBarrier2 barrier {
+    .sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2,
+    .pNext = nullptr,
+    .srcStageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR,
+    .srcAccessMask = GetVulkanAccessFlags(src_state),
+    .dstStageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR,
+    .dstAccessMask = GetVulkanAccessFlags(dst_state),
+    .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+    .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+    .buffer = vulkan_buffer.GetVulkanBuffer(),
+    .offset = 0U,
+    .size = VK_WHOLE_SIZE,
+  };
+
+  const VkDependencyInfo dependency_info {
+    .sType                    = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
+    .pNext                    = nullptr,
+    .dependencyFlags          = 0,
+    .memoryBarrierCount       = 0,
+    .pMemoryBarriers          = nullptr,
+    .bufferMemoryBarrierCount = 1U,
+    .pBufferMemoryBarriers    = &barrier,
+    .imageMemoryBarrierCount  = 0,
+    .pImageMemoryBarriers     = nullptr
+  };
+
+  vkCmdPipelineBarrier2(vk_cmds_, &dependency_info);
 }
 
-void VulkanCommandBuffer::SetPushConstant(const IGraphicsPipeline* graphics_pipeline, std::span<const char> data) {
-  const auto& vulkan_pipeline = static_cast<const VulkanGraphicsPipeline&>(*graphics_pipeline);
+void VulkanCommandBuffer::TextureBarrier(const ITexture* texture, JobType src_job,
+                                         JobType dst_job, DeviceResourceState src_state,
+                                         DeviceResourceState dst_state, uint32_t view) {
+  const auto& vulkan_texture = static_cast<const VulkanTexture&>(*texture);
+  const auto& view_info      = vulkan_texture.GetViewInfo(view);
+  const auto  aspect_mask    = static_cast<VkImageAspectFlags>(
+      IsDepthContainingFormat(vulkan_texture.GetInfo().format) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
 
-  vkCmdPushConstants(vk_cmds_, vulkan_pipeline.GetVulkanLayout(),
-                     VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, data.size(), data.data());
+  const VkImageMemoryBarrier2 image_barrier {
+    .sType               = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+    .pNext               = nullptr,
+    .srcStageMask        = GetVulkanPipelineDstStage(src_job, src_state),
+    .srcAccessMask       = GetVulkanAccessFlags(src_state),
+    .dstStageMask        = GetVulkanPipelineDstStage(dst_job, dst_state),
+    .dstAccessMask       = GetVulkanAccessFlags(dst_state),
+    .oldLayout           = GetVulkanImageLayout(src_state),
+    .newLayout           = GetVulkanImageLayout(dst_state),
+    .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+    .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+    .image               = vulkan_texture.GetVulkanImage(),
+
+    .subresourceRange    = {
+      .aspectMask     = aspect_mask,
+      .baseMipLevel   = view_info.first_mip,
+      .levelCount     = view_info.mip_count,
+      .baseArrayLayer = view_info.first_layer,
+      .layerCount     = view_info.layer_count
+    }
+  };
+
+  const VkDependencyInfo dependency_info {
+    .sType                    = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
+    .pNext                    = nullptr,
+    .dependencyFlags          = 0,
+    .memoryBarrierCount       = 0,
+    .pMemoryBarriers          = nullptr,
+    .bufferMemoryBarrierCount = 0U,
+    .pBufferMemoryBarriers    = nullptr,
+    .imageMemoryBarrierCount  = 1U,
+    .pImageMemoryBarriers     = &image_barrier
+  };
+
+  vkCmdPipelineBarrier2(vk_cmds_, &dependency_info);
 }
 
-void VulkanCommandBuffer::BindPipeline(const IComputePipeline* compute_pipeline) {
-  const auto& vulkan_pipeline = static_cast<const VulkanComputePipeline&>(*compute_pipeline);
-  vkCmdBindPipeline(vk_cmds_, VK_PIPELINE_BIND_POINT_COMPUTE, vulkan_pipeline.GetVulkanPipeline());
+void VulkanCommandBuffer::SetPushConstant(const IPipeline* pipeline, std::span<const char> data) {
+  const auto& vulkan_pipeline = static_cast<const VulkanPipeline&>(*pipeline);
+  const auto  bind_point      = vulkan_pipeline.GetVulkanBindPoint();
+  const auto  shader_stages   = vulkan_pipeline.GetVulkanPushConstantStages();
+
+  vkCmdPushConstants(vk_cmds_, vulkan_pipeline.GetVulkanLayout(), shader_stages, 0, data.size(), data.data());
 }
 
-void VulkanCommandBuffer::BindPipeline(const IGraphicsPipeline* graphics_pipeline) {
-  const auto& vulkan_pipeline = static_cast<const VulkanGraphicsPipeline&>(*graphics_pipeline);
-  vkCmdBindPipeline(vk_cmds_, VK_PIPELINE_BIND_POINT_GRAPHICS, vulkan_pipeline.GetVulkanPipeline());
+void VulkanCommandBuffer::BindPipeline(const IPipeline* pipeline) {
+  const auto& vulkan_pipeline = static_cast<const VulkanPipeline&>(*pipeline);
+  const auto  bind_point      = vulkan_pipeline.GetVulkanBindPoint();
+
+  vkCmdBindPipeline(vk_cmds_, bind_point, vulkan_pipeline.GetVulkanPipeline());
+
+  if (!ds_bound_) {
+    vkCmdBindDescriptorSets(vk_cmds_, bind_point, vulkan_pipeline.GetVulkanLayout(), 0U, 1U, &ds_, 0U, nullptr);
+    // ds_bound_ = true; // FIXME (tralf-strues):
+  }
 }
 
 void VulkanCommandBuffer::Dispatch(uint32_t group_count_x, uint32_t group_count_y, uint32_t group_count_z) {
@@ -88,7 +307,16 @@ void VulkanCommandBuffer::Dispatch(uint32_t group_count_x, uint32_t group_count_
 }
 
 void VulkanCommandBuffer::SetViewports(std::span<const Viewport> viewports) {
-  vkCmdSetViewport(vk_cmds_, 0, viewports.size(), reinterpret_cast<const VkViewport*>(viewports.data()));
+  const VkViewport vk_viewport {
+    .x        = 0.0f,
+    .y        =  viewports[0U].height,
+    .width    =  viewports[0U].width,
+    .height   = -viewports[0U].height,
+    .minDepth = 0.0f,
+    .maxDepth = 1.0f
+  };
+
+  vkCmdSetViewport(vk_cmds_, 0U, 1U, &vk_viewport);
 }
 
 void VulkanCommandBuffer::BindVertexBuffers(uint32_t first_binding, std::span<const IBuffer*> vertex_buffers) {
@@ -117,6 +345,18 @@ void VulkanCommandBuffer::Draw(uint32_t vertex_count, uint32_t first_vertex, uin
 void VulkanCommandBuffer::DrawIndexed(uint32_t index_count, uint32_t first_index, uint32_t vertex_offset,
                                       uint32_t instance_count, uint32_t first_instance) {
   vkCmdDrawIndexed(vk_cmds_, index_count, instance_count, first_index, vertex_offset, first_instance);
+}
+
+void VulkanCommandBuffer::DrawIndirect(const IBuffer* indirect_buffer, uint64_t offset, uint64_t stride,
+                                       uint32_t draw_count) {
+  auto vk_buffer = static_cast<const VulkanBuffer*>(indirect_buffer)->GetVulkanBuffer();
+  vkCmdDrawIndirect(vk_cmds_, vk_buffer, offset, draw_count, stride);
+}
+
+void VulkanCommandBuffer::DrawIndexedIndirect(const IBuffer* indirect_buffer, uint64_t offset, uint64_t stride,
+                                              uint32_t draw_count) {
+  auto vk_buffer = static_cast<const VulkanBuffer*>(indirect_buffer)->GetVulkanBuffer();
+  vkCmdDrawIndexedIndirect(vk_cmds_, vk_buffer, offset, draw_count, stride);
 }
 
 void VulkanCommandBuffer::CopyBuffer(const IBuffer* src_buffer, IBuffer* dst_buffer, uint64_t size, uint64_t src_offset,
@@ -228,6 +468,29 @@ void VulkanCommandBuffer::CopyTexture(const ITexture* src_texture, ITexture* dst
 
   vkCmdCopyImage(vk_cmds_, vk_src, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, vk_dst, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                  1, &copy_info);
+}
+
+void VulkanCommandBuffer::BeginDebugLabelRegion(std::string_view name, const glm::vec4& color) {
+  if (!use_debug_labels_) {
+    return;
+  }
+
+  const VkDebugUtilsLabelEXT label {
+    .sType      = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT,
+    .pNext      = nullptr,
+    .pLabelName = name.data(),
+    .color      = {color.r, color.g, color.b, color.a}
+  };
+
+  vkCmdBeginDebugUtilsLabelEXT(vk_cmds_, &label);
+}
+
+void VulkanCommandBuffer::EndDebugLabelRegion() {
+  if (!use_debug_labels_) {
+    return;
+  }
+
+  vkCmdEndDebugUtilsLabelEXT(vk_cmds_);
 }
 
 }  // namespace liger::rhi

@@ -1,0 +1,53 @@
+Data: | #glsl
+  struct DirectionalLight {
+    // Specification
+    f32vec3     color;
+    float32_t   intensity;
+    // Specification
+
+    f32vec3     direction;
+  };
+
+  struct PointLight {
+    // Specification
+    f32vec3     color;
+    float32_t   intensity;
+    float32_t   range;
+    // Specification
+
+    f32vec3     position;
+  };
+
+Input:
+  - Name: DirectionalLightData
+    Type: uniform-buffer
+    Contents: | #glsl
+      bool              valid;
+      DirectionalLight  directional_light;
+
+  - Name: PointLightData
+    Type: storage-buffer
+    Access: readonly
+    Layout: std140
+    Contents: | #glsl
+      uint32_t    count;
+      PointLight  point_lights[];
+
+CodeSnippets:
+  - Insert: auto-global
+    Code: | #glsl
+      bool DirectionalLightValid(LigerInput liger_in) {
+        return GetUniformBuffer(DirectionalLightData, liger_in.binding_directional_light_data).valid;
+      }
+
+      DirectionalLight GetDirectionalLight(LigerInput liger_in) {
+        return GetUniformBuffer(DirectionalLightData, liger_in.binding_directional_light_data).directional_light;
+      }
+
+      uint32_t GetPointLightCount(LigerInput liger_in) {
+        return GetStorageBuffer(PointLightData, liger_in.binding_point_light_data).count;
+      }
+
+      PointLight GetPointLight(LigerInput liger_in, uint32_t idx) {
+        return GetStorageBuffer(PointLightData, liger_in.binding_point_light_data).point_lights[idx];
+      }

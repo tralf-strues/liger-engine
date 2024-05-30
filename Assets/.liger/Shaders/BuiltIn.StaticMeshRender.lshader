@@ -1,0 +1,175 @@
+InputAssemblyInfo:
+  Topology: TriangleList
+
+RasterizationInfo:
+  CullMode: BackOnly
+  FrontFace: CounterClockwise
+  PolygonMode: Fill
+
+DepthStencilTestInfo:
+  DepthTestEnable: true
+  DepthWriteEnable: true
+  DepthCompareOperation: Less
+
+ColorBlendInfo:
+  Enable: false
+
+  SrcColorFactor: One
+  DstColorFactor: One
+  ColorOperation: Add
+
+  SrcAlphaFactor: SrcAlpha
+  DstAlphaFactor: DstAlpha
+  AlphaOperation: Add
+
+AttachmentInfo:
+  RenderTargets: [R16G16B16A16_SFLOAT]
+  DepthStencilTarget: D32_SFLOAT
+  Samples: 1
+
+VertexShader:
+  Use:
+    - Include: BuiltIn.Camera.lsdecl
+    - Include: BuiltIn.StaticMeshData.lsdecl
+
+  Input:
+    - Name: vertex_idx
+      Type: vertex-index
+
+    - Name: instance_idx
+      Type: instance-index
+
+    - Name: Objects
+      Type: storage-buffer
+      Layout: std430
+      Access: readonly
+      Contents: | #glsl
+        Object objects[];
+
+    - Name: VisibleObjectIndices
+      Type: storage-buffer
+      Layout: std430
+      Access: readonly
+      Contents: | #glsl
+        uint32_t object_indices[];
+
+  Output:
+    - Name: ws_position
+      Type: f32vec3
+    - Name: tex_coords
+      Type: f32vec2
+    - Name: binding_material
+      Type: uint32_t
+    - Name: tbn
+      Type: f32mat3
+
+  CodeSnippets:
+    - Insert: auto-global
+      Code: | #glsl
+        void UnpackObject(const LigerInput liger_in, out Vertex3D vertex, out f32mat4 transform, out uint32_t binding_material) {
+          uint32_t object_idx = GetStorageBuffer(VisibleObjectIndices, liger_in.binding_visible_object_indices).object_indices[liger_in.instance_idx];
+          Object   object     = GetStorageBuffer(Objects, liger_in.binding_objects).objects[object_idx];
+          Mesh     mesh       = GetUniformBuffer(MeshUBO, object.binding_mesh).mesh;
+
+          vertex              = GetStorageBuffer(VertexBuffer, mesh.binding_vertex_buffer).vertices[liger_in.vertex_idx];
+          transform           = object.transform;
+          binding_material    = object.binding_material;
+        }
+
+  Code: | #glsl
+    Vertex3D ms_vertex;
+    f32mat4  transform;
+
+    UnpackObject(liger_in, ms_vertex, transform, binding_material);
+
+    f32mat4 proj_view     = GetCamera(liger_in).proj_view;
+    f32mat3 normal_matrix = transpose(inverse(f32mat3(transform)));
+
+    ws_position           = (transform * f32vec4(ms_vertex.position, 1.0)).xyz;
+    tex_coords            = ms_vertex.tex_coords;
+    tbn                   = normal_matrix * f32mat3(ms_vertex.tangent, ms_vertex.bitangent, ms_vertex.normal);
+    gl_Position           = proj_view * f32vec4(ws_position, 1.0);
+
+FragmentShader:
+  Use:
+    - Include: BuiltIn.PBR.lsdecl
+
+  Input:
+    - Name: ws_position
+      Type: f32vec3
+    - Name: tex_coords
+      Type: f32vec2
+    - Name: binding_material
+      Type: uint32_t
+    - Name: tbn
+      Type: f32mat3
+
+  Output:
+    - Name: out_color
+      Type: f32vec4
+
+  CodeSnippets:
+    - Insert: auto-global
+      Code: | #glsl
+        PBR_SurfacePoint GetSurfaceProperties(const LigerInput liger_in) {
+          PBR_SurfacePoint surface_point;
+
+          Material material = GetUniformBuffer(MaterialUBO, liger_in.binding_material).material;
+
+          /* Normal */
+          if (material.binding_normal_map != kInvalidBinding) {
+            f32vec3 normal       = texture(GetSampler2D(material.binding_normal_map), liger_in.tex_coords).xyz;
+            normal               = normalize(normal);
+            normal               = normalize(liger_in.tbn * normal);
+            surface_point.normal = normal;
+          } else {
+            surface_point.normal = liger_in.tbn[2U];
+          }
+
+          /* Position and to camera */
+          surface_point.position  = liger_in.ws_position;
+          surface_point.to_camera = normalize(GetCamera(liger_in).ws_position - surface_point.position);
+
+          /* Base color */
+          if (material.binding_albedo_map != kInvalidBinding) {
+            surface_point.base_color = texture(GetSampler2D(material.binding_albedo_map), liger_in.tex_coords).rgb;
+          } else {
+            surface_point.base_color = material.albedo_color;
+          }
+
+          /* Metallic & roughness */
+          if (material.binding_metallic_roughness_map != kInvalidBinding) {
+            f32vec4 combined_sample = texture(GetSampler2D(material.binding_metallic_roughness_map), liger_in.tex_coords);
+            surface_point.metallic  = combined_sample.b;
+            surface_point.roughness = combined_sample.g;
+          } else {
+            surface_point.metallic  = material.metallic;
+            surface_point.roughness = material.roughness;
+          }
+
+          /* F0 */
+          surface_point.f0 = f32vec3(0.04f);
+          surface_point.f0 = mix(surface_point.f0, surface_point.base_color, surface_point.metallic);
+
+          return surface_point;
+        }
+
+  Code: | #glsl
+    PBR_SurfacePoint surface_point = GetSurfaceProperties(liger_in);
+
+    f32vec3 kLightDirection = normalize(f32vec3(-1.0f, -2.0f, -0.1f));
+    f32vec3 kLightRadiance  = f32vec3(2.5f,  2.5f,  2.5f);
+    f32vec3 kAmbient        = f32vec3(0.03f, 0.03f, 0.03f);
+
+    PBR_LightSample light_sample;
+    light_sample.to_light    = -kLightDirection;
+    light_sample.half_vector = normalize(surface_point.to_camera + light_sample.to_light);
+    light_sample.radiance    = kLightRadiance;
+
+    f32vec3 L0 = PBR_RadianceSample(surface_point, light_sample);
+
+    if (dot(surface_point.normal, light_sample.to_light) <= 0.0f) {
+      L0 = kAmbient * surface_point.base_color;
+    }
+
+    out_color = f32vec4(L0, 1.0f);

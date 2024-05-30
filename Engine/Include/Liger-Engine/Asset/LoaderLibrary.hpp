@@ -41,7 +41,8 @@ class LoaderLibrary {
   ILoader* TryGet(const std::filesystem::path& extension) const;
 
  private:
-  std::map<std::filesystem::path, std::unique_ptr<ILoader>> loaders_;
+  std::map<std::filesystem::path, ILoader*> loaders_map_;
+  std::vector<std::unique_ptr<ILoader>>     loaders_;
 };
 
 }  // namespace liger::asset

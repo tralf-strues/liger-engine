@@ -28,8 +28,13 @@
 #pragma once
 
 #include <Liger-Engine/Core/EnumBitmask.hpp>
+#include <Liger-Engine/RHI/DeviceResourceState.hpp>
 #include <Liger-Engine/RHI/Extent.hpp>
 #include <Liger-Engine/RHI/Filter.hpp>
+#include <Liger-Engine/RHI/JobType.hpp>
+
+#include <fmt/format.h>
+#include <glm/glm.hpp>
 
 #include <span>
 
@@ -51,9 +56,24 @@ struct RenderArea {
   Extent2D extent{0};  ///< In pixels
 };
 
+/* Indirect commands FIXME (tralf-strues): redesign in order to support APIs other than just Vulkan */
+struct DrawCommand {
+  uint32_t vertex_count;
+  uint32_t instance_count;
+  uint32_t first_vertex;
+  uint32_t first_instance;
+};
+
+struct DrawIndexedCommand {
+  uint32_t index_count;
+  uint32_t instance_count;
+  uint32_t first_index;
+  int32_t  vertex_offset;
+  uint32_t first_instance;
+};
+
 class IBuffer;
-class IComputePipeline;
-class IGraphicsPipeline;
+class IPipeline;
 class ITexture;
 
 class ICommandBuffer {
@@ -73,47 +93,46 @@ class ICommandBuffer {
    * @note Command capabilities must contain @ref Capability::Graphics and @ref Capability::Transfer!
    *
    * @param texture
+   * @param final_state
    * @param filter
    */
-  virtual void GenerateMipLevels(ITexture* texture, Filter filter = Filter::Linear) = 0;
+  virtual void GenerateMipLevels(ITexture* texture, DeviceResourceState final_state, Filter filter) = 0;
 
   /**
-   * @brief Set the push constant for the compute pipeline.
+   * @brief Set buffer barrier to transition it from src state to dst state.
    *
-   * @note Command capabilities must contain @ref Capability::Compute!
+   * @note Must only be used to transition buffer's state within this command buffer stream, i.e. within
+   *       a single render graph node.
    *
-   * @param compute_pipeline
+   * @param buffer
+   * @param src_state
+   * @param dst_state
+   */
+  virtual void BufferBarrier(const IBuffer* buffer, DeviceResourceState src_state, DeviceResourceState dst_state) = 0;
+
+  virtual void TextureBarrier(const ITexture* texture, JobType src_job, JobType dst_job, DeviceResourceState src_state,
+                              DeviceResourceState dst_state, uint32_t view) = 0;
+
+  /**
+   * @brief Set the push constant for the pipeline.
+   *
+   * @note If compute pipeline, then command capabilities must contain @ref Capability::Compute!
+   * @note If graphics pipeline, then command capabilities must contain @ref Capability::Graphics!
+   *
+   * @param pipeline
    * @param data
    */
-  virtual void SetPushConstant(const IComputePipeline* compute_pipeline, std::span<const char> data) = 0;
+  virtual void SetPushConstant(const IPipeline* pipeline, std::span<const char> data) = 0;
 
   /**
-   * @brief Set the push constant for the graphics pipeline.
+   * @brief Bind pipeline.
    *
-   * @note Command capabilities must contain @ref Capability::Graphics!
+   * @note If compute pipeline, then command capabilities must contain @ref Capability::Compute!
+   * @note If graphics pipeline, then command capabilities must contain @ref Capability::Graphics!
    *
-   * @param graphics_pipeline
-   * @param data
+   * @param pipeline
    */
-  virtual void SetPushConstant(const IGraphicsPipeline* graphics_pipeline, std::span<const char> data) = 0;
-
-  /**
-   * @brief Bind compute pipeline.
-   *
-   * @note Command capabilities must contain @ref Capability::Compute!
-   *
-   * @param compute_pipeline
-   */
-  virtual void BindPipeline(const IComputePipeline* compute_pipeline) = 0;
-
-  /**
-   * @brief Bind graphics pipeline.
-   *
-   * @note Command capabilities must contain @ref Capability::Graphics!
-   *
-   * @param graphics_pipeline
-   */
-  virtual void BindPipeline(const IGraphicsPipeline* graphics_pipeline) = 0;
+  virtual void BindPipeline(const IPipeline* pipeline) = 0;
 
   /**
    * @brief Compute dispatch call.
@@ -179,6 +198,8 @@ class ICommandBuffer {
   virtual void Draw(uint32_t vertices_count, uint32_t first_vertex = 0, uint32_t instances_count = 1,
                     uint32_t first_instance = 0) = 0;
 
+  virtual void DrawIndirect(const IBuffer* indirect_buffer, uint64_t offset, uint64_t stride, uint32_t draw_count) = 0;
+
   /**
    * @brief Draw call with an index buffer bound.
    *
@@ -192,6 +213,8 @@ class ICommandBuffer {
    */
   virtual void DrawIndexed(uint32_t indices_count, uint32_t first_index = 0, uint32_t vertex_offset = 0,
                            uint32_t instances_count = 1, uint32_t first_instance = 0) = 0;
+
+  virtual void DrawIndexedIndirect(const IBuffer* indirect_buffer, uint64_t offset, uint64_t stride, uint32_t draw_count) = 0;
 
   /**
    * @brief Copy a region of src buffer's memory to dst buffer's memory.
@@ -246,6 +269,28 @@ class ICommandBuffer {
    */
   virtual void CopyTexture(const ITexture* src_texture, ITexture* dst_texture, Extent3D extent,
                            uint32_t src_mip_level = 0, uint32_t dst_mip_level = 0) = 0;
+
+  /**
+   * @brief Open a debug label region, marking all commands in this region until closing.
+   *
+   * @note In order for this function to work, device must be created with at least basic validation.
+   *
+   * @param name
+   * @param color
+   */
+  virtual void BeginDebugLabelRegion(std::string_view name, const glm::vec4& color) = 0;
+
+  template <typename... FormatArgs>
+  void BeginDebugLabelRegion(const glm::vec4& color, std::string_view fmt, FormatArgs&&... args) {
+    BeginDebugLabelRegion(fmt::format(fmt::runtime(fmt), std::forward<FormatArgs>(args)...), color);
+  }
+
+  /**
+   * @brief Close the debug label region.
+   *
+   * @note In order for this function to work, device must be created with at least basic validation.
+   */
+  virtual void EndDebugLabelRegion() = 0;
 };
 
 }  // namespace liger::rhi

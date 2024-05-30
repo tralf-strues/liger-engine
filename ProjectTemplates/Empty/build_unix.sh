@@ -19,6 +19,6 @@ build_dir_name="build_${1}"
 
 mkdir -p ${build_dir_name}
 cd ${build_dir_name}
-cmake .. -G "Ninja" -DCMAKE_BUILD_TYPE=${build_mode} -DLIGER_ENGINE_PATH="" -DLiger-Engine_DIR=""
+cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS=true -DCMAKE_BUILD_TYPE=${build_mode} -DLIGER_ENGINE_PATH="" -DLiger-Engine_DIR=""
 ninja
 cd ..

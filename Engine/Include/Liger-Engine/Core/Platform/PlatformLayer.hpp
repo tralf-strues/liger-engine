@@ -36,8 +36,7 @@ namespace liger {
 
 class PlatformLayer {
  public:
-  explicit PlatformLayer(EventDispatcher& dispatcher);
-  ~PlatformLayer();
+  static PlatformLayer& Instance();
 
   void PollEvents();
 
@@ -60,6 +59,9 @@ class PlatformLayer {
   void SetCursorEnabled(Window* window, bool enabled);
 
  private:
+   PlatformLayer();
+   ~PlatformLayer();
+
   void SetupCallbacks(Window* window);
 
   static void WindowCloseCallback(GLFWwindow* window);
@@ -69,9 +71,11 @@ class PlatformLayer {
   static void MouseMoveCallback(GLFWwindow* window, double x, double y);
   static void MouseButtonCallback(GLFWwindow* window, int32_t button, int32_t action, int32_t mods);
 
-  EventDispatcher&                           dispatcher_;
+  EventDispatcher                            dispatcher_;
   std::unordered_map<GLFWwindow*, glm::vec2> prev_mouse_pos_;
   std::unordered_map<GLFWwindow*, Window*>   window_wrapper_;
+
+  static PlatformLayer instance_;
 };
 
 }  // namespace liger

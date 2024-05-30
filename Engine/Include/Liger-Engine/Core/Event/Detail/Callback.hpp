@@ -45,7 +45,9 @@ class Callback<ReturnT(ArgsT...)> {
   template <auto FunctionT>
   void Connect() {
     instance_ = nullptr;
-    callable_ = [](void*, ArgsT... args) { return ReturnT(FunctionT(std::forward<ArgsT>(args)...)); };
+    callable_ = [](void*, ArgsT... args) {
+      return ReturnT(FunctionT(std::forward<ArgsT>(args)...));
+    };
   }
 
   template <auto FunctionT, class ClassT>

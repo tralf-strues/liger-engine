@@ -29,7 +29,13 @@
 
 namespace liger {
 
-PlatformLayer::PlatformLayer(EventDispatcher& dispatcher) : dispatcher_(dispatcher) {
+PlatformLayer PlatformLayer::instance_;
+
+PlatformLayer& PlatformLayer::Instance() {
+  return instance_;
+}
+
+PlatformLayer::PlatformLayer() {
   int32_t result = glfwInit();
   LIGER_ASSERT(result == GLFW_TRUE, "PlatformLayer", "Can't init glfw!");
 }

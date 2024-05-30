@@ -78,6 +78,10 @@ void* VulkanBuffer::MapMemory(uint64_t offset, uint64_t /*size*/) {
   return static_cast<void*>(static_cast<uint8_t*>(map_data) + offset);
 }
 
+void* VulkanBuffer::MapMemory() {
+  return MapMemory(0U, 0U);
+}
+
 void VulkanBuffer::UnmapMemory() { vmaUnmapMemory(device_.GetAllocator(), allocation_); }
 
 VkBuffer VulkanBuffer::GetVulkanBuffer() const {

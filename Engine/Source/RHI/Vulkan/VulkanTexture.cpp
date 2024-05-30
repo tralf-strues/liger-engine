@@ -180,6 +180,10 @@ uint32_t VulkanTexture::CreateView(const TextureViewInfo& info) {
   return view_idx;
 }
 
+bool VulkanTexture::ViewCreated(uint32_t view) const {
+  return view < views_.size();
+}
+
 const TextureViewInfo& VulkanTexture::GetViewInfo(uint32_t view) const {
   return views_[view].info;
 }

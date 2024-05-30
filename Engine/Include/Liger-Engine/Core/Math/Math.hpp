@@ -29,3 +29,4 @@
 
 #include <Liger-Engine/Core/Math/Formatting.hpp>
 #include <Liger-Engine/Core/Math/Random.hpp>
+#include <Liger-Engine/Core/Math/Transform3D.hpp>

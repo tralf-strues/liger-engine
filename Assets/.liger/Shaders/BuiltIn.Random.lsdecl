@@ -1,0 +1,40 @@
+Data: | #glsl
+  struct RandGenerator {
+    uint32_t seed;
+  };
+
+CodeSnippets:
+  - Insert: auto-global
+    Code: | #glsl
+      uint32_t pcg_hash(uint32_t seed) {
+        uint32_t state = seed * 747796405u + 2891336453u;
+        uint32_t word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277803737u;
+        return (word >> 22u) ^ word;
+      }
+
+      uint32_t rand_pcg(inout uint32_t rand_state) {
+        uint32_t state = rand_state;
+        rand_state = rand_state * 747796405u + 2891336453u;
+        uint32_t word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277803737u;
+        return (word >> 22u) ^ word;
+      }
+
+      RandGenerator CreateRandGenerator(uint32_t seed) {
+        RandGenerator rand_gen;
+        rand_gen.seed = pcg_hash(seed);
+        return rand_gen;
+      }
+
+      float32_t RandomFloat(inout RandGenerator rand_gen) {
+          uint32_t x = rand_pcg(rand_gen.seed);
+          rand_gen.seed = x;
+          return float32_t(x) * uintBitsToFloat(0x2f800004u);
+      }
+
+      f32vec2 RandomVec2(inout RandGenerator rand_gen) {
+        return f32vec2(RandomFloat(rand_gen), RandomFloat(rand_gen));
+      }
+
+      f32vec3 RandomVec3(inout RandGenerator rand_gen) {
+        return f32vec3(RandomFloat(rand_gen), RandomFloat(rand_gen), RandomFloat(rand_gen));
+      }

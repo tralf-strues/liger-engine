@@ -126,6 +126,11 @@ std::optional<uint32_t> VulkanSwapchain::AcquireNext(VkSemaphore signal_semaphor
 }
 
 bool VulkanSwapchain::CreateSwapchain() {
+  // NOTE (tralf-strues): gotta call this on each resize to get rid of the validation error
+  // NOTE (tralf-strues): https://www.reddit.com/r/vulkan/comments/14uen19/do_i_need_to_recreate_glfw_surfaces_on_window
+  VkSurfaceCapabilitiesKHR surface_capabilities;
+  VULKAN_CALL(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device_.GetPhysicalDevice(), surface_, &surface_capabilities));
+
   Window& window = *GetInfo().window;
 
   auto format          = ChooseSwapchainFormat(std::span(surface_info_.formats));

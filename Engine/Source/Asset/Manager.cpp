@@ -29,43 +29,26 @@
 
 namespace liger::asset {
 
-Manager::Manager(tf::Executor& executor) : executor_(executor) {}
+Manager::Manager(tf::Executor& executor, std::filesystem::path registry_file)
+    : executor_(executor), registry_(std::move(registry_file)) {}
 
-bool Manager::SetRegistry(std::filesystem::path registry_file) {
-  registry_ = std::make_unique<Registry>(std::move(registry_file));
-  return registry_->Valid();
+Registry& Manager::GetRegistry() {
+  LIGER_ASSERT(registry_.Valid(), kLogChannelAsset, "Invalid registry");
+  return registry_;
 }
 
-Registry& Manager::GetRegistry() { return *registry_; }
+const Registry& Manager::GetRegistry() const {
+  LIGER_ASSERT(registry_.Valid(), kLogChannelAsset, "Invalid registry");
+  return registry_;
+}
 
-const Registry& Manager::GetRegistry() const { return *registry_; }
+void Manager::AddLoader(std::unique_ptr<ILoader> loader) {
+  LIGER_ASSERT(registry_.Valid(), kLogChannelAsset, "Invalid registry");
+  loaders_.AddLoader(std::move(loader));
+}
 
-void Manager::AddLoader(std::unique_ptr<ILoader> loader) { loaders_.AddLoader(std::move(loader)); }
-
-template <typename Asset>
-Handle<Asset> Manager::GetAsset(Id id) {
-  std::unique_lock<std::mutex> lock(mutex_);
-
-  auto handle = storage_.Get<Asset>(id);
-  if (handle) {
-    return handle;
-  }
-
-  auto  filepath  = registry_->GetAbsoluteFile(id);
-  auto  extension = filepath.extension();
-  auto* loader    = loaders_.TryGet(extension);
-
-  handle = storage_.Emplace(id, Asset{});
-  handle.UpdateState(State::Loading);
-
-  lock.unlock();
-
-  executor_.silent_async("Load Asset", [this, loader, id, filepath, handle]() {
-    bool loaded = loader->Load(*this, id, filepath);
-    handle.UpdateState(loaded ? State::Loaded : State::Invalid);
-  });
-
-  return handle;
+bool Manager::Valid() const {
+  return registry_.Valid();
 }
 
 }  // namespace liger::asset

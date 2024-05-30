@@ -67,6 +67,12 @@ VkSemaphore VulkanTimelineSemaphore::Get() {
   return vk_semaphore_;
 }
 
+uint64_t VulkanTimelineSemaphore::GetValue() const {
+  uint64_t value = 0U;
+  VULKAN_CALL(vkGetSemaphoreCounterValue(vk_device_, vk_semaphore_, &value));
+  return value;
+}
+
 uint64_t VulkanTimelineSemaphore::TimePoint(uint64_t absolute_frame, uint64_t local_time_point) const {
   return absolute_frame * max_per_frame_ + local_time_point;
 }

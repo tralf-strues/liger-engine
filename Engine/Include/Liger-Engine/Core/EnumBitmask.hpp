@@ -101,3 +101,9 @@ requires liger::EnumEnableBitmask<Enum>::kEnabled
 inline constexpr bool EnumBitmaskContains(Enum lhs, Enum rhs) {
   return static_cast<uint64_t>(lhs & rhs) == static_cast<uint64_t>(rhs);
 }
+
+template <typename Enum>
+requires liger::EnumEnableBitmask<Enum>::kEnabled
+inline constexpr bool EnumBitmaskContainsAny(Enum lhs, Enum rhs) {
+  return static_cast<uint64_t>(lhs & rhs) != 0U;
+}

@@ -51,6 +51,7 @@ class IInstance {
  public:
   enum class ValidationLevel : uint8_t {
     None,
+    DebugInfoOnly,
     Basic,
     Extensive
   };

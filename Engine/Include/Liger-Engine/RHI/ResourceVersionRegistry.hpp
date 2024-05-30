@@ -47,6 +47,8 @@ class ResourceVersionRegistry {
 
   template <typename ResourceType>
   [[nodiscard]] ResourceVersion AddResource(ResourceType resource);
+
+  template <typename ResourceType>
   [[nodiscard]] ResourceVersion DeclareResource();
 
   template <typename ResourceType>
@@ -74,6 +76,8 @@ class ResourceVersionRegistry {
 
   [[nodiscard]] ResourceId GetResourceId(ResourceVersion version) const;
 
+  [[nodiscard]] ResourceVersion LastUsageVersion(ResourceId id) const;
+
   iterator begin();
   iterator end();
 
@@ -93,16 +97,17 @@ template <typename ResourceType>
 typename ResourceVersionRegistry<ResourceTypes...>::ResourceVersion
 ResourceVersionRegistry<ResourceTypes...>::AddResource(ResourceType resource) {
   auto version = static_cast<ResourceVersion>(version_to_id_.size());
-  auto id      = resources_.size();
+  auto id      = static_cast<ResourceId>(resources_.size());
   resources_.emplace_back(resource);
   version_to_id_.emplace_back(id);
   return version;
 }
 
 template <typename... ResourceTypes>
+template <typename ResourceType>
 typename ResourceVersionRegistry<ResourceTypes...>::ResourceVersion
 ResourceVersionRegistry<ResourceTypes...>::DeclareResource() {
-  return AddResource(NullResource{});
+  return AddResource(ResourceType{});
 }
 
 template <typename... ResourceTypes>
@@ -192,6 +197,25 @@ template <typename... ResourceTypes>
 typename ResourceVersionRegistry<ResourceTypes...>::ResourceId ResourceVersionRegistry<ResourceTypes...>::GetResourceId(
     ResourceVersion version) const {
   return version_to_id_[version];
+}
+
+template <typename... ResourceTypes>
+typename ResourceVersionRegistry<ResourceTypes...>::ResourceVersion ResourceVersionRegistry<ResourceTypes...>::LastUsageVersion(ResourceId id) const {
+  if (version_to_id_.empty()) {
+    return kInvalidVersion;
+  }
+
+  for (ResourceVersion version = version_to_id_.size() - 1; version >= 0U; --version) {
+    if (version_to_id_[version] == id) {
+      return version;
+    }
+
+    if (version == 0U) {
+      return kInvalidVersion;
+    }
+  }
+
+  return kInvalidVersion;
 }
 
 }  // namespace liger::rhi

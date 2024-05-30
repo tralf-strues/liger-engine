@@ -38,6 +38,12 @@ template <typename Enum>
 }
 
 template <typename Enum>
+[[nodiscard]] constexpr std::optional<Enum> StringToEnum(std::string_view str) noexcept {
+  auto value = magic_enum::enum_cast<Enum>(str);
+  return value.has_value() ? std::optional(value.value()) : std::nullopt;
+}
+
+template <typename Enum>
 [[nodiscard]] constexpr auto EnumMaskToString(Enum mask, char separator = '|') noexcept {
   return magic_enum::enum_flags_name<Enum>(mask, separator);
 }

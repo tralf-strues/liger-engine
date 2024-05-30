@@ -28,12 +28,12 @@
 #pragma once
 
 #include <Liger-Engine/RHI/Buffer.hpp>
-#include <Liger-Engine/RHI/ComputePipeline.hpp>
-#include <Liger-Engine/RHI/GraphicsPipeline.hpp>
+#include <Liger-Engine/RHI/Pipeline.hpp>
 #include <Liger-Engine/RHI/RenderGraph.hpp>
 #include <Liger-Engine/RHI/ShaderModule.hpp>
 #include <Liger-Engine/RHI/Swapchain.hpp>
 
+#include <list>
 #include <string>
 
 namespace liger::rhi {
@@ -71,6 +71,30 @@ class IDevice {
     Type        type;
     bool        engine_supported;
     Properties  properties;
+  };
+
+  using TransferCallback = std::function<void()>;
+
+  struct DedicatedBufferTransfer {
+    IBuffer*                   buffer;
+    DeviceResourceState        final_state;
+    std::unique_ptr<uint8_t[]> data;
+    uint64_t                   size;
+  };
+
+  struct DedicatedTextureTransfer {
+    ITexture*                  texture;
+    DeviceResourceState        final_state;
+    std::unique_ptr<uint8_t[]> data;
+    uint64_t                   size;
+    bool                       gen_mips{false};
+    Filter                     gen_mips_filter{Filter::Linear};
+  };
+
+  struct DedicatedTransferRequest {
+    std::list<DedicatedBufferTransfer>  buffer_transfers;
+    std::list<DedicatedTextureTransfer> texture_transfers;
+    TransferCallback                    callback;
   };
 
   virtual ~IDevice() = default;
@@ -139,21 +163,24 @@ class IDevice {
    * @warning Calling this method outside of begin and end frame scope (either default or offscreen) can cause UB!
    *
    * @param render_graph Render graph to execute, which must be created by this particular device.
+   * @param context      Context data for render jobs to "communicate" with each other.
    */
-  virtual void ExecuteConsecutive(RenderGraph& render_graph) = 0;
+  virtual void ExecuteConsecutive(RenderGraph& render_graph, Context& context) = 0;
+
+  virtual void RequestDedicatedTransfer(DedicatedTransferRequest&& transfer) = 0;
 
   /**
    * @brief Create a render graph builder, the object for constructing a render graph.
    * @return Render graph builder.
    */
-  [[nodiscard]] virtual RenderGraphBuilder NewRenderGraphBuilder() = 0;
+  [[nodiscard]] virtual RenderGraphBuilder NewRenderGraphBuilder(Context& context) = 0;
 
   [[nodiscard]] virtual std::unique_ptr<ISwapchain> CreateSwapchain(const ISwapchain::Info& info) = 0;
   [[nodiscard]] virtual std::unique_ptr<ITexture> CreateTexture(const ITexture::Info& info) = 0;
   [[nodiscard]] virtual std::unique_ptr<IBuffer> CreateBuffer(const IBuffer::Info& info) = 0;
   [[nodiscard]] virtual std::unique_ptr<IShaderModule> CreateShaderModule(const IShaderModule::Source& source) = 0;
-  [[nodiscard]] virtual std::unique_ptr<IComputePipeline> CreatePipeline(const IComputePipeline::Info& info) = 0;
-  [[nodiscard]] virtual std::unique_ptr<IGraphicsPipeline> CreatePipeline(const IGraphicsPipeline::Info& info) = 0;
+  [[nodiscard]] virtual std::unique_ptr<IPipeline> CreatePipeline(const IPipeline::ComputeInfo& info) = 0;
+  [[nodiscard]] virtual std::unique_ptr<IPipeline> CreatePipeline(const IPipeline::GraphicsInfo& info) = 0;
 };
 
 }  // namespace liger::rhi

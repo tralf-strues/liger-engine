@@ -59,13 +59,13 @@ struct SamplerInfo {
   Filter mag_filter{Filter::Linear};
 
   /** The addressing mode for U coordinates outside normal range [0,1]. */
-  AddressMode address_mode_u{AddressMode::Repeat};
+  AddressMode address_mode_u{AddressMode::ClampToEdge};
 
   /** The addressing mode for V coordinates outside normal range [0,1]. */
-  AddressMode address_mode_v{AddressMode::Repeat};
+  AddressMode address_mode_v{AddressMode::ClampToEdge};
 
   /** The addressing mode for W coordinates outside normal range [0,1]. */
-  AddressMode address_mode_w{AddressMode::Repeat};
+  AddressMode address_mode_w{AddressMode::ClampToEdge};
 
   /** Specifies border color if any address mode is @ref AddressMode::ClampToBorder. */
   BorderColor border_color{BorderColor::IntOpaqueBlack};

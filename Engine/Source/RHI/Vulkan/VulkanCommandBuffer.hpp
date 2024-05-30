@@ -37,7 +37,8 @@ class VulkanCommandBuffer : public ICommandBuffer {
  public:
   static constexpr uint32_t kMaxBindVertexBuffers = 8;
 
-  explicit VulkanCommandBuffer(VkCommandBuffer vk_cmds);
+  VulkanCommandBuffer() = default;
+  explicit VulkanCommandBuffer(VkCommandBuffer vk_cmds, VkDescriptorSet ds, bool use_debug_labels);
   ~VulkanCommandBuffer() override = default;
 
   VkCommandBuffer Get();
@@ -45,13 +46,15 @@ class VulkanCommandBuffer : public ICommandBuffer {
   void Begin();
   void End();
 
-  void GenerateMipLevels(ITexture* texture, Filter filter) override;
+  void GenerateMipLevels(ITexture* texture, DeviceResourceState final_state, Filter filter) override;
 
-  void SetPushConstant(const IComputePipeline* compute_pipeline, std::span<const char> data) override;
-  void SetPushConstant(const IGraphicsPipeline* graphics_pipeline, std::span<const char> data) override;
+  void BufferBarrier(const IBuffer* buffer, DeviceResourceState src_state, DeviceResourceState dst_state) override;
+  void TextureBarrier(const ITexture* texture, JobType src_job, JobType dst_job, DeviceResourceState src_state,
+                      DeviceResourceState dst_state, uint32_t view) override;
 
-  void BindPipeline(const IComputePipeline* compute_pipeline) override;
-  void BindPipeline(const IGraphicsPipeline* graphics_pipeline) override;
+  void SetPushConstant(const IPipeline* pipeline, std::span<const char> data) override;
+
+  void BindPipeline(const IPipeline* pipeline) override;
 
   void Dispatch(uint32_t group_count_x, uint32_t group_count_y, uint32_t group_count_z) override;
 
@@ -64,6 +67,10 @@ class VulkanCommandBuffer : public ICommandBuffer {
   void DrawIndexed(uint32_t index_count, uint32_t first_index, uint32_t vertex_offset, uint32_t instance_count,
                    uint32_t first_instance) override;
 
+  void DrawIndirect(const IBuffer* indirect_buffer, uint64_t offset, uint64_t stride, uint32_t draw_count) override;
+  void DrawIndexedIndirect(const IBuffer* indirect_buffer, uint64_t offset, uint64_t stride,
+                           uint32_t draw_count) override;
+
   void CopyBuffer(const IBuffer* src_buffer, IBuffer* dst_buffer, uint64_t size, uint64_t src_offset,
                   uint64_t dst_offset) override;
   void CopyBufferToTexture(const IBuffer* buffer, ITexture* texture, Extent3D extent, uint32_t mip_level) override;
@@ -71,8 +78,14 @@ class VulkanCommandBuffer : public ICommandBuffer {
   void CopyTexture(const ITexture* src_texture, ITexture* dst_texture, Extent3D extent, uint32_t src_mip_level,
                    uint32_t dst_mip_level) override;
 
+  void BeginDebugLabelRegion(std::string_view name, const glm::vec4& color) override;
+  void EndDebugLabelRegion() override;
+
  private:
   VkCommandBuffer vk_cmds_{VK_NULL_HANDLE};
+  VkDescriptorSet ds_{VK_NULL_HANDLE};
+  bool            ds_bound_{false};
+  bool            use_debug_labels_{false};
 };
 
 }  // namespace liger::rhi
