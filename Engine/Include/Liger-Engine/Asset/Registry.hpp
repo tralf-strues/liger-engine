@@ -30,6 +30,7 @@
 #include <Liger-Engine/Asset/Id.hpp>
 
 #include <filesystem>
+#include <map>
 #include <unordered_map>
 #include <unordered_set>
 
@@ -164,7 +165,7 @@ class Registry {
   std::filesystem::path                         registry_file_;
   std::filesystem::path                         asset_folder_;
   std::unordered_map<Id, std::filesystem::path> files_;
-  std::unordered_map<std::filesystem::path, Id> ids_;
+  std::map<std::filesystem::path, Id>           ids_;
 };
 
 }  // namespace liger::asset
