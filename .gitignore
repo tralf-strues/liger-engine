@@ -36,18 +36,19 @@
 /build/
 /build_debug/
 /build_release/
+/out/
 
 /liger-editor*
-/liger-sandbox*
 
 #=== MacOS ===#
 *.DS_Store
 
-#=== Visual Studio Code ===#
+#=== IDEs ===#
 /.vs/
 /.idea/
 /.vscode/
 /.cache/
+/CMakeSettings.json
 
 #=== Logging and caches ===#
 /.liger_log/

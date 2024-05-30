@@ -38,6 +38,10 @@ struct Extent2D {
   bool operator==(const Extent2D& rhs) const {
     return (x == rhs.x) && (y == rhs.y);
   }
+
+  Extent2D MipExtent(uint32_t mip) const {
+    return Extent2D {.x = (x >> mip), .y = (y >> mip)};
+  }
 };
 
 struct Extent3D {

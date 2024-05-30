@@ -33,6 +33,7 @@
 #include "VulkanQueueSet.hpp"
 #include "VulkanSwapchain.hpp"
 #include "VulkanTimelineSemaphore.hpp"
+#include "VulkanTransferEngine.hpp"
 
 #define VMA_STATIC_VULKAN_FUNCTIONS 0
 #define VMA_DYNAMIC_VULKAN_FUNCTIONS 1
@@ -46,9 +47,9 @@ class VulkanDevice : public IDevice {
  public:
   static constexpr const char* kValidationLayerName = "VK_LAYER_KHRONOS_validation";
 
-  static constexpr const char* kRequiredDeviceExtensions[] = {VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME,
-                                                              VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-                                                              VK_KHR_SYNCHRONIZATION_2_EXTENSION_NAME};
+  static constexpr const char* kRequiredDeviceExtensions[] = {
+    VK_KHR_SWAPCHAIN_EXTENSION_NAME
+  };
 
   static constexpr uint64_t kMaxRenderGraphsPerFrame = 1024;
 
@@ -64,6 +65,7 @@ class VulkanDevice : public IDevice {
   VmaAllocator GetAllocator();
   VulkanDescriptorManager& GetDescriptorManager();
 
+  bool GetDebugEnabled() const;
   const Info& GetInfo() const override;
   uint32_t GetFramesInFlight() const override;
 
@@ -79,18 +81,21 @@ class VulkanDevice : public IDevice {
   void EndOffscreenFrame() override;
 
   uint32_t CurrentFrame() const override;
+  uint32_t NextFrame() const;
   uint64_t CurrentAbsoluteFrame() const override;
 
-  void ExecuteConsecutive(RenderGraph& render_graph) override;
+  void ExecuteConsecutive(RenderGraph& render_graph, Context& context) override;
 
-  RenderGraphBuilder NewRenderGraphBuilder() override;
+  void RequestDedicatedTransfer(DedicatedTransferRequest&& transfer) override;
+
+  RenderGraphBuilder NewRenderGraphBuilder(Context& context) override;
 
   [[nodiscard]] std::unique_ptr<ISwapchain> CreateSwapchain(const ISwapchain::Info& info) override;
   [[nodiscard]] std::unique_ptr<ITexture> CreateTexture(const ITexture::Info& info) override;
   [[nodiscard]] std::unique_ptr<IBuffer> CreateBuffer(const IBuffer::Info& info) override;
   [[nodiscard]] std::unique_ptr<IShaderModule> CreateShaderModule(const IShaderModule::Source& source) override;
-  [[nodiscard]] std::unique_ptr<IComputePipeline> CreatePipeline(const IComputePipeline::Info& info) override;
-  [[nodiscard]] std::unique_ptr<IGraphicsPipeline> CreatePipeline(const IGraphicsPipeline::Info& info) override;
+  [[nodiscard]] std::unique_ptr<IPipeline> CreatePipeline(const IPipeline::ComputeInfo& info) override;
+  [[nodiscard]] std::unique_ptr<IPipeline> CreatePipeline(const IPipeline::GraphicsInfo& info) override;
 
  private:
   struct FrameSynchronization {
@@ -116,6 +121,7 @@ class VulkanDevice : public IDevice {
 
   VulkanDescriptorManager descriptor_manager_;
   VulkanQueueSet          queue_set_;
+  VulkanTransferEngine    transfer_engine_;
 
   std::vector<FrameSynchronization> frame_sync_;
   VulkanSwapchain*                  current_swapchain_{nullptr};

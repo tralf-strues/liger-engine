@@ -28,6 +28,7 @@
 #pragma once
 
 #include <Liger-Engine/Asset/LoaderLibrary.hpp>
+#include <Liger-Engine/Asset/LogChannel.hpp>
 #include <Liger-Engine/Asset/Registry.hpp>
 #include <Liger-Engine/Asset/Storage.hpp>
 
@@ -39,9 +40,9 @@ namespace liger::asset {
 
 class Manager {
  public:
-  explicit Manager(tf::Executor& executor);
+  explicit Manager(tf::Executor& executor, std::filesystem::path registry_file);
 
-  [[nodiscard]] bool SetRegistry(std::filesystem::path registry_file);
+  bool Valid() const;
 
   [[nodiscard]] Registry& GetRegistry();
   [[nodiscard]] const Registry& GetRegistry() const;
@@ -49,14 +50,56 @@ class Manager {
   void AddLoader(std::unique_ptr<ILoader> loader);
 
   template <typename Asset>
-  Handle<Asset> GetAsset(Id id);
+  [[nodiscard]] Handle<Asset> GetAsset(Id id);
+
+  template <typename Asset>
+  [[nodiscard]] Handle<Asset> GetAsset(const std::filesystem::path& file);
 
  private:
-  tf::Executor&             executor_;
-  Storage                   storage_;
-  LoaderLibrary             loaders_;
-  std::unique_ptr<Registry> registry_;
-  std::mutex                mutex_;
+  tf::Executor&   executor_;
+  Storage         storage_;
+  LoaderLibrary   loaders_;
+  Registry        registry_;
+  std::mutex      mutex_;
 };
+
+template <typename Asset>
+Handle<Asset> Manager::GetAsset(Id id) {
+  LIGER_ASSERT(registry_.Valid(), kLogChannelAsset, "Invalid registry");
+
+  std::unique_lock<std::mutex> lock(mutex_);
+
+  auto handle = storage_.Get<Asset>(id);
+  if (handle) {
+    return handle;
+  }
+
+  auto  filepath  = registry_.GetAbsoluteFile(id);
+  auto  extension = filepath.extension();
+  auto* loader    = loaders_.TryGet(extension);
+  LIGER_ASSERT(loader, kLogChannelAsset, "No loader for extension '{0}' found", extension.string());
+
+  handle = storage_.Emplace<Asset>(id);
+  handle.UpdateState(State::Loading);
+
+  lock.unlock();
+
+  // executor_.silent_async("Load asset", [=, this]() mutable {
+    loader->Load(*this, id, filepath);
+  // });
+
+  return handle;
+}
+
+template <typename Asset>
+Handle<Asset> Manager::GetAsset(const std::filesystem::path& file) {
+  LIGER_ASSERT(registry_.Valid(), kLogChannelAsset, "Invalid registry");
+
+  std::unique_lock<std::mutex> lock(mutex_);
+  auto id = registry_.GetId(file);
+  lock.unlock();
+
+  return GetAsset<Asset>(id);
+}
 
 }  // namespace liger::asset

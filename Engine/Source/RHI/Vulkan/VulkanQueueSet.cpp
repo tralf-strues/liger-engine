@@ -27,6 +27,8 @@
 
 #include "VulkanQueueSet.hpp"
 
+#include "VulkanDevice.hpp"
+
 #include <Liger-Engine/RHI/LogChannel.hpp>
 
 namespace liger::rhi {
@@ -81,7 +83,10 @@ std::vector<VkDeviceQueueCreateInfo> VulkanQueueSet::FillQueueCreateInfos(VkPhys
   for (indices.transfer = 0; indices.transfer < queue_family_count; ++(*indices.transfer)) {
     const auto& properties = queue_families[*indices.transfer];
 
-    if (properties.queueFlags == VK_QUEUE_TRANSFER_BIT) {
+    bool has_transfer            = (properties.queueFlags & VK_QUEUE_TRANSFER_BIT) != 0;
+    bool has_graphics_or_compute = (properties.queueFlags & (VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT)) != 0;
+
+    if (has_transfer && !has_graphics_or_compute) {
       transfer_queue_found = true;
       break;
     }
@@ -121,17 +126,22 @@ std::vector<VkDeviceQueueCreateInfo> VulkanQueueSet::FillQueueCreateInfos(VkPhys
   return create_infos;
 }
 
-void VulkanQueueSet::InitQueues(VkDevice device) {
+void VulkanQueueSet::InitQueues(VulkanDevice& device) {
+  auto vk_device = device.GetVulkanDevice();
+
   queue_count_ = 0;
 
-  vkGetDeviceQueue(device, queue_family_indices_.main, /*queueIndex=*/0, &queues_[queue_count_++]);
+  vkGetDeviceQueue(vk_device, queue_family_indices_.main, /*queueIndex=*/0, &queues_[queue_count_++]);
+  device.SetDebugName(queues_[queue_count_ - 1], "MainQueue");
 
   if (queue_family_indices_.compute.has_value()) {
-    vkGetDeviceQueue(device, *queue_family_indices_.compute, /*queueIndex=*/0, &queues_[queue_count_++]);
+    vkGetDeviceQueue(vk_device, *queue_family_indices_.compute, /*queueIndex=*/0, &queues_[queue_count_++]);
+    device.SetDebugName(queues_[queue_count_ - 1], "ComputeQueue");
   }
 
   if (queue_family_indices_.transfer.has_value()) {
-    vkGetDeviceQueue(device, *queue_family_indices_.transfer, /*queueIndex=*/0, &queues_[queue_count_++]);
+    vkGetDeviceQueue(vk_device, *queue_family_indices_.transfer, /*queueIndex=*/0, &queues_[queue_count_++]);
+    device.SetDebugName(queues_[queue_count_ - 1], "TransferQueue");
   }
 }
 

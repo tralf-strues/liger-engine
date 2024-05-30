@@ -56,6 +56,7 @@ class ConsoleLogWriter : public ILogWriter {
     bool write_channel{true};
   };
 
+  ConsoleLogWriter();
   explicit ConsoleLogWriter(Style style);
   ~ConsoleLogWriter() override = default;
 

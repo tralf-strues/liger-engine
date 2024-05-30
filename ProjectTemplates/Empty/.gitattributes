@@ -1,0 +1,2 @@
+/Assets/*.lsmesh filter=lfs diff=lfs merge=lfs -text
+/Assets/*.bin filter=lfs diff=lfs merge=lfs -text

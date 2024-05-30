@@ -145,6 +145,8 @@ class ITexture {
    */
   virtual uint32_t CreateView(const TextureViewInfo& info) = 0;
 
+  virtual bool ViewCreated(uint32_t view) const = 0;
+
   virtual const TextureViewInfo& GetViewInfo(uint32_t view) const = 0;
 
   /**

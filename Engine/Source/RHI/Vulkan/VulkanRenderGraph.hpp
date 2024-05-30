@@ -48,25 +48,34 @@ class VulkanRenderGraph : public RenderGraph {
 
   void ReimportBuffer(ResourceVersion version, BufferResource new_buffer) override;
 
-  void Execute(VkSemaphore wait, uint64_t wait_value, VkSemaphore signal, uint64_t signal_value);
+  void Execute(Context& context, VkSemaphore wait, uint64_t wait_value, VkSemaphore signal, uint64_t signal_value);
 
-  void DumpGraphviz(std::string_view filename) override;
+  void DumpGraphviz(std::string_view filename, bool detailed) override;
+
+  static glm::vec4 GetDebugLabelColor(JobType node_type);
 
  private:
   struct VulkanNode {
-    VkRenderingInfoKHR* rendering_info   = nullptr;
-    uint32_t            queue_idx        = 0;
-    DependencyLevel     dependency_level = 0;
+    std::string name;
 
-    uint32_t in_image_barrier_begin_idx  = 0;
-    uint32_t in_image_barrier_count      = 0;
-    uint32_t out_image_barrier_begin_idx = 0;
-    uint32_t out_image_barrier_count     = 0;
+    VkRenderingInfoKHR* rendering_info         = nullptr;
+    uint32_t            queue_idx              = 0;
+    DependencyLevel     dependency_level       = 0;
 
-    uint32_t in_buffer_barrier_begin_idx  = 0;
-    uint32_t in_buffer_barrier_count      = 0;
-    uint32_t out_buffer_barrier_begin_idx = 0;
-    uint32_t out_buffer_barrier_count     = 0;
+    uint32_t in_image_barrier_begin_idx        = 0;
+    uint32_t in_image_barrier_count            = 0;
+    uint32_t out_image_barrier_begin_idx       = 0;
+    uint32_t out_image_barrier_count           = 0;
+
+    uint32_t in_buffer_barrier_begin_idx       = 0;
+    uint32_t in_buffer_barrier_count           = 0;
+    uint32_t out_buffer_barrier_begin_idx      = 0;
+    uint32_t out_buffer_barrier_count          = 0;
+
+    uint32_t in_buffer_pack_barrier_begin_idx  = 0;
+    uint32_t in_buffer_pack_barrier_count      = 0;
+    uint32_t out_buffer_pack_barrier_begin_idx = 0;
+    uint32_t out_buffer_pack_barrier_count     = 0;    
   };
 
   struct Submit {
@@ -97,8 +106,8 @@ class VulkanRenderGraph : public RenderGraph {
   NodeHandle GetNodeHandle(const VulkanNode& vulkan_node);
 
   uint64_t GetSemaphoreValue(uint32_t queue_idx, uint64_t base_value) const;
-  static VkPipelineStageFlags2 GetVulkanPipelineSrcStage(Node::Type node_type, DeviceResourceState resource_state);
-  static VkPipelineStageFlags2 GetVulkanPipelineDstStage(Node::Type node_type, DeviceResourceState resource_state);
+
+  void SetBufferPackBarriers(VkCommandBuffer vk_cmds, VulkanNode& vulkan_node) const;
 
   VulkanDevice* device_{nullptr};
   bool          dirty_{false};
@@ -124,6 +133,9 @@ class VulkanRenderGraph : public RenderGraph {
   std::vector<VkImageMemoryBarrier2>  vk_image_barriers_;
   std::vector<ResourceId>             image_barrier_resources_;
   std::vector<VkBufferMemoryBarrier2> vk_buffer_barriers_;
+  std::vector<ResourceId>             buffer_barrier_resources_;
+  std::vector<VkBufferMemoryBarrier2> vk_buffer_pack_barriers_;
+  std::vector<ResourceId>             buffer_pack_barrier_resources_;
 };
 
 }  // namespace liger::rhi

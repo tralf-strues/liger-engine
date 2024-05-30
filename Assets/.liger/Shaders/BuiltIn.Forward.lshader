@@ -1,0 +1,82 @@
+RasterizationInfo:
+  CullMode: BackOnly
+  FrontFace: CounterClockwise
+  PolygonMode: Fill
+
+DepthStencilTestInfo:
+  DepthTestEnable: true
+  DepthWriteEnable: true
+  DepthCompareOperation: Less
+
+ColorBlendInfo:
+  Enable: true
+
+  SrcColorFactor: SrcAlpha
+  DstColorFactor: DstAlpha
+  ColorOperation: Add
+
+  SrcAlphaFactor: One
+  DstAlphaFactor: Zero
+  AlphaOperation: Add
+
+AttachmentInfo:
+  RenderTargets: [R16G16B16A16_SFLOAT]
+  DepthStencilTarget: D32_SFLOAT
+  Samples: 1
+
+FragmentShader:
+  Use:
+    - Include: BuiltIn.PBR.lsdecl
+    - Include: BuiltIn.LightSources.lsdecl
+    - Interface: GetParametersPBR
+      Desc: "Implementation must define function 'PBR_SurfacePoint GetParametersPBR(LigerInput liger_in)'"
+
+  Input:
+    - Name: ws_position
+      Type: f32vec3
+    - Name: tex_coords
+      Type: f32vec2
+    - Name: tbn
+      Type: f32mat3
+
+  Output:
+    - Name: out_color
+      Type: f32vec4
+
+  Code: | #glsl
+    PBR_SurfacePoint surface_point = GetParametersPBR(liger_in);
+
+    f32vec3 L = f32vec3(0.0);
+
+    /* Direct illumination */
+    if (DirectionalLightValid(liger_in)) {
+      PBR_LightSample light_sample;
+
+      const DirectionalLight dir_light = GetDirectionalLight(liger_in);
+
+      light_sample.to_light            = -normalize(dir_light.direction);
+      light_sample.half_vector         = normalize(surface_point.to_camera + light_sample.to_light);
+      light_sample.radiance            = dir_light.color * dir_light.intensity;
+
+      L += PBR_RadianceSample(surface_point, light_sample);
+    }
+
+    const uint32_t point_light_count = GetPointLightCount(liger_in);
+    for (uint32_t i = 0; i < point_light_count; ++i) {
+      PBR_LightSample light_sample;
+
+      const PointLight point_light = GetPointLight(liger_in, i);
+
+      light_sample.to_light        = normalize(point_light.position - surface_point.position);
+      light_sample.half_vector     = normalize(surface_point.to_camera + light_sample.to_light);
+
+      // Attenuation
+      const float32_t dist         = length(point_light.position - surface_point.position);
+      const float32_t attenuation  = 1.0 / (1.0 + (dist * dist) / (point_light.range * point_light.range));
+
+      light_sample.radiance        = point_light.color * point_light.intensity * attenuation;
+
+      L += PBR_RadianceSample(surface_point, light_sample);
+    }
+
+    out_color = f32vec4(L, 1.0);

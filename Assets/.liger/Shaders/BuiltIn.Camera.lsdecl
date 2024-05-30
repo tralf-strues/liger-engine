@@ -1,0 +1,30 @@
+Data: | #glsl
+  struct Camera {
+    f32mat4   view;
+    f32mat4   proj;
+    f32mat4   proj_view;
+    f32vec3   ws_position;
+    float32_t near;
+    float32_t far;
+  };
+
+Input:
+  - Name: CameraData
+    Type: uniform-buffer
+    Contents: | #glsl
+      Camera camera;
+
+CodeSnippets:
+  - Insert: auto-global
+    Code: | #glsl
+      Camera GetCamera(LigerInput liger_in) {
+        return GetUniformBuffer(CameraData, liger_in.binding_camera_data).camera;
+      }
+
+      f32vec3 CameraRightWS(Camera camera) {
+        return normalize(f32vec3(camera.view[0][0], camera.view[1][0], camera.view[2][0]));  // First column
+      }
+
+      f32vec3 CameraUpWS(Camera camera) {
+        return normalize(f32vec3(camera.view[0][1], camera.view[1][1], camera.view[2][1]));  // Second column
+      }

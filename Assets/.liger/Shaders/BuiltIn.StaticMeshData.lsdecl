@@ -1,0 +1,56 @@
+Data: | #glsl
+  struct Vertex3D {
+    f32vec3 position;
+    f32vec3 normal;
+    f32vec3 tangent;
+    f32vec3 bitangent;
+    f32vec2 tex_coords;
+  };
+
+  RegisterStorageBuffer(std430, readonly, VertexBuffer, {
+    Vertex3D vertices[];
+  });
+
+  RegisterStorageBuffer(std430, readonly, IndexBuffer, {
+    uint32_t vertex_indices[];
+  });
+
+  struct Mesh {
+    uint32_t  binding_vertex_buffer;
+    uint32_t  binding_index_buffer;
+    uint32_t  vertex_count;
+    uint32_t  index_count;
+    f32vec4   bounding_sphere;
+  };
+
+  RegisterUniformBuffer(MeshUBO, {
+    Mesh mesh;
+  });
+
+  struct Material {
+    f32vec3   albedo_color;
+    float32_t metallic;
+    float32_t roughness;
+
+    /* NOTE (tralf-strues): texture maps may be invalid, must be checked against kInvalidBinding! */
+    uint32_t  binding_albedo_map;
+    uint32_t  binding_normal_map;
+    uint32_t  binding_metallic_roughness_map;
+  };
+
+  RegisterUniformBuffer(MaterialUBO, {
+    Material material;
+  });
+
+  struct Object {
+    f32mat4  transform;
+    uint32_t binding_mesh;
+    uint32_t binding_material;
+    uint32_t vertex_count;
+    uint32_t index_count;
+  };
+
+  struct BatchedObject {
+    uint32_t object_idx;
+    uint32_t batch_idx;
+  };

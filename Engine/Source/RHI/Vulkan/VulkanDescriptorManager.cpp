@@ -27,12 +27,13 @@
 
 #include "VulkanDescriptorManager.hpp"
 
+#include "VulkanDevice.hpp"
 #include "VulkanUtils.hpp"
 
 namespace liger::rhi {
 
-bool VulkanDescriptorManager::Init(VkDevice device) {
-  device_ = device;
+bool VulkanDescriptorManager::Init(VulkanDevice& device) {
+  device_ = device.GetVulkanDevice();
 
   /* Descriptor set layout */
   const VkDescriptorSetLayoutBinding bindings[]{
@@ -89,6 +90,7 @@ bool VulkanDescriptorManager::Init(VkDevice device) {
   };
 
   VULKAN_CALL(vkCreateDescriptorSetLayout(device_, &layout_info, nullptr, &layout_));
+  device.SetDebugName(layout_, "VulkanDescriptorManager::layout_");
 
   /* Descriptor pool */
   const VkDescriptorPoolSize pool_sizes[kBindingsCount] {
@@ -120,6 +122,7 @@ bool VulkanDescriptorManager::Init(VkDevice device) {
   };
 
   VULKAN_CALL(vkCreateDescriptorPool(device_, &pool_info, nullptr, &pool_));
+  device.SetDebugName(pool_, "VulkanDescriptorManager::pool_");
 
   /* Allocate descriptor set */
   const VkDescriptorSetAllocateInfo allocate_info {
@@ -131,11 +134,12 @@ bool VulkanDescriptorManager::Init(VkDevice device) {
   };
 
   VULKAN_CALL(vkAllocateDescriptorSets(device_, &allocate_info, &set_));
+  device.SetDebugName(set_, "VulkanDescriptorManager::set_");
 
   /* Initialize free binding sets */
   auto initialize_set = [](auto& free_bindings) {
     free_bindings.reserve(kMaxBindlessResourcesPerType);
-    for (uint32_t binding = 1; binding < kMaxBindlessResourcesPerType; ++binding) {
+    for (uint32_t binding = 1U; binding < kMaxBindlessResourcesPerType; ++binding) {
       free_bindings.insert(binding);
     }
   };
@@ -157,8 +161,8 @@ bool VulkanDescriptorManager::Init(VkDevice device) {
     .addressModeV            = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
     .addressModeW            = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
     .mipLodBias              = 0,
-    .anisotropyEnable        = VK_TRUE,  // FIXME (tralf-strues):
-    .maxAnisotropy           = 4.0,      // FIXME (tralf-strues):
+    .anisotropyEnable        = VK_FALSE,   // FIXME (tralf-strues):
+    .maxAnisotropy           = 0.0,        // FIXME (tralf-strues):
     .compareEnable           = VK_FALSE,
     .compareOp               = VK_COMPARE_OP_ALWAYS,
     .minLod                  = 0.0,
@@ -168,6 +172,7 @@ bool VulkanDescriptorManager::Init(VkDevice device) {
   };
 
   VULKAN_CALL(vkCreateSampler(device_, &sampler_info, /*allocator=*/nullptr, &sampler_));
+  device.SetDebugName(sampler_, "VulkanDescriptorManager::sampler_");
 
   return true;
 }
@@ -193,6 +198,10 @@ void VulkanDescriptorManager::Destroy() {
 
 VkDescriptorSetLayout VulkanDescriptorManager::GetLayout() const {
   return layout_;
+}
+
+VkDescriptorSet VulkanDescriptorManager::GetSet() const {
+  return set_;
 }
 
 VulkanDescriptorManager::BufferBindings VulkanDescriptorManager::AddBuffer(VkBuffer            buffer,
@@ -229,7 +238,8 @@ VulkanDescriptorManager::BufferBindings VulkanDescriptorManager::AddBuffer(VkBuf
     };
   }
 
-  if (EnumBitmaskContains(buffer_usage, DeviceResourceState::StorageBuffer)) {
+  if (EnumBitmaskContainsAny(buffer_usage, DeviceResourceState::StorageBufferRead |
+                                           DeviceResourceState::StorageBufferWrite)) {
     LIGER_ASSERT(!free_bindings_storage_buffer_.empty(), kLogChannelRHI, "Max bindless storage buffers limit reached!");
 
     uint32_t storage_binding = *free_bindings_storage_buffer_.begin();
@@ -304,7 +314,8 @@ VulkanDescriptorManager::TextureBindings VulkanDescriptorManager::AddImageView(V
     };
   }
 
-  if (EnumBitmaskContains(texture_usage, DeviceResourceState::StorageTexture)) {
+  if (EnumBitmaskContainsAny(texture_usage, DeviceResourceState::StorageTextureRead |
+                                            DeviceResourceState::StorageTextureWrite)) {
     LIGER_ASSERT(!free_bindings_storage_texture_.empty(), kLogChannelRHI,
                  "Max bindless storage textures limit reached!");
 
@@ -346,8 +357,8 @@ void VulkanDescriptorManager::UpdateSampler(TextureDescriptorBinding sampled_bin
     .sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
     .pNext            = nullptr,
     .dstSet           = set_,
-    .dstBinding       = static_cast<uint32_t>(sampled_binding),
-    .dstArrayElement  = 0,
+    .dstBinding       = kBindingSampledTexture,
+    .dstArrayElement  = static_cast<uint32_t>(sampled_binding),
     .descriptorCount  = 1,
     .descriptorType   = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
     .pImageInfo       = &image_info,

@@ -1,0 +1,59 @@
+Data: | #glsl
+  struct Vertex3D {
+    f32vec3 position;
+    f32vec3 normal;
+    f32vec3 tangent;
+    f32vec2 tex_coords;
+  };
+
+InputAssemblyInfo:
+  Topology: TriangleList
+
+VertexShader:
+  Use:
+    - Include: BuiltIn.Camera.lsdecl
+
+  Input:
+    - Name: vertex_idx
+      Type: vertex-index
+
+    - Name: VertexData
+      Type: storage-buffer
+      Layout: std430
+      Access: readonly
+      Contents: | #glsl
+        Vertex3D vertices[];
+
+    - Name: TransformData
+      Type: storage-buffer
+      Layout: std430
+      Access: readonly
+      Contents: | #glsl
+        f32mat4 transforms[];
+
+    - Name: transform_idx
+      Type: uint32_t
+      Modifier: push-constant
+
+  Output:
+    - Name: ws_position
+      Type: f32vec3
+    - Name: tex_coords
+      Type: f32vec2
+    - Name: tbn
+      Type: f32mat3
+
+  Code: | #glsl
+    Camera   camera        = GetCamera(liger_in);
+    Vertex3D ms_vertex     = GetStorageBuffer(VertexData, liger_in.binding_vertex_data).vertices[liger_in.vertex_idx];
+    f32mat4  transform     = GetStorageBuffer(TransformData, liger_in.binding_transform_data).transforms[liger_in.transform_idx];
+
+    f32mat3  normal_matrix = transpose(inverse(f32mat3(transform)));
+    f32vec3  normal        = normalize(normal_matrix * ms_vertex.normal);
+    f32vec3  tangent       = normalize(normal_matrix * ms_vertex.tangent);
+    f32vec3  bitangent     = normalize(cross(normal, tangent));
+
+    ws_position            = (transform * f32vec4(ms_vertex.position, 1.0)).xyz;
+    tex_coords             = ms_vertex.tex_coords;
+    tbn                    = f32mat3(tangent, bitangent, normal);
+    gl_Position            = camera.proj * camera.view * f32vec4(ws_position, 1.0);

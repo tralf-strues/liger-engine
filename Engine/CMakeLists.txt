@@ -1,5 +1,7 @@
 include("../Cmake/CompileOptions.cmake")
 
+set(BUILD_SHARED_LIBS OFF)
+
 add_subdirectory(ThirdParty)
 
 add_library(liger-engine STATIC)
@@ -27,8 +29,6 @@ target_include_directories(liger-engine
   PUBLIC
     $<INSTALL_INTERFACE:Include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Include>
-  PRIVATE
-    ThirdParty/taskflow
 )
 
 target_sources(liger-engine
@@ -40,20 +40,47 @@ target_sources(liger-engine
 
 target_link_libraries(liger-engine
   PUBLIC
+    assimp
+    EnTT::EnTT
     fmt
     glfw
     glm
     magic_enum
+    Taskflow
 
   PRIVATE
+    # shaderc
+    # shaderc glslang glslang-default-resource-limits SPIRV
+    glslang glslang-default-resource-limits SPIRV
+    stb_image
     VulkanMemoryAllocator
+    volk
     vulkan-headers
     vulkan-utility-libraries
-    volk
     yaml-cpp
 )
 
-install(TARGETS liger-engine fmt glfw glm magic_enum VulkanMemoryAllocator vulkan-headers vulkan-utility-libraries volk yaml-cpp
+install(
+  TARGETS
+    liger-engine
+
+    assimp zlibstatic
+    EnTT
+    fmt
+    glfw
+    glm
+    magic_enum
+    glslang OSDependent MachineIndependent GenericCodeGen glslang-default-resource-limits SPIRV
+    # shaderc shaderc_util glslang OSDependent MachineIndependent GenericCodeGen glslang-default-resource-limits SPIRV
+    # shaderc shaderc_util glslang OSDependent MachineIndependent GenericCodeGen SPIRV
+    stb_image
+    Taskflow
+    VulkanMemoryAllocator
+    volk
+    vulkan-headers
+    vulkan-utility-libraries
+    yaml-cpp
+
   EXPORT liger-engine-targets
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib

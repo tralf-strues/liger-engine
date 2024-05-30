@@ -1,0 +1,93 @@
+ComputeShader:
+  ThreadGroupSize: [64, 1, 1]
+
+  Use:
+    - Include: BuiltIn.StaticMeshData.lsdecl
+    - Include: BuiltIn.Camera.lsdecl
+
+  Data: | #glsl
+    struct DrawCommand {
+      uint32_t index_count;
+      uint32_t instance_count;
+      uint32_t first_index;
+      int32_t  vertex_offset;
+      uint32_t first_instance;
+    };
+
+  Input:
+    - Name: BatchedObjects
+      Type: storage-buffer
+      Layout: std430
+      Access: readonly
+      Contents: | #glsl
+        BatchedObject batched_objects[];
+
+    - Name: Draws
+      Type: storage-buffer
+      Layout: std430
+      Access: readwrite
+      Contents: | #glsl
+        DrawCommand draws[];
+
+    - Name: Objects
+      Type: storage-buffer
+      Layout: std430
+      Access: readonly
+      Contents: | #glsl
+        Object objects[];
+
+    - Name: VisibleObjectIndices
+      Type: storage-buffer
+      Layout: std430
+      Access: writeonly
+      Contents: | #glsl
+        uint32_t object_indices[];
+
+    - Name: frustum
+      Type: f32vec4
+      Modifier: push-constant
+
+    - Name: batched_object_count
+      Type: uint32_t
+      Modifier: push-constant
+
+  CodeSnippets:
+    - Insert: auto-global
+      Code: | #glsl
+        bool IsVisible(const LigerInput liger_in, uint32_t object_idx) {
+          Camera    camera = GetCamera(liger_in);
+          Object    object = GetStorageBuffer(Objects, liger_in.binding_objects).objects[object_idx];
+          f32vec4   sphere = GetUniformBuffer(MeshUBO, object.binding_mesh).mesh.bounding_sphere;
+
+          f32vec3   center = (camera.view * object.transform * f32vec4(sphere.xyz, 1.0f)).xyz;
+          float32_t radius = length(object.transform[0U]) * sphere.w;
+
+          // Based on the assumption of frustum symmetry
+          bool visible = true;
+          visible = visible && center.z * liger_in.frustum.y - abs(center.x) * liger_in.frustum.x > -radius;
+          visible = visible && center.z * liger_in.frustum.w - abs(center.y) * liger_in.frustum.z > -radius;
+          visible = visible && !(center.z + radius < -camera.far || center.z - radius > -camera.near);
+          // visible = visible && center.z + radius > camera.near && center.z - radius < camera.far;
+
+          return visible;
+        }
+
+  Code: | #glsl
+    uint32_t batched_object_idx = gl_GlobalInvocationID.x;
+    if (batched_object_idx >= liger_in.batched_object_count) {
+      return;
+    }
+
+    const BatchedObject batched_object = GetStorageBuffer(BatchedObjects, liger_in.binding_batched_objects).batched_objects[batched_object_idx];
+
+    uint32_t object_idx = batched_object.object_idx;
+    uint32_t batch_idx  = batched_object.batch_idx;
+
+    if (!IsVisible(liger_in, object_idx)) {
+      return;
+    }
+
+    uint32_t local_instance_idx = atomicAdd(GetStorageBuffer(Draws, liger_in.binding_draws).draws[batch_idx].instance_count, 1U);
+    uint32_t final_instance_idx = GetStorageBuffer(Draws, liger_in.binding_draws).draws[batch_idx].first_instance + local_instance_idx;
+
+    GetStorageBuffer(VisibleObjectIndices, liger_in.binding_visible_object_indices).object_indices[final_instance_idx] = object_idx;

@@ -139,7 +139,7 @@ bool VulkanInstance::Init(ValidationLevel validation) {
     .applicationVersion = 0,
     .pEngineName        = "Liger Engine",
     .engineVersion      = VK_MAKE_VERSION(1, 0, 0),
-    .apiVersion         = VK_API_VERSION_1_2
+    .apiVersion         = VK_API_VERSION_1_3
   };
 
   auto extensions = GetInstanceExtensions(validation);
@@ -183,7 +183,7 @@ bool VulkanInstance::Init(ValidationLevel validation) {
     .pUserData       = nullptr,
   };
 
-  if (validation != IInstance::ValidationLevel::None) {
+  if (validation != IInstance::ValidationLevel::None && validation != IInstance::ValidationLevel::DebugInfoOnly) {
     instance_info.enabledLayerCount = 1;
     instance_info.ppEnabledLayerNames = &VulkanDevice::kValidationLayerName;
   }
@@ -194,13 +194,26 @@ bool VulkanInstance::Init(ValidationLevel validation) {
     VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT
   };
 
+#ifdef __APPLE__
+  const VkValidationFeatureDisableEXT disable_extra_features[] = {
+    VK_VALIDATION_FEATURE_DISABLE_SHADERS_EXT,
+    VK_VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT
+  };
+#endif
+
   VkValidationFeaturesEXT features_info{
     .sType                          = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT,
     .pNext                          = nullptr,
     .enabledValidationFeatureCount  = std::size(extra_features),
     .pEnabledValidationFeatures     = extra_features,
+
+#ifdef __APPLE__
+    .disabledValidationFeatureCount = std::size(disable_extra_features),
+    .pDisabledValidationFeatures    = disable_extra_features
+#else
     .disabledValidationFeatureCount = 0,
     .pDisabledValidationFeatures    = nullptr
+#endif
   };
 
 #ifdef __APPLE__
@@ -344,9 +357,18 @@ bool VulkanInstance::FillDeviceInfoList() {
       .type             = GetDeviceTypeFromVulkan(properties.deviceType),
       .engine_supported = required_extensions_supported && swapchain_supported &&
                           static_cast<bool>(features2.features.samplerAnisotropy) &&
+                          static_cast<bool>(features2.features.shaderInt64) &&
+                          static_cast<bool>(features2.features.multiDrawIndirect) &&
+                          static_cast<bool>(features2.features.drawIndirectFirstInstance) &&
                           static_cast<bool>(features12.descriptorBindingPartiallyBound) &&
                           static_cast<bool>(features12.runtimeDescriptorArray) &&
+                          static_cast<bool>(features12.shaderUniformBufferArrayNonUniformIndexing) &&
+                          static_cast<bool>(features12.shaderStorageBufferArrayNonUniformIndexing) &&
                           static_cast<bool>(features12.timelineSemaphore) &&
+                          static_cast<bool>(features12.bufferDeviceAddress) &&
+                          static_cast<bool>(features12.scalarBlockLayout) &&
+                          static_cast<bool>(features12.shaderSampledImageArrayNonUniformIndexing) &&
+                          static_cast<bool>(features12.shaderStorageImageArrayNonUniformIndexing) &&
                           static_cast<bool>(sync2_feature.synchronization2),
 
       .properties = {

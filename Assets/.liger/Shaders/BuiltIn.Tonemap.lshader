@@ -1,0 +1,61 @@
+InputAssemblyInfo:
+  Topology: TriangleList
+
+RasterizationInfo:
+  CullMode: BackOnly
+  FrontFace: CounterClockwise
+  PolygonMode: Fill
+
+DepthStencilTestInfo:
+  DepthTestEnable: false
+  DepthWriteEnable: false
+  DepthCompareOperation: Less
+
+ColorBlendInfo:
+  Enable: false
+
+  SrcColorFactor: SrcAlpha
+  DstColorFactor: DstAlpha
+  ColorOperation: Add
+
+  SrcAlphaFactor: One
+  DstAlphaFactor: Zero
+  AlphaOperation: Add
+
+AttachmentInfo:
+  RenderTargets: [B8G8R8A8_SRGB]
+  Samples: 1
+
+VertexShader:
+  Input:
+    - Name: vertex_idx
+      Type: vertex-index
+
+  Output:
+    - Name: uv
+      Type: f32vec2
+
+  Code: | #glsl
+    uv = f32vec2((liger_in.vertex_idx << 1U) & 2U, liger_in.vertex_idx & 2U);
+    gl_Position = f32vec4(uv * 2.0f + -1.0f, 0.0f, 1.0f);
+
+FragmentShader:
+  Input:
+    - Name: uv
+      Type: f32vec2
+
+    - Name: SrcTexture
+      Type: sampler2D
+
+    - Name: exposure
+      Type: float32_t
+      Modifier: push-constant
+
+  Output:
+    - Name: out_color
+      Type: f32vec4
+
+  Code: | #glsl
+    f32vec3 hdr_color = texture(GetSampler2D(liger_in.binding_src_texture), f32vec2(uv.x, 1.0f - uv.y)).rgb;
+    out_color.rgb     = 1.0f - exp(-hdr_color * liger_in.exposure);
+    out_color.a       = 1.0f;

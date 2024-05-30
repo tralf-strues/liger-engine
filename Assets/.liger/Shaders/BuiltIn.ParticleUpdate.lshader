@@ -1,0 +1,104 @@
+ComputeShader:
+  ThreadGroupSize: [64, 1, 1]
+
+  Use:
+    - Include: BuiltIn.ParticleData.lsdecl
+
+  Data: | #glsl
+    struct DrawCommand {
+      uint32_t vertex_count;
+      uint32_t instance_count;
+      uint32_t first_vertex;
+      uint32_t first_instance;
+    };
+
+  Input:
+    - Name: EmitterData
+      Type: uniform-buffer
+      Contents: | #glsl
+        ParticleSystem emitter;
+
+    - Name: Particles
+      Type: storage-buffer
+      Layout: std430
+      Access: writeonly
+      Contents: | #glsl
+        Particle particles[];
+
+    - Name: FreeList
+      Type: storage-buffer
+      Layout: std430
+      Access: readwrite
+      Contents: | #glsl
+        int32_t count;
+        int32_t indices[];
+
+    - Name: DrawParticleIndices
+      Type: storage-buffer
+      Layout: std430
+      Access: writeonly
+      Contents: | #glsl
+        uint32_t particle_indices[];
+
+    - Name: Draw
+      Type: storage-buffer
+      Layout: std430
+      Access: readwrite
+      Contents: | #glsl
+        DrawCommand draw;
+
+    - Name: delta_time
+      Type: float32_t
+      Modifier: push-constant
+
+  CodeSnippets:
+    - Insert: auto-global
+      Code: | #glsl
+        void UpdateParticle(inout Particle particle, int32_t idx, const LigerInput liger_in) {
+          if (particle.lifetime <= 0.0f) {
+            particle.color.a = 0.0f;
+            return;
+          }
+
+          const ParticleSystem emitter = GetUniformBuffer(EmitterData, liger_in.binding_emitter_data).emitter;
+
+          float32_t t = 1.0f - particle.lifetime / emitter.lifetime;
+
+          particle.velocity += emitter.acceleration * liger_in.delta_time;
+          particle.position += particle.velocity * liger_in.delta_time;
+
+          particle.color     = mix(emitter.color_start, emitter.color_end, t);
+          particle.size      = mix(emitter.size_start, emitter.size_end, t);
+          particle.lifetime -= liger_in.delta_time;
+
+          if (particle.lifetime <= 0.0f) {
+            particle.color.a = 0.0f;
+
+            int32_t free_list_idx = atomicAdd(GetStorageBuffer(FreeList, liger_in.binding_free_list).count, 1);
+            GetStorageBuffer(FreeList, liger_in.binding_free_list).indices[free_list_idx] = idx;
+          } else {
+            uint32_t instance_idx = atomicAdd(GetStorageBuffer(Draw, liger_in.binding_draw).draw.instance_count, 1U);
+            GetStorageBuffer(DrawParticleIndices, liger_in.binding_draw_particle_indices).particle_indices[instance_idx] = uint32_t(idx);
+          }
+        }
+
+  Code: | #glsl
+    uint32_t idx = gl_GlobalInvocationID.x;
+
+    if (idx >= GetStorageBuffer(Particles, liger_in.binding_particles).particles.length()) {
+      return;
+    }
+
+    if (idx == 0) {
+      DrawCommand initial_cmd;
+      initial_cmd.vertex_count   = 4U;
+      initial_cmd.instance_count = 0U;
+      initial_cmd.first_vertex   = 0U;
+      initial_cmd.first_instance = 0U;
+
+      GetStorageBuffer(Draw, liger_in.binding_draw).draw = initial_cmd;
+    }
+
+    barrier();
+
+    UpdateParticle(GetStorageBuffer(Particles, liger_in.binding_particles).particles[idx], int32_t(idx), liger_in);

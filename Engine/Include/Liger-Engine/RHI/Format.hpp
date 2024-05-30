@@ -44,6 +44,8 @@ enum class Format : uint32_t {
   Invalid = 0,
 
   /* One-component */
+  R8_UNORM,
+
   R32_UINT,
   R32_SINT,
   R32_SFLOAT,
@@ -60,8 +62,10 @@ enum class Format : uint32_t {
 
   /* Three-component */
   R8G8B8_UNORM,
+  B8G8R8_UNORM,
   R8G8B8_SRGB,
 
+  B10G11R11_UFLOAT,
   R16G16B16_SFLOAT,
   R32G32B32_SFLOAT,
 
@@ -70,6 +74,7 @@ enum class Format : uint32_t {
   R8G8B8A8_SRGB,
   B8G8R8A8_SRGB,
 
+  R16G16B16A16_SFLOAT,
   R32G32B32A32_SFLOAT
 };
 
@@ -80,6 +85,7 @@ enum class Format : uint32_t {
 inline uint32_t GetFormatSize(Format format) {
   switch (format) {
     /* One-component */
+    case (Format::R8_UNORM):            { return 1; }
     case (Format::R32_UINT):            { return 4; }
     case (Format::R32_SINT):            { return 4; }
     case (Format::R32_SFLOAT):          { return 4; }
@@ -96,14 +102,18 @@ inline uint32_t GetFormatSize(Format format) {
 
     /* Three-component */
     case (Format::R8G8B8_UNORM):        { return 3; }
+    case (Format::B8G8R8_UNORM):        { return 3; }
     case (Format::R8G8B8_SRGB):         { return 3; }
 
+    case (Format::B10G11R11_UFLOAT):    { return 4; }
     case (Format::R16G16B16_SFLOAT):    { return 6; }
     case (Format::R32G32B32_SFLOAT):    { return 12; }
 
     /* Four-component */
     case (Format::R8G8B8A8_UNORM):      { return 4; }
     case (Format::R8G8B8A8_SRGB):       { return 4; }
+
+    case (Format::R16G16B16A16_SFLOAT): { return 8; }
     case (Format::R32G32B32A32_SFLOAT): { return 16; }
 
     default: { return 0; }

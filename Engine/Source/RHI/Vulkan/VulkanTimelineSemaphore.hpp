@@ -41,6 +41,8 @@ class VulkanTimelineSemaphore {
 
   VkSemaphore Get();
 
+  uint64_t GetValue() const;
+
   uint64_t TimePoint(uint64_t absolute_frame, uint64_t local_time_point) const;
 
  private:

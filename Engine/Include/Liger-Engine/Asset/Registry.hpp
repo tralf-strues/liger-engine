@@ -30,6 +30,7 @@
 #include <Liger-Engine/Asset/Id.hpp>
 
 #include <filesystem>
+#include <map>
 #include <unordered_map>
 #include <unordered_set>
 
@@ -109,9 +110,19 @@ class Registry {
   bool Save() const;
 
   /**
+   * @brief Get the path of the asset folder, which is the parent directory of the registry file..
+   */
+  const std::filesystem::path& GetAssetFolder() const;
+
+  /**
    * @brief Whether the registry contains an asset with this id.
    */
   bool Contains(Id id) const;
+
+  /**
+   * @brief Whether the registry contains an asset with this filepath.
+   */
+  bool Contains(const std::filesystem::path& file) const;
 
   /**
    * @brief Get the relative filepath of the asset not including the asset folder.
@@ -124,9 +135,14 @@ class Registry {
   std::filesystem::path GetAbsoluteFile(Id id) const;
 
   /**
+   * @brief Get the id of the asset by filepath.
+   */
+  Id GetId(const std::filesystem::path& file) const;
+
+  /**
    * @brief Register a new asset with the specified file.
    */
-  Id Register(std::filesystem::path file);
+  Id Register(const std::filesystem::path& file);
 
   /**
    * @brief Update the filepath corresponding to the registered asset.
@@ -146,9 +162,10 @@ class Registry {
   bool ReadRegistryFile();
 
   bool                                          valid_{false};
-  std::filesystem::path                         asset_folder_;
   std::filesystem::path                         registry_file_;
+  std::filesystem::path                         asset_folder_;
   std::unordered_map<Id, std::filesystem::path> files_;
+  std::map<std::filesystem::path, Id>           ids_;
 };
 
 }  // namespace liger::asset

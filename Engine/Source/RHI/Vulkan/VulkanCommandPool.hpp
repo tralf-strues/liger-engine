@@ -32,12 +32,15 @@
 
 namespace liger::rhi {
 
+class VulkanDevice;
+
 class VulkanCommandPool {
  public:
   VulkanCommandPool() = default;
   ~VulkanCommandPool();
 
-  void Init(VkDevice device, uint32_t frames_in_flight, const VulkanQueueSet& queue_set);
+  void Init(VulkanDevice& device, uint32_t frames_in_flight, VkDescriptorSet ds, const VulkanQueueSet& queue_set,
+            bool use_debug_labels);
   void Destroy();
 
   VulkanCommandBuffer AllocateCommandBuffer(uint32_t frame_idx, uint32_t queue_idx);
@@ -45,12 +48,20 @@ class VulkanCommandPool {
   void Reset(uint32_t frame_idx);
 
  private:
-  VkCommandPool& GetCommandPool(uint32_t frame_idx, uint32_t queue_idx);
+  struct CommandBufferList {
+    size_t                           cur_idx{0U};
+    std::vector<VulkanCommandBuffer> command_buffers;
+  };
 
-  VkDevice                   device_{VK_NULL_HANDLE};
-  uint32_t                   frames_in_flight_{0};
-  uint32_t                   queue_count_{0};
-  std::vector<VkCommandPool> pools_;
+  VkCommandPool& GetCommandPool(uint32_t frame_idx, uint32_t queue_idx);
+  CommandBufferList& GetCommandBufferList(uint32_t frame_idx, uint32_t queue_idx);
+
+  VulkanDevice*                  device_{nullptr};
+  bool                           use_debug_labels_{false};
+  uint32_t                       frames_in_flight_{0};
+  uint32_t                       queue_count_{0};
+  std::vector<VkCommandPool>     pools_;
+  std::vector<CommandBufferList> command_buffers_per_pool_;
 };
 
 }  // namespace liger::rhi

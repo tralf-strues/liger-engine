@@ -90,6 +90,15 @@ class IBuffer {
   virtual void* MapMemory(uint64_t offset, uint64_t size) = 0;
 
   /**
+   * @brief Map the whole range of buffer's memory.
+   *
+   * @warning Only available if the buffer is created with @ref Info::cpu_visible enabled.
+   *
+   * @return Address of the mapped memory or nullptr in case of error.
+   */
+  virtual void* MapMemory() = 0;
+
+  /**
    * @brief Unmap buffer's memory.
    *
    * @warning It is UB when calling this method without previously successful call to @ref MapMemory.

@@ -47,6 +47,7 @@ class VulkanBuffer : public IBuffer {
   BufferDescriptorBinding GetStorageDescriptorBinding() const override;
 
   void* MapMemory(uint64_t offset, uint64_t size) override;
+  void* MapMemory() override;
   void UnmapMemory() override;
 
   VkBuffer GetVulkanBuffer() const;

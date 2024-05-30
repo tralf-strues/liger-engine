@@ -33,24 +33,28 @@ namespace liger::rhi {
 
 enum class DeviceResourceState : uint32_t {
   /* Common resource states */
-  Undefined          = 0,
-  TransferSrc        = Bit(0),
-  TransferDst        = Bit(1),
+  Undefined               = 0,
+  TransferSrc             = Bit(0),
+  TransferDst             = Bit(1),
 
   /* Texture specific states */
-  ShaderSampled      = Bit(2),
-  ColorTarget        = Bit(3),
-  DepthStencilTarget = Bit(4),
-  DepthStencilRead   = Bit(5),
-  StorageTexture     = Bit(6),
-  PresentTexture     = Bit(7),
+  ShaderSampled           = Bit(2),
+  ColorTarget             = Bit(3),
+  DepthStencilTarget      = Bit(4),
+  DepthStencilRead        = Bit(5),
+  StorageTextureRead      = Bit(6),
+  StorageTextureWrite     = Bit(7),
+  StorageTextureReadWrite = StorageTextureRead | StorageTextureWrite,
+  PresentTexture          = Bit(8),
 
   /* Buffer specific states */
-  VertexBuffer       = Bit(8),
-  IndexBuffer        = Bit(9),
-  IndirectArgument   = Bit(10),
-  UniformBuffer      = Bit(11),
-  StorageBuffer      = Bit(12)
+  VertexBuffer            = Bit(9),
+  IndexBuffer             = Bit(10),
+  IndirectArgument        = Bit(11),
+  UniformBuffer           = Bit(12),
+  StorageBufferRead       = Bit(13),
+  StorageBufferWrite      = Bit(14),
+  StorageBufferReadWrite  = StorageBufferRead | StorageBufferWrite,
 };
 
 }  // namespace liger::rhi

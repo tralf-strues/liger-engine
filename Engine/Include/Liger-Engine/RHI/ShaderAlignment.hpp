@@ -29,6 +29,7 @@
 
 #include <Liger-Engine/Core/Log/Log.hpp>
 #include <Liger-Engine/Core/Math/Math.hpp>
+#include <Liger-Engine/RHI/DescriptorBinding.hpp>
 #include <Liger-Engine/RHI/LogChannel.hpp>
 
 #include <cassert>
@@ -67,6 +68,16 @@ struct StructMemberAlignment<int32_t> {
 
 template <>
 struct StructMemberAlignment<uint32_t> {
+  static constexpr uint32_t Value() { return 4; }
+};
+
+template <>
+struct StructMemberAlignment<rhi::BufferDescriptorBinding> {
+  static constexpr uint32_t Value() { return 4; }
+};
+
+template <>
+struct StructMemberAlignment<rhi::TextureDescriptorBinding> {
   static constexpr uint32_t Value() { return 4; }
 };
 
