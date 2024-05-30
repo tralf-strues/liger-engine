@@ -127,21 +127,25 @@ $(document).ready(function(){initNavTree('_extent_8hpp_source.html',''); initRes
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code" href="structliger_1_1rhi_1_1_extent2_d.html">Extent2D</a>&amp; rhs)<span class="keyword"> const </span>{</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordflow">return</span> (x == rhs.x) &amp;&amp; (y == rhs.y);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  }</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;};</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_extent3_d.html">   43</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_extent3_d.html">Extent3D</a> {</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  uint32_t x{0};</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  uint32_t y{0};</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  uint32_t z{0};</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code" href="structliger_1_1rhi_1_1_extent3_d.html">Extent3D</a>&amp; rhs)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">return</span> (x == rhs.x) &amp;&amp; (y == rhs.y) &amp;&amp; (z == rhs.z);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  }</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;};</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;}  <span class="comment">// namespace liger::rhi</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  <a class="code" href="structliger_1_1rhi_1_1_extent2_d.html">Extent2D</a> MipExtent(uint32_t mip)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="structliger_1_1rhi_1_1_extent2_d.html">Extent2D</a> {.x = (x &gt;&gt; mip), .y = (y &gt;&gt; mip)};</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  }</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;};</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_extent3_d.html">   47</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_extent3_d.html">Extent3D</a> {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  uint32_t x{0};</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  uint32_t y{0};</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  uint32_t z{0};</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code" href="structliger_1_1rhi_1_1_extent3_d.html">Extent3D</a>&amp; rhs)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">return</span> (x == rhs.x) &amp;&amp; (y == rhs.y) &amp;&amp; (z == rhs.z);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  }</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;};</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;}  <span class="comment">// namespace liger::rhi</span></div>
 <div class="ttc" id="astructliger_1_1rhi_1_1_extent2_d_html"><div class="ttname"><a href="structliger_1_1rhi_1_1_extent2_d.html">liger::rhi::Extent2D</a></div><div class="ttdef"><b>Definition:</b> <a href="_extent_8hpp_source.html#l00034">Extent.hpp:34</a></div></div>
-<div class="ttc" id="astructliger_1_1rhi_1_1_extent3_d_html"><div class="ttname"><a href="structliger_1_1rhi_1_1_extent3_d.html">liger::rhi::Extent3D</a></div><div class="ttdef"><b>Definition:</b> <a href="_extent_8hpp_source.html#l00043">Extent.hpp:43</a></div></div>
+<div class="ttc" id="astructliger_1_1rhi_1_1_extent3_d_html"><div class="ttname"><a href="structliger_1_1rhi_1_1_extent3_d.html">liger::rhi::Extent3D</a></div><div class="ttdef"><b>Definition:</b> <a href="_extent_8hpp_source.html#l00047">Extent.hpp:47</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

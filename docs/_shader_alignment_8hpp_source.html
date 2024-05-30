@@ -118,88 +118,100 @@ $(document).ready(function(){initNavTree('_shader_alignment_8hpp_source.html',''
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="_log_8hpp.html">Liger-Engine/Core/Log/Log.hpp</a>&gt;</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="_math_8hpp.html">Liger-Engine/Core/Math/Math.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="_r_h_i_2_log_channel_8hpp.html">Liger-Engine/RHI/LogChannel.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &lt;cassert&gt;</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">namespace </span>glm {</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">using</span> ivec2 = ::glm::vec&lt;2, int&gt;;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#define SHADER_ARRAY_MEMBER(T)  liger::rhi::ArrayMemberAligned&lt;T&gt;</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#define SHADER_STRUCT_MEMBER(T) alignas(liger::rhi::StructMemberAlignment&lt;T&gt;::Value()) T</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">namespace </span>liger::rhi {</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_array_member_aligned.html">   46</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_array_member_aligned.html">ArrayMemberAligned</a> {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  <span class="keyword">alignas</span>(16) T value;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  <a class="code" href="structliger_1_1rhi_1_1_array_member_aligned.html">ArrayMemberAligned</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="keyword">explicit</span> <a class="code" href="structliger_1_1rhi_1_1_array_member_aligned.html">ArrayMemberAligned</a>(<span class="keyword">const</span> T&amp; value) : value(value) {}</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  <span class="keyword">explicit</span> <span class="keyword">operator</span> T()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> value; }</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;};</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment.html">   56</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a> {</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    LIGER_ASSERT(<span class="keyword">false</span>, kLogChannelRHI, <span class="stringliteral">&quot;You have to specialize this struct for your type&quot;</span>)</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  }</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;};</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment_3_01int32__t_01_4.html">   64</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a>&lt;int32_t&gt; {</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() { <span class="keywordflow">return</span> 4; }</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;};</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment_3_01uint32__t_01_4.html">   69</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a>&lt;uint32_t&gt; {</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() { <span class="keywordflow">return</span> 4; }</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;};</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment_3_01float_01_4.html">   74</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a>&lt;float&gt; {</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() { <span class="keywordflow">return</span> 4; }</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;};</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment_3_01glm_1_1vec2_01_4.html">   79</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a>&lt;glm::vec2&gt; {</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() { <span class="keywordflow">return</span> 8; }</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;};</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment_3_01glm_1_1ivec2_01_4.html">   84</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a>&lt;glm::ivec2&gt; {</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() { <span class="keywordflow">return</span> 8; }</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;};</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment_3_01glm_1_1vec3_01_4.html">   89</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a>&lt;glm::vec3&gt; {</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() { <span class="keywordflow">return</span> 16; }</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;};</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment_3_01glm_1_1vec4_01_4.html">   94</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a>&lt;glm::vec4&gt; {</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() { <span class="keywordflow">return</span> 16; }</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;};</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment_3_01glm_1_1mat3_01_4.html">   99</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a>&lt;glm::mat3&gt; {</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() { <span class="keywordflow">return</span> 16; }</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;};</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a name="l00104"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment_3_01glm_1_1mat4_01_4.html">  104</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a>&lt;glm::mat4&gt; {</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() { <span class="keywordflow">return</span> 16; }</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;};</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;}  <span class="comment">// namespace liger::rhi</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="_descriptor_binding_8hpp.html">Liger-Engine/RHI/DescriptorBinding.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="_r_h_i_2_log_channel_8hpp.html">Liger-Engine/RHI/LogChannel.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &lt;cassert&gt;</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">namespace </span>glm {</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">using</span> ivec2 = ::glm::vec&lt;2, int&gt;;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;}</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#define SHADER_ARRAY_MEMBER(T)  liger::rhi::ArrayMemberAligned&lt;T&gt;</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#define SHADER_STRUCT_MEMBER(T) alignas(liger::rhi::StructMemberAlignment&lt;T&gt;::Value()) T</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">namespace </span>liger::rhi {</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_array_member_aligned.html">   47</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_array_member_aligned.html">ArrayMemberAligned</a> {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  <span class="keyword">alignas</span>(16) T value;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <a class="code" href="structliger_1_1rhi_1_1_array_member_aligned.html">ArrayMemberAligned</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  <span class="keyword">explicit</span> <a class="code" href="structliger_1_1rhi_1_1_array_member_aligned.html">ArrayMemberAligned</a>(<span class="keyword">const</span> T&amp; value) : value(value) {}</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  <span class="keyword">explicit</span> <span class="keyword">operator</span> T()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> value; }</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;};</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment.html">   57</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a> {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    LIGER_ASSERT(<span class="keyword">false</span>, kLogChannelRHI, <span class="stringliteral">&quot;You have to specialize this struct for your type&quot;</span>)</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  }</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;};</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment_3_01int32__t_01_4.html">   65</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a>&lt;int32_t&gt; {</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() { <span class="keywordflow">return</span> 4; }</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;};</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment_3_01uint32__t_01_4.html">   70</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a>&lt;uint32_t&gt; {</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() { <span class="keywordflow">return</span> 4; }</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;};</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a name="l00075"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment_3_01rhi_1_1_buffer_descriptor_binding_01_4.html">   75</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a>&lt;rhi::BufferDescriptorBinding&gt; {</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() { <span class="keywordflow">return</span> 4; }</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;};</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment_3_01rhi_1_1_texture_descriptor_binding_01_4.html">   80</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a>&lt;rhi::TextureDescriptorBinding&gt; {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() { <span class="keywordflow">return</span> 4; }</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;};</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment_3_01float_01_4.html">   85</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a>&lt;float&gt; {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() { <span class="keywordflow">return</span> 4; }</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;};</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment_3_01glm_1_1vec2_01_4.html">   90</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a>&lt;glm::vec2&gt; {</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() { <span class="keywordflow">return</span> 8; }</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;};</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment_3_01glm_1_1ivec2_01_4.html">   95</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a>&lt;glm::ivec2&gt; {</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() { <span class="keywordflow">return</span> 8; }</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;};</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment_3_01glm_1_1vec3_01_4.html">  100</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a>&lt;glm::vec3&gt; {</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() { <span class="keywordflow">return</span> 16; }</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;};</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a name="l00105"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment_3_01glm_1_1vec4_01_4.html">  105</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a>&lt;glm::vec4&gt; {</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() { <span class="keywordflow">return</span> 16; }</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;};</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a name="l00110"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment_3_01glm_1_1mat3_01_4.html">  110</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a>&lt;glm::mat3&gt; {</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() { <span class="keywordflow">return</span> 16; }</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;};</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="structliger_1_1rhi_1_1_struct_member_alignment_3_01glm_1_1mat4_01_4.html">  115</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structliger_1_1rhi_1_1_struct_member_alignment.html">StructMemberAlignment</a>&lt;glm::mat4&gt; {</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  <span class="keyword">static</span> constexpr uint32_t Value() { <span class="keywordflow">return</span> 16; }</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;};</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;}  <span class="comment">// namespace liger::rhi</span></div>
+<div class="ttc" id="a_descriptor_binding_8hpp_html"><div class="ttname"><a href="_descriptor_binding_8hpp.html">DescriptorBinding.hpp</a></div></div>
 <div class="ttc" id="a_log_8hpp_html"><div class="ttname"><a href="_log_8hpp.html">Log.hpp</a></div></div>
 <div class="ttc" id="a_math_8hpp_html"><div class="ttname"><a href="_math_8hpp.html">Math.hpp</a></div></div>
 <div class="ttc" id="a_r_h_i_2_log_channel_8hpp_html"><div class="ttname"><a href="_r_h_i_2_log_channel_8hpp.html">LogChannel.hpp</a></div></div>
-<div class="ttc" id="astructliger_1_1rhi_1_1_array_member_aligned_html"><div class="ttname"><a href="structliger_1_1rhi_1_1_array_member_aligned.html">liger::rhi::ArrayMemberAligned</a></div><div class="ttdef"><b>Definition:</b> <a href="_shader_alignment_8hpp_source.html#l00046">ShaderAlignment.hpp:46</a></div></div>
-<div class="ttc" id="astructliger_1_1rhi_1_1_struct_member_alignment_html"><div class="ttname"><a href="structliger_1_1rhi_1_1_struct_member_alignment.html">liger::rhi::StructMemberAlignment</a></div><div class="ttdef"><b>Definition:</b> <a href="_shader_alignment_8hpp_source.html#l00056">ShaderAlignment.hpp:56</a></div></div>
+<div class="ttc" id="astructliger_1_1rhi_1_1_array_member_aligned_html"><div class="ttname"><a href="structliger_1_1rhi_1_1_array_member_aligned.html">liger::rhi::ArrayMemberAligned</a></div><div class="ttdef"><b>Definition:</b> <a href="_shader_alignment_8hpp_source.html#l00047">ShaderAlignment.hpp:47</a></div></div>
+<div class="ttc" id="astructliger_1_1rhi_1_1_struct_member_alignment_html"><div class="ttname"><a href="structliger_1_1rhi_1_1_struct_member_alignment.html">liger::rhi::StructMemberAlignment</a></div><div class="ttdef"><b>Definition:</b> <a href="_shader_alignment_8hpp_source.html#l00057">ShaderAlignment.hpp:57</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

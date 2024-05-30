@@ -117,47 +117,94 @@ $(document).ready(function(){initNavTree('_manager_8hpp_source.html',''); initRe
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="_loader_library_8hpp.html">Liger-Engine/Asset/LoaderLibrary.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="_registry_8hpp.html">Liger-Engine/Asset/Registry.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="_storage_8hpp.html">Liger-Engine/Asset/Storage.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &lt;taskflow/taskflow.hpp&gt;</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &lt;mutex&gt;</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">namespace </span>liger::asset {</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classliger_1_1asset_1_1_manager.html">   40</a></span>&#160;<span class="keyword">class </span><a class="code" href="classliger_1_1asset_1_1_manager.html">Manager</a> {</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classliger_1_1asset_1_1_manager.html">Manager</a>(tf::Executor&amp; executor);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  [[nodiscard]] <span class="keywordtype">bool</span> SetRegistry(std::filesystem::path registry_file);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  [[nodiscard]] <a class="code" href="classliger_1_1asset_1_1_registry.html">Registry</a>&amp; GetRegistry();</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  [[nodiscard]] <span class="keyword">const</span> <a class="code" href="classliger_1_1asset_1_1_registry.html">Registry</a>&amp; GetRegistry() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  <span class="keywordtype">void</span> AddLoader(std::unique_ptr&lt;ILoader&gt; loader);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Asset&gt;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  <a class="code" href="classliger_1_1asset_1_1_handle.html">Handle&lt;Asset&gt;</a> GetAsset(<a class="code" href="classliger_1_1_basic_u_u_i_d.html">Id</a> <span class="keywordtype">id</span>);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  tf::Executor&amp;             executor_;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <a class="code" href="classliger_1_1asset_1_1_storage.html">Storage</a>                   storage_;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <a class="code" href="classliger_1_1asset_1_1_loader_library.html">LoaderLibrary</a>             loaders_;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  std::unique_ptr&lt;Registry&gt; registry_;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  std::mutex                mutex_;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;};</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}  <span class="comment">// namespace liger::asset</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="_asset_2_log_channel_8hpp.html">Liger-Engine/Asset/LogChannel.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="_registry_8hpp.html">Liger-Engine/Asset/Registry.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="_storage_8hpp.html">Liger-Engine/Asset/Storage.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &lt;taskflow/taskflow.hpp&gt;</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &lt;mutex&gt;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">namespace </span>liger::asset {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classliger_1_1asset_1_1_manager.html">   41</a></span>&#160;<span class="keyword">class </span><a class="code" href="classliger_1_1asset_1_1_manager.html">Manager</a> {</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classliger_1_1asset_1_1_manager.html">Manager</a>(tf::Executor&amp; executor, std::filesystem::path registry_file);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  <span class="keywordtype">bool</span> Valid() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  [[nodiscard]] <a class="code" href="classliger_1_1asset_1_1_registry.html">Registry</a>&amp; GetRegistry();</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  [[nodiscard]] <span class="keyword">const</span> <a class="code" href="classliger_1_1asset_1_1_registry.html">Registry</a>&amp; GetRegistry() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="keywordtype">void</span> AddLoader(std::unique_ptr&lt;ILoader&gt; loader);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Asset&gt;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  [[nodiscard]] <a class="code" href="classliger_1_1asset_1_1_handle.html">Handle&lt;Asset&gt;</a> GetAsset(<a class="code" href="classliger_1_1_basic_u_u_i_d.html">Id</a> <span class="keywordtype">id</span>);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Asset&gt;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  [[nodiscard]] <a class="code" href="classliger_1_1asset_1_1_handle.html">Handle&lt;Asset&gt;</a> GetAsset(<span class="keyword">const</span> std::filesystem::path&amp; file);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  tf::Executor&amp;   executor_;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <a class="code" href="classliger_1_1asset_1_1_storage.html">Storage</a>         storage_;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <a class="code" href="classliger_1_1asset_1_1_loader_library.html">LoaderLibrary</a>   loaders_;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <a class="code" href="classliger_1_1asset_1_1_registry.html">Registry</a>        registry_;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  std::mutex      mutex_;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;};</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Asset&gt;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<a class="code" href="classliger_1_1asset_1_1_handle.html">Handle&lt;Asset&gt;</a> Manager::GetAsset(<a class="code" href="classliger_1_1_basic_u_u_i_d.html">Id</a> <span class="keywordtype">id</span>) {</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  LIGER_ASSERT(registry_.<a class="code" href="classliger_1_1asset_1_1_registry.html#ac428d12bcac052f5dc82e87ca372de05">Valid</a>(), kLogChannelAsset, <span class="stringliteral">&quot;Invalid registry&quot;</span>);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  std::unique_lock&lt;std::mutex&gt; lock(mutex_);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <span class="keyword">auto</span> handle = storage_.Get&lt;Asset&gt;(id);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  <span class="keywordflow">if</span> (handle) {</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordflow">return</span> handle;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="keyword">auto</span>  filepath  = registry_.<a class="code" href="classliger_1_1asset_1_1_registry.html#a1940d88114c4fea105bc5e50168ec22f">GetAbsoluteFile</a>(<span class="keywordtype">id</span>);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  <span class="keyword">auto</span>  extension = filepath.extension();</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <span class="keyword">auto</span>* loader    = loaders_.TryGet(extension);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  LIGER_ASSERT(loader, kLogChannelAsset, <span class="stringliteral">&quot;No loader for extension &#39;{0}&#39; found&quot;</span>, extension.string());</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  handle = storage_.Emplace&lt;Asset&gt;(id);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  handle.UpdateState(State::Loading);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  lock.unlock();</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <span class="comment">// executor_.silent_async(&quot;Load asset&quot;, [=, this]() mutable {</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    loader-&gt;Load(*<span class="keyword">this</span>, <span class="keywordtype">id</span>, filepath);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  <span class="comment">// });</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  <span class="keywordflow">return</span> handle;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;}</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Asset&gt;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;Handle&lt;Asset&gt; Manager::GetAsset(<span class="keyword">const</span> std::filesystem::path&amp; file) {</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  LIGER_ASSERT(registry_.<a class="code" href="classliger_1_1asset_1_1_registry.html#ac428d12bcac052f5dc82e87ca372de05">Valid</a>(), kLogChannelAsset, <span class="stringliteral">&quot;Invalid registry&quot;</span>);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  std::unique_lock&lt;std::mutex&gt; lock(mutex_);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  <span class="keyword">auto</span> <span class="keywordtype">id</span> = registry_.<a class="code" href="classliger_1_1asset_1_1_registry.html#ad549f2f6a3a040acf5f68a28f16e5107">GetId</a>(file);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  lock.unlock();</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  <span class="keywordflow">return</span> GetAsset&lt;Asset&gt;(<span class="keywordtype">id</span>);</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;}</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;}  <span class="comment">// namespace liger::asset</span></div>
+<div class="ttc" id="a_asset_2_log_channel_8hpp_html"><div class="ttname"><a href="_asset_2_log_channel_8hpp.html">LogChannel.hpp</a></div></div>
 <div class="ttc" id="a_loader_library_8hpp_html"><div class="ttname"><a href="_loader_library_8hpp.html">LoaderLibrary.hpp</a></div></div>
 <div class="ttc" id="a_registry_8hpp_html"><div class="ttname"><a href="_registry_8hpp.html">Registry.hpp</a></div></div>
 <div class="ttc" id="a_storage_8hpp_html"><div class="ttname"><a href="_storage_8hpp.html">Storage.hpp</a></div></div>
 <div class="ttc" id="aclassliger_1_1_basic_u_u_i_d_html"><div class="ttname"><a href="classliger_1_1_basic_u_u_i_d.html">liger::BasicUUID</a></div><div class="ttdef"><b>Definition:</b> <a href="_u_u_i_d_8hpp_source.html#l00038">UUID.hpp:38</a></div></div>
-<div class="ttc" id="aclassliger_1_1asset_1_1_handle_html"><div class="ttname"><a href="classliger_1_1asset_1_1_handle.html">liger::asset::Handle</a></div><div class="ttdef"><b>Definition:</b> <a href="_storage_8hpp_source.html#l00060">Storage.hpp:60</a></div></div>
+<div class="ttc" id="aclassliger_1_1asset_1_1_handle_html"><div class="ttname"><a href="classliger_1_1asset_1_1_handle.html">liger::asset::Handle</a></div><div class="ttdoc">Ref-counted asset handle with state info.</div><div class="ttdef"><b>Definition:</b> <a href="_storage_8hpp_source.html#l00065">Storage.hpp:65</a></div></div>
 <div class="ttc" id="aclassliger_1_1asset_1_1_loader_library_html"><div class="ttname"><a href="classliger_1_1asset_1_1_loader_library.html">liger::asset::LoaderLibrary</a></div><div class="ttdef"><b>Definition:</b> <a href="_loader_library_8hpp_source.html#l00037">LoaderLibrary.hpp:37</a></div></div>
-<div class="ttc" id="aclassliger_1_1asset_1_1_manager_html"><div class="ttname"><a href="classliger_1_1asset_1_1_manager.html">liger::asset::Manager</a></div><div class="ttdef"><b>Definition:</b> <a href="_manager_8hpp_source.html#l00040">Manager.hpp:40</a></div></div>
-<div class="ttc" id="aclassliger_1_1asset_1_1_registry_html"><div class="ttname"><a href="classliger_1_1asset_1_1_registry.html">liger::asset::Registry</a></div><div class="ttdoc">Registry of assets contained in an asset folder.</div><div class="ttdef"><b>Definition:</b> <a href="_registry_8hpp_source.html#l00081">Registry.hpp:81</a></div></div>
-<div class="ttc" id="aclassliger_1_1asset_1_1_storage_html"><div class="ttname"><a href="classliger_1_1asset_1_1_storage.html">liger::asset::Storage</a></div><div class="ttdef"><b>Definition:</b> <a href="_storage_8hpp_source.html#l00107">Storage.hpp:107</a></div></div>
+<div class="ttc" id="aclassliger_1_1asset_1_1_manager_html"><div class="ttname"><a href="classliger_1_1asset_1_1_manager.html">liger::asset::Manager</a></div><div class="ttdef"><b>Definition:</b> <a href="_manager_8hpp_source.html#l00041">Manager.hpp:41</a></div></div>
+<div class="ttc" id="aclassliger_1_1asset_1_1_registry_html"><div class="ttname"><a href="classliger_1_1asset_1_1_registry.html">liger::asset::Registry</a></div><div class="ttdoc">Registry of assets contained in an asset folder.</div><div class="ttdef"><b>Definition:</b> <a href="_registry_8hpp_source.html#l00082">Registry.hpp:82</a></div></div>
+<div class="ttc" id="aclassliger_1_1asset_1_1_registry_html_a1940d88114c4fea105bc5e50168ec22f"><div class="ttname"><a href="classliger_1_1asset_1_1_registry.html#a1940d88114c4fea105bc5e50168ec22f">liger::asset::Registry::GetAbsoluteFile</a></div><div class="ttdeci">std::filesystem::path GetAbsoluteFile(Id id) const</div><div class="ttdoc">Get the relative filepath of the asset including the asset folder.</div></div>
+<div class="ttc" id="aclassliger_1_1asset_1_1_registry_html_ac428d12bcac052f5dc82e87ca372de05"><div class="ttname"><a href="classliger_1_1asset_1_1_registry.html#ac428d12bcac052f5dc82e87ca372de05">liger::asset::Registry::Valid</a></div><div class="ttdeci">bool Valid() const</div><div class="ttdoc">Whether the registry is valid (i.e. upon construction file was found and successfully loaded).</div></div>
+<div class="ttc" id="aclassliger_1_1asset_1_1_registry_html_ad549f2f6a3a040acf5f68a28f16e5107"><div class="ttname"><a href="classliger_1_1asset_1_1_registry.html#ad549f2f6a3a040acf5f68a28f16e5107">liger::asset::Registry::GetId</a></div><div class="ttdeci">Id GetId(const std::filesystem::path &amp;file) const</div><div class="ttdoc">Get the id of the asset by filepath.</div></div>
+<div class="ttc" id="aclassliger_1_1asset_1_1_storage_html"><div class="ttname"><a href="classliger_1_1asset_1_1_storage.html">liger::asset::Storage</a></div><div class="ttdoc">Multi-type asset storage with ref-counting mechanism.</div><div class="ttdef"><b>Definition:</b> <a href="_storage_8hpp_source.html#l00130">Storage.hpp:130</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

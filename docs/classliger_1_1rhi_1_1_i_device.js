@@ -1,7 +1,11 @@
 var classliger_1_1rhi_1_1_i_device =
 [
+    [ "DedicatedBufferTransfer", "structliger_1_1rhi_1_1_i_device_1_1_dedicated_buffer_transfer.html", "structliger_1_1rhi_1_1_i_device_1_1_dedicated_buffer_transfer" ],
+    [ "DedicatedTextureTransfer", "structliger_1_1rhi_1_1_i_device_1_1_dedicated_texture_transfer.html", "structliger_1_1rhi_1_1_i_device_1_1_dedicated_texture_transfer" ],
+    [ "DedicatedTransferRequest", "structliger_1_1rhi_1_1_i_device_1_1_dedicated_transfer_request.html", "structliger_1_1rhi_1_1_i_device_1_1_dedicated_transfer_request" ],
     [ "Info", "structliger_1_1rhi_1_1_i_device_1_1_info.html", "structliger_1_1rhi_1_1_i_device_1_1_info" ],
     [ "Properties", "structliger_1_1rhi_1_1_i_device_1_1_properties.html", "structliger_1_1rhi_1_1_i_device_1_1_properties" ],
+    [ "TransferCallback", "classliger_1_1rhi_1_1_i_device.html#a6d9326551f16a022c4af15e69439162e", null ],
     [ "Type", "classliger_1_1rhi_1_1_i_device.html#a656bbc63c4af594149bf15816c08b53b", [
       [ "Undefined", "classliger_1_1rhi_1_1_i_device.html#a656bbc63c4af594149bf15816c08b53baec0fc0100c4fc1ce4eea230c3dc10360", null ],
       [ "IntegratedGPU", "classliger_1_1rhi_1_1_i_device.html#a656bbc63c4af594149bf15816c08b53bab70d66f5b58172fec7e22dc11d0484a9", null ],
@@ -13,8 +17,8 @@ var classliger_1_1rhi_1_1_i_device =
     [ "BeginFrame", "classliger_1_1rhi_1_1_i_device.html#ae08ba2b8acb8660a871a075aea11153a", null ],
     [ "BeginOffscreenFrame", "classliger_1_1rhi_1_1_i_device.html#a17bc745605be8227cbeea3250b5a4653", null ],
     [ "CreateBuffer", "classliger_1_1rhi_1_1_i_device.html#a1e3999b3bf47323e08b97c63a539b383", null ],
-    [ "CreatePipeline", "classliger_1_1rhi_1_1_i_device.html#a8a4d889ebf5e855fbcd83e4da24c6d6c", null ],
-    [ "CreatePipeline", "classliger_1_1rhi_1_1_i_device.html#ad7d997a72409da4d891faa0fd3db2f4b", null ],
+    [ "CreatePipeline", "classliger_1_1rhi_1_1_i_device.html#abcf28b37be1be96264290da156a4fc16", null ],
+    [ "CreatePipeline", "classliger_1_1rhi_1_1_i_device.html#a07fc347ef2fd19ff263edfff0650aefe", null ],
     [ "CreateShaderModule", "classliger_1_1rhi_1_1_i_device.html#a3816d14e91ec7c523edf2e503e2486ae", null ],
     [ "CreateSwapchain", "classliger_1_1rhi_1_1_i_device.html#a235ab5bbaf7bbf670d0f1eb79a6b8d8e", null ],
     [ "CreateTexture", "classliger_1_1rhi_1_1_i_device.html#a2d8e8b97a0bafaa0773bcc4f86261d2b", null ],
@@ -22,9 +26,10 @@ var classliger_1_1rhi_1_1_i_device =
     [ "CurrentFrame", "classliger_1_1rhi_1_1_i_device.html#a40ad4d4d0a7f8bc88a0ab9638f09c9dd", null ],
     [ "EndFrame", "classliger_1_1rhi_1_1_i_device.html#ae8ec01ea3d129685d6b1ef1816d8869f", null ],
     [ "EndOffscreenFrame", "classliger_1_1rhi_1_1_i_device.html#aa5a9ee9fdd875c69471d2cde6bc89d96", null ],
-    [ "ExecuteConsecutive", "classliger_1_1rhi_1_1_i_device.html#a80e556b9ccb4ba2672d13fadd384b216", null ],
+    [ "ExecuteConsecutive", "classliger_1_1rhi_1_1_i_device.html#af9b766ce882855eae16aab92c1a20d0a", null ],
     [ "GetFramesInFlight", "classliger_1_1rhi_1_1_i_device.html#a87866901716b84a969ebbeaa90c5d773", null ],
     [ "GetInfo", "classliger_1_1rhi_1_1_i_device.html#a9891c13b817c93f8d821dd5b54737d3b", null ],
-    [ "NewRenderGraphBuilder", "classliger_1_1rhi_1_1_i_device.html#accd4879102fe8e90a14c48397121af05", null ],
+    [ "NewRenderGraphBuilder", "classliger_1_1rhi_1_1_i_device.html#a72a6a8be1d5f16c77d1ac000879c98bd", null ],
+    [ "RequestDedicatedTransfer", "classliger_1_1rhi_1_1_i_device.html#ab7a96b5d017875e68f717c2b9de50d9c", null ],
     [ "WaitIdle", "classliger_1_1rhi_1_1_i_device.html#aa555e5a0618e430ff977abee46377c54", null ]
 ];

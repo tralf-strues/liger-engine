@@ -96,6 +96,12 @@ $(document).ready(function(){initNavTree('classliger_1_1asset_1_1_i_importer.htm
  <a href="classliger_1_1asset_1_1_i_importer.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_importer_8hpp_source.html">Importer.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for liger::asset::IImporter:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classliger_1_1asset_1_1_i_importer__inherit__graph.svg" width="312" height="398"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -109,16 +115,16 @@ Public Member Functions</h2></td></tr>
 virtual const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1asset_1_1_i_importer.html#a5310bed87c3821da06d8a8d153bd314e">FileExtension</a> () const =0</td></tr>
 <tr class="memdesc:a5310bed87c3821da06d8a8d153bd314e"><td class="mdescLeft">&#160;</td><td class="mdescRight">File extension of files which this importer can import, e.g. ('.fbx'). <br /></td></tr>
 <tr class="separator:a5310bed87c3821da06d8a8d153bd314e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a70e9c4e33519c9314530fd95fb5672"><td class="memItemLeft" align="right" valign="top"><a id="a0a70e9c4e33519c9314530fd95fb5672"></a>
-virtual <a class="el" href="structliger_1_1asset_1_1_i_importer_1_1_result.html">Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1asset_1_1_i_importer.html#a0a70e9c4e33519c9314530fd95fb5672">Import</a> (const std::filesystem::path &amp;src, const std::filesystem::path &amp;dst_folder) const =0</td></tr>
-<tr class="memdesc:a0a70e9c4e33519c9314530fd95fb5672"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to import <code>src</code> file and save generated files to <code>dst_folder</code>. <br /></td></tr>
-<tr class="separator:a0a70e9c4e33519c9314530fd95fb5672"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd5c2aedf8851be9da1fd094b3ded6f5"><td class="memItemLeft" align="right" valign="top"><a id="afd5c2aedf8851be9da1fd094b3ded6f5"></a>
+virtual <a class="el" href="structliger_1_1asset_1_1_i_importer_1_1_result.html">Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1asset_1_1_i_importer.html#afd5c2aedf8851be9da1fd094b3ded6f5">Import</a> (<a class="el" href="classliger_1_1asset_1_1_registry.html">Registry</a> &amp;registry, const std::filesystem::path &amp;src, const std::filesystem::path &amp;dst_folder) const =0</td></tr>
+<tr class="memdesc:afd5c2aedf8851be9da1fd094b3ded6f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to import <code>src</code> file, save generated files to <code>dst_folder</code> and register them to the asset registry. <br /></td></tr>
+<tr class="separator:afd5c2aedf8851be9da1fd094b3ded6f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Importer interface. </p>
 <p>Importers are basically converters of one asset file (based on extension) to possibly several asset files better suited for some particular usage. An example can be an FBX importer that generates mesh/material/texture/etc. files in a format which is tailored specifically for a particular renderer implementation. </p>
 
-<p class="definition">Definition at line <a class="el" href="_importer_8hpp_source.html#l00043">43</a> of file <a class="el" href="_importer_8hpp_source.html">Importer.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_importer_8hpp_source.html#l00042">42</a> of file <a class="el" href="_importer_8hpp_source.html">Importer.hpp</a>.</p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="_importer_8hpp_source.html">Importer.hpp</a></li>
 </ul>

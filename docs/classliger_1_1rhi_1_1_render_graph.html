@@ -99,6 +99,8 @@ $(document).ready(function(){initNavTree('classliger_1_1rhi_1_1_render_graph.htm
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_render_graph_1_1_buffer_pack_resource.html">BufferPackResource</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_render_graph_1_1_imported_resource_usage.html">ImportedResourceUsage</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_render_graph_1_1_node.html">Node</a></td></tr>
@@ -117,9 +119,9 @@ Public Types</h2></td></tr>
 <tr class="memitem:aa08549080ee5b26105b9b3600c13437f"><td class="memItemLeft" align="right" valign="top"><a id="aa08549080ee5b26105b9b3600c13437f"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>BufferResource</b> = <a class="el" href="classliger_1_1rhi_1_1_i_buffer.html">IBuffer</a> *</td></tr>
 <tr class="separator:aa08549080ee5b26105b9b3600c13437f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afbac3cdd7eb6a41674b616a7c42c5551"><td class="memItemLeft" align="right" valign="top"><a id="afbac3cdd7eb6a41674b616a7c42c5551"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>ResourceVersionRegistry</b> = ResourceVersionRegistry&lt; <a class="el" href="structliger_1_1rhi_1_1_render_graph_1_1_texture_resource.html">TextureResource</a>, <a class="el" href="classliger_1_1rhi_1_1_i_buffer.html">BufferResource</a> &gt;</td></tr>
-<tr class="separator:afbac3cdd7eb6a41674b616a7c42c5551"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a1c9de83321289f9a5a03fdb4f5c1fc"><td class="memItemLeft" align="right" valign="top"><a id="a7a1c9de83321289f9a5a03fdb4f5c1fc"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>ResourceVersionRegistry</b> = ResourceVersionRegistry&lt; <a class="el" href="structliger_1_1rhi_1_1_render_graph_1_1_texture_resource.html">TextureResource</a>, <a class="el" href="classliger_1_1rhi_1_1_i_buffer.html">BufferResource</a>, <a class="el" href="structliger_1_1rhi_1_1_render_graph_1_1_buffer_pack_resource.html">BufferPackResource</a> &gt;</td></tr>
+<tr class="separator:a7a1c9de83321289f9a5a03fdb4f5c1fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d88217e45968e104a3d4f2df3341ba9"><td class="memItemLeft" align="right" valign="top"><a id="a0d88217e45968e104a3d4f2df3341ba9"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>ResourceVersion</b> = ResourceVersionRegistry::ResourceVersion</td></tr>
 <tr class="separator:a0d88217e45968e104a3d4f2df3341ba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -129,9 +131,9 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>ResourceId</b> = Res
 <tr class="memitem:a11f16bdf78720c3285c7b51008af2f20"><td class="memItemLeft" align="right" valign="top"><a id="a11f16bdf78720c3285c7b51008af2f20"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>DependentTextureInfo</b> = DependentTextureInfo&lt; ResourceVersion &gt;</td></tr>
 <tr class="separator:a11f16bdf78720c3285c7b51008af2f20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67e3ff5cf48aef809d03fbcbe9fb844a"><td class="memItemLeft" align="right" valign="top"><a id="a67e3ff5cf48aef809d03fbcbe9fb844a"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>Job</b> = std::function&lt; void(<a class="el" href="classliger_1_1rhi_1_1_i_command_buffer.html">ICommandBuffer</a> &amp;cmds)&gt;</td></tr>
-<tr class="separator:a67e3ff5cf48aef809d03fbcbe9fb844a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3edba6c9101fee13d87e106c85b523fe"><td class="memItemLeft" align="right" valign="top"><a id="a3edba6c9101fee13d87e106c85b523fe"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>Job</b> = std::function&lt; void(<a class="el" href="classliger_1_1rhi_1_1_render_graph.html">RenderGraph</a> &amp;, <a class="el" href="classliger_1_1rhi_1_1_context.html">Context</a> &amp;, <a class="el" href="classliger_1_1rhi_1_1_i_command_buffer.html">ICommandBuffer</a> &amp;)&gt;</td></tr>
+<tr class="separator:a3edba6c9101fee13d87e106c85b523fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -141,15 +143,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a062544d9245916bad76b3475c463fc1e"><td class="memItemLeft" align="right" valign="top"><a id="a062544d9245916bad76b3475c463fc1e"></a>
 <a class="el" href="classliger_1_1rhi_1_1_i_buffer.html">BufferResource</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetBuffer</b> (ResourceVersion version)</td></tr>
 <tr class="separator:a062544d9245916bad76b3475c463fc1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c2948148837d00dd9dd884f700fb9ed"><td class="memItemLeft" align="right" valign="top"><a id="a3c2948148837d00dd9dd884f700fb9ed"></a>
+<a class="el" href="structliger_1_1rhi_1_1_render_graph_1_1_buffer_pack_resource.html">BufferPackResource</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetBufferPack</b> (ResourceVersion version)</td></tr>
+<tr class="separator:a3c2948148837d00dd9dd884f700fb9ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d8b9845dee8fd5bc8ab3385fa56f971"><td class="memItemLeft" align="right" valign="top"><a id="a1d8b9845dee8fd5bc8ab3385fa56f971"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>ReimportTexture</b> (ResourceVersion version, <a class="el" href="structliger_1_1rhi_1_1_render_graph_1_1_texture_resource.html">TextureResource</a> new_texture)=0</td></tr>
 <tr class="separator:a1d8b9845dee8fd5bc8ab3385fa56f971"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9abdbdb08ab5fe8102b4360197749418"><td class="memItemLeft" align="right" valign="top"><a id="a9abdbdb08ab5fe8102b4360197749418"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>ReimportBuffer</b> (ResourceVersion version, <a class="el" href="classliger_1_1rhi_1_1_i_buffer.html">BufferResource</a> new_buffer)=0</td></tr>
 <tr class="separator:a9abdbdb08ab5fe8102b4360197749418"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0eaad96be5ce564a4367c69b436bccf4"><td class="memItemLeft" align="right" valign="top"><a id="a0eaad96be5ce564a4367c69b436bccf4"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>DumpGraphviz</b> (std::string_view filename)=0</td></tr>
-<tr class="separator:a0eaad96be5ce564a4367c69b436bccf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12d291b25b5121d25583aa047a4ff503"><td class="memItemLeft" align="right" valign="top"><a id="a12d291b25b5121d25583aa047a4ff503"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>DumpGraphviz</b> (std::string_view filename, bool detailed)=0</td></tr>
+<tr class="separator:a12d291b25b5121d25583aa047a4ff503"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ca97635f53a34346256fafba09fc7d7"><td class="memItemLeft" align="right" valign="top"><a id="a8ca97635f53a34346256fafba09fc7d7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>SetJob</b> (std::string_view node_name, Job job)</td></tr>
 <tr class="separator:a8ca97635f53a34346256fafba09fc7d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -165,6 +170,9 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>NodeHandle</b> = Nod
 <tr class="memitem:a404d66f706a95d1f0e95c375612e7a79"><td class="memItemLeft" align="right" valign="top"><a id="a404d66f706a95d1f0e95c375612e7a79"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>DependencyLevel</b> = NodeGraph::Depth</td></tr>
 <tr class="separator:a404d66f706a95d1f0e95c375612e7a79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1b0c7896fe556de813b437b37f6d0dd"><td class="memItemLeft" align="right" valign="top"><a id="ab1b0c7896fe556de813b437b37f6d0dd"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>TextureViewList</b> = std::vector&lt; <a class="el" href="structliger_1_1rhi_1_1_texture_view_info.html">rhi::TextureViewInfo</a> &gt;</td></tr>
+<tr class="separator:ab1b0c7896fe556de813b437b37f6d0dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -201,6 +209,9 @@ ResourceVersionRegistry&#160;</td><td class="memItemRight" valign="bottom"><b>re
 <tr class="memitem:a3cb0b2d0ad94d33486cd0025dec62c9b"><td class="memItemLeft" align="right" valign="top"><a id="a3cb0b2d0ad94d33486cd0025dec62c9b"></a>
 std::unordered_map&lt; ResourceId, DependentTextureInfo &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>transient_texture_infos_</b></td></tr>
 <tr class="separator:a3cb0b2d0ad94d33486cd0025dec62c9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54a4cf059478fbe58573bc36915edaff"><td class="memItemLeft" align="right" valign="top"><a id="a54a4cf059478fbe58573bc36915edaff"></a>
+std::unordered_map&lt; ResourceId, TextureViewList &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>transient_texture_view_infos_</b></td></tr>
+<tr class="separator:a54a4cf059478fbe58573bc36915edaff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53843e3b4695fb98edb8753113d69769"><td class="memItemLeft" align="right" valign="top"><a id="a53843e3b4695fb98edb8753113d69769"></a>
 std::unordered_map&lt; ResourceId, <a class="el" href="structliger_1_1rhi_1_1_i_buffer_1_1_info.html">IBuffer::Info</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>transient_buffer_infos_</b></td></tr>
 <tr class="separator:a53843e3b4695fb98edb8753113d69769"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -219,7 +230,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>RenderGraphBuilder</
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="_render_graph_8hpp_source.html#l00056">56</a> of file <a class="el" href="_render_graph_8hpp_source.html">RenderGraph.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_render_graph_8hpp_source.html#l00057">57</a> of file <a class="el" href="_render_graph_8hpp_source.html">RenderGraph.hpp</a>.</p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="_render_graph_8hpp_source.html">RenderGraph.hpp</a></li>
 </ul>

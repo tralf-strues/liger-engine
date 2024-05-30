@@ -140,44 +140,45 @@ $(document).ready(function(){initNavTree('_instance_8hpp_source.html',''); initR
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  <span class="keyword">enum class</span> ValidationLevel : uint8_t {</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    None,</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    Basic,</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    Extensive</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  };</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <a class="code" href="classliger_1_1rhi_1_1_i_instance.html">IInstance</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <a class="code" href="classliger_1_1rhi_1_1_i_instance.html">IInstance</a>(<span class="keyword">const</span> <a class="code" href="classliger_1_1rhi_1_1_i_instance.html">IInstance</a>&amp; other) = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <a class="code" href="classliger_1_1rhi_1_1_i_instance.html">IInstance</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classliger_1_1rhi_1_1_i_instance.html">IInstance</a>&amp; other) = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="keyword">virtual</span> ~<a class="code" href="classliger_1_1rhi_1_1_i_instance.html">IInstance</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">  /**</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">   * @brief Get the available devices&#39; info list.</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">   */</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="classliger_1_1rhi_1_1_i_instance.html#a7961c6853e16cde5a09556b03ccda49c">   68</a></span>&#160;  <span class="keyword">virtual</span> std::span&lt;const IDevice::Info&gt; <a class="code" href="classliger_1_1rhi_1_1_i_instance.html#a7961c6853e16cde5a09556b03ccda49c">GetDeviceInfoList</a>() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment">  /**</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment">   * @brief Create device, based on the physical device type.</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">   *</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">   * @param id Device identifier, can be obtained via @ref IDevice::Info.</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment">   * @param frames_in_flight The number of frames in flight the device is configured to work with.</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">   *</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">   * @return Device or nullptr in case an error occurs.</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">   */</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="classliger_1_1rhi_1_1_i_instance.html#ab75549063730809ab5d9df684fcc6118">   78</a></span>&#160;  <span class="keyword">virtual</span> std::unique_ptr&lt;IDevice&gt; <a class="code" href="classliger_1_1rhi_1_1_i_instance.html#ab75549063730809ab5d9df684fcc6118">CreateDevice</a>(uint32_t <span class="keywordtype">id</span>, uint32_t frames_in_flight) = 0;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment">  /**</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment">   * @brief Create a RHI Instance for the particular API.</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment">   *</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment">   * @param api Desired @ref GraphicsAPI.</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">   * @param validation Desired @ref ValidationLevel.</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment">   *</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment">   * @return RHI instance or nullptr in case an error occurs.</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment">   */</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="classliger_1_1rhi_1_1_i_instance.html#afded85348f32856b852541bf780d2a88">   88</a></span>&#160;  <span class="keyword">static</span> std::unique_ptr&lt;IInstance&gt; <a class="code" href="classliger_1_1rhi_1_1_i_instance.html#afded85348f32856b852541bf780d2a88">Create</a>(<a class="code" href="_instance_8hpp.html#a405246d3194616d4daa3b8e21132f8b5">GraphicsAPI</a> api, ValidationLevel validation);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;};</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;}  <span class="comment">// namespace liger::rhi</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    DebugInfoOnly,</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    Basic,</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    Extensive</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  };</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <a class="code" href="classliger_1_1rhi_1_1_i_instance.html">IInstance</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <a class="code" href="classliger_1_1rhi_1_1_i_instance.html">IInstance</a>(<span class="keyword">const</span> <a class="code" href="classliger_1_1rhi_1_1_i_instance.html">IInstance</a>&amp; other) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <a class="code" href="classliger_1_1rhi_1_1_i_instance.html">IInstance</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classliger_1_1rhi_1_1_i_instance.html">IInstance</a>&amp; other) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keyword">virtual</span> ~<a class="code" href="classliger_1_1rhi_1_1_i_instance.html">IInstance</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">  /**</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">   * @brief Get the available devices&#39; info list.</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment">   */</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="classliger_1_1rhi_1_1_i_instance.html#a7961c6853e16cde5a09556b03ccda49c">   69</a></span>&#160;  <span class="keyword">virtual</span> std::span&lt;const IDevice::Info&gt; <a class="code" href="classliger_1_1rhi_1_1_i_instance.html#a7961c6853e16cde5a09556b03ccda49c">GetDeviceInfoList</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment">  /**</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">   * @brief Create device, based on the physical device type.</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">   *</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment">   * @param id Device identifier, can be obtained via @ref IDevice::Info.</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">   * @param frames_in_flight The number of frames in flight the device is configured to work with.</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">   *</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">   * @return Device or nullptr in case an error occurs.</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">   */</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="classliger_1_1rhi_1_1_i_instance.html#ab75549063730809ab5d9df684fcc6118">   79</a></span>&#160;  <span class="keyword">virtual</span> std::unique_ptr&lt;IDevice&gt; <a class="code" href="classliger_1_1rhi_1_1_i_instance.html#ab75549063730809ab5d9df684fcc6118">CreateDevice</a>(uint32_t <span class="keywordtype">id</span>, uint32_t frames_in_flight) = 0;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment">  /**</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment">   * @brief Create a RHI Instance for the particular API.</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment">   *</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">   * @param api Desired @ref GraphicsAPI.</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment">   * @param validation Desired @ref ValidationLevel.</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment">   *</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment">   * @return RHI instance or nullptr in case an error occurs.</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment">   */</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="classliger_1_1rhi_1_1_i_instance.html#afded85348f32856b852541bf780d2a88">   89</a></span>&#160;  <span class="keyword">static</span> std::unique_ptr&lt;IInstance&gt; <a class="code" href="classliger_1_1rhi_1_1_i_instance.html#afded85348f32856b852541bf780d2a88">Create</a>(<a class="code" href="_instance_8hpp.html#a405246d3194616d4daa3b8e21132f8b5">GraphicsAPI</a> api, ValidationLevel validation);</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;};</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;}  <span class="comment">// namespace liger::rhi</span></div>
 <div class="ttc" id="a_device_8hpp_html"><div class="ttname"><a href="_device_8hpp.html">Device.hpp</a></div></div>
 <div class="ttc" id="a_instance_8hpp_html_a405246d3194616d4daa3b8e21132f8b5"><div class="ttname"><a href="_instance_8hpp.html#a405246d3194616d4daa3b8e21132f8b5">liger::rhi::GraphicsAPI</a></div><div class="ttdeci">GraphicsAPI</div><div class="ttdoc">Type of graphics API.</div><div class="ttdef"><b>Definition:</b> <a href="_instance_8hpp_source.html#l00041">Instance.hpp:41</a></div></div>
 <div class="ttc" id="aclassliger_1_1rhi_1_1_i_instance_html"><div class="ttname"><a href="classliger_1_1rhi_1_1_i_instance.html">liger::rhi::IInstance</a></div><div class="ttdoc">The RHI instance over particular GraphicsAPIs. Allows creating devices.</div><div class="ttdef"><b>Definition:</b> <a href="_instance_8hpp_source.html#l00050">Instance.hpp:50</a></div></div>

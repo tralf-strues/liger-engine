@@ -2,6 +2,7 @@ var _render_graph_8hpp =
 [
     [ "RenderGraph", "classliger_1_1rhi_1_1_render_graph.html", "classliger_1_1rhi_1_1_render_graph" ],
     [ "TextureResource", "structliger_1_1rhi_1_1_render_graph_1_1_texture_resource.html", "structliger_1_1rhi_1_1_render_graph_1_1_texture_resource" ],
+    [ "BufferPackResource", "structliger_1_1rhi_1_1_render_graph_1_1_buffer_pack_resource.html", "structliger_1_1rhi_1_1_render_graph_1_1_buffer_pack_resource" ],
     [ "ResourceRead", "structliger_1_1rhi_1_1_render_graph_1_1_resource_read.html", "structliger_1_1rhi_1_1_render_graph_1_1_resource_read" ],
     [ "ResourceWrite", "structliger_1_1rhi_1_1_render_graph_1_1_resource_write.html", "structliger_1_1rhi_1_1_render_graph_1_1_resource_write" ],
     [ "ImportedResourceUsage", "structliger_1_1rhi_1_1_render_graph_1_1_imported_resource_usage.html", "structliger_1_1rhi_1_1_render_graph_1_1_imported_resource_usage" ],

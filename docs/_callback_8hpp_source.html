@@ -134,32 +134,34 @@ $(document).ready(function(){initNavTree('_callback_8hpp_source.html',''); initR
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  <span class="keyword">template</span> &lt;auto FunctionT&gt;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="keywordtype">void</span> Connect() {</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    instance_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    callable_ = [](<span class="keywordtype">void</span>*, ArgsT... args) { <span class="keywordflow">return</span> ReturnT(FunctionT(std::forward&lt;ArgsT&gt;(args)...)); };</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  }</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  <span class="keyword">template</span> &lt;auto FunctionT, <span class="keyword">class</span> ClassT&gt;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  <span class="keywordtype">void</span> Connect(ClassT&amp; instance) {</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    instance_ = &amp;instance;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    callable_ = [](<span class="keywordtype">void</span>* instance, ArgsT... args) {</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;      <span class="keywordflow">return</span> ReturnT(((<span class="keyword">reinterpret_cast&lt;</span>ClassT*<span class="keyword">&gt;</span>(instance))-&gt;*(FunctionT))(std::forward&lt;ArgsT&gt;(args)...));</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    };</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  }</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  ReturnT operator()(ArgsT... args) {</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    LIGER_ASSERT(callable_, kLogChannelCore, <span class="stringliteral">&quot;Trying to call nullptr function!&quot;</span>);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">return</span> callable_(instance_, args...);</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  }</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code" href="classliger_1_1detail_1_1_callback.html">Callback</a>&lt;ReturnT(ArgsT...)&gt;&amp; other) {</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">return</span> callable_ == other.callable_ &amp;&amp; instance_ == other.instance_;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  }</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <span class="keywordtype">void</span>*             instance_{<span class="keyword">nullptr</span>};</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  MethodSignatureT* callable_{<span class="keyword">nullptr</span>};</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;};</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;}  <span class="comment">// namespace liger::detail</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    callable_ = [](<span class="keywordtype">void</span>*, ArgsT... args) {</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      <span class="keywordflow">return</span> ReturnT(FunctionT(std::forward&lt;ArgsT&gt;(args)...));</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    };</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  }</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  <span class="keyword">template</span> &lt;auto FunctionT, <span class="keyword">class</span> ClassT&gt;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  <span class="keywordtype">void</span> Connect(ClassT&amp; instance) {</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    instance_ = &amp;instance;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    callable_ = [](<span class="keywordtype">void</span>* instance, ArgsT... args) {</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;      <span class="keywordflow">return</span> ReturnT(((<span class="keyword">reinterpret_cast&lt;</span>ClassT*<span class="keyword">&gt;</span>(instance))-&gt;*(FunctionT))(std::forward&lt;ArgsT&gt;(args)...));</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    };</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  }</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  ReturnT operator()(ArgsT... args) {</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    LIGER_ASSERT(callable_, kLogChannelCore, <span class="stringliteral">&quot;Trying to call nullptr function!&quot;</span>);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">return</span> callable_(instance_, args...);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  }</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code" href="classliger_1_1detail_1_1_callback.html">Callback</a>&lt;ReturnT(ArgsT...)&gt;&amp; other) {</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">return</span> callable_ == other.callable_ &amp;&amp; instance_ == other.instance_;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  }</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <span class="keywordtype">void</span>*             instance_{<span class="keyword">nullptr</span>};</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  MethodSignatureT* callable_{<span class="keyword">nullptr</span>};</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;};</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;}  <span class="comment">// namespace liger::detail</span></div>
 <div class="ttc" id="a_core_2_log_channel_8hpp_html"><div class="ttname"><a href="_core_2_log_channel_8hpp.html">LogChannel.hpp</a></div></div>
 <div class="ttc" id="a_log_8hpp_html"><div class="ttname"><a href="_log_8hpp.html">Log.hpp</a></div></div>
 <div class="ttc" id="aclassliger_1_1detail_1_1_callback_html"><div class="ttname"><a href="classliger_1_1detail_1_1_callback.html">liger::detail::Callback</a></div><div class="ttdef"><b>Definition:</b> <a href="_callback_8hpp_source.html#l00036">Callback.hpp:36</a></div></div>

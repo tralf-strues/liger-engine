@@ -122,29 +122,33 @@ $(document).ready(function(){initNavTree('_device_resource_state_8hpp_source.htm
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">enum class</span> DeviceResourceState : uint32_t {</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  <span class="comment">/* Common resource states */</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  Undefined          = 0,</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  TransferSrc        = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(0),</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  TransferDst        = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(1),</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  Undefined               = 0,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  TransferSrc             = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(0),</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  TransferDst             = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(1),</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  <span class="comment">/* Texture specific states */</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  ShaderSampled      = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(2),</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  ColorTarget        = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(3),</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  DepthStencilTarget = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(4),</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  DepthStencilRead   = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(5),</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  StorageTexture     = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(6),</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  PresentTexture     = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(7),</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  <span class="comment">/* Buffer specific states */</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  VertexBuffer       = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(8),</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  IndexBuffer        = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(9),</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  IndirectArgument   = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(10),</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  UniformBuffer      = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(11),</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  StorageBuffer      = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(12)</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;};</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}  <span class="comment">// namespace liger::rhi</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;ENABLE_ENUM_BITMASK(liger::rhi::DeviceResourceState);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  ShaderSampled           = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(2),</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  ColorTarget             = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(3),</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  DepthStencilTarget      = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(4),</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  DepthStencilRead        = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(5),</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  StorageTextureRead      = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(6),</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  StorageTextureWrite     = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(7),</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  StorageTextureReadWrite = StorageTextureRead | StorageTextureWrite,</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  PresentTexture          = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(8),</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="comment">/* Buffer specific states */</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  VertexBuffer            = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(9),</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  IndexBuffer             = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(10),</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  IndirectArgument        = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(11),</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  UniformBuffer           = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(12),</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  StorageBufferRead       = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(13),</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  StorageBufferWrite      = <a class="code" href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">Bit</a>(14),</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  StorageBufferReadWrite  = StorageBufferRead | StorageBufferWrite,</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;};</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;}  <span class="comment">// namespace liger::rhi</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;ENABLE_ENUM_BITMASK(liger::rhi::DeviceResourceState);</div>
 <div class="ttc" id="a_enum_bitmask_8hpp_html"><div class="ttname"><a href="_enum_bitmask_8hpp.html">EnumBitmask.hpp</a></div></div>
 <div class="ttc" id="a_enum_bitmask_8hpp_html_aee2094d5199b530e09feb4e6a0aaacfa"><div class="ttname"><a href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">liger::Bit</a></div><div class="ttdeci">constexpr T Bit(std::uint32_t bit)</div><div class="ttdoc">Set the specified bit.</div><div class="ttdef"><b>Definition:</b> <a href="_enum_bitmask_8hpp_source.html#l00054">EnumBitmask.hpp:54</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

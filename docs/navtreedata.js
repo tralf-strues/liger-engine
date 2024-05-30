@@ -26,11 +26,16 @@ var NAVTREE =
 [
   [ "Liger Engine", "index.html", [
     [ "Build", "index.html#autotoc_md1", [
-      [ "Installing the engine", "index.html#autotoc_md2", null ],
-      [ "Create game project", "index.html#autotoc_md3", null ],
-      [ "Dependencies", "index.html#autotoc_md4", null ]
+      [ "Installing the engine", "index.html#autotoc_md2", [
+        [ "Linux & <strike>MacOS</strike>", "index.html#autotoc_md3", null ],
+        [ "Windows (Microsoft Visual Studio)", "index.html#autotoc_md4", null ]
+      ] ],
+      [ "Create game project", "index.html#autotoc_md5", [
+        [ "Windows (Microsoft Visual Studio)", "index.html#autotoc_md6", null ]
+      ] ],
+      [ "Dependencies", "index.html#autotoc_md7", null ]
     ] ],
-    [ "Wiki", "index.html#autotoc_md5", null ],
+    [ "Wiki", "index.html#autotoc_md8", null ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
@@ -51,9 +56,12 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_asset_2_log_channel_8hpp.html",
-"_storage_8hpp.html#a549738fbc1a2cf4528f7675d95a98344a7381d487d18845b379422325c0a768d6",
-"classliger_1_1rhi_1_1_i_command_buffer.html#adffdb50e63b09aed2c64e934c1d1f7d3",
-"structliger_1_1rhi_1_1_color_blend_info.html#a4bd724261901efc26f224c0747ec2c66"
+"_mapped_buffer_8hpp_source.html",
+"classliger_1_1_ref_count_storage_1_1_reference.html",
+"classliger_1_1rhi_1_1_i_buffer.html#a7f8eb668a608dca3014bf86a05321c96",
+"classliger_1_1shader_1_1_shader.html#a96e23e003374cd83379e928d8c586685",
+"structliger_1_1rhi_1_1_depth_stencil_test_info.html#a57b23af12ee5771e4a4e359a1651aab1a8768a6821cd735aea4f5b0df88c1fc6a",
+"structliger_1_1shader_1_1_declaration_1_1_member.html#a843c2e82e853ade3145339b692d77bb2a4bbb8f967da6d1a610596d7257179c2b"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

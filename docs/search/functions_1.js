@@ -1,14 +1,12 @@
 var searchData=
 [
-  ['connect_432',['Connect',['../classliger_1_1_event_sink.html#a4eb20a458c6b13094f845ae8a32004b5',1,'liger::EventSink::Connect()'],['../classliger_1_1_event_sink.html#adc94c4e7acafa680af31e377a07010f2',1,'liger::EventSink::Connect(ClassT &amp;instance)']]],
-  ['contains_433',['Contains',['../classliger_1_1asset_1_1_registry.html#adc3a2a0af20aca43589e1c6448558eeb',1,'liger::asset::Registry']]],
-  ['copybuffer_434',['CopyBuffer',['../classliger_1_1rhi_1_1_i_command_buffer.html#a2aa37c6862c70c7d77dd91f110568685',1,'liger::rhi::ICommandBuffer']]],
-  ['copybuffertotexture_435',['CopyBufferToTexture',['../classliger_1_1rhi_1_1_i_command_buffer.html#a57ca687dcbba2fc2bee3dc2dcd948dd1',1,'liger::rhi::ICommandBuffer']]],
-  ['copytexture_436',['CopyTexture',['../classliger_1_1rhi_1_1_i_command_buffer.html#a4e368ecd52cbb28d428206bd2478ca35',1,'liger::rhi::ICommandBuffer']]],
-  ['copytexturetobuffer_437',['CopyTextureToBuffer',['../classliger_1_1rhi_1_1_i_command_buffer.html#a2fb30e71b6ff3cb5541d315f704d3d99',1,'liger::rhi::ICommandBuffer']]],
-  ['create_438',['Create',['../classliger_1_1rhi_1_1_i_instance.html#afded85348f32856b852541bf780d2a88',1,'liger::rhi::IInstance']]],
-  ['createdevice_439',['CreateDevice',['../classliger_1_1rhi_1_1_i_instance.html#ab75549063730809ab5d9df684fcc6118',1,'liger::rhi::IInstance']]],
-  ['createview_440',['CreateView',['../classliger_1_1rhi_1_1_i_texture.html#ab6a96ed06bc6f939e3365bd6543f52dd',1,'liger::rhi::ITexture']]],
-  ['currentabsoluteframe_441',['CurrentAbsoluteFrame',['../classliger_1_1rhi_1_1_i_device.html#acf3a77886e4dc4d600a73f3892c9f793',1,'liger::rhi::IDevice']]],
-  ['currentframe_442',['CurrentFrame',['../classliger_1_1rhi_1_1_i_device.html#a40ad4d4d0a7f8bc88a0ab9638f09c9dd',1,'liger::rhi::IDevice']]]
+  ['begindebuglabelregion_661',['BeginDebugLabelRegion',['../classliger_1_1rhi_1_1_i_command_buffer.html#a0dfc221e984dbdb9735154f42b834548',1,'liger::rhi::ICommandBuffer']]],
+  ['beginframe_662',['BeginFrame',['../classliger_1_1_frame_timer.html#a683ec0fe5ec79d79a9ec797de6e0c31c',1,'liger::FrameTimer::BeginFrame()'],['../classliger_1_1rhi_1_1_i_device.html#ae08ba2b8acb8660a871a075aea11153a',1,'liger::rhi::IDevice::BeginFrame(ISwapchain &amp;swapchain)=0']]],
+  ['beginoffscreenframe_663',['BeginOffscreenFrame',['../classliger_1_1rhi_1_1_i_device.html#a17bc745605be8227cbeea3250b5a4653',1,'liger::rhi::IDevice']]],
+  ['bindindexbuffer_664',['BindIndexBuffer',['../classliger_1_1rhi_1_1_i_command_buffer.html#a4dd0b69b762c81e81baefaf267a611d4',1,'liger::rhi::ICommandBuffer']]],
+  ['bindpipeline_665',['BindPipeline',['../classliger_1_1rhi_1_1_i_command_buffer.html#a569fc55aadd51330c193ece4079f8376',1,'liger::rhi::ICommandBuffer']]],
+  ['bindvertexbuffer_666',['BindVertexBuffer',['../classliger_1_1rhi_1_1_i_command_buffer.html#ada374bb9fd1ef61e62d5cb692870d3ed',1,'liger::rhi::ICommandBuffer']]],
+  ['bindvertexbuffers_667',['BindVertexBuffers',['../classliger_1_1rhi_1_1_i_command_buffer.html#abffa36c1978bb7fc78e60c9de7b3bb54',1,'liger::rhi::ICommandBuffer']]],
+  ['bit_668',['Bit',['../_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa',1,'liger']]],
+  ['bufferbarrier_669',['BufferBarrier',['../classliger_1_1rhi_1_1_i_command_buffer.html#af81b3bbc3f3ced0ed56f70420df74cae',1,'liger::rhi::ICommandBuffer']]]
 ];

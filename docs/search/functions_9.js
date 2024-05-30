@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['operator_20bool_467',['operator bool',['../classliger_1_1asset_1_1_registry.html#ad9e6e7cdebccc987e5f85c126ad01cb8',1,'liger::asset::Registry']]]
+  ['newrendergraphbuilder_714',['NewRenderGraphBuilder',['../classliger_1_1rhi_1_1_i_device.html#a72a6a8be1d5f16c77d1ac000879c98bd',1,'liger::rhi::IDevice']]]
 ];

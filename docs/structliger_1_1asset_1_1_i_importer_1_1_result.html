@@ -102,53 +102,53 @@ Public Attributes</h2></td></tr>
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1asset_1_1_i_importer_1_1_result.html#a11f42407954d8b94ceaf7666a743e4eb">success</a> {false}</td></tr>
 <tr class="memdesc:a11f42407954d8b94ceaf7666a743e4eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether import has finished successfully. <br /></td></tr>
 <tr class="separator:a11f42407954d8b94ceaf7666a743e4eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab12e81ad4c6a3b3f6a52bde8bfd0373f"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::filesystem::path &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1asset_1_1_i_importer_1_1_result.html#ab12e81ad4c6a3b3f6a52bde8bfd0373f">files</a></td></tr>
-<tr class="memdesc:ab12e81ad4c6a3b3f6a52bde8bfd0373f"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of filepaths of imported assets.  <a href="structliger_1_1asset_1_1_i_importer_1_1_result.html#ab12e81ad4c6a3b3f6a52bde8bfd0373f">More...</a><br /></td></tr>
-<tr class="separator:ab12e81ad4c6a3b3f6a52bde8bfd0373f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7bbb42fae37d397f4af061022f50af6"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::pair&lt; uint32_t, uint32_t &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1asset_1_1_i_importer_1_1_result.html#ac7bbb42fae37d397f4af061022f50af6">dependencies</a></td></tr>
-<tr class="memdesc:ac7bbb42fae37d397f4af061022f50af6"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of dependencies between assets.  <a href="structliger_1_1asset_1_1_i_importer_1_1_result.html#ac7bbb42fae37d397f4af061022f50af6">More...</a><br /></td></tr>
-<tr class="separator:ac7bbb42fae37d397f4af061022f50af6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5d5bf61d627878a4df3b882ff41605d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classliger_1_1_basic_u_u_i_d.html">asset::Id</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1asset_1_1_i_importer_1_1_result.html#ad5d5bf61d627878a4df3b882ff41605d">imported_assets</a></td></tr>
+<tr class="memdesc:ad5d5bf61d627878a4df3b882ff41605d"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of imported assets.  <a href="structliger_1_1asset_1_1_i_importer_1_1_result.html#ad5d5bf61d627878a4df3b882ff41605d">More...</a><br /></td></tr>
+<tr class="separator:ad5d5bf61d627878a4df3b882ff41605d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37166d0dc93ad95d75683ad13e9d5e58"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::pair&lt; <a class="el" href="classliger_1_1_basic_u_u_i_d.html">asset::Id</a>, <a class="el" href="classliger_1_1_basic_u_u_i_d.html">asset::Id</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1asset_1_1_i_importer_1_1_result.html#a37166d0dc93ad95d75683ad13e9d5e58">dependencies</a></td></tr>
+<tr class="memdesc:a37166d0dc93ad95d75683ad13e9d5e58"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of dependencies between assets.  <a href="structliger_1_1asset_1_1_i_importer_1_1_result.html#a37166d0dc93ad95d75683ad13e9d5e58">More...</a><br /></td></tr>
+<tr class="separator:a37166d0dc93ad95d75683ad13e9d5e58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Import result which (if successful) lists imported files and dependencies between them. </p>
 
-<p class="definition">Definition at line <a class="el" href="_importer_8hpp_source.html#l00048">48</a> of file <a class="el" href="_importer_8hpp_source.html">Importer.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_importer_8hpp_source.html#l00047">47</a> of file <a class="el" href="_importer_8hpp_source.html">Importer.hpp</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="ac7bbb42fae37d397f4af061022f50af6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac7bbb42fae37d397f4af061022f50af6">&#9670;&nbsp;</a></span>dependencies</h2>
+<a id="a37166d0dc93ad95d75683ad13e9d5e58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37166d0dc93ad95d75683ad13e9d5e58">&#9670;&nbsp;</a></span>dependencies</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;std::pair&lt;uint32_t, uint32_t&gt; &gt; liger::asset::IImporter::Result::dependencies</td>
+          <td class="memname">std::vector&lt;std::pair&lt;<a class="el" href="classliger_1_1_basic_u_u_i_d.html">asset::Id</a>, <a class="el" href="classliger_1_1_basic_u_u_i_d.html">asset::Id</a>&gt; &gt; liger::asset::IImporter::Result::dependencies</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>List of dependencies between assets. </p>
-<p>Each dependency is represented by two indices into <a class="el" href="structliger_1_1asset_1_1_i_importer_1_1_result.html#ab12e81ad4c6a3b3f6a52bde8bfd0373f">files</a> list. The first index is the index of the dependent file and the second one is of its dependency file. </p>
+<p>The first asset is dependent on the second asset. </p>
 
-<p class="definition">Definition at line <a class="el" href="_importer_8hpp_source.html#l00069">69</a> of file <a class="el" href="_importer_8hpp_source.html">Importer.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_importer_8hpp_source.html#l00067">67</a> of file <a class="el" href="_importer_8hpp_source.html">Importer.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ab12e81ad4c6a3b3f6a52bde8bfd0373f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab12e81ad4c6a3b3f6a52bde8bfd0373f">&#9670;&nbsp;</a></span>files</h2>
+<a id="ad5d5bf61d627878a4df3b882ff41605d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5d5bf61d627878a4df3b882ff41605d">&#9670;&nbsp;</a></span>imported_assets</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;std::filesystem::path&gt; liger::asset::IImporter::Result::files</td>
+          <td class="memname">std::vector&lt;<a class="el" href="classliger_1_1_basic_u_u_i_d.html">asset::Id</a>&gt; liger::asset::IImporter::Result::imported_assets</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>List of filepaths of imported assets. </p>
+<p>List of imported assets. </p>
 <dl class="section note"><dt>Note</dt><dd>The filepaths are based on the import destination folder. For instance, if <code>dst_folder</code> is "assets/imported/", and the importer generated file "teapot.mesh", then the filepath will be "assets/imported/teapot.mesh". </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_importer_8hpp_source.html#l00061">61</a> of file <a class="el" href="_importer_8hpp_source.html">Importer.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_importer_8hpp_source.html#l00060">60</a> of file <a class="el" href="_importer_8hpp_source.html">Importer.hpp</a>.</p>
 
 </div>
 </div>

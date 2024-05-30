@@ -126,7 +126,7 @@ $(document).ready(function(){initNavTree('_formatting_8hpp_source.html',''); ini
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> FormatContext&gt;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  <span class="keyword">auto</span> format(<span class="keyword">const</span> glm::vec2&amp; vector, FormatContext&amp; ctx) {</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordflow">return</span> fmt::format_to(ctx.out(), <span class="stringliteral">&quot;(x={}, y={})&quot;</span>, vector.x, vector.y);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordflow">return</span> fmt::format_to(ctx.out(), <span class="stringliteral">&quot;({}, {})&quot;</span>, vector.x, vector.y);</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  }</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;};</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
@@ -139,9 +139,22 @@ $(document).ready(function(){initNavTree('_formatting_8hpp_source.html',''); ini
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> FormatContext&gt;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  <span class="keyword">auto</span> format(<span class="keyword">const</span> glm::vec3&amp; vector, FormatContext&amp; ctx) {</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">return</span> fmt::format_to(ctx.out(), <span class="stringliteral">&quot;(x={}, y={}, z={})&quot;</span>, vector.x, vector.y, vector.z);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">return</span> fmt::format_to(ctx.out(), <span class="stringliteral">&quot;({}, {}, {})&quot;</span>, vector.x, vector.y, vector.z);</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  }</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;};</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="structfmt_1_1formatter_3_01glm_1_1vec4_01_4.html">   58</a></span>&#160;<span class="keyword">struct </span>fmt::formatter&lt;glm::vec4&gt; {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ParseContext&gt;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  constexpr <span class="keyword">auto</span> parse(ParseContext&amp; ctx) {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">return</span> ctx.begin();</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  }</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> FormatContext&gt;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keyword">auto</span> format(<span class="keyword">const</span> glm::vec4&amp; vector, FormatContext&amp; ctx) {</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordflow">return</span> fmt::format_to(ctx.out(), <span class="stringliteral">&quot;({}, {}, {}, {})&quot;</span>, vector.x, vector.y, vector.z, vector.w);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  }</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;};</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

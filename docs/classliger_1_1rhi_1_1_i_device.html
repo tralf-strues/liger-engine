@@ -100,6 +100,12 @@ $(document).ready(function(){initNavTree('classliger_1_1rhi_1_1_i_device.html','
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_i_device_1_1_dedicated_buffer_transfer.html">DedicatedBufferTransfer</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_i_device_1_1_dedicated_texture_transfer.html">DedicatedTextureTransfer</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_i_device_1_1_dedicated_transfer_request.html">DedicatedTransferRequest</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structliger_1_1rhi_1_1_i_device_1_1_info.html">Info</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Device info, which can be used to identify the device needed.  <a href="structliger_1_1rhi_1_1_i_device_1_1_info.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -120,6 +126,9 @@ Public Types</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:a656bbc63c4af594149bf15816c08b53b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of the device. <br /></td></tr>
 <tr class="separator:a656bbc63c4af594149bf15816c08b53b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d9326551f16a022c4af15e69439162e"><td class="memItemLeft" align="right" valign="top"><a id="a6d9326551f16a022c4af15e69439162e"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>TransferCallback</b> = std::function&lt; void()&gt;</td></tr>
+<tr class="separator:a6d9326551f16a022c4af15e69439162e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -153,12 +162,15 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:acf3a77886e4dc4d600a73f3892c9f793"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#acf3a77886e4dc4d600a73f3892c9f793">CurrentAbsoluteFrame</a> () const =0</td></tr>
 <tr class="memdesc:acf3a77886e4dc4d600a73f3892c9f793"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current absolute frame index.  <a href="classliger_1_1rhi_1_1_i_device.html#acf3a77886e4dc4d600a73f3892c9f793">More...</a><br /></td></tr>
 <tr class="separator:acf3a77886e4dc4d600a73f3892c9f793"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a80e556b9ccb4ba2672d13fadd384b216"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#a80e556b9ccb4ba2672d13fadd384b216">ExecuteConsecutive</a> (<a class="el" href="classliger_1_1rhi_1_1_render_graph.html">RenderGraph</a> &amp;render_graph)=0</td></tr>
-<tr class="memdesc:a80e556b9ccb4ba2672d13fadd384b216"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the render graph and synchronize it with previous (if any) render graphs during current frame.  <a href="classliger_1_1rhi_1_1_i_device.html#a80e556b9ccb4ba2672d13fadd384b216">More...</a><br /></td></tr>
-<tr class="separator:a80e556b9ccb4ba2672d13fadd384b216"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:accd4879102fe8e90a14c48397121af05"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classliger_1_1rhi_1_1_render_graph_builder.html">RenderGraphBuilder</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#accd4879102fe8e90a14c48397121af05">NewRenderGraphBuilder</a> ()=0</td></tr>
-<tr class="memdesc:accd4879102fe8e90a14c48397121af05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a render graph builder, the object for constructing a render graph.  <a href="classliger_1_1rhi_1_1_i_device.html#accd4879102fe8e90a14c48397121af05">More...</a><br /></td></tr>
-<tr class="separator:accd4879102fe8e90a14c48397121af05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9b766ce882855eae16aab92c1a20d0a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#af9b766ce882855eae16aab92c1a20d0a">ExecuteConsecutive</a> (<a class="el" href="classliger_1_1rhi_1_1_render_graph.html">RenderGraph</a> &amp;render_graph, <a class="el" href="classliger_1_1rhi_1_1_context.html">Context</a> &amp;context)=0</td></tr>
+<tr class="memdesc:af9b766ce882855eae16aab92c1a20d0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the render graph and synchronize it with previous (if any) render graphs during current frame.  <a href="classliger_1_1rhi_1_1_i_device.html#af9b766ce882855eae16aab92c1a20d0a">More...</a><br /></td></tr>
+<tr class="separator:af9b766ce882855eae16aab92c1a20d0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7a96b5d017875e68f717c2b9de50d9c"><td class="memItemLeft" align="right" valign="top"><a id="ab7a96b5d017875e68f717c2b9de50d9c"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>RequestDedicatedTransfer</b> (<a class="el" href="structliger_1_1rhi_1_1_i_device_1_1_dedicated_transfer_request.html">DedicatedTransferRequest</a> &amp;&amp;transfer)=0</td></tr>
+<tr class="separator:ab7a96b5d017875e68f717c2b9de50d9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72a6a8be1d5f16c77d1ac000879c98bd"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classliger_1_1rhi_1_1_render_graph_builder.html">RenderGraphBuilder</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_device.html#a72a6a8be1d5f16c77d1ac000879c98bd">NewRenderGraphBuilder</a> (<a class="el" href="classliger_1_1rhi_1_1_context.html">Context</a> &amp;context)=0</td></tr>
+<tr class="memdesc:a72a6a8be1d5f16c77d1ac000879c98bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a render graph builder, the object for constructing a render graph.  <a href="classliger_1_1rhi_1_1_i_device.html#a72a6a8be1d5f16c77d1ac000879c98bd">More...</a><br /></td></tr>
+<tr class="separator:a72a6a8be1d5f16c77d1ac000879c98bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a235ab5bbaf7bbf670d0f1eb79a6b8d8e"><td class="memItemLeft" align="right" valign="top"><a id="a235ab5bbaf7bbf670d0f1eb79a6b8d8e"></a>
 virtual std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_i_swapchain.html">ISwapchain</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CreateSwapchain</b> (const <a class="el" href="structliger_1_1rhi_1_1_i_swapchain_1_1_info.html">ISwapchain::Info</a> &amp;info)=0</td></tr>
 <tr class="separator:a235ab5bbaf7bbf670d0f1eb79a6b8d8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -171,12 +183,12 @@ virtual std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_i_buffer.h
 <tr class="memitem:a3816d14e91ec7c523edf2e503e2486ae"><td class="memItemLeft" align="right" valign="top"><a id="a3816d14e91ec7c523edf2e503e2486ae"></a>
 virtual std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_i_shader_module.html">IShaderModule</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CreateShaderModule</b> (const <a class="el" href="structliger_1_1rhi_1_1_i_shader_module_1_1_source.html">IShaderModule::Source</a> &amp;source)=0</td></tr>
 <tr class="separator:a3816d14e91ec7c523edf2e503e2486ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a4d889ebf5e855fbcd83e4da24c6d6c"><td class="memItemLeft" align="right" valign="top"><a id="a8a4d889ebf5e855fbcd83e4da24c6d6c"></a>
-virtual std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_i_compute_pipeline.html">IComputePipeline</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CreatePipeline</b> (const <a class="el" href="structliger_1_1rhi_1_1_i_compute_pipeline_1_1_info.html">IComputePipeline::Info</a> &amp;info)=0</td></tr>
-<tr class="separator:a8a4d889ebf5e855fbcd83e4da24c6d6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7d997a72409da4d891faa0fd3db2f4b"><td class="memItemLeft" align="right" valign="top"><a id="ad7d997a72409da4d891faa0fd3db2f4b"></a>
-virtual std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_i_graphics_pipeline.html">IGraphicsPipeline</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CreatePipeline</b> (const <a class="el" href="structliger_1_1rhi_1_1_i_graphics_pipeline_1_1_info.html">IGraphicsPipeline::Info</a> &amp;info)=0</td></tr>
-<tr class="separator:ad7d997a72409da4d891faa0fd3db2f4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abcf28b37be1be96264290da156a4fc16"><td class="memItemLeft" align="right" valign="top"><a id="abcf28b37be1be96264290da156a4fc16"></a>
+virtual std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_i_pipeline.html">IPipeline</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CreatePipeline</b> (const <a class="el" href="structliger_1_1rhi_1_1_i_pipeline_1_1_compute_info.html">IPipeline::ComputeInfo</a> &amp;info)=0</td></tr>
+<tr class="separator:abcf28b37be1be96264290da156a4fc16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07fc347ef2fd19ff263edfff0650aefe"><td class="memItemLeft" align="right" valign="top"><a id="a07fc347ef2fd19ff263edfff0650aefe"></a>
+virtual std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_i_pipeline.html">IPipeline</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CreatePipeline</b> (const <a class="el" href="structliger_1_1rhi_1_1_i_pipeline_1_1_graphics_info.html">IPipeline::GraphicsInfo</a> &amp;info)=0</td></tr>
+<tr class="separator:a07fc347ef2fd19ff263edfff0650aefe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Logical device, an interface for working with a physical device (e.g. GPU). </p>
@@ -304,8 +316,8 @@ virtual std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_i_graphics
 
 </div>
 </div>
-<a id="a80e556b9ccb4ba2672d13fadd384b216"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a80e556b9ccb4ba2672d13fadd384b216">&#9670;&nbsp;</a></span>ExecuteConsecutive()</h2>
+<a id="af9b766ce882855eae16aab92c1a20d0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9b766ce882855eae16aab92c1a20d0a">&#9670;&nbsp;</a></span>ExecuteConsecutive()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -317,8 +329,18 @@ virtual std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_i_graphics
           <td class="memname">virtual void liger::rhi::IDevice::ExecuteConsecutive </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classliger_1_1rhi_1_1_render_graph.html">RenderGraph</a> &amp;&#160;</td>
-          <td class="paramname"><em>render_graph</em></td><td>)</td>
+          <td class="paramname"><em>render_graph</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="classliger_1_1rhi_1_1_context.html">Context</a> &amp;&#160;</td>
+          <td class="paramname"><em>context</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -333,6 +355,7 @@ virtual std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_i_graphics
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">render_graph</td><td>Render graph to execute, which must be created by this particular device. </td></tr>
+    <tr><td class="paramname">context</td><td><a class="el" href="classliger_1_1rhi_1_1_context.html">Context</a> data for render jobs to "communicate" with each other. </td></tr>
   </table>
   </dd>
 </dl>
@@ -396,8 +419,8 @@ virtual std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_i_graphics
 
 </div>
 </div>
-<a id="accd4879102fe8e90a14c48397121af05"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#accd4879102fe8e90a14c48397121af05">&#9670;&nbsp;</a></span>NewRenderGraphBuilder()</h2>
+<a id="a72a6a8be1d5f16c77d1ac000879c98bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72a6a8be1d5f16c77d1ac000879c98bd">&#9670;&nbsp;</a></span>NewRenderGraphBuilder()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -408,7 +431,8 @@ virtual std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_i_graphics
         <tr>
           <td class="memname">virtual <a class="el" href="classliger_1_1rhi_1_1_render_graph_builder.html">RenderGraphBuilder</a> liger::rhi::IDevice::NewRenderGraphBuilder </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classliger_1_1rhi_1_1_context.html">Context</a> &amp;&#160;</td>
+          <td class="paramname"><em>context</em></td><td>)</td>
           <td></td>
         </tr>
       </table>

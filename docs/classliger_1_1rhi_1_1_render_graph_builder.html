@@ -103,9 +103,9 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>DependentTextureInfo
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:afc528caec74c97c72e9c81a47cf6900d"><td class="memItemLeft" align="right" valign="top"><a id="afc528caec74c97c72e9c81a47cf6900d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>RenderGraphBuilder</b> (std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_render_graph.html">RenderGraph</a> &gt; graph)</td></tr>
-<tr class="separator:afc528caec74c97c72e9c81a47cf6900d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a840ef8eb501ea9e497be7058a31295"><td class="memItemLeft" align="right" valign="top"><a id="a1a840ef8eb501ea9e497be7058a31295"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>RenderGraphBuilder</b> (std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_render_graph.html">RenderGraph</a> &gt; graph, <a class="el" href="classliger_1_1rhi_1_1_context.html">Context</a> &amp;context)</td></tr>
+<tr class="separator:a1a840ef8eb501ea9e497be7058a31295"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34a494fad628e5f7d9452c4828d67915"><td class="memItemLeft" align="right" valign="top"><a id="a34a494fad628e5f7d9452c4828d67915"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>RenderGraphBuilder</b> (const <a class="el" href="classliger_1_1rhi_1_1_render_graph_builder.html">RenderGraphBuilder</a> &amp;other)=delete</td></tr>
 <tr class="separator:a34a494fad628e5f7d9452c4828d67915"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -115,6 +115,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1d809b61248db86c01e380b04bef7e39"><td class="memItemLeft" align="right" valign="top"><a id="a1d809b61248db86c01e380b04bef7e39"></a>
 ResourceVersion&#160;</td><td class="memItemRight" valign="bottom"><b>DeclareTransientTexture</b> (const DependentTextureInfo &amp;info)</td></tr>
 <tr class="separator:a1d809b61248db86c01e380b04bef7e39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acef84fdecd298faa7767f3f8b7d51201"><td class="memItemLeft" align="right" valign="top"><a id="acef84fdecd298faa7767f3f8b7d51201"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>DeclareTextureView</b> (ResourceVersion texture, const <a class="el" href="structliger_1_1rhi_1_1_texture_view_info.html">rhi::TextureViewInfo</a> &amp;view_info)</td></tr>
+<tr class="separator:acef84fdecd298faa7767f3f8b7d51201"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d2805607708990f57342686cc35b9c1"><td class="memItemLeft" align="right" valign="top"><a id="a9d2805607708990f57342686cc35b9c1"></a>
 ResourceVersion&#160;</td><td class="memItemRight" valign="bottom"><b>DeclareTransientBuffer</b> (const <a class="el" href="structliger_1_1rhi_1_1_i_buffer_1_1_info.html">IBuffer::Info</a> &amp;info)</td></tr>
 <tr class="separator:a9d2805607708990f57342686cc35b9c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -124,6 +127,18 @@ ResourceVersion&#160;</td><td class="memItemRight" valign="bottom"><b>DeclareImp
 <tr class="memitem:aac95f50dd0962b41c5c9f6c1f95ceb36"><td class="memItemLeft" align="right" valign="top"><a id="aac95f50dd0962b41c5c9f6c1f95ceb36"></a>
 ResourceVersion&#160;</td><td class="memItemRight" valign="bottom"><b>DeclareImportBuffer</b> (DeviceResourceState initial_state, DeviceResourceState final_state)</td></tr>
 <tr class="separator:aac95f50dd0962b41c5c9f6c1f95ceb36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0b11f17ae0f495abbd4c582a22061fe"><td class="memItemLeft" align="right" valign="top"><a id="ab0b11f17ae0f495abbd4c582a22061fe"></a>
+ResourceVersion&#160;</td><td class="memItemRight" valign="bottom"><b>DeclareImportBufferPack</b> (std::string_view name, DeviceResourceState initial_state, DeviceResourceState final_state)</td></tr>
+<tr class="separator:ab0b11f17ae0f495abbd4c582a22061fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a537b94e1e1db95a2a3607002fd175113"><td class="memItemLeft" align="right" valign="top"><a id="a537b94e1e1db95a2a3607002fd175113"></a>
+ResourceVersion&#160;</td><td class="memItemRight" valign="bottom"><b>ImportTexture</b> (<a class="el" href="structliger_1_1rhi_1_1_render_graph_1_1_texture_resource.html">RenderGraph::TextureResource</a> texture, DeviceResourceState initial_state, DeviceResourceState final_state)</td></tr>
+<tr class="separator:a537b94e1e1db95a2a3607002fd175113"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d2e982d6de58185766f4ab41417f027"><td class="memItemLeft" align="right" valign="top"><a id="a3d2e982d6de58185766f4ab41417f027"></a>
+ResourceVersion&#160;</td><td class="memItemRight" valign="bottom"><b>ImportBuffer</b> (<a class="el" href="classliger_1_1rhi_1_1_i_buffer.html">RenderGraph::BufferResource</a> buffer, DeviceResourceState initial_state, DeviceResourceState final_state)</td></tr>
+<tr class="separator:a3d2e982d6de58185766f4ab41417f027"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0aca687fdc536b89fbb10d7533c01f38"><td class="memItemLeft" align="right" valign="top"><a id="a0aca687fdc536b89fbb10d7533c01f38"></a>
+ResourceVersion&#160;</td><td class="memItemRight" valign="bottom"><b>LastResourceVersion</b> (ResourceVersion resource)</td></tr>
+<tr class="separator:a0aca687fdc536b89fbb10d7533c01f38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abbf2ac580888813bdb264fe5e89f020c"><td class="memItemLeft" align="right" valign="top"><a id="abbf2ac580888813bdb264fe5e89f020c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>BeginRenderPass</b> (std::string_view name, ICommandBuffer::Capability capabilities=ICommandBuffer::Capability::Graphics)</td></tr>
 <tr class="separator:abbf2ac580888813bdb264fe5e89f020c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,6 +157,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>BeginTransfer</b> (st
 <tr class="memitem:a13f73a1f4460b03ee7f833b161eae578"><td class="memItemLeft" align="right" valign="top"><a id="a13f73a1f4460b03ee7f833b161eae578"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>EndTransfer</b> ()</td></tr>
 <tr class="separator:a13f73a1f4460b03ee7f833b161eae578"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefca376605193ca241d76493c8b75c3f"><td class="memItemLeft" align="right" valign="top"><a id="aefca376605193ca241d76493c8b75c3f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SetJob</b> (RenderGraph::Job job)</td></tr>
+<tr class="separator:aefca376605193ca241d76493c8b75c3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb3409ed88c55931697c722df2d3b91a"><td class="memItemLeft" align="right" valign="top"><a id="aeb3409ed88c55931697c722df2d3b91a"></a>
 ResourceVersion&#160;</td><td class="memItemRight" valign="bottom"><b>AddColorTarget</b> (ResourceVersion texture, AttachmentLoad load, AttachmentStore store)</td></tr>
 <tr class="separator:aeb3409ed88c55931697c722df2d3b91a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -151,19 +169,31 @@ ResourceVersion&#160;</td><td class="memItemRight" valign="bottom"><b>SetDepthSt
 <tr class="memitem:ac435d0d873affb3bba442ff41e344080"><td class="memItemLeft" align="right" valign="top"><a id="ac435d0d873affb3bba442ff41e344080"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>SampleTexture</b> (ResourceVersion texture)</td></tr>
 <tr class="separator:ac435d0d873affb3bba442ff41e344080"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3854e9ebb305ad54c2f753f8bbd8b25b"><td class="memItemLeft" align="right" valign="top"><a id="a3854e9ebb305ad54c2f753f8bbd8b25b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>WriteTexture</b> (ResourceVersion texture)</td></tr>
+<tr class="separator:a3854e9ebb305ad54c2f753f8bbd8b25b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e563ac3662a7b38246906330e719582"><td class="memItemLeft" align="right" valign="top"><a id="a6e563ac3662a7b38246906330e719582"></a>
+ResourceVersion&#160;</td><td class="memItemRight" valign="bottom"><b>ReadWriteTexture</b> (ResourceVersion texture)</td></tr>
+<tr class="separator:a6e563ac3662a7b38246906330e719582"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e968259561bd784a543c98c903b74dc"><td class="memItemLeft" align="right" valign="top"><a id="a6e968259561bd784a543c98c903b74dc"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>ReadBuffer</b> (ResourceVersion buffer, DeviceResourceState usage)</td></tr>
 <tr class="separator:a6e968259561bd784a543c98c903b74dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad7ae76d17a0345497321e2c1b04fced6"><td class="memItemLeft" align="right" valign="top"><a id="ad7ae76d17a0345497321e2c1b04fced6"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>WriteBuffer</b> (ResourceVersion buffer, DeviceResourceState usage)</td></tr>
 <tr class="separator:ad7ae76d17a0345497321e2c1b04fced6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18ffded67c2c26d3ca6bed47fd1539c7"><td class="memItemLeft" align="right" valign="top"><a id="a18ffded67c2c26d3ca6bed47fd1539c7"></a>
+ResourceVersion&#160;</td><td class="memItemRight" valign="bottom"><b>ReadWriteBuffer</b> (ResourceVersion buffer, DeviceResourceState usage)</td></tr>
+<tr class="separator:a18ffded67c2c26d3ca6bed47fd1539c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65cedc3949f399858964481c14cffac2"><td class="memItemLeft" align="right" valign="top"><a id="a65cedc3949f399858964481c14cffac2"></a>
+<a class="el" href="classliger_1_1rhi_1_1_context.html">Context</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetContext</b> ()</td></tr>
+<tr class="separator:a65cedc3949f399858964481c14cffac2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5d811a194631ba02e7f8f636eace562"><td class="memItemLeft" align="right" valign="top"><a id="ad5d811a194631ba02e7f8f636eace562"></a>
 std::unique_ptr&lt; <a class="el" href="classliger_1_1rhi_1_1_render_graph.html">RenderGraph</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Build</b> (<a class="el" href="classliger_1_1rhi_1_1_i_device.html">IDevice</a> &amp;device, std::string_view name)</td></tr>
 <tr class="separator:ad5d811a194631ba02e7f8f636eace562"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="_render_graph_8hpp_source.html#l00148">148</a> of file <a class="el" href="_render_graph_8hpp_source.html">RenderGraph.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_render_graph_8hpp_source.html#l00152">152</a> of file <a class="el" href="_render_graph_8hpp_source.html">RenderGraph.hpp</a>.</p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="_render_graph_8hpp_source.html">RenderGraph.hpp</a></li>
 </ul>

@@ -1,8 +1,12 @@
 <map id="Math.hpp" name="Math.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="249,5,332,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="396,5,479,32"/>
 <area shape="rect" id="node2" href="$_formatting_8hpp.html" title=" " alt="" coords="5,80,283,107"/>
 <area shape="rect" id="node5" href="$_random_8hpp.html" title=" " alt="" coords="307,80,567,107"/>
+<area shape="rect" id="node7" href="$_transform3_d_8hpp.html" title=" " alt="" coords="642,80,931,107"/>
 <area shape="rect" id="node3" title=" " alt="" coords="99,155,189,181"/>
-<area shape="rect" id="node4" title=" " alt="" coords="244,155,348,181"/>
-<area shape="rect" id="node6" title=" " alt="" coords="401,155,473,181"/>
+<area shape="rect" id="node4" title=" " alt="" coords="243,155,347,181"/>
+<area shape="rect" id="node6" title=" " alt="" coords="385,155,457,181"/>
+<area shape="rect" id="node8" title=" " alt="" coords="482,155,699,181"/>
+<area shape="rect" id="node9" title=" " alt="" coords="724,155,953,181"/>
+<area shape="rect" id="node10" title=" " alt="" coords="978,155,1153,181"/>
 </map>

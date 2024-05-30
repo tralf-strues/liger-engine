@@ -4,6 +4,8 @@ var _shader_alignment_8hpp =
     [ "StructMemberAlignment", "structliger_1_1rhi_1_1_struct_member_alignment.html", null ],
     [ "StructMemberAlignment< int32_t >", "structliger_1_1rhi_1_1_struct_member_alignment_3_01int32__t_01_4.html", null ],
     [ "StructMemberAlignment< uint32_t >", "structliger_1_1rhi_1_1_struct_member_alignment_3_01uint32__t_01_4.html", null ],
+    [ "StructMemberAlignment< rhi::BufferDescriptorBinding >", "structliger_1_1rhi_1_1_struct_member_alignment_3_01rhi_1_1_buffer_descriptor_binding_01_4.html", null ],
+    [ "StructMemberAlignment< rhi::TextureDescriptorBinding >", "structliger_1_1rhi_1_1_struct_member_alignment_3_01rhi_1_1_texture_descriptor_binding_01_4.html", null ],
     [ "StructMemberAlignment< float >", "structliger_1_1rhi_1_1_struct_member_alignment_3_01float_01_4.html", null ],
     [ "StructMemberAlignment< glm::vec2 >", "structliger_1_1rhi_1_1_struct_member_alignment_3_01glm_1_1vec2_01_4.html", null ],
     [ "StructMemberAlignment< glm::ivec2 >", "structliger_1_1rhi_1_1_struct_member_alignment_3_01glm_1_1ivec2_01_4.html", null ],

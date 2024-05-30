@@ -130,12 +130,13 @@ $(document).ready(function(){initNavTree('_loader_library_8hpp_source.html','');
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  <a class="code" href="classliger_1_1asset_1_1_i_loader.html">ILoader</a>* TryGet(<span class="keyword">const</span> std::filesystem::path&amp; extension) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  std::map&lt;std::filesystem::path, std::unique_ptr&lt;ILoader&gt;&gt; loaders_;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;};</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}  <span class="comment">// namespace liger::asset</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  std::map&lt;std::filesystem::path, ILoader*&gt; loaders_map_;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  std::vector&lt;std::unique_ptr&lt;ILoader&gt;&gt;     loaders_;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;};</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}  <span class="comment">// namespace liger::asset</span></div>
 <div class="ttc" id="a_loader_8hpp_html"><div class="ttname"><a href="_loader_8hpp.html">Loader.hpp</a></div></div>
-<div class="ttc" id="aclassliger_1_1asset_1_1_i_loader_html"><div class="ttname"><a href="classliger_1_1asset_1_1_i_loader.html">liger::asset::ILoader</a></div><div class="ttdef"><b>Definition:</b> <a href="_loader_8hpp_source.html#l00038">Loader.hpp:38</a></div></div>
+<div class="ttc" id="aclassliger_1_1asset_1_1_i_loader_html"><div class="ttname"><a href="classliger_1_1asset_1_1_i_loader.html">liger::asset::ILoader</a></div><div class="ttdef"><b>Definition:</b> <a href="_loader_8hpp_source.html#l00039">Loader.hpp:39</a></div></div>
 <div class="ttc" id="aclassliger_1_1asset_1_1_loader_library_html"><div class="ttname"><a href="classliger_1_1asset_1_1_loader_library.html">liger::asset::LoaderLibrary</a></div><div class="ttdef"><b>Definition:</b> <a href="_loader_library_8hpp_source.html#l00037">LoaderLibrary.hpp:37</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

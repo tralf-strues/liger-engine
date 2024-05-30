@@ -1,5 +1,13 @@
 <map id="Loader.hpp" name="Loader.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="27,5,121,32"/>
-<area shape="rect" id="node2" href="$_loader_library_8hpp.html" title=" " alt="" coords="5,80,143,107"/>
-<area shape="rect" id="node3" href="$_manager_8hpp.html" title=" " alt="" coords="21,155,127,181"/>
+<area shape="rect" id="node1" title=" " alt="" coords="660,5,753,32"/>
+<area shape="rect" id="node2" href="$_loader_library_8hpp.html" title=" " alt="" coords="305,80,442,107"/>
+<area shape="rect" id="node8" href="$_material_loader_8hpp.html" title=" " alt="" coords="467,80,613,107"/>
+<area shape="rect" id="node9" href="$_shader_loader_8hpp.html" title=" " alt="" coords="637,80,776,107"/>
+<area shape="rect" id="node10" href="$_static_mesh_loader_8hpp.html" title=" " alt="" coords="800,80,965,107"/>
+<area shape="rect" id="node11" href="$_texture_loader_8hpp.html" title=" " alt="" coords="989,80,1131,107"/>
+<area shape="rect" id="node3" href="$_manager_8hpp.html" title=" " alt="" coords="320,155,427,181"/>
+<area shape="rect" id="node4" href="$_bloom_feature_8hpp.html" title=" " alt="" coords="5,229,147,256"/>
+<area shape="rect" id="node5" href="$_particle_system_feature_8hpp.html" title=" " alt="" coords="171,229,367,256"/>
+<area shape="rect" id="node6" href="$_static_mesh_feature_8hpp.html" title=" " alt="" coords="392,229,563,256"/>
+<area shape="rect" id="node7" href="$_tonemap_feature_8hpp.html" title=" " alt="" coords="587,229,746,256"/>
 </map>

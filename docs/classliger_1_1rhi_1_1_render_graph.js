@@ -1,5 +1,6 @@
 var classliger_1_1rhi_1_1_render_graph =
 [
+    [ "BufferPackResource", "structliger_1_1rhi_1_1_render_graph_1_1_buffer_pack_resource.html", "structliger_1_1rhi_1_1_render_graph_1_1_buffer_pack_resource" ],
     [ "ImportedResourceUsage", "structliger_1_1rhi_1_1_render_graph_1_1_imported_resource_usage.html", "structliger_1_1rhi_1_1_render_graph_1_1_imported_resource_usage" ],
     [ "Node", "structliger_1_1rhi_1_1_render_graph_1_1_node.html", "structliger_1_1rhi_1_1_render_graph_1_1_node" ],
     [ "ResourceRead", "structliger_1_1rhi_1_1_render_graph_1_1_resource_read.html", "structliger_1_1rhi_1_1_render_graph_1_1_resource_read" ],
@@ -9,17 +10,19 @@ var classliger_1_1rhi_1_1_render_graph =
     [ "BufferResource", "classliger_1_1rhi_1_1_render_graph.html#aa08549080ee5b26105b9b3600c13437f", null ],
     [ "DependencyLevel", "classliger_1_1rhi_1_1_render_graph.html#a404d66f706a95d1f0e95c375612e7a79", null ],
     [ "DependentTextureInfo", "classliger_1_1rhi_1_1_render_graph.html#a11f16bdf78720c3285c7b51008af2f20", null ],
-    [ "Job", "classliger_1_1rhi_1_1_render_graph.html#a67e3ff5cf48aef809d03fbcbe9fb844a", null ],
+    [ "Job", "classliger_1_1rhi_1_1_render_graph.html#a3edba6c9101fee13d87e106c85b523fe", null ],
     [ "NodeGraph", "classliger_1_1rhi_1_1_render_graph.html#ac170e2f1f8adca3dfc926c3c46ba7d22", null ],
     [ "NodeHandle", "classliger_1_1rhi_1_1_render_graph.html#a83eeb3596df504f73e66f9e7bff8efee", null ],
     [ "ResourceId", "classliger_1_1rhi_1_1_render_graph.html#a7899f894b47357eb728f1e6c945c55c5", null ],
     [ "ResourceVersion", "classliger_1_1rhi_1_1_render_graph.html#a0d88217e45968e104a3d4f2df3341ba9", null ],
-    [ "ResourceVersionRegistry", "classliger_1_1rhi_1_1_render_graph.html#afbac3cdd7eb6a41674b616a7c42c5551", null ],
+    [ "ResourceVersionRegistry", "classliger_1_1rhi_1_1_render_graph.html#a7a1c9de83321289f9a5a03fdb4f5c1fc", null ],
+    [ "TextureViewList", "classliger_1_1rhi_1_1_render_graph.html#ab1b0c7896fe556de813b437b37f6d0dd", null ],
     [ "~RenderGraph", "classliger_1_1rhi_1_1_render_graph.html#a2c5431b38a65806697b6f8f7b6b912d4", null ],
     [ "RenderGraph", "classliger_1_1rhi_1_1_render_graph.html#af8432390ef2c163b439e08f410a9aa02", null ],
     [ "Compile", "classliger_1_1rhi_1_1_render_graph.html#adfff797e6ea3b4a02e8634fd287033ae", null ],
-    [ "DumpGraphviz", "classliger_1_1rhi_1_1_render_graph.html#a0eaad96be5ce564a4367c69b436bccf4", null ],
+    [ "DumpGraphviz", "classliger_1_1rhi_1_1_render_graph.html#a12d291b25b5121d25583aa047a4ff503", null ],
     [ "GetBuffer", "classliger_1_1rhi_1_1_render_graph.html#a062544d9245916bad76b3475c463fc1e", null ],
+    [ "GetBufferPack", "classliger_1_1rhi_1_1_render_graph.html#a3c2948148837d00dd9dd884f700fb9ed", null ],
     [ "GetDependencyLevel", "classliger_1_1rhi_1_1_render_graph.html#a96d8a8d1d74f01e0823374e4b413de42", null ],
     [ "GetSortedNode", "classliger_1_1rhi_1_1_render_graph.html#ab9edd16c3c22d5e712a3aaec0c13ee1c", null ],
     [ "GetTexture", "classliger_1_1rhi_1_1_render_graph.html#aa47632238b030ea1cdc6967c21d7c7c2", null ],
@@ -36,5 +39,6 @@ var classliger_1_1rhi_1_1_render_graph =
     [ "resource_version_registry_", "classliger_1_1rhi_1_1_render_graph.html#a8d0dfd3563b3945d5d41656093ee8997", null ],
     [ "sorted_nodes_", "classliger_1_1rhi_1_1_render_graph.html#ab5eba3ebd66f215837918af5fa012e92", null ],
     [ "transient_buffer_infos_", "classliger_1_1rhi_1_1_render_graph.html#a53843e3b4695fb98edb8753113d69769", null ],
-    [ "transient_texture_infos_", "classliger_1_1rhi_1_1_render_graph.html#a3cb0b2d0ad94d33486cd0025dec62c9b", null ]
+    [ "transient_texture_infos_", "classliger_1_1rhi_1_1_render_graph.html#a3cb0b2d0ad94d33486cd0025dec62c9b", null ],
+    [ "transient_texture_view_infos_", "classliger_1_1rhi_1_1_render_graph.html#a54a4cf059478fbe58573bc36915edaff", null ]
 ];

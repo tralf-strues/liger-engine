@@ -1,4 +1,4 @@
 <map id="liger::ILogWriter" name="liger::ILogWriter">
 <area shape="rect" id="node1" title="Manages a particular way of writing log messages (e.g. ConsoleLogWriter)." alt="" coords="11,5,175,97"/>
-<area shape="rect" id="node2" href="$classliger_1_1_console_log_writer.html" title="Writes log messages to console and allows custom styles." alt="" coords="5,145,180,281"/>
+<area shape="rect" id="node2" href="$classliger_1_1_console_log_writer.html" title="Writes log messages to console and allows custom styles." alt="" coords="5,145,180,296"/>
 </map>

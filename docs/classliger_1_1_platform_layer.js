@@ -1,7 +1,5 @@
 var classliger_1_1_platform_layer =
 [
-    [ "PlatformLayer", "classliger_1_1_platform_layer.html#a47c7ad7fefdc0f7530b19cde213b58a5", null ],
-    [ "~PlatformLayer", "classliger_1_1_platform_layer.html#aa12e7e0128194ba04195533239577b2d", null ],
     [ "CreateWindow", "classliger_1_1_platform_layer.html#a5ab5e2cb068559037eb7150f2fbe6084", null ],
     [ "GetCursorPosition", "classliger_1_1_platform_layer.html#a5203c0c9b1b6609fadde6a9f6241ef0d", null ],
     [ "GetSink", "classliger_1_1_platform_layer.html#a5e68bc0ffa6e5c6e52b605b70d268ffd", null ],

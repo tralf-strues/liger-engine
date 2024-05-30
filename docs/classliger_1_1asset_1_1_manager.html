@@ -93,12 +93,12 @@ $(document).ready(function(){initNavTree('classliger_1_1asset_1_1_manager.html',
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9c254cbf4e488b88c5f6e936ec1eb291"><td class="memItemLeft" align="right" valign="top"><a id="a9c254cbf4e488b88c5f6e936ec1eb291"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Manager</b> (tf::Executor &amp;executor)</td></tr>
-<tr class="separator:a9c254cbf4e488b88c5f6e936ec1eb291"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab99e0a36c6e7f2f443221d01c8787f26"><td class="memItemLeft" align="right" valign="top"><a id="ab99e0a36c6e7f2f443221d01c8787f26"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>SetRegistry</b> (std::filesystem::path registry_file)</td></tr>
-<tr class="separator:ab99e0a36c6e7f2f443221d01c8787f26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a4c41fad9d969d2e4c6446163c0c797"><td class="memItemLeft" align="right" valign="top"><a id="a1a4c41fad9d969d2e4c6446163c0c797"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Manager</b> (tf::Executor &amp;executor, std::filesystem::path registry_file)</td></tr>
+<tr class="separator:a1a4c41fad9d969d2e4c6446163c0c797"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa45bae100e99005c2e2d8605ef1b1c87"><td class="memItemLeft" align="right" valign="top"><a id="aa45bae100e99005c2e2d8605ef1b1c87"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>Valid</b> () const</td></tr>
+<tr class="separator:aa45bae100e99005c2e2d8605ef1b1c87"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabcf1b7342d91332c492749a1571c99f"><td class="memItemLeft" align="right" valign="top"><a id="aabcf1b7342d91332c492749a1571c99f"></a>
 <a class="el" href="classliger_1_1asset_1_1_registry.html">Registry</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetRegistry</b> ()</td></tr>
 <tr class="separator:aabcf1b7342d91332c492749a1571c99f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -108,14 +108,18 @@ const <a class="el" href="classliger_1_1asset_1_1_registry.html">Registry</a> &a
 <tr class="memitem:a0552084cea3590e6f0f535b70feaf3fb"><td class="memItemLeft" align="right" valign="top"><a id="a0552084cea3590e6f0f535b70feaf3fb"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>AddLoader</b> (std::unique_ptr&lt; <a class="el" href="classliger_1_1asset_1_1_i_loader.html">ILoader</a> &gt; loader)</td></tr>
 <tr class="separator:a0552084cea3590e6f0f535b70feaf3fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac33143de0da9d5afb63b0b03b02248df"><td class="memTemplParams" colspan="2"><a id="ac33143de0da9d5afb63b0b03b02248df"></a>
+<tr class="memitem:a868a069ce3e052ac7e81599d89913c07"><td class="memTemplParams" colspan="2"><a id="a868a069ce3e052ac7e81599d89913c07"></a>
 template&lt;typename Asset &gt; </td></tr>
-<tr class="memitem:ac33143de0da9d5afb63b0b03b02248df"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classliger_1_1asset_1_1_handle.html">Handle</a>&lt; Asset &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>GetAsset</b> (<a class="el" href="classliger_1_1_basic_u_u_i_d.html">Id</a> id)</td></tr>
-<tr class="separator:ac33143de0da9d5afb63b0b03b02248df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a868a069ce3e052ac7e81599d89913c07"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classliger_1_1asset_1_1_handle.html">Handle</a>&lt; Asset &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>GetAsset</b> (<a class="el" href="classliger_1_1_basic_u_u_i_d.html">Id</a> id)</td></tr>
+<tr class="separator:a868a069ce3e052ac7e81599d89913c07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3672f90c0ed0e3eeafe5142b5a9636c2"><td class="memTemplParams" colspan="2"><a id="a3672f90c0ed0e3eeafe5142b5a9636c2"></a>
+template&lt;typename Asset &gt; </td></tr>
+<tr class="memitem:a3672f90c0ed0e3eeafe5142b5a9636c2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classliger_1_1asset_1_1_handle.html">Handle</a>&lt; Asset &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>GetAsset</b> (const std::filesystem::path &amp;file)</td></tr>
+<tr class="separator:a3672f90c0ed0e3eeafe5142b5a9636c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="_manager_8hpp_source.html#l00040">40</a> of file <a class="el" href="_manager_8hpp_source.html">Manager.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_manager_8hpp_source.html#l00041">41</a> of file <a class="el" href="_manager_8hpp_source.html">Manager.hpp</a>.</p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="_manager_8hpp_source.html">Manager.hpp</a></li>
 </ul>

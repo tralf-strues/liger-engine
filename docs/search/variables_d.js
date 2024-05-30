@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['usage_527',['usage',['../structliger_1_1rhi_1_1_i_buffer_1_1_info.html#ab3930bf052eccf84aef050b41e782829',1,'liger::rhi::IBuffer::Info::usage()'],['../structliger_1_1rhi_1_1_dependent_texture_info.html#a05313c1bf9bcca8ec1cc016380624fc7',1,'liger::rhi::DependentTextureInfo::usage()'],['../structliger_1_1rhi_1_1_i_swapchain_1_1_info.html#a1834c78b02ab877e79cbbbe01a2812b9',1,'liger::rhi::ISwapchain::Info::usage()'],['../structliger_1_1rhi_1_1_i_texture_1_1_info.html#a2e6601b1575f88296d96eba4d7c4ea7f',1,'liger::rhi::ITexture::Info::usage()']]]
+  ['type_775',['type',['../structliger_1_1rhi_1_1_dependent_texture_info.html#a47999fd4194af63a81e8e34095e27334',1,'liger::rhi::DependentTextureInfo::type()'],['../structliger_1_1rhi_1_1_i_shader_module_1_1_source.html#a3176786f82d96287dd8a90c3262e9c51',1,'liger::rhi::IShaderModule::Source::type()'],['../structliger_1_1rhi_1_1_i_texture_1_1_info.html#a41c0bd042f1d831561215da22ad5b1e4',1,'liger::rhi::ITexture::Info::type()']]]
 ];

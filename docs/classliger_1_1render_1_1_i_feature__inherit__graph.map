@@ -1,0 +1,9 @@
+<map id="liger::render::IFeature" name="liger::render::IFeature">
+<area shape="rect" id="node1" title=" " alt="" coords="679,5,863,156"/>
+<area shape="rect" id="node2" href="$classliger_1_1render_1_1_bloom_feature.html" title=" " alt="" coords="5,219,205,355"/>
+<area shape="rect" id="node3" href="$classliger_1_1render_1_1_camera_data_collector.html" title=" " alt="" coords="229,211,478,362"/>
+<area shape="rect" id="node4" href="$classliger_1_1render_1_1_forward_render_feature.html" title=" " alt="" coords="503,219,759,355"/>
+<area shape="rect" id="node5" href="$classliger_1_1render_1_1_particle_system_feature.html" title=" " alt="" coords="783,204,1038,369"/>
+<area shape="rect" id="node6" href="$classliger_1_1render_1_1_static_mesh_feature.html" title=" " alt="" coords="1062,204,1293,369"/>
+<area shape="rect" id="node7" href="$classliger_1_1render_1_1_tonemap_feature.html" title=" " alt="" coords="1317,226,1534,347"/>
+</map>

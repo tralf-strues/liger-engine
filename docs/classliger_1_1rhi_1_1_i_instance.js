@@ -2,6 +2,7 @@ var classliger_1_1rhi_1_1_i_instance =
 [
     [ "ValidationLevel", "classliger_1_1rhi_1_1_i_instance.html#a75744541fa794042a63c6eeb03cab519", [
       [ "None", "classliger_1_1rhi_1_1_i_instance.html#a75744541fa794042a63c6eeb03cab519a6adf97f83acf6453d4a6a4b1070f3754", null ],
+      [ "DebugInfoOnly", "classliger_1_1rhi_1_1_i_instance.html#a75744541fa794042a63c6eeb03cab519a41bccc58ad6098f0a88e96ebc74e905b", null ],
       [ "Basic", "classliger_1_1rhi_1_1_i_instance.html#a75744541fa794042a63c6eeb03cab519a972e73b7a882d0802a4e3a16946a2f94", null ],
       [ "Extensive", "classliger_1_1rhi_1_1_i_instance.html#a75744541fa794042a63c6eeb03cab519a3a95b84976186295a434b6b705c08ee7", null ]
     ] ],

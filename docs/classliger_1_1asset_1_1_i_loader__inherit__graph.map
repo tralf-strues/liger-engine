@@ -1,0 +1,7 @@
+<map id="liger::asset::ILoader" name="liger::asset::ILoader">
+<area shape="rect" id="node1" title=" " alt="" coords="477,5,627,112"/>
+<area shape="rect" id="node2" href="$classliger_1_1asset_1_1loaders_1_1_material_loader.html" title="Static mesh material asset loader." alt="" coords="5,160,261,281"/>
+<area shape="rect" id="node3" href="$classliger_1_1asset_1_1loaders_1_1_shader_loader.html" title=" " alt="" coords="286,160,533,281"/>
+<area shape="rect" id="node4" href="$classliger_1_1asset_1_1loaders_1_1_static_mesh_loader.html" title="Static mesh asset loader." alt="" coords="557,160,832,281"/>
+<area shape="rect" id="node5" href="$classliger_1_1asset_1_1loaders_1_1_texture_loader.html" title=" " alt="" coords="856,160,1107,281"/>
+</map>

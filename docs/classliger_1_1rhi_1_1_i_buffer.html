@@ -112,6 +112,9 @@ const <a class="el" href="structliger_1_1rhi_1_1_i_buffer_1_1_info.html">Info</a
 <tr class="memitem:af1bbb4a4439f9a1df24abe62aa6fcd6f"><td class="memItemLeft" align="right" valign="top">virtual void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_buffer.html#af1bbb4a4439f9a1df24abe62aa6fcd6f">MapMemory</a> (uint64_t offset, uint64_t size)=0</td></tr>
 <tr class="memdesc:af1bbb4a4439f9a1df24abe62aa6fcd6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map a range of buffer's memory.  <a href="classliger_1_1rhi_1_1_i_buffer.html#af1bbb4a4439f9a1df24abe62aa6fcd6f">More...</a><br /></td></tr>
 <tr class="separator:af1bbb4a4439f9a1df24abe62aa6fcd6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a0984f40e9c553e52bc590a76a06cb4"><td class="memItemLeft" align="right" valign="top">virtual void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_buffer.html#a6a0984f40e9c553e52bc590a76a06cb4">MapMemory</a> ()=0</td></tr>
+<tr class="memdesc:a6a0984f40e9c553e52bc590a76a06cb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map the whole range of buffer's memory.  <a href="classliger_1_1rhi_1_1_i_buffer.html#a6a0984f40e9c553e52bc590a76a06cb4">More...</a><br /></td></tr>
+<tr class="separator:a6a0984f40e9c553e52bc590a76a06cb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c78b6201dccdb50751a6acd2f935ab7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classliger_1_1rhi_1_1_i_buffer.html#a2c78b6201dccdb50751a6acd2f935ab7">UnmapMemory</a> ()=0</td></tr>
 <tr class="memdesc:a2c78b6201dccdb50751a6acd2f935ab7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unmap buffer's memory.  <a href="classliger_1_1rhi_1_1_i_buffer.html#a2c78b6201dccdb50751a6acd2f935ab7">More...</a><br /></td></tr>
 <tr class="separator:a2c78b6201dccdb50751a6acd2f935ab7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -184,8 +187,37 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a6a0984f40e9c553e52bc590a76a06cb4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a0984f40e9c553e52bc590a76a06cb4">&#9670;&nbsp;</a></span>MapMemory() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void* liger::rhi::IBuffer::MapMemory </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Map the whole range of buffer's memory. </p>
+<dl class="section warning"><dt>Warning</dt><dd>Only available if the buffer is created with <a class="el" href="structliger_1_1rhi_1_1_i_buffer_1_1_info.html#a76bb7856eaaff1f510fc2b44bc250753">Info::cpu_visible</a> enabled.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Address of the mapped memory or nullptr in case of error. </dd></dl>
+
+</div>
+</div>
 <a id="af1bbb4a4439f9a1df24abe62aa6fcd6f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af1bbb4a4439f9a1df24abe62aa6fcd6f">&#9670;&nbsp;</a></span>MapMemory()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af1bbb4a4439f9a1df24abe62aa6fcd6f">&#9670;&nbsp;</a></span>MapMemory() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">

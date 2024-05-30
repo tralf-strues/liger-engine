@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['level_504',['level',['../structliger_1_1_log_message.html#aa1c4ad507a7af0b9ed0614db727005d7',1,'liger::LogMessage']]],
-  ['lod_5fbias_505',['lod_bias',['../structliger_1_1rhi_1_1_sampler_info.html#a65e96e6515e6472623abf5e7b81a1c45',1,'liger::rhi::SamplerInfo']]]
+  ['imported_5fassets_752',['imported_assets',['../structliger_1_1asset_1_1_i_importer_1_1_result.html#ad5d5bf61d627878a4df3b882ff41605d',1,'liger::asset::IImporter::Result']]]
 ];

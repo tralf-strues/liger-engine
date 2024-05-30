@@ -127,11 +127,17 @@ $(document).ready(function(){initNavTree('_enum_reflection_8hpp_source.html','')
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Enum&gt;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;[[nodiscard]] constexpr <span class="keyword">auto</span> EnumMaskToString(Enum mask, <span class="keywordtype">char</span> separator = <span class="charliteral">&#39;|&#39;</span>) noexcept {</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  <span class="keywordflow">return</span> magic_enum::enum_flags_name&lt;Enum&gt;(mask, separator);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;}</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}  <span class="comment">// namespace liger</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;[[nodiscard]] constexpr std::optional&lt;Enum&gt; StringToEnum(std::string_view str) noexcept {</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  <span class="keyword">auto</span> value = magic_enum::enum_cast&lt;Enum&gt;(str);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <span class="keywordflow">return</span> value.has_value() ? std::optional(value.value()) : std::nullopt;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Enum&gt;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;[[nodiscard]] constexpr <span class="keyword">auto</span> EnumMaskToString(Enum mask, <span class="keywordtype">char</span> separator = <span class="charliteral">&#39;|&#39;</span>) noexcept {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  <span class="keywordflow">return</span> magic_enum::enum_flags_name&lt;Enum&gt;(mask, separator);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;}</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;}  <span class="comment">// namespace liger</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

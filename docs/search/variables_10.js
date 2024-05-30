@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['x_531',['x',['../structliger_1_1rhi_1_1_viewport.html#aa916ea6d3e6c98b173ae8485ed60d6a3',1,'liger::rhi::Viewport']]]
+  ['width_778',['width',['../structliger_1_1rhi_1_1_viewport.html#a5c59f6be989b727486da0402684c8adb',1,'liger::rhi::Viewport']]],
+  ['window_779',['window',['../structliger_1_1rhi_1_1_i_swapchain_1_1_info.html#a50d96f540868107c52321355ab8bc7a3',1,'liger::rhi::ISwapchain::Info']]]
 ];

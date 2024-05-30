@@ -190,6 +190,12 @@ $(document).ready(function(){initNavTree('_enum_bitmask_8hpp_source.html',''); i
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="keyword">inline</span> constexpr <span class="keywordtype">bool</span> EnumBitmaskContains(Enum lhs, Enum rhs) {</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>uint64_t<span class="keyword">&gt;</span>(lhs &amp; rhs) == <span class="keyword">static_cast&lt;</span>uint64_t<span class="keyword">&gt;</span>(rhs);</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;}</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Enum&gt;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;requires <a class="code" href="structliger_1_1_enum_enable_bitmask.html">liger::EnumEnableBitmask&lt;Enum&gt;::kEnabled</a></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="keyword">inline</span> constexpr <span class="keywordtype">bool</span> EnumBitmaskContainsAny(Enum lhs, Enum rhs) {</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>uint64_t<span class="keyword">&gt;</span>(lhs &amp; rhs) != 0U;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;}</div>
 <div class="ttc" id="a_enum_bitmask_8hpp_html_aee2094d5199b530e09feb4e6a0aaacfa"><div class="ttname"><a href="_enum_bitmask_8hpp.html#aee2094d5199b530e09feb4e6a0aaacfa">liger::Bit</a></div><div class="ttdeci">constexpr T Bit(std::uint32_t bit)</div><div class="ttdoc">Set the specified bit.</div><div class="ttdef"><b>Definition:</b> <a href="_enum_bitmask_8hpp_source.html#l00054">EnumBitmask.hpp:54</a></div></div>
 <div class="ttc" id="astructliger_1_1_enum_enable_bitmask_html"><div class="ttname"><a href="structliger_1_1_enum_enable_bitmask.html">liger::EnumEnableBitmask</a></div><div class="ttdef"><b>Definition:</b> <a href="_enum_bitmask_8hpp_source.html#l00057">EnumBitmask.hpp:57</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

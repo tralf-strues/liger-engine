@@ -100,7 +100,7 @@ Include dependency graph for DeviceResourceState.hpp:</div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="_device_resource_state_8hpp__dep__incl.svg" width="410" height="411"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="_device_resource_state_8hpp__dep__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </div>
@@ -117,15 +117,20 @@ Enumerations</h2></td></tr>
 &#160;&#160;<b>ColorTarget</b> = Bit(3)
 , <b>DepthStencilTarget</b> = Bit(4)
 , <b>DepthStencilRead</b> = Bit(5)
-, <b>StorageTexture</b> = Bit(6)
+, <b>StorageTextureRead</b> = Bit(6)
 , <br />
-&#160;&#160;<b>PresentTexture</b> = Bit(7)
-, <b>VertexBuffer</b> = Bit(8)
-, <b>IndexBuffer</b> = Bit(9)
-, <b>IndirectArgument</b> = Bit(10)
+&#160;&#160;<b>StorageTextureWrite</b> = Bit(7)
+, <b>StorageTextureReadWrite</b> = StorageTextureRead | StorageTextureWrite
+, <b>PresentTexture</b> = Bit(8)
+, <b>VertexBuffer</b> = Bit(9)
 , <br />
-&#160;&#160;<b>UniformBuffer</b> = Bit(11)
-, <b>StorageBuffer</b> = Bit(12)
+&#160;&#160;<b>IndexBuffer</b> = Bit(10)
+, <b>IndirectArgument</b> = Bit(11)
+, <b>UniformBuffer</b> = Bit(12)
+, <b>StorageBufferRead</b> = Bit(13)
+, <br />
+&#160;&#160;<b>StorageBufferWrite</b> = Bit(14)
+, <b>StorageBufferReadWrite</b> = StorageBufferRead | StorageBufferWrite
 <br />
  }</td></tr>
 <tr class="separator:aff9ce9abaa6374c6dc2a9d77f14bb23b"><td class="memSeparator" colspan="2">&#160;</td></tr>

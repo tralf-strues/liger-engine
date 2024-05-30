@@ -91,19 +91,42 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <p>Liger engine is a personal learning game engine, currently in the early stages development.</p>
 <h1><a class="anchor" id="autotoc_md1"></a>
 Build</h1>
-<p>Currently the engine works on Linux and MacOS.</p>
+<p>Currently the engine works only on Windows and Linux. MacOS is currently not supported until MoltenVK supports Vulkan 1.3</p>
 <h2><a class="anchor" id="autotoc_md2"></a>
 Installing the engine</h2>
+<h3><a class="anchor" id="autotoc_md3"></a>
+Linux &amp; &lt;strike&gt;MacOS&lt;/strike&gt;</h3>
 <div class="fragment"><div class="line">git clone --recursive https://github.com/tralf-strues/liger-engine</div>
 <div class="line">./build_unix.sh {debug|release}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md3"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md4"></a>
+Windows (Microsoft Visual Studio)</h3>
+<ol type="1">
+<li>Clone repository <div class="fragment"><div class="line">git clone --recursive https://github.com/tralf-strues/liger-engine</div>
+</div><!-- fragment --></li>
+<li>Open the cloned folder as CMake project in MVS</li>
+<li>Configure CMake in MVS</li>
+<li>Build-&gt;Build all</li>
+<li>Build-&gt;Install Liger-Engine</li>
+</ol>
+<h2><a class="anchor" id="autotoc_md5"></a>
 Create game project</h2>
 <div class="fragment"><div class="line">python new_project.py --name &quot;&lt;PROJECT_NAME&gt;&quot; --path &quot;&lt;PROJECT_PATH&gt;&quot; --liger_path &quot;&lt;ENGINE_PATH&gt;&quot;</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md4"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md6"></a>
+Windows (Microsoft Visual Studio)</h3>
+<ol type="1">
+<li>Open generated project in MVS</li>
+<li>Go to Manage Configurations and add the following CMake command arguments (this will definitely be improved in the future): <div class="fragment"><div class="line">-DCMAKE_EXPORT_COMPILE_COMMANDS=true -DLIGER_ENGINE_PATH=&lt;&lt;YOUR_PATH&gt;&gt; -DLiger-Engine_DIR=&lt;&lt;YOUR_PATH&gt;&gt;/out/build/x64-{Debug|Release}/Engine -DSPIRV-Tools_DIR=&lt;&lt;YOUR_PATH&gt;&gt;/out/install/x64-{Debug|Release}/SPIRV-Tools/cmake -DSPIRV-Tools-opt_DIR=&lt;&lt;YOUR_PATH&gt;&gt;/out/install/x64-{Debug|Release}/SPIRV-Tools-opt/cmake</div>
+</div><!-- fragment --></li>
+</ol>
+<h2><a class="anchor" id="autotoc_md7"></a>
 Dependencies</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Name   </th><th class="markdownTableHeadNone">Notes    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a href="https://github.com/assimp/assimp">assimp</a>   </td><td class="markdownTableBodyNone">Submodule    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a href="https://github.com/skypjack/entt">entt</a>   </td><td class="markdownTableBodyNone">Submodule    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a href="https://github.com/fmtlib/fmt">fmt</a>   </td><td class="markdownTableBodyNone">Submodule    </td></tr>
 <tr class="markdownTableRowEven">
@@ -111,11 +134,15 @@ Dependencies</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a href="https://github.com/g-truc/glm">glm</a>   </td><td class="markdownTableBodyNone">Submodule    </td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a href="https://github.com/KhronosGroup/glslang">glslang</a>   </td><td class="markdownTableBodyNone">Submodule    </td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a href="https://github.com/Neargye/magic_enum">magic_enum</a>   </td><td class="markdownTableBodyNone">Submodule    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a href="https://github.com/nothings/stb">stb-image</a>   </td><td class="markdownTableBodyNone">-    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a href="https://github.com/taskflow/taskflow">taskflow</a>   </td><td class="markdownTableBodyNone">Submodule    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a href="https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator">VMA</a>   </td><td class="markdownTableBodyNone">Submodule    </td></tr>
+<td class="markdownTableBodyNone"><a href="https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator">vma</a>   </td><td class="markdownTableBodyNone">Submodule    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a href="https://github.com/zeux/volk">volk</a>   </td><td class="markdownTableBodyNone">Submodule    </td></tr>
 <tr class="markdownTableRowEven">
@@ -125,7 +152,7 @@ Dependencies</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a href="https://github.com/jbeder/yaml-cpp">yaml-cpp</a>   </td><td class="markdownTableBodyNone">Submodule   </td></tr>
 </table>
-<h1><a class="anchor" id="autotoc_md5"></a>
+<h1><a class="anchor" id="autotoc_md8"></a>
 Wiki</h1>
 <p><a href="https://github.com/tralf-strues/liger-engine/wiki">Here</a> I'm going to write short pages on the design decisions I'm making during development of the engine. </p>
 </div></div><!-- PageDoc -->
