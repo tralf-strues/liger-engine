@@ -33,6 +33,7 @@
 #include <Liger-Engine/RHI/ShaderModule.hpp>
 #include <Liger-Engine/RHI/Swapchain.hpp>
 
+#include <list>
 #include <string>
 
 namespace liger::rhi {

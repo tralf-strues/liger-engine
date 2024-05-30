@@ -25,8 +25,6 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#pragma once
-
 #include <Liger-Engine/Asset/Importers/StaticMeshImporter.hpp>
 
 #include <Liger-Engine/Render/BuiltIn/StaticMeshFeature.hpp>

@@ -98,7 +98,7 @@ void TextureLoader::Load(asset::Manager& manager, asset::Id asset_id, const std:
     .extent          = {.x = static_cast<uint32_t>(tex_width), .y = static_cast<uint32_t>(tex_height), .z = 1},
     .mip_levels      = tex_mip_levels,
     .samples         = 1U,
-    .name            = std::format("Texture_0x{0:X}({1})", asset_id.Value(), filepath.stem().string())
+    .name            = fmt::format("Texture_0x{0:X}({1})", asset_id.Value(), filepath.stem().string())
   });
 
   const rhi::SamplerInfo sampler_info {
