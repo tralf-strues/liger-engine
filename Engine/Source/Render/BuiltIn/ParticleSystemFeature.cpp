@@ -115,7 +115,7 @@ void ParticleSystemFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
                                                                 rhi::DeviceResourceState::Undefined);
 
   /* Emit */
-  builder.BeginCompute("ParticleSystemFeature - Emit");
+  builder.BeginCompute("Particle Emit");
 
   rg_versions_.update_free_list = builder.ReadWriteBuffer(rg_versions_.emit_free_list, rhi::DeviceResourceState::StorageBufferReadWrite);
   rg_versions_.update_particles = builder.ReadWriteBuffer(rg_versions_.emit_particles, rhi::DeviceResourceState::StorageBufferWrite);
@@ -159,7 +159,7 @@ void ParticleSystemFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
   builder.EndCompute();
 
   /* Update */
-  builder.BeginCompute("ParticleSystemFeature - Update");
+  builder.BeginCompute("Particle Update");
 
   builder.ReadWriteBuffer(rg_versions_.update_free_list, rhi::DeviceResourceState::StorageBufferReadWrite);
   rg_versions_.render_particles             = builder.ReadWriteBuffer(rg_versions_.update_particles, rhi::DeviceResourceState::StorageBufferWrite);

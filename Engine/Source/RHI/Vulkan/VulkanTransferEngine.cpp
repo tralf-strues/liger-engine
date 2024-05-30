@@ -82,11 +82,13 @@ void VulkanTransferEngine::Init(uint64_t staging_capacity) {
                                 &staging_buffers_[i].allocation, nullptr));
     device_.SetDebugName(staging_buffers_[i].buffer, "VulkanTransferEngine::staging_buffers_[{0}]", i);
   }
-
-  Flip(device_.CurrentFrame());
 }
 
 void VulkanTransferEngine::Request(IDevice::DedicatedTransferRequest&& transfer) {
+  if (!recording_) {
+    BeginRecording();
+  }
+
   ProcessBufferTransfers(transfer);
   ProcessTextureTransfers(transfer);
 
@@ -101,10 +103,9 @@ void VulkanTransferEngine::Request(IDevice::DedicatedTransferRequest&& transfer)
 }
 
 void VulkanTransferEngine::Submit() {
-  //// No transfers scheduled
-  //if (cur_data_size_ == 0U) {
-  //  return;
-  //}
+  if (!recording_) {
+    return;
+  }
 
   vmaUnmapMemory(device_.GetAllocator(), staging_buffers_[cur_frame_].allocation);
 
@@ -122,6 +123,8 @@ void VulkanTransferEngine::Submit() {
     }
   }
 
+  last_submit_abs_frame_ = device_.CurrentAbsoluteFrame();
+
   /* Submit transfer work */
   const VkCommandBufferSubmitInfo transfer_cmds_submit_info {
     .sType         = VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO,
@@ -134,7 +137,7 @@ void VulkanTransferEngine::Submit() {
     .sType       = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
     .pNext       = nullptr,
     .semaphore   = timeline_semaphore_.Get(),
-    .value       = timeline_semaphore_.TimePoint(device_.CurrentAbsoluteFrame(), 1U),
+    .value       = timeline_semaphore_.TimePoint(last_submit_abs_frame_, 1U),
     .stageMask   = VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT,
     .deviceIndex = 0,
   };
@@ -165,7 +168,7 @@ void VulkanTransferEngine::Submit() {
     .sType       = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
     .pNext       = nullptr,
     .semaphore   = timeline_semaphore_.Get(),
-    .value       = timeline_semaphore_.TimePoint(device_.CurrentAbsoluteFrame(), 1U),
+    .value       = timeline_semaphore_.TimePoint(last_submit_abs_frame_, 1U),
     .stageMask   = VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT,
     .deviceIndex = 0,
   };
@@ -174,7 +177,7 @@ void VulkanTransferEngine::Submit() {
     .sType       = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
     .pNext       = nullptr,
     .semaphore   = timeline_semaphore_.Get(),
-    .value       = timeline_semaphore_.TimePoint(device_.CurrentAbsoluteFrame(), 2U),
+    .value       = timeline_semaphore_.TimePoint(last_submit_abs_frame_, 2U),
     .stageMask   = VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT,
     .deviceIndex = 0,
   };
@@ -193,17 +196,17 @@ void VulkanTransferEngine::Submit() {
 
   VULKAN_CALL(vkQueueSubmit2(device_.GetQueues().GetMainQueue(), 1U, &graphics_submit_info, VK_NULL_HANDLE));
 
-  Flip(device_.NextFrame());
+  recording_ = false;
 
   ReschedulePending();
 }
 
-void VulkanTransferEngine::Flip(uint32_t next_frame) {
+void VulkanTransferEngine::BeginRecording() {
   const uint32_t frames_in_flight = device_.GetFramesInFlight();
 
-  if (device_.CurrentAbsoluteFrame() >= frames_in_flight - 1U) {
+  if (last_submit_abs_frame_ != 0U) {
     const VkSemaphore wait_semaphore = timeline_semaphore_.Get();
-    const uint64_t    wait_value     = timeline_semaphore_.TimePoint(device_.CurrentAbsoluteFrame() + 1U - frames_in_flight, 2U);
+    const uint64_t    wait_value     = timeline_semaphore_.TimePoint(last_submit_abs_frame_ + 1U - frames_in_flight, 2U);
 
     const VkSemaphoreWaitInfo wait_info {
       .sType          = VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO,
@@ -217,7 +220,7 @@ void VulkanTransferEngine::Flip(uint32_t next_frame) {
     vkWaitSemaphores(device_.GetVulkanDevice(), &wait_info, UINT64_MAX);
   }
 
-  cur_frame_ = next_frame;
+  cur_frame_ = (cur_frame_ + 1U) % device_.GetFramesInFlight();
 
   command_pool_.Reset(cur_frame_);
   cmds_transfer_ = command_pool_.AllocateCommandBuffer(cur_frame_, 2U);
@@ -228,6 +231,8 @@ void VulkanTransferEngine::Flip(uint32_t next_frame) {
 
   VULKAN_CALL(vmaMapMemory(device_.GetAllocator(), staging_buffers_[cur_frame_].allocation, &cur_mapped_data_));
   cur_data_size_ = 0U;
+
+  recording_ = true;
 }
 
 void VulkanTransferEngine::ReschedulePending() {

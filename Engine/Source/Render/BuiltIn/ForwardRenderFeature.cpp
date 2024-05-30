@@ -48,11 +48,6 @@ void ForwardRenderFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
   color_info.name            = "HDR Color";
   rg_color_ = builder.DeclareTransientTexture(color_info);
 
-  builder.GetContext().Insert(OutputTexture {
-    .rg_hdr_color   = rg_color_,
-    .rg_final_color = rg_output_
-  });
-
   rhi::RenderGraph::DependentTextureInfo depth_info{};
   depth_info.extent.SetDependency(rg_output_);
   depth_info.format          = rhi::Format::D32_SFLOAT;
@@ -64,22 +59,38 @@ void ForwardRenderFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
   depth_info.name            = "Depth buffer";
   rg_depth_ = builder.DeclareTransientTexture(depth_info);
 
-  builder.BeginRenderPass("Forward Pass");
+  /* Opaque */
+  builder.BeginRenderPass("Forward Pass - Opaque");
 
-  builder.AddColorTarget(rg_color_, rhi::AttachmentLoad::Clear, rhi::AttachmentStore::Store);
-  builder.SetDepthStencil(rg_depth_, rhi::AttachmentLoad::Clear, rhi::AttachmentStore::Discard);
+  rg_color_after_opaque_ = builder.AddColorTarget(rg_color_, rhi::AttachmentLoad::Clear, rhi::AttachmentStore::Store);
+  rg_depth_after_opaque_ = builder.SetDepthStencil(rg_depth_, rhi::AttachmentLoad::Clear, rhi::AttachmentStore::Store);
 
-  for (auto& layer : layers_) {
-    layer.Setup(builder);
-  }
+  layers_[static_cast<size_t>(LayerType::Opaque)].Setup(builder);
 
   builder.SetJob([this](auto& graph, auto& context, rhi::ICommandBuffer& cmds) {
-    for (auto& layer : layers_) {
-      layer.Execute(graph, context, cmds);
-    }
+    layers_[static_cast<size_t>(LayerType::Opaque)].Execute(graph, context, cmds);
   });
 
   builder.EndRenderPass();
+
+  /* Transparent */
+  builder.BeginRenderPass("Forward Pass - Transparent");
+
+  builder.AddColorTarget(rg_color_after_opaque_, rhi::AttachmentLoad::Load, rhi::AttachmentStore::Store);
+  builder.SetDepthStencil(rg_depth_after_opaque_, rhi::AttachmentLoad::Load, rhi::AttachmentStore::Discard);
+
+  layers_[static_cast<size_t>(LayerType::Transparent)].Setup(builder);
+
+  builder.SetJob([this](auto& graph, auto& context, rhi::ICommandBuffer& cmds) {
+    layers_[static_cast<size_t>(LayerType::Transparent)].Execute(graph, context, cmds);
+  });
+
+  builder.EndRenderPass();
+
+  builder.GetContext().Insert(OutputTexture {
+    .rg_hdr_color   = rg_color_,
+    .rg_final_color = rg_output_
+  });
 }
 
 }  // namespace liger::render

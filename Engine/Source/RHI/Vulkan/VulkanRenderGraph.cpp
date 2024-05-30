@@ -157,13 +157,14 @@ void VulkanRenderGraph::Execute(Context& context, VkSemaphore wait, uint64_t wai
     std::optional<VulkanCommandBuffer> cmds = std::nullopt;
 
     for (auto* node : nodes_per_queue_[queue_idx]) {
+      if (node->dependency_level > submit_it->dependency_level) {
+        submit(queue_idx, submit_it, cmds);
+        cmds = std::nullopt;
+      }
+
       if (!cmds) {
         cmds = command_pool_.AllocateCommandBuffer(frame_idx, queue_idx);
         cmds->Begin();
-      }
-
-      if (node->dependency_level > submit_it->dependency_level) {
-        submit(queue_idx, submit_it, cmds);
       }
 
       const auto& original_node = dag_.GetNode(GetNodeHandle(*node));
@@ -641,6 +642,7 @@ void VulkanRenderGraph::ScheduleToQueues() {
     for (uint64_t i = 0; i < submits_per_queue_[queue_idx].size(); ++i) {
       if (submits_per_queue_[queue_idx][i].dependency_level >= dependency_level) {
         submit_idx = i;
+        break;
       }
     }
 
@@ -652,6 +654,7 @@ void VulkanRenderGraph::ScheduleToQueues() {
       for (uint64_t i = 0; i < submits_per_queue_[dependent_queue_idx].size(); ++i) {
         if (submits_per_queue_[dependent_queue_idx][i].dependency_level >= dependent_dependency_level) {
           dependent_submit_idx = i;
+          break;
         }
       }
 
@@ -659,7 +662,7 @@ void VulkanRenderGraph::ScheduleToQueues() {
         // Add wait on dependent submit
         auto& dependent_submit = submits_per_queue_[dependent_queue_idx][dependent_submit_idx];
         dependent_submit.wait_per_queue[queue_idx].base_value =
-            std::max(dependent_submit.wait_per_queue[queue_idx].base_value, dependent_submit_idx + 1);
+            std::max(dependent_submit.wait_per_queue[queue_idx].base_value, submit_idx + 1);
 
         // Add signal on this submit
         auto& submit = submits_per_queue_[queue_idx][submit_idx];

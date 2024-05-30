@@ -52,8 +52,12 @@ class ForwardRenderFeature : public IFeature {
  private:
   std::vector<Layer>                layers_;
   rhi::RenderGraph::ResourceVersion rg_output_;
+
   rhi::RenderGraph::ResourceVersion rg_color_;
   rhi::RenderGraph::ResourceVersion rg_depth_;
+
+  rhi::RenderGraph::ResourceVersion rg_color_after_opaque_;
+  rhi::RenderGraph::ResourceVersion rg_depth_after_opaque_;
 };
 
 }  // namespace liger::render

@@ -38,7 +38,7 @@ uint32_t CalcualteGroupCount(uint32_t resolution) {
 }
 
 void BloomFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
-  rg_src_color_ = builder.GetContext().Get<OutputTexture>().rg_hdr_color;
+  rg_src_color_ = builder.LastResourceVersion(builder.GetContext().Get<OutputTexture>().rg_hdr_color);
 
   rhi::RenderGraph::DependentTextureInfo bloom_texture_info{};
   bloom_texture_info.extent.SetDependency(rg_src_color_);

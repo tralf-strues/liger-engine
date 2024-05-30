@@ -611,7 +611,7 @@ std::vector<uint32_t> CompileToBinary(Declaration::Scope scope, const char* sour
   glslang_spv_options_t options = {
     .generate_debug_info                  = true,
     .strip_debug_info                     = false,
-    .disable_optimizer                    = true,
+    .disable_optimizer                    = false,
     .optimize_size                        = false,
     .disassemble                          = false,
     .validate                             = true,

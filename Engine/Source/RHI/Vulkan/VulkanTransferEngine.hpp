@@ -50,7 +50,7 @@ class VulkanTransferEngine {
   void Submit();
 
  private:
-  void Flip(uint32_t next_frame);
+  void BeginRecording();
   void ReschedulePending();
 
   void ProcessBufferTransfers(IDevice::DedicatedTransferRequest& transfer);
@@ -79,6 +79,9 @@ class VulkanTransferEngine {
   uint32_t                                     cur_frame_;
   void*                                        cur_mapped_data_{nullptr};
   uint64_t                                     cur_data_size_{0U};
+  bool                                         recording_{false};
+
+  uint64_t                                     last_submit_abs_frame_{0U};
 
   std::list<Callback>                          callbacks_;
   std::list<IDevice::DedicatedTransferRequest> pending_;
