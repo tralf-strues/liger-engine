@@ -66,7 +66,7 @@ void TextureLoader::Load(asset::Manager& manager, asset::Id asset_id, const std:
     }
     case 3:
     case 4: {
-      format           = rhi::Format::R8G8B8A8_SRGB;
+      format           = rhi::Format::R8G8B8A8_UNORM;
       desired_channels = STBI_rgb_alpha;
       break;
     }

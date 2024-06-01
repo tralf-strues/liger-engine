@@ -28,12 +28,14 @@ Data: | #glsl
   });
 
   struct Material {
-    f32vec3   albedo_color;
+    f32vec3   base_color;
+    f32vec3   emission_color;
+    float32_t emission_intensity;
     float32_t metallic;
     float32_t roughness;
 
     /* NOTE (tralf-strues): texture maps may be invalid, must be checked against kInvalidBinding! */
-    uint32_t  binding_albedo_map;
+    uint32_t  binding_base_color_map;
     uint32_t  binding_normal_map;
     uint32_t  binding_metallic_roughness_map;
   };

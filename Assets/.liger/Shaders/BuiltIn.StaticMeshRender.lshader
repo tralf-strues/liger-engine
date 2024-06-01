@@ -23,7 +23,7 @@ ColorBlendInfo:
   AlphaOperation: Add
 
 AttachmentInfo:
-  RenderTargets: [R16G16B16A16_SFLOAT]
+  RenderTargets: [B10G11R11_UFLOAT]
   DepthStencilTarget: D32_SFLOAT
   Samples: 1
 
@@ -111,15 +111,15 @@ FragmentShader:
   CodeSnippets:
     - Insert: auto-global
       Code: | #glsl
-        PBR_SurfacePoint GetSurfaceProperties(const LigerInput liger_in) {
+        PBR_SurfacePoint GetSurfaceProperties(const LigerInput liger_in, out f32vec3 out_emission) {
           PBR_SurfacePoint surface_point;
 
           Material material = GetUniformBuffer(MaterialUBO, liger_in.binding_material).material;
+          out_emission = material.emission_color * material.emission_intensity;
 
           /* Normal */
           if (material.binding_normal_map != kInvalidBinding) {
-            f32vec3 normal       = texture(GetSampler2D(material.binding_normal_map), liger_in.tex_coords).xyz;
-            normal               = normalize(normal);
+            f32vec3 normal       = 2.0f * texture(GetSampler2D(material.binding_normal_map), liger_in.tex_coords).xyz - 1.0f;
             normal               = normalize(liger_in.tbn * normal);
             surface_point.normal = normal;
           } else {
@@ -131,10 +131,11 @@ FragmentShader:
           surface_point.to_camera = normalize(GetCamera(liger_in).ws_position - surface_point.position);
 
           /* Base color */
-          if (material.binding_albedo_map != kInvalidBinding) {
-            surface_point.base_color = texture(GetSampler2D(material.binding_albedo_map), liger_in.tex_coords).rgb;
+          if (material.binding_base_color_map != kInvalidBinding) {
+            surface_point.base_color = texture(GetSampler2D(material.binding_base_color_map), liger_in.tex_coords).rgb;
+            surface_point.base_color = pow(surface_point.base_color, f32vec3(2.2f));  // NOTE (tralf-strues): sRGB to linear space
           } else {
-            surface_point.base_color = material.albedo_color;
+            surface_point.base_color = material.base_color;
           }
 
           /* Metallic & roughness */
@@ -155,10 +156,11 @@ FragmentShader:
         }
 
   Code: | #glsl
-    PBR_SurfacePoint surface_point = GetSurfaceProperties(liger_in);
+    f32vec3 emission = f32vec3(0.0f);
+    PBR_SurfacePoint surface_point = GetSurfaceProperties(liger_in, emission);
 
-    f32vec3 kLightDirection = normalize(f32vec3(-1.0f, -2.0f, -0.1f));
-    f32vec3 kLightRadiance  = f32vec3(2.5f,  2.5f,  2.5f);
+    f32vec3 kLightDirection = normalize(f32vec3(-1.5f, -2.0f, 0.5f));
+    f32vec3 kLightRadiance  = f32vec3(3.0f,  3.0f,  3.0f);
     f32vec3 kAmbient        = f32vec3(0.03f, 0.03f, 0.03f);
 
     PBR_LightSample light_sample;
@@ -171,5 +173,7 @@ FragmentShader:
     if (dot(surface_point.normal, light_sample.to_light) <= 0.0f) {
       L0 = kAmbient * surface_point.base_color;
     }
+
+    L0 += emission;
 
     out_color = f32vec4(L0, 1.0f);

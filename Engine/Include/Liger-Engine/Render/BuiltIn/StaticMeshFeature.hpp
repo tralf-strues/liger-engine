@@ -46,20 +46,24 @@ struct Vertex3D {
 /* Assets */
 struct Material {
   struct UBO {
-    SHADER_STRUCT_MEMBER(glm::vec3)                     albedo_color;
+    SHADER_STRUCT_MEMBER(glm::vec3)                     base_color;
+    SHADER_STRUCT_MEMBER(glm::vec3)                     emission_color;
+    SHADER_STRUCT_MEMBER(float)                         emission_intensity;
     SHADER_STRUCT_MEMBER(float)                         metallic;
     SHADER_STRUCT_MEMBER(float)                         roughness;
-    SHADER_STRUCT_MEMBER(rhi::TextureDescriptorBinding) binding_albedo_map;
+    SHADER_STRUCT_MEMBER(rhi::TextureDescriptorBinding) binding_base_color_map;
     SHADER_STRUCT_MEMBER(rhi::TextureDescriptorBinding) binding_normal_map;
     SHADER_STRUCT_MEMBER(rhi::TextureDescriptorBinding) binding_metallic_roughness_map;
   };
 
   std::unique_ptr<rhi::IBuffer>                 ubo;
 
-  glm::vec3                                     albedo_color;
+  glm::vec3                                     base_color;
+  glm::vec3                                     emission_color;
+  float                                         emission_intensity;
   float                                         metallic;
   float                                         roughness;
-  asset::Handle<std::unique_ptr<rhi::ITexture>> albedo_map;
+  asset::Handle<std::unique_ptr<rhi::ITexture>> base_color_map;
   asset::Handle<std::unique_ptr<rhi::ITexture>> normal_map;
   asset::Handle<std::unique_ptr<rhi::ITexture>> metallic_roughness_map;
 };

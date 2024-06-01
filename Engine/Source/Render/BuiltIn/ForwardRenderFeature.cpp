@@ -39,7 +39,7 @@ ForwardRenderFeature::ForwardRenderFeature(rhi::RenderGraph::ResourceVersion rg_
 void ForwardRenderFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
   rhi::RenderGraph::DependentTextureInfo color_info{};
   color_info.extent.SetDependency(rg_output_);
-  color_info.format          = rhi::Format::R16G16B16A16_SFLOAT;
+  color_info.format          = rhi::Format::B10G11R11_UFLOAT;
   color_info.type            = rhi::TextureType::Texture2D;
   color_info.usage           = rhi::DeviceResourceState::ColorTarget | rhi::DeviceResourceState::ShaderSampled | rhi::DeviceResourceState::StorageTextureReadWrite;
   color_info.cube_compatible = false;
