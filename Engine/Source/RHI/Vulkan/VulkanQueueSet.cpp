@@ -102,7 +102,7 @@ std::vector<VkDeviceQueueCreateInfo> VulkanQueueSet::FillQueueCreateInfos(VkPhys
   queue_family_indices_ = indices;
 
   /* Fill create infos */
-  constexpr float kDefaultQueuePriority = 1.0f;
+  static const float kDefaultQueuePriority = 1.0f;
 
   auto add_queue_create_info = [&](uint32_t family_index) {
     create_infos.emplace_back(VkDeviceQueueCreateInfo {

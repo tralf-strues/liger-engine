@@ -200,9 +200,8 @@ struct ColorBlendInfo {
 };
 
 struct AttachmentInfo {
-  std::vector<Format> render_target_formats;
+  std::vector<Format> color_target_formats;
   Format              depth_stencil_format{Format::Invalid};
-  uint8_t             samples{1};
 };
 
 class IShaderModule;

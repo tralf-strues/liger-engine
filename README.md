@@ -1,5 +1,5 @@
 # Liger Engine
-![Linux/MacOS build status](https://github.com/tralf-strues/liger-engine/actions/workflows/build.yml/badge.svg?branch=main)
+![Linux/MacOS build status](https://github.com/tralf-strues/liger-engine/actions/workflows/build_linux_and_macos.yml/badge.svg?branch=main)
 
 Liger engine is a personal learning game engine, currently in the early stages development.
 

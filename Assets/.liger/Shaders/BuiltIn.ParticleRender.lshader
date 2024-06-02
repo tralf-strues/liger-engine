@@ -28,7 +28,6 @@ ColorBlendInfo:
 AttachmentInfo:
   RenderTargets: [B10G11R11_UFLOAT]
   DepthStencilTarget: D32_SFLOAT
-  Samples: 1
 
 Input:
   - Name: Particles

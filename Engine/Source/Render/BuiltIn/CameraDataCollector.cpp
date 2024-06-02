@@ -46,7 +46,7 @@ void CameraDataCollector::Run(const ecs::Camera& camera, const ecs::WorldTransfo
   data->far         = camera.far;
 }
 
-void CameraDataCollector::PreRender(rhi::IDevice&, rhi::Context& context) {
+void CameraDataCollector::PreRender(rhi::IDevice&, rhi::RenderGraph&, rhi::Context& context) {
   context.Insert(*ubo_camera_data_.GetData());
   context.Insert(CameraDataBinding{.binding_ubo = ubo_camera_data_->GetUniformDescriptorBinding()});
 }

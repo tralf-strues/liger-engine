@@ -368,12 +368,12 @@ bool ParseGraphicsPipelineInfo(Declaration& declaration, YAML::Node& root) {
     declaration.attachments = rhi::AttachmentInfo{};
 
     if (auto render_targets_node = attachments_node["RenderTargets"]) {
-      declaration.attachments->render_target_formats.reserve(render_targets_node.size());
+      declaration.attachments->color_target_formats.reserve(render_targets_node.size());
 
       for (auto target_node : render_targets_node) {
         auto value_str = target_node.as<std::string>();
         if (auto value = StringToEnum<rhi::Format>(value_str)) {
-          declaration.attachments->render_target_formats.push_back(*value);
+          declaration.attachments->color_target_formats.push_back(*value);
         } else {
           LIGER_LOG_ERROR(kLogChannelShader, "Property '{0}' contains unknown token '{1}'", "RenderTargets", value_str);
           return false;
@@ -383,10 +383,6 @@ bool ParseGraphicsPipelineInfo(Declaration& declaration, YAML::Node& root) {
 
     if (!parse_enum(attachments_node, "DepthStencilTarget", declaration.attachments->depth_stencil_format)) {
       return false;
-    }
-
-    if (auto samples_node = attachments_node["Samples"]) {
-      declaration.attachments->samples = samples_node.as<uint32_t>();
     }
   }
 

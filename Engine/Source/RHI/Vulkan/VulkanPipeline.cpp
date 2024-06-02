@@ -133,7 +133,8 @@ bool VulkanPipeline::Init(const GraphicsInfo& info) {
   vk_input_assembly_info.primitiveRestartEnable = VK_FALSE;
 
   /* Dynamic states */
-  const std::vector<VkDynamicState> vk_dynamic_states = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
+  const std::vector<VkDynamicState> vk_dynamic_states = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR,
+                                                         VK_DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT};
 
   VkPipelineDynamicStateCreateInfo vk_dynamic_state_info{};
   vk_dynamic_state_info.sType             = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
@@ -185,7 +186,7 @@ bool VulkanPipeline::Init(const GraphicsInfo& info) {
   VkPipelineMultisampleStateCreateInfo vk_multisampling_info{};
   vk_multisampling_info.sType                 = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
   vk_multisampling_info.sampleShadingEnable   = VK_FALSE;
-  vk_multisampling_info.rasterizationSamples  = static_cast<VkSampleCountFlagBits>(info.attachments.samples);
+  vk_multisampling_info.rasterizationSamples  = static_cast<VkSampleCountFlagBits>(1U);  // NOTE (tralf-strues): set dynamically
   vk_multisampling_info.minSampleShading      = 1.0f;
   vk_multisampling_info.pSampleMask           = nullptr;
   vk_multisampling_info.alphaToCoverageEnable = VK_FALSE;
@@ -216,8 +217,8 @@ bool VulkanPipeline::Init(const GraphicsInfo& info) {
   vk_blend_attachment_state.dstAlphaBlendFactor = GetVulkanBlendFactor(info.blend.dst_alpha_factor);
   vk_blend_attachment_state.alphaBlendOp        = GetVulkanBlendOp(info.blend.alpha_operation);
 
-  std::vector<VkPipelineColorBlendAttachmentState> vk_blend_attachment_states{
-      info.attachments.render_target_formats.size(), vk_blend_attachment_state};
+  std::vector<VkPipelineColorBlendAttachmentState> vk_blend_attachment_states(
+      info.attachments.color_target_formats.size(), vk_blend_attachment_state);
 
   VkPipelineColorBlendStateCreateInfo vk_color_blend_info{};
   vk_color_blend_info.sType             = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
@@ -232,9 +233,9 @@ bool VulkanPipeline::Init(const GraphicsInfo& info) {
 
   /* Attachment Info */
   std::vector<VkFormat> vk_color_attachment_formats;
-  vk_color_attachment_formats.reserve(info.attachments.render_target_formats.size());
+  vk_color_attachment_formats.reserve(info.attachments.color_target_formats.size());
 
-  for (auto format : info.attachments.render_target_formats) {
+  for (auto format : info.attachments.color_target_formats) {
     vk_color_attachment_formats.emplace_back(GetVulkanFormat(format));
   }
 
@@ -252,7 +253,7 @@ bool VulkanPipeline::Init(const GraphicsInfo& info) {
     .stencilAttachmentFormat = stencil_used ? GetVulkanFormat(depth_stencil_format) : VK_FORMAT_UNDEFINED
   };
 
-  /*  pipeline */
+  /* Pipeline */
   VkGraphicsPipelineCreateInfo vk_pipeline_info{};
   vk_pipeline_info.sType               = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
   vk_pipeline_info.pNext               = &vk_pipeline_rendering;

@@ -49,11 +49,18 @@ class ForwardRenderFeature : public IFeature {
 
   void SetupRenderGraph(rhi::RenderGraphBuilder& builder) override;
 
+  void UpdateSampleCount(uint8_t new_sample_count);
+
+  void PreRender(rhi::IDevice&, rhi::RenderGraph& graph, rhi::Context&) override;
+
  private:
   std::vector<Layer>                layers_;
   rhi::RenderGraph::ResourceVersion rg_output_;
 
+  uint8_t                           sample_count_{1U};
+
   rhi::RenderGraph::ResourceVersion rg_color_;
+  rhi::RenderGraph::ResourceVersion rg_resolve_;
   rhi::RenderGraph::ResourceVersion rg_depth_;
 
   rhi::RenderGraph::ResourceVersion rg_color_after_opaque_;

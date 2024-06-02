@@ -45,8 +45,8 @@ class VulkanRenderGraph : public RenderGraph {
   ~VulkanRenderGraph() override = default;
 
   void ReimportTexture(ResourceVersion version, TextureResource new_texture) override;
-
   void ReimportBuffer(ResourceVersion version, BufferResource new_buffer) override;
+  void UpdateTransientTextureSamples(ResourceVersion version, uint8_t new_sample_count) override;
 
   void Execute(Context& context, VkSemaphore wait, uint64_t wait_value, VkSemaphore signal, uint64_t signal_value);
 
@@ -59,6 +59,7 @@ class VulkanRenderGraph : public RenderGraph {
     std::string name;
 
     VkRenderingInfoKHR* rendering_info         = nullptr;
+    uint8_t             samples                = 1U;
     uint32_t            queue_idx              = 0;
     DependencyLevel     dependency_level       = 0;
 
@@ -111,12 +112,13 @@ class VulkanRenderGraph : public RenderGraph {
 
   VulkanDevice* device_{nullptr};
   bool          dirty_{false};
+  bool          force_recreate_resources_{false};
   bool          first_frame_{true};
 
   std::vector<VulkanNode> vulkan_nodes_;
 
-  std::vector<std::unique_ptr<ITexture>> transient_textures_;
-  std::vector<std::unique_ptr<IBuffer>>  transient_buffers_;
+  std::unordered_map<ResourceId, std::unique_ptr<ITexture>> transient_textures_;
+  std::unordered_map<ResourceId, std::unique_ptr<IBuffer>>  transient_buffers_;
 
   std::vector<VkRenderingInfo>           vk_rendering_infos_;
   std::vector<VkRenderingAttachmentInfo> vk_attachments_;

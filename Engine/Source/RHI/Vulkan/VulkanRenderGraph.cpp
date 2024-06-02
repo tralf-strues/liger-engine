@@ -48,6 +48,14 @@ void VulkanRenderGraph::ReimportBuffer(ResourceVersion version, BufferResource n
 //   dirty_ = true; TODO(tralf-strues): dependent buffer info
 }
 
+void VulkanRenderGraph::UpdateTransientTextureSamples(ResourceVersion version, uint8_t new_sample_count) {
+  auto& texture_info = transient_texture_infos_[resource_version_registry_.GetResourceId(version)];
+  if (texture_info.samples.Get() != new_sample_count) {
+    force_recreate_resources_ = true;
+    texture_info.samples = new_sample_count;
+  }
+}
+
 void VulkanRenderGraph::Execute(Context& context, VkSemaphore wait, uint64_t wait_value, VkSemaphore signal, uint64_t signal_value) {
   if (first_frame_) {
     UpdateDependentResourceValues();
@@ -68,7 +76,8 @@ void VulkanRenderGraph::Execute(Context& context, VkSemaphore wait, uint64_t wai
     LinkBarriersToResources();
   }
 
-  dirty_ = false;
+  dirty_                    = false;
+  force_recreate_resources_ = false;
 
   auto frame_idx = device_->CurrentFrame();
   command_pool_.Reset(frame_idx);
@@ -209,6 +218,8 @@ void VulkanRenderGraph::Execute(Context& context, VkSemaphore wait, uint64_t wai
 
         vkCmdSetViewport(cmds->Get(), 0, 1, &viewport);
         vkCmdSetScissor(cmds->Get(), 0, 1, &scissor);
+
+        vkCmdSetRasterizationSamplesEXT(cmds->Get(), static_cast<VkSampleCountFlagBits>(node->samples));
       }
 
       auto& job = dag_.GetNode(GetNodeHandle(*node)).job;
@@ -312,8 +323,9 @@ bool VulkanRenderGraph::UpdateDependentResourceValues() {
       }
     }
 
-    if (changed) {
-      auto& texture = transient_textures_.emplace_back(device_->CreateTexture(dependent_info.Get()));
+    if (changed || force_recreate_resources_) {
+      transient_textures_[resource_id] = device_->CreateTexture(dependent_info.Get());
+      auto& texture = transient_textures_[resource_id];
 
       for (const auto& view_info : transient_texture_view_infos_[resource_id]) {
         texture->CreateView(view_info);
@@ -330,7 +342,8 @@ bool VulkanRenderGraph::UpdateDependentResourceValues() {
 
 void VulkanRenderGraph::RecreateTransientResources() {
   for (const auto& [id, info] : transient_buffer_infos_) {
-    auto& buffer = transient_buffers_.emplace_back(device_->CreateBuffer(info));
+    transient_buffers_[id] = device_->CreateBuffer(info);
+    auto& buffer = transient_buffers_[id];
     resource_version_registry_.UpdateResource(id, buffer.get());
   }
 }
@@ -357,6 +370,7 @@ void VulkanRenderGraph::SetupAttachments() {
     }
 
     Extent2D render_area;
+    uint32_t samples = 1U;
 
     /* First get all color attachments */
     size_t first_color_attachment_idx = kInvalidIdx;
@@ -373,6 +387,8 @@ void VulkanRenderGraph::SetupAttachments() {
       const auto extent = texture->GetInfo().extent;
       render_area.x = extent.x;
       render_area.y = extent.y;
+
+      samples = texture->GetInfo().samples;
 
       if (write.state == DeviceResourceState::ColorTarget) {
         vk_attachments_[cur_attachment_idx] = VkRenderingAttachmentInfo {
@@ -394,6 +410,28 @@ void VulkanRenderGraph::SetupAttachments() {
 
         ++cur_attachment_idx;
         ++color_attachment_count;
+      }
+    }
+
+    /* Set color resolve */
+    uint32_t color_resolve_count = 0;
+    if (color_attachment_count > 0) {
+      for (const auto& write : node.write) {
+        auto resource = resource_version_registry_.TryGetResourceByVersion<TextureResource>(write.version);
+        if (!resource || !resource->texture) {
+          continue;
+        }
+
+        auto* texture = static_cast<VulkanTexture*>(resource->texture);
+
+        if (write.state == DeviceResourceState::ColorMultisampleResolve) {
+          auto& attachment_info = vk_attachments_[first_color_attachment_idx + color_resolve_count];
+          attachment_info.resolveMode        = VK_RESOLVE_MODE_AVERAGE_BIT;
+          attachment_info.resolveImageView   = texture->GetVulkanView(resource->view);
+          attachment_info.resolveImageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+          ++color_resolve_count;
+        }
       }
     }
 
@@ -446,6 +484,7 @@ void VulkanRenderGraph::SetupAttachments() {
     };
 
     GetVulkanNode(node).rendering_info = &vk_rendering_infos_[cur_rendering_idx];
+    GetVulkanNode(node).samples        = samples;
     ++cur_rendering_idx;
   }
 }
@@ -459,7 +498,9 @@ void VulkanRenderGraph::CalculateRenderPassCount(size_t& render_pass_count, size
     ++render_pass_count;
 
     for (const auto& write : node.write) {
-      if (write.state == DeviceResourceState::ColorTarget || write.state == DeviceResourceState::DepthStencilTarget) {
+      if (write.state == DeviceResourceState::ColorTarget ||
+          write.state == DeviceResourceState::ColorMultisampleResolve ||
+          write.state == DeviceResourceState::DepthStencilTarget) {
         ++total_attachment_count;
       }
     }

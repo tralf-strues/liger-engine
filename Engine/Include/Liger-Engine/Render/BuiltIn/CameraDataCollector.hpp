@@ -44,7 +44,7 @@ class CameraDataCollector : public IFeature, public ecs::ComponentSystem<const e
   void SetupEntitySystems(ecs::SystemGraph& systems) override;
   void Run(const ecs::Camera& camera, const ecs::WorldTransform& transform) override;
 
-  void PreRender(rhi::IDevice&, rhi::Context& context) override;
+  void PreRender(rhi::IDevice&, rhi::RenderGraph&, rhi::Context& context) override;
 
  private:
   rhi::UniqueMappedBuffer<CameraData> ubo_camera_data_;

@@ -253,6 +253,10 @@ inline constexpr VkImageUsageFlags GetVulkanImageUsage(DeviceResourceState state
     vk_usage |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
   }
 
+  if (EnumBitmaskContains(states, DeviceResourceState::ColorMultisampleResolve)) {
+    vk_usage |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+  }
+
   if (EnumBitmaskContains(states, DeviceResourceState::DepthStencilTarget)) {
     vk_usage |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
   }
@@ -335,7 +339,8 @@ inline constexpr VkPipelineStageFlags2 GetVulkanPipelineSrcStage(JobType node_ty
     stage = VK_PIPELINE_STAGE_2_TRANSFER_BIT;
   } else if (resource_state == DeviceResourceState::ShaderSampled) {
     stage = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT;
-  } else if (resource_state == DeviceResourceState::ColorTarget) {
+  } else if (resource_state == DeviceResourceState::ColorTarget ||
+             resource_state == DeviceResourceState::ColorMultisampleResolve) {
     stage = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT;
   } else if (resource_state == DeviceResourceState::DepthStencilTarget ||
              resource_state == DeviceResourceState::DepthStencilRead) {
@@ -356,7 +361,8 @@ inline constexpr VkPipelineStageFlags2 GetVulkanPipelineDstStage(JobType node_ty
              resource_state == DeviceResourceState::UniformBuffer ||
              resource_state == DeviceResourceState::StorageBufferRead) {
     stage = VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT;  // TODO (tralf-strues): Sampling in vertex shaders is rare
-  } else if (resource_state == DeviceResourceState::ColorTarget) {
+  } else if (resource_state == DeviceResourceState::ColorTarget ||
+             resource_state == DeviceResourceState::ColorMultisampleResolve) {
     stage = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT;
   } else if (resource_state == DeviceResourceState::DepthStencilTarget ||
              resource_state == DeviceResourceState::DepthStencilRead) {
@@ -386,6 +392,10 @@ inline constexpr VkAccessFlags2 GetVulkanAccessFlags(DeviceResourceState state) 
   }
 
   if (EnumBitmaskContains(state, DeviceResourceState::ColorTarget)) {
+    vk_access |= VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT;
+  }
+
+  if (EnumBitmaskContains(state, DeviceResourceState::ColorMultisampleResolve)) {
     vk_access |= VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT;
   }
 
@@ -443,6 +453,7 @@ inline constexpr VkImageLayout GetVulkanImageLayout(DeviceResourceState state) {
     case (DeviceResourceState::TransferDst):             { return VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL; }
     case (DeviceResourceState::ShaderSampled):           { return VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL; }
     case (DeviceResourceState::ColorTarget):             { return VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL; }
+    case (DeviceResourceState::ColorMultisampleResolve): { return VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL; }
     case (DeviceResourceState::DepthStencilTarget):      { return VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL; }
     case (DeviceResourceState::DepthStencilRead):        { return VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL; }
     case (DeviceResourceState::StorageTextureRead):      { return VK_IMAGE_LAYOUT_GENERAL; }
