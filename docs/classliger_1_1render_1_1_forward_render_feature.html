@@ -94,7 +94,7 @@ $(document).ready(function(){initNavTree('classliger_1_1render_1_1_forward_rende
 <div class="dynheader">
 Inheritance diagram for liger::render::ForwardRenderFeature:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classliger_1_1render_1_1_forward_render_feature__inherit__graph.svg" width="267" height="346"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classliger_1_1render_1_1_forward_render_feature__inherit__graph.svg" width="267" height="375"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 <table class="memberdecls">
@@ -119,6 +119,12 @@ std::span&lt; <a class="el" href="classliger_1_1render_1_1_layer.html">Layer</a>
 <tr class="memitem:a3b40ea1d30186f085ad636c7f5ab8519"><td class="memItemLeft" align="right" valign="top"><a id="a3b40ea1d30186f085ad636c7f5ab8519"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>SetupRenderGraph</b> (<a class="el" href="classliger_1_1rhi_1_1_render_graph_builder.html">rhi::RenderGraphBuilder</a> &amp;builder) override</td></tr>
 <tr class="separator:a3b40ea1d30186f085ad636c7f5ab8519"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ab8272e1266afa5a6f32f71e2844c3b"><td class="memItemLeft" align="right" valign="top"><a id="a1ab8272e1266afa5a6f32f71e2844c3b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>UpdateSampleCount</b> (uint8_t new_sample_count)</td></tr>
+<tr class="separator:a1ab8272e1266afa5a6f32f71e2844c3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e47023b2539fcf0bded1305ba5d1a1f"><td class="memItemLeft" align="right" valign="top"><a id="a9e47023b2539fcf0bded1305ba5d1a1f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>PreRender</b> (<a class="el" href="classliger_1_1rhi_1_1_i_device.html">rhi::IDevice</a> &amp;, <a class="el" href="classliger_1_1rhi_1_1_render_graph.html">rhi::RenderGraph</a> &amp;graph, <a class="el" href="classliger_1_1rhi_1_1_context.html">rhi::Context</a> &amp;) override</td></tr>
+<tr class="separator:a9e47023b2539fcf0bded1305ba5d1a1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classliger_1_1render_1_1_i_feature"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classliger_1_1render_1_1_i_feature')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classliger_1_1render_1_1_i_feature.html">liger::render::IFeature</a></td></tr>
 <tr class="memitem:a3a511de4c8048c15f7060ca162fc8a13 inherit pub_methods_classliger_1_1render_1_1_i_feature"><td class="memItemLeft" align="right" valign="top"><a id="a3a511de4c8048c15f7060ca162fc8a13"></a>
 virtual std::span&lt; const std::string_view &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>DependencyFeatures</b> () const</td></tr>
@@ -129,12 +135,9 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>AddLayerJobs<
 <tr class="memitem:a4be56e2da7742aebb543d834dda7cc56 inherit pub_methods_classliger_1_1render_1_1_i_feature"><td class="memItemLeft" align="right" valign="top"><a id="a4be56e2da7742aebb543d834dda7cc56"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>SetupEntitySystems</b> (<a class="el" href="classliger_1_1ecs_1_1_system_graph.html">ecs::SystemGraph</a> &amp;)</td></tr>
 <tr class="separator:a4be56e2da7742aebb543d834dda7cc56 inherit pub_methods_classliger_1_1render_1_1_i_feature"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3545f58a765c39e024f54c5f3b9e0f75 inherit pub_methods_classliger_1_1render_1_1_i_feature"><td class="memItemLeft" align="right" valign="top"><a id="a3545f58a765c39e024f54c5f3b9e0f75"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>PreRender</b> (<a class="el" href="classliger_1_1rhi_1_1_i_device.html">rhi::IDevice</a> &amp;, <a class="el" href="classliger_1_1rhi_1_1_context.html">rhi::Context</a> &amp;)</td></tr>
-<tr class="separator:a3545f58a765c39e024f54c5f3b9e0f75 inherit pub_methods_classliger_1_1render_1_1_i_feature"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8fcaa40f5bf03bdb83a124dd536fe09 inherit pub_methods_classliger_1_1render_1_1_i_feature"><td class="memItemLeft" align="right" valign="top"><a id="ae8fcaa40f5bf03bdb83a124dd536fe09"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>PostRender</b> (<a class="el" href="classliger_1_1rhi_1_1_i_device.html">rhi::IDevice</a> &amp;, <a class="el" href="classliger_1_1rhi_1_1_context.html">rhi::Context</a> &amp;)</td></tr>
-<tr class="separator:ae8fcaa40f5bf03bdb83a124dd536fe09 inherit pub_methods_classliger_1_1render_1_1_i_feature"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72280df99101ea67462784b484d26b03 inherit pub_methods_classliger_1_1render_1_1_i_feature"><td class="memItemLeft" align="right" valign="top"><a id="a72280df99101ea67462784b484d26b03"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>PostRender</b> (<a class="el" href="classliger_1_1rhi_1_1_i_device.html">rhi::IDevice</a> &amp;, <a class="el" href="classliger_1_1rhi_1_1_render_graph.html">rhi::RenderGraph</a> &amp;, <a class="el" href="classliger_1_1rhi_1_1_context.html">rhi::Context</a> &amp;)</td></tr>
+<tr class="separator:a72280df99101ea67462784b484d26b03 inherit pub_methods_classliger_1_1render_1_1_i_feature"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">

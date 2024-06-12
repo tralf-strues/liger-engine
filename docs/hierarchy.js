@@ -11,6 +11,7 @@ var hierarchy =
     [ "liger::ecs::Camera", "structliger_1_1ecs_1_1_camera.html", null ],
     [ "liger::render::CameraData", "structliger_1_1render_1_1_camera_data.html", null ],
     [ "liger::render::CameraDataBinding", "structliger_1_1render_1_1_camera_data_binding.html", null ],
+    [ "liger::render::ClusteredLightData", "structliger_1_1render_1_1_clustered_light_data.html", null ],
     [ "liger::shader::Declaration::CodeSnippet", "structliger_1_1shader_1_1_declaration_1_1_code_snippet.html", null ],
     [ "liger::rhi::ColorBlendInfo", "structliger_1_1rhi_1_1_color_blend_info.html", null ],
     [ "liger::shader::Compiler", "classliger_1_1shader_1_1_compiler.html", null ],
@@ -19,6 +20,7 @@ var hierarchy =
     ] ],
     [ "ecs::ComponentSystem", null, [
       [ "liger::render::CameraDataCollector", "classliger_1_1render_1_1_camera_data_collector.html", null ],
+      [ "liger::render::ClusteredLightFeature", "classliger_1_1render_1_1_clustered_light_feature.html", null ],
       [ "liger::render::StaticMeshFeature", "classliger_1_1render_1_1_static_mesh_feature.html", null ]
     ] ],
     [ "liger::rhi::IPipeline::ComputeInfo", "structliger_1_1rhi_1_1_i_pipeline_1_1_compute_info.html", null ],
@@ -74,6 +76,7 @@ var hierarchy =
     [ "liger::render::IFeature", "classliger_1_1render_1_1_i_feature.html", [
       [ "liger::render::BloomFeature", "classliger_1_1render_1_1_bloom_feature.html", null ],
       [ "liger::render::CameraDataCollector", "classliger_1_1render_1_1_camera_data_collector.html", null ],
+      [ "liger::render::ClusteredLightFeature", "classliger_1_1render_1_1_clustered_light_feature.html", null ],
       [ "liger::render::ForwardRenderFeature", "classliger_1_1render_1_1_forward_render_feature.html", null ],
       [ "liger::render::ParticleSystemFeature", "classliger_1_1render_1_1_particle_system_feature.html", null ],
       [ "liger::render::StaticMeshFeature", "classliger_1_1render_1_1_static_mesh_feature.html", null ],
@@ -128,6 +131,7 @@ var hierarchy =
     [ "liger::render::Particle", "structliger_1_1render_1_1_particle.html", null ],
     [ "liger::render::ParticleEmitterInfo", "structliger_1_1render_1_1_particle_emitter_info.html", null ],
     [ "liger::PlatformLayer", "classliger_1_1_platform_layer.html", null ],
+    [ "liger::render::PointLightInfo", "structliger_1_1render_1_1_point_light_info.html", null ],
     [ "liger::rhi::IDevice::Properties", "structliger_1_1rhi_1_1_i_device_1_1_properties.html", null ],
     [ "liger::rhi::PushConstantInfo", "structliger_1_1rhi_1_1_push_constant_info.html", null ],
     [ "liger::Random", "classliger_1_1_random.html", null ],

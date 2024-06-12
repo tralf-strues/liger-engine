@@ -27,6 +27,13 @@ var files_dup =
     [ "CameraMovementScript.hpp", "_camera_movement_script_8hpp.html", [
       [ "CameraMovementScript", "classliger_1_1ecs_1_1_camera_movement_script.html", "classliger_1_1ecs_1_1_camera_movement_script" ]
     ] ],
+    [ "ClusteredLightData.hpp", "_clustered_light_data_8hpp.html", [
+      [ "PointLightInfo", "structliger_1_1render_1_1_point_light_info.html", "structliger_1_1render_1_1_point_light_info" ],
+      [ "ClusteredLightData", "structliger_1_1render_1_1_clustered_light_data.html", "structliger_1_1render_1_1_clustered_light_data" ]
+    ] ],
+    [ "ClusteredLightFeature.hpp", "_clustered_light_feature_8hpp.html", [
+      [ "ClusteredLightFeature", "classliger_1_1render_1_1_clustered_light_feature.html", "classliger_1_1render_1_1_clustered_light_feature" ]
+    ] ],
     [ "CommandBuffer.hpp", "_command_buffer_8hpp.html", "_command_buffer_8hpp" ],
     [ "Compiler.hpp", "_compiler_8hpp.html", [
       [ "Compiler", "classliger_1_1shader_1_1_compiler.html", "classliger_1_1shader_1_1_compiler" ]

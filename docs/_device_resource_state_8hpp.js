@@ -6,6 +6,7 @@ var _device_resource_state_8hpp =
       [ "TransferDst", "_device_resource_state_8hpp.html#aff9ce9abaa6374c6dc2a9d77f14bb23bafc2b74588602de2090079ac53957dfdd", null ],
       [ "ShaderSampled", "_device_resource_state_8hpp.html#aff9ce9abaa6374c6dc2a9d77f14bb23ba15c1f44b9751ae816267b76ec70d176d", null ],
       [ "ColorTarget", "_device_resource_state_8hpp.html#aff9ce9abaa6374c6dc2a9d77f14bb23baa193782000bdf049b37403d15e7b0e88", null ],
+      [ "ColorMultisampleResolve", "_device_resource_state_8hpp.html#aff9ce9abaa6374c6dc2a9d77f14bb23bac8ad76f6d6f84b6a97c16b1101adc717", null ],
       [ "DepthStencilTarget", "_device_resource_state_8hpp.html#aff9ce9abaa6374c6dc2a9d77f14bb23bacec614506ac7d4f4cb239c406797e512", null ],
       [ "DepthStencilRead", "_device_resource_state_8hpp.html#aff9ce9abaa6374c6dc2a9d77f14bb23baa7419f15f4d15322a98d29734b8e48b4", null ],
       [ "StorageTextureRead", "_device_resource_state_8hpp.html#aff9ce9abaa6374c6dc2a9d77f14bb23ba886ab894e263c2efeba0cb8472cec4f7", null ],

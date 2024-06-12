@@ -4,6 +4,7 @@ var classliger_1_1rhi_1_1_render_graph_builder =
     [ "ResourceVersion", "classliger_1_1rhi_1_1_render_graph_builder.html#ae9cc64f58ff426b54d00da3156619406", null ],
     [ "RenderGraphBuilder", "classliger_1_1rhi_1_1_render_graph_builder.html#a1a840ef8eb501ea9e497be7058a31295", null ],
     [ "RenderGraphBuilder", "classliger_1_1rhi_1_1_render_graph_builder.html#a34a494fad628e5f7d9452c4828d67915", null ],
+    [ "AddColorMultisampleResolve", "classliger_1_1rhi_1_1_render_graph_builder.html#a8ed28886c2cfd57d9f1471d0b030b9cc", null ],
     [ "AddColorTarget", "classliger_1_1rhi_1_1_render_graph_builder.html#aeb3409ed88c55931697c722df2d3b91a", null ],
     [ "BeginCompute", "classliger_1_1rhi_1_1_render_graph_builder.html#a09cabff7f6bd5806261026526ba09d25", null ],
     [ "BeginRenderPass", "classliger_1_1rhi_1_1_render_graph_builder.html#abbf2ac580888813bdb264fe5e89f020c", null ],

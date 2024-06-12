@@ -29,6 +29,8 @@ var classliger_1_1rhi_1_1_render_graph =
     [ "ReimportBuffer", "classliger_1_1rhi_1_1_render_graph.html#a9abdbdb08ab5fe8102b4360197749418", null ],
     [ "ReimportTexture", "classliger_1_1rhi_1_1_render_graph.html#a1d8b9845dee8fd5bc8ab3385fa56f971", null ],
     [ "SetJob", "classliger_1_1rhi_1_1_render_graph.html#a8ca97635f53a34346256fafba09fc7d7", null ],
+    [ "UpdateTransientBufferSize", "classliger_1_1rhi_1_1_render_graph.html#a8d70cbf41aa2491956d1889f98e3d75d", null ],
+    [ "UpdateTransientTextureSamples", "classliger_1_1rhi_1_1_render_graph.html#a484c0e4a3516167692befed09e9b72b9", null ],
     [ "RenderGraphBuilder", "classliger_1_1rhi_1_1_render_graph.html#a1df598451abe1aebf6631eaa2d0be93d", null ],
     [ "dag_", "classliger_1_1rhi_1_1_render_graph.html#aaac26a37f4ad553169f6b43ba381ef67", null ],
     [ "imported_resource_usages_", "classliger_1_1rhi_1_1_render_graph.html#a5004bb9df1b27d9a0cbc702cdfc2e257", null ],

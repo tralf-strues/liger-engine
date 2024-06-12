@@ -1,10 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,44,181,71"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,56,181,83"/>
 <area shape="rect" id="node2" href="$classliger_1_1render_1_1_camera_data_collector.html" title=" " alt="" coords="233,5,482,32"/>
-<area shape="rect" id="node3" href="$classliger_1_1render_1_1_static_mesh_feature.html" title=" " alt="" coords="242,56,473,83"/>
-<area shape="rect" id="node4" href="$classliger_1_1render_1_1_i_feature.html" title=" " alt="" coords="12,120,175,147"/>
-<area shape="rect" id="node5" href="$classliger_1_1render_1_1_bloom_feature.html" title=" " alt="" coords="257,208,457,235"/>
-<area shape="rect" id="node6" href="$classliger_1_1render_1_1_forward_render_feature.html" title=" " alt="" coords="229,259,485,285"/>
-<area shape="rect" id="node7" href="$classliger_1_1render_1_1_particle_system_feature.html" title=" " alt="" coords="230,107,485,133"/>
-<area shape="rect" id="node8" href="$classliger_1_1render_1_1_tonemap_feature.html" title=" " alt="" coords="249,157,466,184"/>
+<area shape="rect" id="node3" href="$classliger_1_1render_1_1_clustered_light_feature.html" title=" " alt="" coords="231,56,483,83"/>
+<area shape="rect" id="node4" href="$classliger_1_1render_1_1_static_mesh_feature.html" title=" " alt="" coords="242,107,473,133"/>
+<area shape="rect" id="node5" href="$classliger_1_1render_1_1_i_feature.html" title=" " alt="" coords="12,157,175,184"/>
+<area shape="rect" id="node6" href="$classliger_1_1render_1_1_bloom_feature.html" title=" " alt="" coords="257,208,457,235"/>
+<area shape="rect" id="node7" href="$classliger_1_1render_1_1_forward_render_feature.html" title=" " alt="" coords="229,259,485,285"/>
+<area shape="rect" id="node8" href="$classliger_1_1render_1_1_particle_system_feature.html" title=" " alt="" coords="230,309,485,336"/>
+<area shape="rect" id="node9" href="$classliger_1_1render_1_1_tonemap_feature.html" title=" " alt="" coords="249,157,466,184"/>
 </map>

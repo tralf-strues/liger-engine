@@ -1,11 +1,12 @@
 <map id="LogChannel.hpp" name="LogChannel.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="531,5,658,32"/>
-<area shape="rect" id="node2" href="$_shader_8hpp.html" title=" " alt="" coords="547,80,642,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="646,5,773,32"/>
+<area shape="rect" id="node2" href="$_shader_8hpp.html" title=" " alt="" coords="662,80,757,107"/>
 <area shape="rect" id="node3" href="$_bloom_feature_8hpp.html" title=" " alt="" coords="5,155,147,181"/>
-<area shape="rect" id="node4" href="$_forward_render_feature_8hpp.html" title=" " alt="" coords="171,155,368,181"/>
-<area shape="rect" id="node5" href="$_particle_system_feature_8hpp.html" title=" " alt="" coords="393,155,589,181"/>
-<area shape="rect" id="node6" href="$_static_mesh_feature_8hpp.html" title=" " alt="" coords="613,155,784,181"/>
-<area shape="rect" id="node7" href="$_tonemap_feature_8hpp.html" title=" " alt="" coords="809,155,967,181"/>
-<area shape="rect" id="node8" href="$_compiler_8hpp.html" title=" " alt="" coords="991,155,1099,181"/>
-<area shape="rect" id="node9" href="$_shader_loader_8hpp.html" title=" " alt="" coords="976,229,1115,256"/>
+<area shape="rect" id="node4" href="$_clustered_light_feature_8hpp.html" title=" " alt="" coords="171,155,365,181"/>
+<area shape="rect" id="node5" href="$_forward_render_feature_8hpp.html" title=" " alt="" coords="389,155,587,181"/>
+<area shape="rect" id="node6" href="$_particle_system_feature_8hpp.html" title=" " alt="" coords="611,155,807,181"/>
+<area shape="rect" id="node7" href="$_static_mesh_feature_8hpp.html" title=" " alt="" coords="832,155,1003,181"/>
+<area shape="rect" id="node8" href="$_tonemap_feature_8hpp.html" title=" " alt="" coords="1027,155,1186,181"/>
+<area shape="rect" id="node9" href="$_compiler_8hpp.html" title=" " alt="" coords="1210,155,1318,181"/>
+<area shape="rect" id="node10" href="$_shader_loader_8hpp.html" title=" " alt="" coords="1195,229,1333,256"/>
 </map>

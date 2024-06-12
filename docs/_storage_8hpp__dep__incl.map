@@ -1,8 +1,9 @@
 <map id="Storage.hpp" name="Storage.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="323,5,423,32"/>
-<area shape="rect" id="node2" href="$_manager_8hpp.html" title=" " alt="" coords="320,80,427,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="437,5,537,32"/>
+<area shape="rect" id="node2" href="$_manager_8hpp.html" title=" " alt="" coords="433,80,540,107"/>
 <area shape="rect" id="node3" href="$_bloom_feature_8hpp.html" title=" " alt="" coords="5,155,147,181"/>
-<area shape="rect" id="node4" href="$_particle_system_feature_8hpp.html" title=" " alt="" coords="171,155,367,181"/>
-<area shape="rect" id="node5" href="$_static_mesh_feature_8hpp.html" title=" " alt="" coords="392,155,563,181"/>
-<area shape="rect" id="node6" href="$_tonemap_feature_8hpp.html" title=" " alt="" coords="587,155,746,181"/>
+<area shape="rect" id="node4" href="$_clustered_light_feature_8hpp.html" title=" " alt="" coords="171,155,365,181"/>
+<area shape="rect" id="node5" href="$_particle_system_feature_8hpp.html" title=" " alt="" coords="389,155,585,181"/>
+<area shape="rect" id="node6" href="$_static_mesh_feature_8hpp.html" title=" " alt="" coords="609,155,780,181"/>
+<area shape="rect" id="node7" href="$_tonemap_feature_8hpp.html" title=" " alt="" coords="805,155,963,181"/>
 </map>

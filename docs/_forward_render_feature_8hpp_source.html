@@ -138,25 +138,35 @@ $(document).ready(function(){initNavTree('_forward_render_feature_8hpp_source.ht
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="keywordtype">void</span> SetupRenderGraph(<a class="code" href="classliger_1_1rhi_1_1_render_graph_builder.html">rhi::RenderGraphBuilder</a>&amp; builder) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  std::vector&lt;Layer&gt;                layers_;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  rhi::RenderGraph::ResourceVersion rg_output_;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  <span class="keywordtype">void</span> UpdateSampleCount(uint8_t new_sample_count);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  <span class="keywordtype">void</span> PreRender(<a class="code" href="classliger_1_1rhi_1_1_i_device.html">rhi::IDevice</a>&amp;, <a class="code" href="classliger_1_1rhi_1_1_render_graph.html">rhi::RenderGraph</a>&amp; graph, <a class="code" href="classliger_1_1rhi_1_1_context.html">rhi::Context</a>&amp;) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  rhi::RenderGraph::ResourceVersion rg_color_;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  rhi::RenderGraph::ResourceVersion rg_depth_;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  rhi::RenderGraph::ResourceVersion rg_color_after_opaque_;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  rhi::RenderGraph::ResourceVersion rg_depth_after_opaque_;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;};</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}  <span class="comment">// namespace liger::render</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  std::vector&lt;Layer&gt;                layers_;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  rhi::RenderGraph::ResourceVersion rg_output_;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  uint8_t                           sample_count_{1U};</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  rhi::RenderGraph::ResourceVersion rg_color_;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  rhi::RenderGraph::ResourceVersion rg_resolve_;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  rhi::RenderGraph::ResourceVersion rg_depth_;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  rhi::RenderGraph::ResourceVersion rg_color_after_opaque_;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  rhi::RenderGraph::ResourceVersion rg_depth_after_opaque_;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;};</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;}  <span class="comment">// namespace liger::render</span></div>
 <div class="ttc" id="a_default_components_8hpp_html"><div class="ttname"><a href="_default_components_8hpp.html">DefaultComponents.hpp</a></div></div>
 <div class="ttc" id="a_feature_8hpp_html"><div class="ttname"><a href="_feature_8hpp.html">Feature.hpp</a></div></div>
 <div class="ttc" id="a_shader_8hpp_html"><div class="ttname"><a href="_shader_8hpp.html">Shader.hpp</a></div></div>
 <div class="ttc" id="a_shader_alignment_8hpp_html"><div class="ttname"><a href="_shader_alignment_8hpp.html">ShaderAlignment.hpp</a></div></div>
 <div class="ttc" id="aclassliger_1_1render_1_1_forward_render_feature_html"><div class="ttname"><a href="classliger_1_1render_1_1_forward_render_feature.html">liger::render::ForwardRenderFeature</a></div><div class="ttdef"><b>Definition:</b> <a href="_forward_render_feature_8hpp_source.html#l00037">ForwardRenderFeature.hpp:37</a></div></div>
 <div class="ttc" id="aclassliger_1_1render_1_1_i_feature_html"><div class="ttname"><a href="classliger_1_1render_1_1_i_feature.html">liger::render::IFeature</a></div><div class="ttdef"><b>Definition:</b> <a href="_feature_8hpp_source.html#l00038">Feature.hpp:38</a></div></div>
-<div class="ttc" id="aclassliger_1_1rhi_1_1_render_graph_builder_html"><div class="ttname"><a href="classliger_1_1rhi_1_1_render_graph_builder.html">liger::rhi::RenderGraphBuilder</a></div><div class="ttdef"><b>Definition:</b> <a href="_render_graph_8hpp_source.html#l00152">RenderGraph.hpp:152</a></div></div>
+<div class="ttc" id="aclassliger_1_1rhi_1_1_context_html"><div class="ttname"><a href="classliger_1_1rhi_1_1_context.html">liger::rhi::Context</a></div><div class="ttdef"><b>Definition:</b> <a href="_context_8hpp_source.html#l00038">Context.hpp:38</a></div></div>
+<div class="ttc" id="aclassliger_1_1rhi_1_1_i_device_html"><div class="ttname"><a href="classliger_1_1rhi_1_1_i_device.html">liger::rhi::IDevice</a></div><div class="ttdoc">Logical device, an interface for working with a physical device (e.g. GPU).</div><div class="ttdef"><b>Definition:</b> <a href="_device_8hpp_source.html#l00044">Device.hpp:44</a></div></div>
+<div class="ttc" id="aclassliger_1_1rhi_1_1_render_graph_builder_html"><div class="ttname"><a href="classliger_1_1rhi_1_1_render_graph_builder.html">liger::rhi::RenderGraphBuilder</a></div><div class="ttdef"><b>Definition:</b> <a href="_render_graph_8hpp_source.html#l00154">RenderGraph.hpp:154</a></div></div>
+<div class="ttc" id="aclassliger_1_1rhi_1_1_render_graph_html"><div class="ttname"><a href="classliger_1_1rhi_1_1_render_graph.html">liger::rhi::RenderGraph</a></div><div class="ttdef"><b>Definition:</b> <a href="_render_graph_8hpp_source.html#l00057">RenderGraph.hpp:57</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

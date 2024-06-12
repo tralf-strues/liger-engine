@@ -1,8 +1,10 @@
 var structliger_1_1render_1_1_material =
 [
     [ "UBO", "structliger_1_1render_1_1_material_1_1_u_b_o.html", "structliger_1_1render_1_1_material_1_1_u_b_o" ],
-    [ "albedo_color", "structliger_1_1render_1_1_material.html#a6e6771e709a7dfc4ac9bc54f66d71b39", null ],
-    [ "albedo_map", "structliger_1_1render_1_1_material.html#ad70cc76288e26c4f58541412506673be", null ],
+    [ "base_color", "structliger_1_1render_1_1_material.html#a84ef61a69104db573ef346ede8f16388", null ],
+    [ "base_color_map", "structliger_1_1render_1_1_material.html#ae927dea71d80b59dcf67b3db6fc0f794", null ],
+    [ "emission_color", "structliger_1_1render_1_1_material.html#acf08187d6ac95388a69cc7af15bdd7c6", null ],
+    [ "emission_intensity", "structliger_1_1render_1_1_material.html#a419d8659e3f58b7852bbb58561ad439b", null ],
     [ "metallic", "structliger_1_1render_1_1_material.html#a4867572c2c15e9208ced5e81f7fcbf7b", null ],
     [ "metallic_roughness_map", "structliger_1_1render_1_1_material.html#a7776186656c1e8e326337a7d8cee3a9f", null ],
     [ "normal_map", "structliger_1_1render_1_1_material.html#ad59f6e139762d00681131f8b5178d3be", null ],
