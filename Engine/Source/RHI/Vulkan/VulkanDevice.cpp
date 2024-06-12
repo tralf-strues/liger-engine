@@ -51,6 +51,8 @@ VulkanDevice::VulkanDevice(Info info, uint32_t frames_in_flight, VkInstance inst
       transfer_engine_(*this) {}
 
 VulkanDevice::~VulkanDevice() {
+  transfer_engine_.Destroy();
+
   descriptor_manager_.Destroy();
 
   render_graph_semaphore_.Destroy();
