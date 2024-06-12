@@ -13,6 +13,8 @@ function(add_liger_link_flags flags)
   set(LIGER_LINK_FLAGS "${LIGER_LINK_FLAGS} ${flags}" PARENT_SCOPE)
 endfunction()
 
+add_liger_compile_flags("-DGLM_FORCE_DEPTH_ZERO_TO_ONE")
+
 # C++ version and standard library
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   add_liger_compile_flags("/std:c++20 -DNOMINMAX /permissive")

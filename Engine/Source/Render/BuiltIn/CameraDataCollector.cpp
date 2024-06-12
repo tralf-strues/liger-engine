@@ -41,6 +41,7 @@ void CameraDataCollector::Run(const ecs::Camera& camera, const ecs::WorldTransfo
   data->view        = transform.InverseMatrix();
   data->proj        = camera.ProjectionMatrix();
   data->proj_view   = data->proj * data->view;
+  data->inv_proj    = glm::inverse(data->proj);
   data->ws_position = transform.position;
   data->near        = camera.near;
   data->far         = camera.far;

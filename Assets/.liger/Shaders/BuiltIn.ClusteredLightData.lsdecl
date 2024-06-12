@@ -1,0 +1,44 @@
+Data: | #glsl
+  const u32vec2 kClusterSizeXY = u32vec2(16U, 16U);
+
+  struct PointLight {
+    f32vec3   ws_position;
+    float32_t radius;
+
+    f32vec3   color;
+    float32_t intensity;
+  };
+
+  struct AABB {
+    f32vec4 min_point;
+    f32vec4 max_point;
+  };
+
+  struct LightCluster {
+    uint32_t offset;
+    uint32_t count;
+    uint32_t pad0;
+    uint32_t pad1;
+  };
+
+Input:
+  - Name: PointLights
+    Type: storage-buffer
+    Layout: std430
+    Access: readonly
+    Contents: | #glsl
+      PointLight lights[];
+
+CodeSnippets:
+  - Insert: auto-global
+    Code: | #glsl
+      /**
+       * The formula is from https://advances.realtimerendering.com/s2016/Siggraph2016_idTech6.pdf:
+       *   id_z = log(view_space_depth) * (clusters_z_count / log(far / near)) - log(near) * (clusters_z_count / log(far / near))
+       *
+       * cluster_z_params.x = (clusters_z_count / log(far / near))
+       * cluster_z_params.y = log(near) * (clusters_z_count / log(far / near))
+       */
+      uint32_t CalculateClusterIdZ(float32_t view_space_depth, f32vec2 cluster_z_params) {
+        return uint32_t(log(-view_space_depth) * cluster_z_params.x - cluster_z_params.y);
+      }

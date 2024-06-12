@@ -28,6 +28,7 @@
 #include <Liger-Engine/Render/BuiltIn/StaticMeshFeature.hpp>
 
 #include <Liger-Engine/Render/BuiltIn/CameraData.hpp>
+#include <Liger-Engine/Render/BuiltIn/ClusteredLightData.hpp>
 #include <Liger-Engine/Render/LogChannel.hpp>
 
 namespace liger::render {
@@ -52,26 +53,30 @@ StaticMeshFeature::StaticMeshFeature(rhi::IDevice& device, asset::Manager& asset
     .size        = kMaxObjects * sizeof(Object),
     .usage       = rhi::DeviceResourceState::StorageBufferRead | rhi::DeviceResourceState::TransferDst,
     .cpu_visible = false,
-    .name        = "StaticMeshFeature::sbo_objects_"
+    .name        = "StaticMeshFeature - Objects"
   });
 
   sbo_batched_objects_ = device.CreateBuffer(rhi::IBuffer::Info {
     .size        = kMaxObjects * sizeof(BatchedObject),
     .usage       = rhi::DeviceResourceState::StorageBufferRead | rhi::DeviceResourceState::TransferDst,
     .cpu_visible = false,
-    .name        = "StaticMeshFeature::sbo_batched_objects_"
+    .name        = "StaticMeshFeature - Batches"
   });
 
   sbo_draw_commands_ = device.CreateBuffer(rhi::IBuffer::Info {
     .size        = kMaxMeshes * sizeof(rhi::DrawIndexedCommand),
     .usage       = rhi::DeviceResourceState::StorageBufferReadWrite | rhi::DeviceResourceState::IndirectArgument | rhi::DeviceResourceState::TransferDst,
     .cpu_visible = false,
-    .name        = "StaticMeshFeature::sbo_draw_commands_"
+    .name        = "StaticMeshFeature - Draw Cmds"
   });
 
   for (uint32_t object_idx = 0U; object_idx < kMaxObjects; ++object_idx) {
     free_list_.insert(object_idx);
   }
+}
+
+void StaticMeshFeature::UpdateMode(DebugMode new_mode) {
+  debug_mode_ = new_mode;
 }
 
 void StaticMeshFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
@@ -81,7 +86,7 @@ void StaticMeshFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
     .size        = sbo_objects_->GetInfo().size + sbo_batched_objects_->GetInfo().size + sbo_draw_commands_->GetInfo().size,
     .usage       = DeviceResourceState::TransferSrc,
     .cpu_visible = true,
-    .name        = "StaticMeshFeature - staging_buffer"
+    .name        = "StaticMeshFeature - Staging Buffer"
   });
 
   rg_versions_.objects         = builder.ImportBuffer(sbo_objects_.get(),         DeviceResourceState::TransferDst, DeviceResourceState::StorageBufferRead);
@@ -92,10 +97,10 @@ void StaticMeshFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
     .size        = kMaxObjects * sizeof(uint32_t),
     .usage       = DeviceResourceState::StorageBufferReadWrite,
     .cpu_visible = false,
-    .name        = "StaticMeshFeature - sbo_visible_object_indices"
+    .name        = "StaticMeshFeature - Visible Objects"
   });
 
-  builder.BeginTransfer("StaticMeshFeature - Prepare Buffers");
+  builder.BeginTransfer("Static Mesh - Prepare");
   builder.ReadBuffer(rg_versions_.staging_buffer,   DeviceResourceState::TransferSrc);
   builder.WriteBuffer(rg_versions_.objects,         DeviceResourceState::TransferDst);
   builder.WriteBuffer(rg_versions_.batched_objects, DeviceResourceState::TransferDst);
@@ -112,8 +117,8 @@ void StaticMeshFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
       return;
     }
 
-    auto staging_buffer = graph.GetBuffer(rg_versions_.staging_buffer);
-    auto* staging_data = staging_buffer->MapMemory();
+    auto  staging_buffer = graph.GetBuffer(rg_versions_.staging_buffer);
+    auto* staging_data   = staging_buffer->MapMemory();
 
     uint64_t objects_data_size         = objects_.size() * sizeof(objects_[0U]);
     uint64_t batched_objects_data_size = batched_objects_.size() * sizeof(batched_objects_[0U]);
@@ -135,7 +140,7 @@ void StaticMeshFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
   });
   builder.EndTransfer();
 
-  builder.BeginCompute("StaticMeshFeature - Frustum Cull");
+  builder.BeginCompute("Static Mesh - Frustum Cull");
   builder.ReadBuffer(rg_versions_.objects,                 DeviceResourceState::StorageBufferRead);
   builder.ReadBuffer(rg_versions_.batched_objects,         DeviceResourceState::StorageBufferRead);
   builder.WriteBuffer(rg_versions_.visible_object_indices, DeviceResourceState::StorageBufferWrite);
@@ -171,9 +176,14 @@ void StaticMeshFeature::AddLayerJobs(LayerMap& layer_map) {
   auto& layer = layer_map["Opaque"];
 
   layer->Emplace([this](rhi::RenderGraphBuilder& builder) {
-    builder.ReadBuffer(rg_versions_.objects,                rhi::DeviceResourceState::StorageBufferRead);
-    builder.ReadBuffer(rg_versions_.visible_object_indices, rhi::DeviceResourceState::StorageBufferRead);
-    builder.ReadBuffer(rg_versions_.final_draw_commands,    rhi::DeviceResourceState::IndirectArgument);
+    const auto& clustered_data = builder.GetContext().template Get<ClusteredLightData>();
+
+    builder.ReadBuffer(clustered_data.rg_point_lights,               rhi::DeviceResourceState::StorageBufferRead);
+    builder.ReadBuffer(clustered_data.rg_contributing_light_indices, rhi::DeviceResourceState::StorageBufferRead);
+    builder.ReadBuffer(clustered_data.rg_light_clusters,             rhi::DeviceResourceState::StorageBufferRead);
+    builder.ReadBuffer(rg_versions_.objects,                         rhi::DeviceResourceState::StorageBufferRead);
+    builder.ReadBuffer(rg_versions_.visible_object_indices,          rhi::DeviceResourceState::StorageBufferRead);
+    builder.ReadBuffer(rg_versions_.final_draw_commands,             rhi::DeviceResourceState::IndirectArgument);
   });
 
   layer->Emplace([this](auto& graph, auto& context, auto& cmds) {
@@ -181,10 +191,22 @@ void StaticMeshFeature::AddLayerJobs(LayerMap& layer_map) {
       return;
     }
 
+    const ClusteredLightData& clustered_data = context.template Get<ClusteredLightData>();
+    auto sbo_point_lights = graph.GetBuffer(clustered_data.rg_point_lights);
+    auto sbo_contributing_light_indices = graph.GetBuffer(clustered_data.rg_contributing_light_indices);
+    auto sbo_light_clusters = graph.GetBuffer(clustered_data.rg_light_clusters);
+
     auto sbo_visible_object_indices = graph.GetBuffer(rg_versions_.visible_object_indices);
     render_shader_->SetBuffer("Objects", sbo_objects_->GetStorageDescriptorBinding());
     render_shader_->SetBuffer("VisibleObjectIndices", sbo_visible_object_indices->GetStorageDescriptorBinding());
     render_shader_->SetBuffer("CameraData", context.template Get<CameraDataBinding>().binding_ubo);
+
+    render_shader_->SetBuffer("PointLights", sbo_point_lights->GetStorageDescriptorBinding());
+    render_shader_->SetBuffer("ContributingLightIndices", sbo_contributing_light_indices->GetStorageDescriptorBinding());
+    render_shader_->SetBuffer("LightClusters", sbo_light_clusters->GetStorageDescriptorBinding());
+    render_shader_->SetPushConstant("cluster_z_params", clustered_data.cluster_z_params);
+    render_shader_->SetPushConstant("clusters_count", clustered_data.clusters_count);
+    render_shader_->SetPushConstant("debug_mode", debug_mode_);
 
     render_shader_->BindPipeline(cmds);
     render_shader_->BindPushConstants(cmds);

@@ -1,0 +1,159 @@
+ComputeShader:
+  ThreadGroupSize: [32, 1, 1]
+
+  Use:
+    - Include: BuiltIn.ClusteredLightData.lsdecl
+    - Include: BuiltIn.Camera.lsdecl
+
+  Input:
+    - Name: ContributingLightIndices
+      Type: storage-buffer
+      Layout: std430
+      Access: readwrite
+      Contents: | #glsl
+        uint32_t contributing_light_count;
+        uint32_t indices[];
+
+    - Name: LightClusters
+      Type: storage-buffer
+      Layout: std430
+      Access: writeonly
+      Contents: | #glsl
+        LightCluster clusters[];
+
+    - Name: ClusterVolumes
+      Type: storage-buffer
+      Layout: std430
+      Access: readonly
+      Contents: | #glsl
+        AABB volumes[];
+
+    - Name: screen_resolution
+      Type: u32vec2
+      Modifier: push-constant
+
+    - Name: light_count
+      Type: uint32_t
+      Modifier: push-constant
+
+  CodeSnippets:
+    - Insert: auto-global
+      Code: | #glsl
+        const uint32_t kMaxLightsPerCluster = 512U;
+
+        shared uint32_t shared_lights_in_cluster[kMaxLightsPerCluster];
+        shared uint32_t shared_lights_in_cluster_count;
+
+        bool Intersect(AABB a, AABB b) {
+          return (a.min_point.x <= b.max_point.x && a.max_point.x >= b.min_point.x) &&
+                 (a.min_point.y <= b.max_point.y && a.max_point.y >= b.min_point.y) &&
+                 (a.min_point.z <= b.max_point.z && a.max_point.z >= b.min_point.z);
+        }
+
+        bool TestSphereAABB(f32vec4 sphere, AABB aabb) {
+          float32_t radius = sphere.w;
+          f32vec3   center = sphere.xyz;
+
+          /* Calculate distance from sphere's center to aabb */
+          float32_t sq_dist = 0.0f;
+          for (uint32_t i = 0U; i < 3U; ++i) {
+            float32_t v = center[i];
+
+            if (v < aabb.min_point[i]) {
+              sq_dist += (aabb.min_point[i] - v) * (aabb.min_point[i] - v);
+            }
+
+            if (v > aabb.max_point[i]) {
+              sq_dist += (aabb.max_point[i] - v) * (aabb.max_point[i] - v);
+            }
+          }
+
+          return sq_dist <= (radius * radius);
+        }
+
+        f32vec4 ScreenSpaceToViewSpace(f32vec4 screen, f32mat4 inverse_proj, u32vec2 screen_resolution){
+          /* Convert to NDC */
+          f32vec2 tex_coords = screen.xy / f32vec2(screen_resolution);
+
+          /* Convert to Clip Space */
+          f32vec4 clip = f32vec4(f32vec2(tex_coords.x, tex_coords.y)* 2.0 - 1.0, screen.z, screen.w);
+
+          /* Convert to World Space */
+          f32vec4 view = inverse_proj * clip;
+          view = view / view.w;
+
+          return view;
+        }
+
+        f32vec3 IntersectLineWithZPlane(f32vec3 from, f32vec3 to, float32_t z_plane) {
+          return to * z_plane / to.z;
+        }
+
+  Code: | #glsl
+    Camera camera = GetCamera(liger_in);
+
+    const uint32_t cluster_idx = gl_WorkGroupID.z * gl_NumWorkGroups.x * gl_NumWorkGroups.y +
+                                 gl_WorkGroupID.y * gl_NumWorkGroups.x +
+                                 gl_WorkGroupID.x;
+
+    /* Initialize global list */
+    if (gl_GlobalInvocationID == u32vec3(0U)) {
+      GetStorageBuffer(ContributingLightIndices, liger_in.binding_contributing_light_indices).contributing_light_count = 0U;
+    }
+    memoryBarrierShared();
+    barrier();
+
+    /* Initialize shared memory */
+    if (gl_LocalInvocationIndex == 0U) {
+      shared_lights_in_cluster_count = 0U;
+    }
+    memoryBarrierShared();
+    barrier();
+
+    /* Cull lights against cluster, lights are divided equally among threads */
+    const uint32_t thread_count           = gl_WorkGroupSize.x * gl_WorkGroupSize.y * gl_WorkGroupSize.z;
+    const uint32_t light_count_per_thread = (liger_in.light_count + thread_count - 1U) / thread_count;
+
+    for (uint32_t local_light_idx = 0U; local_light_idx < light_count_per_thread; ++local_light_idx) {
+      uint32_t light_idx = gl_LocalInvocationIndex * light_count_per_thread + local_light_idx;
+      if (light_idx >= liger_in.light_count) {
+        break;
+      }
+
+      const PointLight point_light = GetStorageBuffer(PointLights, liger_in.binding_point_lights).lights[light_idx];
+      f32vec4 sphere = f32vec4(point_light.ws_position, point_light.radius);
+      sphere.xyz = (camera.view * f32vec4(sphere.xyz, 1.0f)).xyz;
+
+      const AABB aabb = GetStorageBuffer(ClusterVolumes, liger_in.binding_cluster_volumes).volumes[cluster_idx];
+
+      AABB sphere_aabb;
+      sphere_aabb.min_point = f32vec4(sphere.xyz - f32vec3(sphere.w), 1.0f);
+      sphere_aabb.max_point = f32vec4(sphere.xyz + f32vec3(sphere.w), 1.0f);
+
+      if (TestSphereAABB(sphere, aabb)) {
+        uint32_t idx = atomicAdd(shared_lights_in_cluster_count, 1U);
+        shared_lights_in_cluster[idx] = light_idx;
+      }
+    }
+
+
+    memoryBarrierShared();
+    barrier();
+
+    /* Fill global light buffer */
+    if (gl_LocalInvocationIndex == 0U) {
+      uint32_t offset = atomicAdd(
+        GetStorageBuffer(ContributingLightIndices, liger_in.binding_contributing_light_indices).contributing_light_count,
+        shared_lights_in_cluster_count
+      );
+
+      LightCluster cluster;
+      cluster.offset = offset;
+      cluster.count  = shared_lights_in_cluster_count;
+
+      GetStorageBuffer(LightClusters, liger_in.binding_light_clusters).clusters[cluster_idx] = cluster;
+      for (uint32_t idx = 0U; idx < shared_lights_in_cluster_count; ++idx) {
+        GetStorageBuffer(ContributingLightIndices, liger_in.binding_contributing_light_indices).indices[offset + idx] =
+            shared_lights_in_cluster[idx];
+      }
+    }

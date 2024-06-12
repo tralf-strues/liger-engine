@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file CameraData.hpp
- * @date 2024-05-14
+ * @file ClusteredLightData.hpp
+ * @date 2024-06-03
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -28,22 +28,24 @@
 #pragma once
 
 #include <Liger-Engine/RHI/DescriptorBinding.hpp>
+#include <Liger-Engine/RHI/RenderGraph.hpp>
 #include <Liger-Engine/RHI/ShaderAlignment.hpp>
 
 namespace liger::render {
 
-struct CameraData {
-  SHADER_STRUCT_MEMBER(glm::mat4) view;
-  SHADER_STRUCT_MEMBER(glm::mat4) proj;
-  SHADER_STRUCT_MEMBER(glm::mat4) proj_view;
-  SHADER_STRUCT_MEMBER(glm::mat4) inv_proj;
-  SHADER_STRUCT_MEMBER(glm::vec3) ws_position;
-  SHADER_STRUCT_MEMBER(float)     near;
-  SHADER_STRUCT_MEMBER(float)     far;
+struct PointLightInfo {
+  glm::vec3 color;
+  float     intensity;
+  float     radius;
 };
 
-struct CameraDataBinding {
-  rhi::BufferDescriptorBinding binding_ubo;
+struct ClusteredLightData {
+  glm::uvec3 clusters_count;
+  glm::vec2  cluster_z_params;
+
+  rhi::RenderGraph::ResourceVersion rg_point_lights;
+  rhi::RenderGraph::ResourceVersion rg_contributing_light_indices;
+  rhi::RenderGraph::ResourceVersion rg_light_clusters;
 };
 
 }  // namespace liger::render

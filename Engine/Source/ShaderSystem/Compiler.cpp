@@ -86,9 +86,15 @@ inline const char* ToString(Declaration::Member::Type type) {
     case Declaration::Member::Type::UInt32:  { return "uint32_t";  }
     case Declaration::Member::Type::UInt64:  { return "uint64_t";  }
     case Declaration::Member::Type::Float32: { return "float32_t"; }
+
+    case Declaration::Member::Type::U32Vec2: { return "u32vec2";   }
+    case Declaration::Member::Type::U32Vec3: { return "u32vec3";   }
+    case Declaration::Member::Type::U32Vec4: { return "u32vec4";   }
+
     case Declaration::Member::Type::F32Vec2: { return "f32vec2";   }
     case Declaration::Member::Type::F32Vec3: { return "f32vec3";   }
     case Declaration::Member::Type::F32Vec4: { return "f32vec4";   }
+
     case Declaration::Member::Type::F32Mat3: { return "f32mat3";   }
     case Declaration::Member::Type::F32Mat4: { return "f32mat4";   }
 
@@ -154,9 +160,15 @@ inline const char* ToString(Declaration::Member::Type type) {
     case Declaration::Member::Type::UInt32:         { return         sizeof(uint32_t); }
     case Declaration::Member::Type::UInt64:         { return         sizeof(uint64_t); }
     case Declaration::Member::Type::Float32:        { return         sizeof(float);    }
+
+    case Declaration::Member::Type::U32Vec2:        { return     2 * sizeof(uint32_t); }
+    case Declaration::Member::Type::U32Vec3:        { return     3 * sizeof(uint32_t); }
+    case Declaration::Member::Type::U32Vec4:        { return     4 * sizeof(uint32_t); }
+
     case Declaration::Member::Type::F32Vec2:        { return     2 * sizeof(float);    }
     case Declaration::Member::Type::F32Vec3:        { return     3 * sizeof(float);    }
     case Declaration::Member::Type::F32Vec4:        { return     4 * sizeof(float);    }
+
     case Declaration::Member::Type::F32Mat3:        { return 3 * 3 * sizeof(float);    }
     case Declaration::Member::Type::F32Mat4:        { return 4 * 4 * sizeof(float);    }
 

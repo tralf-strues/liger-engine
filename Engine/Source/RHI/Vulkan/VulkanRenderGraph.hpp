@@ -47,6 +47,7 @@ class VulkanRenderGraph : public RenderGraph {
   void ReimportTexture(ResourceVersion version, TextureResource new_texture) override;
   void ReimportBuffer(ResourceVersion version, BufferResource new_buffer) override;
   void UpdateTransientTextureSamples(ResourceVersion version, uint8_t new_sample_count) override;
+  void UpdateTransientBufferSize(ResourceVersion version, uint64_t new_size) override;
 
   void Execute(Context& context, VkSemaphore wait, uint64_t wait_value, VkSemaphore signal, uint64_t signal_value);
 

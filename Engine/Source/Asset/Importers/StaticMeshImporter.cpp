@@ -333,7 +333,7 @@ asset::IImporter::Result StaticMeshImporter::Import(asset::Registry& registry, c
   auto src_str = src.string();
 
   Assimp::Importer importer;
-  const aiScene*   scene = importer.ReadFile(src_str, kProcessFlags);
+  const aiScene* scene = importer.ReadFile(src_str, kProcessFlags);
   if (scene == nullptr) {
     LIGER_LOG_ERROR(kLogChannelAsset, "Failed to open file '{0}'.", src_str);
     return kFailedResult;

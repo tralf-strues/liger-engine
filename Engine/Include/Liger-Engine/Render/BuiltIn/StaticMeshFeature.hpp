@@ -103,12 +103,21 @@ class StaticMeshFeature
     : public IFeature,
       public ecs::ComponentSystem<const ecs::WorldTransform, StaticMeshComponent> {
  public:
+  enum class DebugMode : uint32_t {
+    Off = 0U,
+    Normals,
+    ClusterZ,
+    LightComplexity
+  };
+
   explicit StaticMeshFeature(rhi::IDevice& device, asset::Manager& asset_manager);
   ~StaticMeshFeature() override = default;
 
   std::string_view Name() const override {
-    return "StaticMeshFeature<const WorldTransform, StaticMeshComponent>";
+    return "StaticMeshFeature";
   }
+
+  void UpdateMode(DebugMode new_mode);
 
   void SetupRenderGraph(rhi::RenderGraphBuilder& builder) override;
   void AddLayerJobs(LayerMap& layer_map) override;
@@ -153,6 +162,8 @@ class StaticMeshFeature
 
   uint32_t AddObject(Object object);
   void Rebuild(rhi::ICommandBuffer& cmds);
+
+  DebugMode                            debug_mode_{DebugMode::Off};
 
   rhi::IDevice&                        device_;
   std::vector<Object>                  objects_;

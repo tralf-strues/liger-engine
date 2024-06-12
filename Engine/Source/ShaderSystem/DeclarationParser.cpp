@@ -47,9 +47,15 @@ static const std::unordered_map<std::string, Declaration::Member::Type> kStringT
   {"int32_t",          Declaration::Member::Type::Int32},
   {"uint32_t",         Declaration::Member::Type::UInt32},
   {"float32_t",        Declaration::Member::Type::Float32},
+
+  {"u32vec2",          Declaration::Member::Type::U32Vec2},
+  {"u32vec3",          Declaration::Member::Type::U32Vec3},
+  {"u32vec4",          Declaration::Member::Type::U32Vec4},
+
   {"f32vec2",          Declaration::Member::Type::F32Vec2},
   {"f32vec3",          Declaration::Member::Type::F32Vec3},
   {"f32vec4",          Declaration::Member::Type::F32Vec4},
+
   {"f32mat3",          Declaration::Member::Type::F32Mat3},
   {"f32mat4",          Declaration::Member::Type::F32Mat4},
 

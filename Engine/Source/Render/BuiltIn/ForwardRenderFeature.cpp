@@ -71,7 +71,7 @@ void ForwardRenderFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
   rg_depth_ = builder.DeclareTransientTexture(depth_info);
 
   /* Opaque */
-  builder.BeginRenderPass("Forward Pass - Opaque");
+  builder.BeginRenderPass("Forward - Opaque");
 
   rg_color_after_opaque_ = builder.AddColorTarget(rg_color_, rhi::AttachmentLoad::Clear, rhi::AttachmentStore::Store);
   rg_depth_after_opaque_ = builder.SetDepthStencil(rg_depth_, rhi::AttachmentLoad::Clear, rhi::AttachmentStore::Store);
@@ -85,7 +85,7 @@ void ForwardRenderFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
   builder.EndRenderPass();
 
   /* Transparent */
-  builder.BeginRenderPass("Forward Pass - Transparent");
+  builder.BeginRenderPass("Forward - Transparent");
 
   builder.AddColorTarget(rg_color_after_opaque_, rhi::AttachmentLoad::Load, rhi::AttachmentStore::Store);
   builder.AddColorMultisampleResolve(rg_resolve_);

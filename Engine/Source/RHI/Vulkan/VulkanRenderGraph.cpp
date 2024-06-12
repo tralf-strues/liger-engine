@@ -56,6 +56,14 @@ void VulkanRenderGraph::UpdateTransientTextureSamples(ResourceVersion version, u
   }
 }
 
+void VulkanRenderGraph::UpdateTransientBufferSize(ResourceVersion version, uint64_t new_size) {
+  auto& buffer_info = transient_buffer_infos_[resource_version_registry_.GetResourceId(version)];
+  if (buffer_info.size != new_size) {
+    force_recreate_resources_ = true;
+    buffer_info.size = new_size;
+  }
+}
+
 void VulkanRenderGraph::Execute(Context& context, VkSemaphore wait, uint64_t wait_value, VkSemaphore signal, uint64_t signal_value) {
   if (first_frame_) {
     UpdateDependentResourceValues();

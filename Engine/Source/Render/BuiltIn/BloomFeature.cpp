@@ -48,7 +48,7 @@ void BloomFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
   bloom_texture_info.cube_compatible = false;
   bloom_texture_info.mip_levels      = info_.mip_count + 1U;
   bloom_texture_info.samples         = 1U;
-  bloom_texture_info.name            = "BloomFeature - transient";
+  bloom_texture_info.name            = "Bloom Transient";
   rg_transient_ = builder.DeclareTransientTexture(bloom_texture_info);
 
   for (uint32_t mip = 1U; mip <= info_.mip_count; ++mip) {
@@ -167,7 +167,7 @@ void BloomFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
   builder.EndCompute();
 
   /* Compose */
-  builder.BeginCompute("Bloom - Compose");
+  builder.BeginCompute("Bloom Compose");
   builder.SampleTexture(rg_transient_);
   rg_dst_color_ = builder.ReadWriteTexture(rg_src_color_);
   builder.SetJob([this](rhi::RenderGraph& graph, auto& context, rhi::ICommandBuffer& cmds) {
