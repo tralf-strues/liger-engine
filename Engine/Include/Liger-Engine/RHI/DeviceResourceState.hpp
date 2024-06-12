@@ -40,20 +40,21 @@ enum class DeviceResourceState : uint32_t {
   /* Texture specific states */
   ShaderSampled           = Bit(2),
   ColorTarget             = Bit(3),
-  DepthStencilTarget      = Bit(4),
-  DepthStencilRead        = Bit(5),
-  StorageTextureRead      = Bit(6),
-  StorageTextureWrite     = Bit(7),
+  ColorMultisampleResolve = Bit(4),
+  DepthStencilTarget      = Bit(5),
+  DepthStencilRead        = Bit(6),
+  StorageTextureRead      = Bit(7),
+  StorageTextureWrite     = Bit(8),
   StorageTextureReadWrite = StorageTextureRead | StorageTextureWrite,
-  PresentTexture          = Bit(8),
+  PresentTexture          = Bit(9),
 
   /* Buffer specific states */
-  VertexBuffer            = Bit(9),
-  IndexBuffer             = Bit(10),
-  IndirectArgument        = Bit(11),
-  UniformBuffer           = Bit(12),
-  StorageBufferRead       = Bit(13),
-  StorageBufferWrite      = Bit(14),
+  VertexBuffer            = Bit(10),
+  IndexBuffer             = Bit(11),
+  IndirectArgument        = Bit(12),
+  UniformBuffer           = Bit(13),
+  StorageBufferRead       = Bit(14),
+  StorageBufferWrite      = Bit(15),
   StorageBufferReadWrite  = StorageBufferRead | StorageBufferWrite,
 };
 

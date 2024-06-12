@@ -22,7 +22,6 @@ ColorBlendInfo:
 AttachmentInfo:
   RenderTargets: [R16G16B16A16_SFLOAT]
   DepthStencilTarget: D32_SFLOAT
-  Samples: 1
 
 FragmentShader:
   Use:

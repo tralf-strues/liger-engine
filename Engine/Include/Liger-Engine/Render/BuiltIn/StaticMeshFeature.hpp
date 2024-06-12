@@ -46,20 +46,24 @@ struct Vertex3D {
 /* Assets */
 struct Material {
   struct UBO {
-    SHADER_STRUCT_MEMBER(glm::vec3)                     albedo_color;
+    SHADER_STRUCT_MEMBER(glm::vec3)                     base_color;
+    SHADER_STRUCT_MEMBER(glm::vec3)                     emission_color;
+    SHADER_STRUCT_MEMBER(float)                         emission_intensity;
     SHADER_STRUCT_MEMBER(float)                         metallic;
     SHADER_STRUCT_MEMBER(float)                         roughness;
-    SHADER_STRUCT_MEMBER(rhi::TextureDescriptorBinding) binding_albedo_map;
+    SHADER_STRUCT_MEMBER(rhi::TextureDescriptorBinding) binding_base_color_map;
     SHADER_STRUCT_MEMBER(rhi::TextureDescriptorBinding) binding_normal_map;
     SHADER_STRUCT_MEMBER(rhi::TextureDescriptorBinding) binding_metallic_roughness_map;
   };
 
   std::unique_ptr<rhi::IBuffer>                 ubo;
 
-  glm::vec3                                     albedo_color;
+  glm::vec3                                     base_color;
+  glm::vec3                                     emission_color;
+  float                                         emission_intensity;
   float                                         metallic;
   float                                         roughness;
-  asset::Handle<std::unique_ptr<rhi::ITexture>> albedo_map;
+  asset::Handle<std::unique_ptr<rhi::ITexture>> base_color_map;
   asset::Handle<std::unique_ptr<rhi::ITexture>> normal_map;
   asset::Handle<std::unique_ptr<rhi::ITexture>> metallic_roughness_map;
 };
@@ -99,12 +103,21 @@ class StaticMeshFeature
     : public IFeature,
       public ecs::ComponentSystem<const ecs::WorldTransform, StaticMeshComponent> {
  public:
+  enum class DebugMode : uint32_t {
+    Off = 0U,
+    Normals,
+    ClusterZ,
+    LightComplexity
+  };
+
   explicit StaticMeshFeature(rhi::IDevice& device, asset::Manager& asset_manager);
   ~StaticMeshFeature() override = default;
 
   std::string_view Name() const override {
-    return "StaticMeshFeature<const WorldTransform, StaticMeshComponent>";
+    return "StaticMeshFeature";
   }
+
+  void UpdateMode(DebugMode new_mode);
 
   void SetupRenderGraph(rhi::RenderGraphBuilder& builder) override;
   void AddLayerJobs(LayerMap& layer_map) override;
@@ -149,6 +162,8 @@ class StaticMeshFeature
 
   uint32_t AddObject(Object object);
   void Rebuild(rhi::ICommandBuffer& cmds);
+
+  DebugMode                            debug_mode_{DebugMode::Off};
 
   rhi::IDevice&                        device_;
   std::vector<Object>                  objects_;

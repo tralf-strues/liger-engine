@@ -1,7 +1,7 @@
 /**
  * @author Nikita Mochalov (github.com/tralf-strues)
- * @file ForwardRenderFeature.hpp
- * @date 2024-05-06
+ * @file ClusteredLightData.hpp
+ * @date 2024-06-03
  *
  * The MIT License (MIT)
  * Copyright (c) 2023 Nikita Mochalov
@@ -27,44 +27,25 @@
 
 #pragma once
 
-#include <Liger-Engine/ECS/DefaultComponents.hpp>
+#include <Liger-Engine/RHI/DescriptorBinding.hpp>
+#include <Liger-Engine/RHI/RenderGraph.hpp>
 #include <Liger-Engine/RHI/ShaderAlignment.hpp>
-#include <Liger-Engine/Render/Feature.hpp>
-#include <Liger-Engine/ShaderSystem/Shader.hpp>
 
 namespace liger::render {
 
-class ForwardRenderFeature : public IFeature {
- public:
-  enum class LayerType : uint32_t {
-    Opaque,
-    Transparent
-  };
+struct PointLightInfo {
+  glm::vec3 color;
+  float     intensity;
+  float     radius;
+};
 
-  explicit ForwardRenderFeature(rhi::RenderGraph::ResourceVersion rg_output);
-  ~ForwardRenderFeature() override = default;
+struct ClusteredLightData {
+  glm::uvec3 clusters_count;
+  glm::vec2  cluster_z_params;
 
-  std::string_view Name() const override { return "ForwardRenderFeature"; }
-  std::span<Layer> Layers() override { return std::span<Layer>(layers_); }
-
-  void SetupRenderGraph(rhi::RenderGraphBuilder& builder) override;
-
-  void UpdateSampleCount(uint8_t new_sample_count);
-
-  void PreRender(rhi::IDevice&, rhi::RenderGraph& graph, rhi::Context&) override;
-
- private:
-  std::vector<Layer>                layers_;
-  rhi::RenderGraph::ResourceVersion rg_output_;
-
-  uint8_t                           sample_count_{1U};
-
-  rhi::RenderGraph::ResourceVersion rg_color_;
-  rhi::RenderGraph::ResourceVersion rg_resolve_;
-  rhi::RenderGraph::ResourceVersion rg_depth_;
-
-  rhi::RenderGraph::ResourceVersion rg_color_after_opaque_;
-  rhi::RenderGraph::ResourceVersion rg_depth_after_opaque_;
+  rhi::RenderGraph::ResourceVersion rg_point_lights;
+  rhi::RenderGraph::ResourceVersion rg_contributing_light_indices;
+  rhi::RenderGraph::ResourceVersion rg_light_clusters;
 };
 
 }  // namespace liger::render

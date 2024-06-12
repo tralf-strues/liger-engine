@@ -36,21 +36,7 @@ namespace liger::rhi {
 VulkanTransferEngine::VulkanTransferEngine(VulkanDevice& device) : device_(device) {}
 
 VulkanTransferEngine::~VulkanTransferEngine() {
-  staging_capacity_ = 0U;
-
-  if (staging_buffers_[cur_frame_].buffer != VK_NULL_HANDLE) {
-    vmaUnmapMemory(device_.GetAllocator(), staging_buffers_[cur_frame_].allocation);
-    cur_data_size_   = 0U;
-    cur_mapped_data_ = nullptr;
-  }
-
-  for (uint32_t i = 0U; i < 2U; ++i) {
-    if (staging_buffers_[i].buffer != VK_NULL_HANDLE) {
-      vmaDestroyBuffer(device_.GetAllocator(), staging_buffers_[i].buffer, staging_buffers_[i].allocation);
-      staging_buffers_[i].buffer     = VK_NULL_HANDLE;
-      staging_buffers_[i].allocation = VK_NULL_HANDLE;
-    }
-  }
+  Destroy();
 }
 
 void VulkanTransferEngine::Init(uint64_t staging_capacity) {
@@ -81,6 +67,28 @@ void VulkanTransferEngine::Init(uint64_t staging_capacity) {
     VULKAN_CALL(vmaCreateBuffer(device_.GetAllocator(), &buffer_info, &alloc_info, &staging_buffers_[i].buffer,
                                 &staging_buffers_[i].allocation, nullptr));
     device_.SetDebugName(staging_buffers_[i].buffer, "VulkanTransferEngine::staging_buffers_[{0}]", i);
+  }
+}
+
+void VulkanTransferEngine::Destroy() {
+  staging_capacity_ = 0U;
+
+  if (staging_buffers_.empty()) {
+    return;
+  }
+
+  if (recording_ && staging_buffers_[cur_frame_].buffer != VK_NULL_HANDLE) {
+    vmaUnmapMemory(device_.GetAllocator(), staging_buffers_[cur_frame_].allocation);
+    cur_data_size_   = 0U;
+    cur_mapped_data_ = nullptr;
+  }
+
+  for (uint32_t i = 0U; i < staging_buffers_.size(); ++i) {
+    if (staging_buffers_[i].buffer != VK_NULL_HANDLE) {
+      vmaDestroyBuffer(device_.GetAllocator(), staging_buffers_[i].buffer, staging_buffers_[i].allocation);
+      staging_buffers_[i].buffer     = VK_NULL_HANDLE;
+      staging_buffers_[i].allocation = VK_NULL_HANDLE;
+    }
   }
 }
 

@@ -3,6 +3,7 @@ Data: | #glsl
     f32mat4   view;
     f32mat4   proj;
     f32mat4   proj_view;
+    f32mat4   inv_proj;
     f32vec3   ws_position;
     float32_t near;
     float32_t far;

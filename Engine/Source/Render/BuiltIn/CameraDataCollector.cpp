@@ -41,12 +41,13 @@ void CameraDataCollector::Run(const ecs::Camera& camera, const ecs::WorldTransfo
   data->view        = transform.InverseMatrix();
   data->proj        = camera.ProjectionMatrix();
   data->proj_view   = data->proj * data->view;
+  data->inv_proj    = glm::inverse(data->proj);
   data->ws_position = transform.position;
   data->near        = camera.near;
   data->far         = camera.far;
 }
 
-void CameraDataCollector::PreRender(rhi::IDevice&, rhi::Context& context) {
+void CameraDataCollector::PreRender(rhi::IDevice&, rhi::RenderGraph&, rhi::Context& context) {
   context.Insert(*ubo_camera_data_.GetData());
   context.Insert(CameraDataBinding{.binding_ubo = ubo_camera_data_->GetUniformDescriptorBinding()});
 }

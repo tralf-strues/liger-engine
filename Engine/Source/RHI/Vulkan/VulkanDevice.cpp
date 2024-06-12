@@ -51,6 +51,8 @@ VulkanDevice::VulkanDevice(Info info, uint32_t frames_in_flight, VkInstance inst
       transfer_engine_(*this) {}
 
 VulkanDevice::~VulkanDevice() {
+  transfer_engine_.Destroy();
+
   descriptor_manager_.Destroy();
 
   render_graph_semaphore_.Destroy();
@@ -109,6 +111,10 @@ bool VulkanDevice::Init(bool debug_enable) {
   device_features12.shaderStorageImageArrayNonUniformIndexing     = VK_TRUE;
   device_features12.scalarBlockLayout                             = VK_TRUE;
 
+  VkPhysicalDeviceExtendedDynamicState3FeaturesEXT dynamic_state3_features {.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_FEATURES_EXT};
+  dynamic_state3_features.pNext = &device_features12;
+  dynamic_state3_features.extendedDynamicState3RasterizationSamples = VK_TRUE;
+
   std::vector<const char*> extensions{std::begin(kRequiredDeviceExtensions), std::end(kRequiredDeviceExtensions)};
 
 #ifdef __APPLE__
@@ -131,7 +137,7 @@ bool VulkanDevice::Init(bool debug_enable) {
 
   VkDeviceCreateInfo create_info {
     .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
-    .pNext = &device_features12,
+    .pNext = &dynamic_state3_features,
     .flags = 0,
     .queueCreateInfoCount = static_cast<uint32_t>(queue_create_infos.size()),
     .pQueueCreateInfos = queue_create_infos.data(),

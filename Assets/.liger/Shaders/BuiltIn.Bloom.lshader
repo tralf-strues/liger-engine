@@ -57,6 +57,54 @@ ComputeShader:
           return color * contribution; 
         }
 
+        float32_t KarisAverage(f32vec3 v) {
+          const float32_t kInverseGamma = 1.0f / 2.2f;
+          v = pow(v, f32vec3(kInverseGamma));
+
+          float32_t luma = dot(v, f32vec3(0.2126f, 0.7152f, 0.0722f));
+          return 0.25f * 1.0f / (1.0f + luma);
+        }
+
+        /**
+         * Inspired by https://www.iryoku.com/next-generation-post-processing-in-call-of-duty-advanced-warfare/
+         * Karis Average is used to combat fireflies.
+         */
+        f32vec3 DownsampleWithKarisAverage(sampler2D src_texture, f32vec2 uv, f32vec2 texel_size) {
+          f32vec3 A = textureLod(src_texture, uv, 0).rgb;
+
+          texel_size *= 0.5f; // Sample from center of texels
+
+          f32vec3 B = textureLod(src_texture, uv + texel_size * f32vec2(-1.0f, -1.0f), 0).rgb;
+          f32vec3 C = textureLod(src_texture, uv + texel_size * f32vec2(-1.0f,  1.0f), 0).rgb;
+          f32vec3 D = textureLod(src_texture, uv + texel_size * f32vec2( 1.0f,  1.0f), 0).rgb;
+          f32vec3 E = textureLod(src_texture, uv + texel_size * f32vec2( 1.0f, -1.0f), 0).rgb;
+
+          f32vec3 F = textureLod(src_texture, uv + texel_size * f32vec2(-2.0f, -2.0f), 0).rgb;
+          f32vec3 G = textureLod(src_texture, uv + texel_size * f32vec2(-2.0f,  0.0f), 0).rgb;
+          f32vec3 H = textureLod(src_texture, uv + texel_size * f32vec2( 0.0f,  2.0f), 0).rgb;
+          f32vec3 I = textureLod(src_texture, uv + texel_size * f32vec2( 2.0f,  2.0f), 0).rgb;
+          f32vec3 J = textureLod(src_texture, uv + texel_size * f32vec2( 2.0f,  2.0f), 0).rgb;
+          f32vec3 K = textureLod(src_texture, uv + texel_size * f32vec2( 2.0f,  0.0f), 0).rgb;
+          f32vec3 L = textureLod(src_texture, uv + texel_size * f32vec2(-2.0f, -2.0f), 0).rgb;
+          f32vec3 M = textureLod(src_texture, uv + texel_size * f32vec2( 0.0f, -2.0f), 0).rgb;
+
+          f32vec3 group_results[5U] = {
+            (B + C + D + E) * 0.5f,
+            (F + G + A + M) * 0.125f,
+            (G + H + I + A) * 0.125f,
+            (A + I + J + K) * 0.125f,
+            (M + A + K + L) * 0.125f
+          };
+
+          f32vec3 result = f32vec3(0.0f);
+          for (uint32_t group_idx = 0U; group_idx < 5U; ++group_idx) {
+            group_results[group_idx] *= KarisAverage(group_results[group_idx]);
+            result                   += group_results[group_idx];
+          }
+
+          return result;
+        }
+
         /**
          * Inspired by https://www.iryoku.com/next-generation-post-processing-in-call-of-duty-advanced-warfare/
          */
@@ -124,7 +172,7 @@ ComputeShader:
     f32vec4 result    = f32vec4(1.0f);
     switch (liger_in.stage) {
       case kStagePrefilter: {
-        result.rgb = Downsample(GetSampler2D(liger_in.binding_src_texture), dst_uv, 1.0f / src_size);
+        result.rgb = DownsampleWithKarisAverage(GetSampler2D(liger_in.binding_src_texture), dst_uv, 1.0f / src_size);
         result.rgb = Prefilter(result.rgb, liger_in.prefilter_params);
         break;
       }

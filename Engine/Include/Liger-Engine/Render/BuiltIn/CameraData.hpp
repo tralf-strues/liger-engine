@@ -36,6 +36,7 @@ struct CameraData {
   SHADER_STRUCT_MEMBER(glm::mat4) view;
   SHADER_STRUCT_MEMBER(glm::mat4) proj;
   SHADER_STRUCT_MEMBER(glm::mat4) proj_view;
+  SHADER_STRUCT_MEMBER(glm::mat4) inv_proj;
   SHADER_STRUCT_MEMBER(glm::vec3) ws_position;
   SHADER_STRUCT_MEMBER(float)     near;
   SHADER_STRUCT_MEMBER(float)     far;

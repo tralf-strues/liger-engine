@@ -23,13 +23,14 @@ ColorBlendInfo:
   AlphaOperation: Add
 
 AttachmentInfo:
-  RenderTargets: [R16G16B16A16_SFLOAT]
+  RenderTargets: [B10G11R11_UFLOAT]
   DepthStencilTarget: D32_SFLOAT
-  Samples: 1
+
+Use:
+  - Include: BuiltIn.Camera.lsdecl
 
 VertexShader:
   Use:
-    - Include: BuiltIn.Camera.lsdecl
     - Include: BuiltIn.StaticMeshData.lsdecl
 
   Input:
@@ -93,6 +94,7 @@ VertexShader:
 FragmentShader:
   Use:
     - Include: BuiltIn.PBR.lsdecl
+    - Include: BuiltIn.ClusteredLightData.lsdecl
 
   Input:
     - Name: ws_position
@@ -104,6 +106,33 @@ FragmentShader:
     - Name: tbn
       Type: f32mat3
 
+    - Name: cluster_z_params
+      Type: f32vec2
+      Modifier: push-constant
+
+    - Name: clusters_count
+      Type: u32vec3
+      Modifier: push-constant
+
+    - Name: debug_mode
+      Type: uint32_t
+      Modifier: push-constant
+
+    - Name: ContributingLightIndices
+      Type: storage-buffer
+      Layout: std430
+      Access: readonly
+      Contents: | #glsl
+        uint32_t contributing_light_count;
+        uint32_t indices[];
+
+    - Name: LightClusters
+      Type: storage-buffer
+      Layout: std430
+      Access: readonly
+      Contents: | #glsl
+        LightCluster clusters[];
+
   Output:
     - Name: out_color
       Type: f32vec4
@@ -111,15 +140,20 @@ FragmentShader:
   CodeSnippets:
     - Insert: auto-global
       Code: | #glsl
-        PBR_SurfacePoint GetSurfaceProperties(const LigerInput liger_in) {
+        const uint32_t kDebugModeOff             = 0U;
+        const uint32_t kDebugModeNormals         = 1U;
+        const uint32_t kDebugModeClusterZ        = 2U;
+        const uint32_t kDebugModeLightComplexity = 3U;
+
+        PBR_SurfacePoint GetSurfaceProperties(const LigerInput liger_in, out f32vec3 out_emission) {
           PBR_SurfacePoint surface_point;
 
           Material material = GetUniformBuffer(MaterialUBO, liger_in.binding_material).material;
+          out_emission = material.emission_color * material.emission_intensity;
 
           /* Normal */
           if (material.binding_normal_map != kInvalidBinding) {
-            f32vec3 normal       = texture(GetSampler2D(material.binding_normal_map), liger_in.tex_coords).xyz;
-            normal               = normalize(normal);
+            f32vec3 normal       = 2.0f * texture(GetSampler2D(material.binding_normal_map), liger_in.tex_coords).xyz - 1.0f;
             normal               = normalize(liger_in.tbn * normal);
             surface_point.normal = normal;
           } else {
@@ -131,10 +165,11 @@ FragmentShader:
           surface_point.to_camera = normalize(GetCamera(liger_in).ws_position - surface_point.position);
 
           /* Base color */
-          if (material.binding_albedo_map != kInvalidBinding) {
-            surface_point.base_color = texture(GetSampler2D(material.binding_albedo_map), liger_in.tex_coords).rgb;
+          if (material.binding_base_color_map != kInvalidBinding) {
+            surface_point.base_color = texture(GetSampler2D(material.binding_base_color_map), liger_in.tex_coords).rgb;
+            surface_point.base_color = pow(surface_point.base_color, f32vec3(2.2f));  // NOTE (tralf-strues): sRGB to linear space
           } else {
-            surface_point.base_color = material.albedo_color;
+            surface_point.base_color = material.base_color;
           }
 
           /* Metallic & roughness */
@@ -154,22 +189,105 @@ FragmentShader:
           return surface_point;
         }
 
+        float32_t LinearDepth(float32_t z, float32_t near, float32_t far) {
+          return near * far / (far + z * (near - far));
+        }
+
+        uint32_t ClusterZSlice(Camera camera, f32vec2 cluster_z_params) {
+          float32_t linDepth = LinearDepth(gl_FragCoord.z, camera.near, camera.far);
+          return uint32_t(max(log2(linDepth) * cluster_z_params.x + cluster_z_params.y, 0.0f));
+        }
+
+        f32vec3 CLUSTER_SLICE_COLORS[7U] = f32vec3[](
+          f32vec3(0.0f, 0.0f, 1.0f),
+          f32vec3(0.0f, 1.0f, 0.0f),
+          f32vec3(0.0f, 1.0f, 1.0f),
+          f32vec3(1.0f, 0.0f, 0.0f),
+          f32vec3(1.0f, 0.0f, 1.0f),
+          f32vec3(1.0f, 1.0f, 0.0f),
+          f32vec3(1.0f, 1.0f, 1.0f)
+        );
+
+        f32vec3 LIGHT_COMPLEXITY_COLORS[8U] = f32vec3[](
+          f32vec3(0.0f, 0.0f, 0.25f),
+          f32vec3(0.0f, 0.0f, 0.5f),
+          f32vec3(0.0f, 0.0f, 0.75f),
+          f32vec3(0.0f, 0.0f, 1.0f),
+          f32vec3(0.0f, 0.5f, 1.0f),
+          f32vec3(1.0f, 0.5f, 0.0f),
+          f32vec3(1.5f, 0.0f, 0.0f),
+          f32vec3(2.0f, 0.0f, 0.0f)
+        );
+
+        f32vec3 ProcessPointLights(const LigerInput liger_in, const PBR_SurfacePoint surface_point) {
+          f32vec3         L0               = f32vec3(0.0f);
+
+          const Camera    camera           = GetCamera(liger_in);
+          const float32_t view_space_depth = (camera.view * f32vec4(liger_in.ws_position, 1.0f)).z;
+          const u32vec2   pixel_coords     = u32vec2(gl_FragCoord.xy);
+
+          const u32vec3   cluster_id       = u32vec3(pixel_coords / kClusterSizeXY,
+                                                     ClusterZSlice(camera, liger_in.cluster_z_params));
+          const uint32_t  cluster_idx      = cluster_id.z * liger_in.clusters_count.x * liger_in.clusters_count.y +
+                                             cluster_id.y * liger_in.clusters_count.x +
+                                             cluster_id.x;
+
+          const LightCluster cluster = GetStorageBuffer(LightClusters, liger_in.binding_light_clusters).clusters[cluster_idx];
+          for (uint32_t i = 0U; i < cluster.count; ++i) {
+            const uint32_t   light_idx   = GetStorageBuffer(ContributingLightIndices, liger_in.binding_contributing_light_indices).indices[cluster.offset + i];
+            const PointLight point_light = GetStorageBuffer(PointLights, liger_in.binding_point_lights).lights[light_idx];
+
+            PBR_LightSample light_sample;
+            light_sample.to_light    = point_light.ws_position - surface_point.position;
+            light_sample.half_vector = normalize(surface_point.to_camera + light_sample.to_light);
+            light_sample.radiance    = point_light.color * point_light.intensity;
+
+            float32_t dist           = length(point_light.ws_position - surface_point.position);
+            float32_t attenuation    = max(1.0f - (dist / point_light.radius), 0.0f) / pow(dist, 2.0f);
+            light_sample.radiance   *= attenuation;
+
+            L0 += PBR_RadianceSample(surface_point, light_sample);
+          }
+
+          switch (liger_in.debug_mode) {
+            case kDebugModeClusterZ: {
+              return 0.5f * L0 + CLUSTER_SLICE_COLORS[cluster_id.z % 7U];
+            }
+
+            case kDebugModeLightComplexity: {
+              return 0.75f * L0 + LIGHT_COMPLEXITY_COLORS[clamp(cluster.count, 0U, 7U)];
+            }
+          }
+
+          return L0;
+        }
+
   Code: | #glsl
-    PBR_SurfacePoint surface_point = GetSurfaceProperties(liger_in);
+    f32vec3 emission = f32vec3(0.0f);
+    PBR_SurfacePoint surface_point = GetSurfaceProperties(liger_in, emission);
 
-    f32vec3 kLightDirection = normalize(f32vec3(-1.0f, -2.0f, -0.1f));
-    f32vec3 kLightRadiance  = f32vec3(2.5f,  2.5f,  2.5f);
-    f32vec3 kAmbient        = f32vec3(0.03f, 0.03f, 0.03f);
+    f32vec3 kLightDirection = normalize(f32vec3(-1.5f, -2.0f, 0.5f));
+    f32vec3 kLightRadiance  = f32vec3(0.9f,  0.9f,  1.3f);
+    f32vec3 kAmbient        = f32vec3(0.05f, 0.05f, 0.05f);
 
-    PBR_LightSample light_sample;
-    light_sample.to_light    = -kLightDirection;
-    light_sample.half_vector = normalize(surface_point.to_camera + light_sample.to_light);
-    light_sample.radiance    = kLightRadiance;
+    PBR_LightSample dir_light_sample;
+    dir_light_sample.to_light    = -kLightDirection;
+    dir_light_sample.half_vector = normalize(surface_point.to_camera + dir_light_sample.to_light);
+    dir_light_sample.radiance    = kLightRadiance;
 
-    f32vec3 L0 = PBR_RadianceSample(surface_point, light_sample);
+    f32vec3 L0 = PBR_RadianceSample(surface_point, dir_light_sample);
+    L0 += ProcessPointLights(liger_in, surface_point);
 
-    if (dot(surface_point.normal, light_sample.to_light) <= 0.0f) {
-      L0 = kAmbient * surface_point.base_color;
+    L0 += emission;
+
+    switch (liger_in.debug_mode) {
+      case kDebugModeNormals: {
+        out_color = f32vec4(0.5f * surface_point.normal + f32vec3(1.0f), 1.0f);
+        break;
+      }
+
+      default: {
+        out_color = f32vec4(L0, 1.0f);
+        break;
+      }
     }
-
-    out_color = f32vec4(L0, 1.0f);

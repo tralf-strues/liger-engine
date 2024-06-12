@@ -44,6 +44,7 @@ class VulkanTransferEngine {
   ~VulkanTransferEngine();
 
   void Init(uint64_t staging_capacity);
+  void Destroy();
 
   void Request(IDevice::DedicatedTransferRequest&& transfer);
 
@@ -76,7 +77,7 @@ class VulkanTransferEngine {
   std::vector<StagingBuffer>                   staging_buffers_;
   uint64_t                                     staging_capacity_{0U};
 
-  uint32_t                                     cur_frame_;
+  uint32_t                                     cur_frame_{0U};
   void*                                        cur_mapped_data_{nullptr};
   uint64_t                                     cur_data_size_{0U};
   bool                                         recording_{false};

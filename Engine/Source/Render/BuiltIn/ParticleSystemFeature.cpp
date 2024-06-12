@@ -107,10 +107,10 @@ void ParticleSystemFeature::SetupRenderGraph(rhi::RenderGraphBuilder& builder) {
   rg_versions_.emit_particles = builder.DeclareImportBufferPack("Particles",
                                                                 rhi::DeviceResourceState::Undefined,
                                                                 rhi::DeviceResourceState::Undefined);
-  rg_versions_.update_draw_command = builder.DeclareImportBufferPack("Particle Draw Command",
+  rg_versions_.update_draw_command = builder.DeclareImportBufferPack("Particle Draw Cmd",
                                                                 rhi::DeviceResourceState::Undefined,
                                                                 rhi::DeviceResourceState::Undefined);
-  rg_versions_.update_draw_particle_indices = builder.DeclareImportBufferPack("Particle Draw Particle Indices",
+  rg_versions_.update_draw_particle_indices = builder.DeclareImportBufferPack("Draw Particle Indices",
                                                                 rhi::DeviceResourceState::Undefined,
                                                                 rhi::DeviceResourceState::Undefined);
 

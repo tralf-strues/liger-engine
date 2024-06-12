@@ -50,8 +50,8 @@ class IFeature {
 
   virtual void SetupEntitySystems(ecs::SystemGraph&) {}
 
-  virtual void PreRender(rhi::IDevice&, rhi::Context&) {}
-  virtual void PostRender(rhi::IDevice&, rhi::Context&) {}
+  virtual void PreRender(rhi::IDevice&, rhi::RenderGraph&, rhi::Context&) {}
+  virtual void PostRender(rhi::IDevice&, rhi::RenderGraph&, rhi::Context&) {}
 };
 
 }  // namespace liger::render

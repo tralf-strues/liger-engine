@@ -38,11 +38,13 @@
 namespace liger::asset::importers {
 
 struct MaterialData {
-  glm::vec3   albedo_color;
+  glm::vec3   base_color;
+  glm::vec3   emission_color;
+  float       emission_intensity;
   float       metallic;
   float       roughness;
 
-  std::string albedo_map;
+  std::string base_color_map;
   std::string normal_map;
   std::string metallic_roughness_map;
 };
@@ -81,22 +83,28 @@ bool LoadMaterials(const aiScene* scene, std::vector<MaterialData>& materials,
     const aiMaterial* assimp_material = scene->mMaterials[material_idx];
 
     /* Color values */
-    aiColor4D albedo_color{1, 1, 1, 1};
-    if (aiGetMaterialColor(assimp_material, AI_MATKEY_BASE_COLOR, &albedo_color) == aiReturn_SUCCESS) {
-      materials[material_idx].albedo_color = ConvertAssimpColor(albedo_color);
-    } else if (aiGetMaterialColor(assimp_material, AI_MATKEY_COLOR_DIFFUSE, &albedo_color) == aiReturn_SUCCESS) {
-      materials[material_idx].albedo_color = ConvertAssimpColor(albedo_color);
+    aiColor4D base_color{1, 1, 1, 1};
+    if (aiGetMaterialColor(assimp_material, AI_MATKEY_BASE_COLOR, &base_color) == aiReturn_SUCCESS) {
+      materials[material_idx].base_color = ConvertAssimpColor(base_color);
+    } else if (aiGetMaterialColor(assimp_material, AI_MATKEY_COLOR_DIFFUSE, &base_color) == aiReturn_SUCCESS) {
+      materials[material_idx].base_color = ConvertAssimpColor(base_color);
+    }
+
+    aiColor4D emission_color{0, 0, 0, 0};
+    if (aiGetMaterialColor(assimp_material, AI_MATKEY_COLOR_EMISSIVE, &emission_color) == aiReturn_SUCCESS) {
+      materials[material_idx].emission_color = ConvertAssimpColor(emission_color);
     }
 
     /* Scalars */
-    aiGetMaterialFloat(assimp_material, AI_MATKEY_METALLIC_FACTOR,  &materials[material_idx].metallic);
-    aiGetMaterialFloat(assimp_material, AI_MATKEY_ROUGHNESS_FACTOR, &materials[material_idx].roughness);
+    aiGetMaterialFloat(assimp_material, AI_MATKEY_METALLIC_FACTOR,    &materials[material_idx].metallic);
+    aiGetMaterialFloat(assimp_material, AI_MATKEY_ROUGHNESS_FACTOR,   &materials[material_idx].roughness);
+    aiGetMaterialFloat(assimp_material, AI_MATKEY_EMISSIVE_INTENSITY, &materials[material_idx].emission_intensity);
     
     /* Texture maps */
-    aiString albedo_map_path;
-    if (assimp_material->GetTexture(AI_MATKEY_BASE_COLOR_TEXTURE, &albedo_map_path) == aiReturn_SUCCESS ||
-        assimp_material->GetTexture(aiTextureType_DIFFUSE, 0, &albedo_map_path) == aiReturn_SUCCESS) {
-      materials[material_idx].albedo_map = (source_dir / albedo_map_path.C_Str()).string();
+    aiString base_color_map_path;
+    if (assimp_material->GetTexture(AI_MATKEY_BASE_COLOR_TEXTURE, &base_color_map_path) == aiReturn_SUCCESS ||
+        assimp_material->GetTexture(aiTextureType_DIFFUSE, 0, &base_color_map_path) == aiReturn_SUCCESS) {
+      materials[material_idx].base_color_map = (source_dir / base_color_map_path.C_Str()).string();
     }
 
     aiString normal_map_path;
@@ -201,8 +209,8 @@ bool SaveMaterials(asset::Registry& registry, const std::filesystem::path& dst_f
   };
 
   for (uint32_t material_idx = 0U; material_idx < materials.size(); ++material_idx) {
-    if (!materials[material_idx].albedo_map.empty() &&
-        save_texture(materials[material_idx].albedo_map) == asset::kInvalidId) {
+    if (!materials[material_idx].base_color_map.empty() &&
+        save_texture(materials[material_idx].base_color_map) == asset::kInvalidId) {
       return false;
     }
 
@@ -233,14 +241,21 @@ bool SaveMaterials(asset::Registry& registry, const std::filesystem::path& dst_f
       return false;
     }
 
-    fmt::println(file, "Albedo: {0}",    materials[material_idx].albedo_color);
-    fmt::println(file, "Metallic: {0}",  materials[material_idx].metallic);
-    fmt::println(file, "Roughness: {0}", materials[material_idx].roughness);
+    auto print_vector = [&file](std::string_view name, const glm::vec3& vector) {
+      fmt::println(file, "{0}: [{1}, {2}, {3}]", name, vector.x, vector.y, vector.z);
+    };
 
-    if (!materials[material_idx].albedo_map.empty()) {
-      fmt::println(file, "AlbedoMap: 0x{0:X}", *texture_ids[materials[material_idx].albedo_map]);
+    print_vector("BaseColor", materials[material_idx].base_color);
+    print_vector("Emission",  materials[material_idx].emission_color);
+
+    fmt::println(file, "EmissionIntensity: {0}",  materials[material_idx].emission_intensity);
+    fmt::println(file, "Metallic: {0}",           materials[material_idx].metallic);
+    fmt::println(file, "Roughness: {0}",          materials[material_idx].roughness);
+
+    if (!materials[material_idx].base_color_map.empty()) {
+      fmt::println(file, "BaseColorMap: 0x{0:X}", *texture_ids[materials[material_idx].base_color_map]);
     } else {
-      fmt::println(file, "AlbedoMap: 0x0");
+      fmt::println(file, "BaseColorMap: 0x0");
     }
 
     if (!materials[material_idx].normal_map.empty()) {
@@ -318,7 +333,7 @@ asset::IImporter::Result StaticMeshImporter::Import(asset::Registry& registry, c
   auto src_str = src.string();
 
   Assimp::Importer importer;
-  const aiScene*   scene = importer.ReadFile(src_str, kProcessFlags);
+  const aiScene* scene = importer.ReadFile(src_str, kProcessFlags);
   if (scene == nullptr) {
     LIGER_LOG_ERROR(kLogChannelAsset, "Failed to open file '{0}'.", src_str);
     return kFailedResult;

@@ -28,3 +28,9 @@
   id: 0x4A63915B05CB750F
 - file: .liger/Shaders/BuiltIn.Tonemap.lshader
   id: 0xAC01F12A0DCB92DC
+- file: .liger/Shaders/BuiltIn.ClusteredLightCull.lshader
+  id: 0x2C44F12F0D3B91BA
+- file: .liger/Shaders/BuiltIn.ClusteredLightData.lsdecl
+  id: 0x1BACF60F4D3591C0
+- file: .liger/Shaders/BuiltIn.ClusteredLightGenVolumes.lshader
+  id: 0x6C341C2A023AA93D

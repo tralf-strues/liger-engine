@@ -310,9 +310,14 @@ bool VulkanInstance::FillDeviceInfoList() {
       .pNext = &sync2_feature
     };
 
+    VkPhysicalDeviceExtendedDynamicState3FeaturesEXT dynamic_state3_features {
+      .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_FEATURES_EXT,
+      .pNext = &features12
+    };
+
     VkPhysicalDeviceFeatures2 features2 {
       .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
-      .pNext = &features12
+      .pNext = &dynamic_state3_features
     };
 
     vkGetPhysicalDeviceFeatures2(physical_device, &features2);
@@ -360,6 +365,7 @@ bool VulkanInstance::FillDeviceInfoList() {
                           static_cast<bool>(features2.features.shaderInt64) &&
                           static_cast<bool>(features2.features.multiDrawIndirect) &&
                           static_cast<bool>(features2.features.drawIndirectFirstInstance) &&
+                          static_cast<bool>(dynamic_state3_features.extendedDynamicState3RasterizationSamples) &&
                           static_cast<bool>(features12.descriptorBindingPartiallyBound) &&
                           static_cast<bool>(features12.runtimeDescriptorArray) &&
                           static_cast<bool>(features12.shaderUniformBufferArrayNonUniformIndexing) &&

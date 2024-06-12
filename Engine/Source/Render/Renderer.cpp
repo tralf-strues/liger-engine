@@ -70,13 +70,13 @@ rhi::RenderGraph& Renderer::GetRenderGraph() { return *render_graph_; }
 
 void Renderer::Render() {
   for (auto& feature : features_) {
-    feature->PreRender(device_, context_);
+    feature->PreRender(device_, *render_graph_, context_);
   }
 
   device_.ExecuteConsecutive(*render_graph_, context_);
 
   for (auto& feature : features_) {
-    feature->PostRender(device_, context_);
+    feature->PostRender(device_, *render_graph_, context_);
   }
 }
 

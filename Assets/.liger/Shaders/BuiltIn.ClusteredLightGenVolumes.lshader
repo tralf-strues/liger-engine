@@ -1,0 +1,80 @@
+ComputeShader:
+  ThreadGroupSize: [1, 1, 1]
+
+  Use:
+    - Include: BuiltIn.ClusteredLightData.lsdecl
+    - Include: BuiltIn.Camera.lsdecl
+
+  Input:
+    - Name: ClusterVolumes
+      Type: storage-buffer
+      Layout: std430
+      Access: writeonly
+      Contents: | #glsl
+        AABB volumes[];
+
+    - Name: clusters_count
+      Type: u32vec3
+      Modifier: push-constant
+
+    - Name: screen_resolution
+      Type: u32vec2
+      Modifier: push-constant
+
+  CodeSnippets:
+    - Insert: auto-global
+      Code: | #glsl
+        f32vec4 ScreenSpaceToViewSpace(f32vec4 screen, f32mat4 inverse_proj, u32vec2 screen_resolution){
+          /* Convert to NDC */
+          f32vec2 tex_coords = screen.xy / screen_resolution.xy;
+
+          /* Convert to Clip Space */
+          f32vec4 clip = f32vec4(f32vec2(tex_coords.x, 1.0 - tex_coords.y)* 2.0 - 1.0, screen.z, screen.w);
+
+          /* Convert to World Space */
+          f32vec4 view = inverse_proj * clip;
+          view = view / view.w;
+
+          return view;
+        }
+
+        f32vec3 IntersectLineWithZPlane(f32vec3 from, f32vec3 to, float32_t z_plane) {
+          f32vec3   normal = f32vec3(0.0f, 0.0f, 1.0f);
+          f32vec3   line   = to - from;
+          float32_t t      = (z_plane - dot(normal, from)) / dot(normal, line);
+
+          return from + t * line;
+        }
+
+  Code: | #glsl
+    Camera camera = GetCamera(liger_in);
+
+    const uint32_t cluster_idx = gl_WorkGroupID.z * gl_NumWorkGroups.x * gl_NumWorkGroups.y +
+                                 gl_WorkGroupID.y * gl_NumWorkGroups.x +
+                                 gl_WorkGroupID.x;
+
+    /* Screen Space */
+    f32vec4 ss_min_point = f32vec4(f32vec2(gl_WorkGroupID.x,      gl_WorkGroupID.y)      * kClusterSizeXY.xy, 0.0f, 1.0f);
+    f32vec4 ss_max_point = f32vec4(f32vec2(gl_WorkGroupID.x + 1U, gl_WorkGroupID.y + 1U) * kClusterSizeXY.xy, 0.0f, 1.0f);
+
+    /* View Space */
+    f32vec3 vs_min_point = ScreenSpaceToViewSpace(ss_min_point, camera.inv_proj, liger_in.screen_resolution).xyz;
+    f32vec3 vs_max_point = ScreenSpaceToViewSpace(ss_max_point, camera.inv_proj, liger_in.screen_resolution).xyz;
+
+    /* Cluster's near and far values in view space */
+    float32_t cluster_near = -camera.near * pow(camera.far / camera.near, float32_t(gl_WorkGroupID.z)      / float32_t(gl_NumWorkGroups.z));
+    float32_t cluster_far  = -camera.near * pow(camera.far / camera.near, float32_t(gl_WorkGroupID.z + 1U) / float32_t(gl_NumWorkGroups.z));
+
+    /* Intersection points with cluster's near and far planes */
+    const f32vec3 kOriginViewSpace = f32vec3(0.0f);
+
+    f32vec3 min_point_near = IntersectLineWithZPlane(kOriginViewSpace, vs_min_point, cluster_near);
+    f32vec3 min_point_far  = IntersectLineWithZPlane(kOriginViewSpace, vs_min_point, cluster_far);
+    f32vec3 max_point_near = IntersectLineWithZPlane(kOriginViewSpace, vs_max_point, cluster_near);
+    f32vec3 max_point_far  = IntersectLineWithZPlane(kOriginViewSpace, vs_max_point, cluster_far);
+
+    AABB cluster_aabb;
+    cluster_aabb.min_point = f32vec4(min(min(min_point_near, min_point_far), min(max_point_near, max_point_far)), 1.0f);
+    cluster_aabb.max_point = f32vec4(max(max(min_point_near, min_point_far), max(max_point_near, max_point_far)), 1.0f);
+
+    GetStorageBuffer(ClusterVolumes, liger_in.binding_cluster_volumes).volumes[cluster_idx] = cluster_aabb;

@@ -50,9 +50,15 @@ struct Declaration {
       UInt32,
       UInt64,
       Float32,
+
+      U32Vec2,
+      U32Vec3,
+      U32Vec4,
+
       F32Vec2,
       F32Vec3,
       F32Vec4,
+
       F32Mat3,
       F32Mat4,
 

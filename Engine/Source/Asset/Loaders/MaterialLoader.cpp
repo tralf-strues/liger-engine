@@ -51,10 +51,20 @@ void MaterialLoader::Load(asset::Manager& manager, asset::Id asset_id, const std
     return;
   }
 
-  if (auto color_node = root_node["Albedo"]; color_node) {
+  if (auto color_node = root_node["BaseColor"]; color_node) {
     for (uint32_t channel_idx = 0U; channel_idx < color_node.size(); ++channel_idx) {
-      material->albedo_color[channel_idx] = color_node[channel_idx].as<float>();
+      material->base_color[channel_idx] = color_node[channel_idx].as<float>();
     }
+  }
+
+  if (auto color_node = root_node["Emission"]; color_node) {
+    for (uint32_t channel_idx = 0U; channel_idx < color_node.size(); ++channel_idx) {
+      material->emission_color[channel_idx] = color_node[channel_idx].as<float>();
+    }
+  }
+
+  if (auto emission_intensity_node = root_node["EmissionIntensity"]; emission_intensity_node) {
+    material->emission_intensity = emission_intensity_node.as<float>();
   }
 
   if (auto metallic_node = root_node["Metallic"]; metallic_node) {
@@ -65,10 +75,10 @@ void MaterialLoader::Load(asset::Manager& manager, asset::Id asset_id, const std
     material->roughness = roughness_node.as<float>();
   }
 
-  if (auto albedo_map_node = root_node["AlbedoMap"]; albedo_map_node) {
-    auto texture_id = albedo_map_node.as<uint64_t>();
+  if (auto base_color_map_node = root_node["BaseColorMap"]; base_color_map_node) {
+    auto texture_id = base_color_map_node.as<uint64_t>();
     if (texture_id != asset::kInvalidId.Value()) {
-      material->albedo_map = manager.GetAsset<std::unique_ptr<rhi::ITexture>>(asset::Id(texture_id));
+      material->base_color_map = manager.GetAsset<std::unique_ptr<rhi::ITexture>>(asset::Id(texture_id));
     }
   }
 
@@ -96,14 +106,19 @@ void MaterialLoader::Load(asset::Manager& manager, asset::Id asset_id, const std
   auto  ubo_data_raw = std::make_unique<uint8_t[]>(sizeof(render::Material::UBO));
   auto& ubo_data     = *reinterpret_cast<render::Material::UBO*>(ubo_data_raw.get());
 
-  ubo_data.albedo_color = material->albedo_color;
-  ubo_data.metallic     = material->metallic;
-  ubo_data.roughness    = material->roughness;
+  ubo_data.base_color         = material->base_color;
+  ubo_data.emission_color     = material->emission_color;
+  ubo_data.emission_intensity = material->emission_intensity;
+  ubo_data.metallic           = material->metallic;
+  ubo_data.roughness          = material->roughness;
 
-  ubo_data.binding_albedo_map = material->albedo_map ? material->albedo_map->get()->GetSampledDescriptorBinding()
-                                                     : rhi::TextureDescriptorBinding::Invalid;
+  ubo_data.binding_base_color_map = material->base_color_map
+                                        ? material->base_color_map->get()->GetSampledDescriptorBinding()
+                                        : rhi::TextureDescriptorBinding::Invalid;
+
   ubo_data.binding_normal_map = material->normal_map ? material->normal_map->get()->GetSampledDescriptorBinding()
                                                      : rhi::TextureDescriptorBinding::Invalid;
+
   ubo_data.binding_metallic_roughness_map = material->metallic_roughness_map
                                                 ? material->metallic_roughness_map->get()->GetSampledDescriptorBinding()
                                                 : rhi::TextureDescriptorBinding::Invalid;

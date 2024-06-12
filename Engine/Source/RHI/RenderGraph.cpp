@@ -195,6 +195,23 @@ RenderGraphBuilder::ResourceVersion RenderGraphBuilder::AddColorTarget(ResourceV
   return new_version;
 }
 
+RenderGraphBuilder::ResourceVersion RenderGraphBuilder::AddColorMultisampleResolve(ResourceVersion texture) {
+  LIGER_ASSERT(current_node_.has_value(), kLogChannelRHI, "Adding resource access outside of begin/end scope!");
+
+  auto& node = graph_->dag_.GetNode(*current_node_);
+  LIGER_ASSERT(node.type == JobType::RenderPass, kLogChannelRHI,
+               "Incompatible resource access with the current node type!");
+
+  auto new_version = texture;
+
+  node.write.push_back(RenderGraph::ResourceWrite {
+    .version = new_version,
+    .state   = DeviceResourceState::ColorMultisampleResolve,
+  });
+
+  return new_version;
+}
+
 RenderGraphBuilder::ResourceVersion RenderGraphBuilder::SetDepthStencil(ResourceVersion texture, AttachmentLoad load,
                                                                         AttachmentStore store) {
   LIGER_ASSERT(current_node_.has_value(), kLogChannelRHI, "Adding resource access outside of begin/end scope!");
