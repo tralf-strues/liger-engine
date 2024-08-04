@@ -3,6 +3,26 @@
 
 Liger engine is a personal learning game engine, currently in the early stages development.
 
+![](Docs/Images/BuiltInRenderer.png)
+
+## Features
+- RHI layer with Vulkan implementation
+- Render Graph as a first-class citizen of the RHI
+- Support for multiple command queues
+- Shader System based on custom declaration format
+- Built-in renderer
+  - Forward renderer with MSAA
+  - Multi-draw indirect with compute-based frustum culling
+  - Clustered light culling
+  - Particle system rendering
+  - Bloom and tone mapping
+- Dependency-based concurrent execution of ECS systems
+- Asset management
+- Event system
+- Platform layer
+- Logging
+![](Docs/Images/RenderGraphBasic.png)
+
 ## Build
 Currently the engine works only on Windows and Linux. MacOS is currently not supported until MoltenVK supports Vulkan 1.3
 
